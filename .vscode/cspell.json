@@ -1,0 +1,17 @@
+{
+  // https://github.com/streetsidesoftware/vscode-spell-checker/blob/master/packages/client/README.md#cspelljson
+  "version": "0.2",
+  "words": [
+    //
+    "NomicLabs",
+    "bscscan",
+    "dbaeumer",
+    "esbenp",
+    "hbenl",
+    "juanblanco",
+    "polygonscan",
+    "unstake",
+    "Solhint"
+  ],
+  "ignorePaths": ["/.vscode/cspell.json", "/package-lock.json"]
+}

@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.13;
+
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+/**
+ * @title AdminPrivileges
+ * @author Tim Loh
+ */
+contract AdminPrivileges is AccessControl {
+    bytes32 public constant GOVERNANCE_ROLE = keccak256("GOVERNANCE_ROLE");
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
+
+    constructor() {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(GOVERNANCE_ROLE, msg.sender);
+        _grantRole(CONTRACT_ADMIN_ROLE, msg.sender);
+    }
+}
