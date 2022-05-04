@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.13;
 
+import "@openzeppelin/contracts/access/IAccessControl.sol";
+
 /**
  * @title IStakingPool
  * @author Tim Loh
  */
-interface IStakingPool {
+interface IStakingPool is IAccessControl {
     /**
      * @dev Emitted when staking pool has been closed
      */

@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.13;
 
+import "@openzeppelin/contracts/access/IAccessControl.sol";
+import "./IAdminWallet.sol";
+
 /**
  * @title IStakingService
  * @author Tim Loh
  */
-interface IStakingService {
+interface IStakingService is IAccessControl, IAdminWallet {
     /**
      * @dev Emitted when revoked stakes have been removed from pool
      */
