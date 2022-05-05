@@ -116,6 +116,8 @@ interface IStakingService is IAccessControl, IAdminWallet {
         uint256 rewardWei
     );
 
+    function stakingPoolContract() external view returns (address);
+
     function getClaimableRewardWei(bytes32 poolId, address account)
         external
         view
