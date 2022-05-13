@@ -100,7 +100,7 @@ describe("StakingPool", function () {
       );
   });
 
-  it("Should be initialized correctly", async function () {
+  it("Should be initialized correctly", async () => {
     await testHelpers.verifyRole(
       stakingPoolInstance,
       testHelpers.GOVERNANCE_ROLE,
@@ -154,7 +154,7 @@ describe("StakingPool", function () {
     ).to.be.revertedWith("SPool: uninitialized");
   });
 
-  it("Should only allow default admin role to grant and revoke roles", async function () {
+  it("Should only allow default admin role to grant and revoke roles", async () => {
     await testHelpers.testGrantRevokeRoles(
       stakingPoolInstance,
       governanceRoleAccounts,

@@ -404,15 +404,6 @@ contract StakingService is
         override
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
-        require(
-            _stakingPoolStats[poolId].totalRevokedStakeWei > 0,
-            "SSvcs: no revoked"
-        );
-
-        uint256 totalRevokedStakeWei = _stakingPoolStats[poolId]
-            .totalRevokedStakeWei;
-        _stakingPoolStats[poolId].totalRevokedStakeWei = 0;
-
         (
             ,
             address stakeTokenAddress,
@@ -423,6 +414,15 @@ contract StakingService is
             ,
 
         ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
+
+        require(
+            _stakingPoolStats[poolId].totalRevokedStakeWei > 0,
+            "SSvcs: no revoked"
+        );
+
+        uint256 totalRevokedStakeWei = _stakingPoolStats[poolId]
+            .totalRevokedStakeWei;
+        _stakingPoolStats[poolId].totalRevokedStakeWei = 0;
 
         emit RevokedStakesRemoved(
             poolId,
@@ -449,11 +449,6 @@ contract StakingService is
         override
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
-        uint256 unallocatedRewardWei = _calculatePoolRemainingRewardWei(poolId);
-        require(unallocatedRewardWei > 0, "SSvcs: no unallocated");
-
-        _stakingPoolStats[poolId].totalRewardWei -= unallocatedRewardWei;
-
         (
             ,
             ,
@@ -464,6 +459,11 @@ contract StakingService is
             ,
 
         ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
+
+        uint256 unallocatedRewardWei = _calculatePoolRemainingRewardWei(poolId);
+        require(unallocatedRewardWei > 0, "SSvcs: no unallocated");
+
+        _stakingPoolStats[poolId].totalRewardWei -= unallocatedRewardWei;
 
         emit StakingPoolRewardRemoved(
             poolId,
