@@ -248,15 +248,23 @@ contract StakingService is
         );
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
-        _stakes[stakekey] = StakeInfo({
-            stakeAmountWei: stakeAmountWei,
-            stakeTimestamp: block.timestamp,
-            stakeMaturityTimestamp: stakeMaturityTimestamp,
-            estimatedRewardAtMaturityWei: estimatedRewardAtMaturityWei,
-            rewardClaimedWei: 0,
-            isActive: true,
-            isInitialized: true
-        });
+        if (_stakes[stakekey].isInitialized) {
+            _stakes[stakekey].stakeAmountWei += stakeAmountWei;
+            _stakes[stakekey].stakeTimestamp = block.timestamp;
+            _stakes[stakekey].stakeMaturityTimestamp = stakeMaturityTimestamp;
+            _stakes[stakekey]
+                .estimatedRewardAtMaturityWei += estimatedRewardAtMaturityWei;
+        } else {
+            _stakes[stakekey] = StakeInfo({
+                stakeAmountWei: stakeAmountWei,
+                stakeTimestamp: block.timestamp,
+                stakeMaturityTimestamp: stakeMaturityTimestamp,
+                estimatedRewardAtMaturityWei: estimatedRewardAtMaturityWei,
+                rewardClaimedWei: 0,
+                isActive: true,
+                isInitialized: true
+            });
+        }
 
         _stakingPoolStats[poolId].totalStakedWei += stakeAmountWei;
         _stakingPoolStats[poolId]

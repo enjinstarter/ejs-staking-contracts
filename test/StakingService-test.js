@@ -384,6 +384,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("562896.53017638"),
         stakeSecondsAfterStartblockTimestamp: 10,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -391,6 +393,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("94880.38757420"),
         stakeSecondsAfterStartblockTimestamp: 143,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -398,6 +402,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("5764.57794068"),
         stakeSecondsAfterStartblockTimestamp: 279,
+        addStakeAmountWei: hre.ethers.utils.parseEther("6216.90935019"),
+        addStakeSecondsAfterStartblockTimestamp: 2433,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -405,6 +411,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("5279.76920273"),
         stakeSecondsAfterStartblockTimestamp: 415,
+        addStakeAmountWei: hre.ethers.utils.parseEther("79149.44093680"),
+        addStakeSecondsAfterStartblockTimestamp: 2667,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -412,6 +420,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("3189.47044271"),
         stakeSecondsAfterStartblockTimestamp: 548,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -419,6 +429,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("7846.8168352"),
         stakeSecondsAfterStartblockTimestamp: 679,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -426,6 +438,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("4895.31994040"),
         stakeSecondsAfterStartblockTimestamp: 810,
+        addStakeAmountWei: hre.ethers.utils.parseEther("22520.66832642"),
+        addStakeSecondsAfterStartblockTimestamp: 2827,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -433,6 +447,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("1056.52266119"),
         stakeSecondsAfterStartblockTimestamp: 946,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: false,
@@ -440,6 +456,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("1140.20926502"),
         stakeSecondsAfterStartblockTimestamp: 1077,
+        addStakeAmountWei: hre.ethers.utils.parseEther("53039.67090266"),
+        addStakeSecondsAfterStartblockTimestamp: 3015,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -447,6 +465,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("5977.5179946"),
         stakeSecondsAfterStartblockTimestamp: 1189,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -454,6 +474,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("2248.32691972"),
         stakeSecondsAfterStartblockTimestamp: 1348,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: false,
@@ -461,6 +483,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("5645.14307150"),
         stakeSecondsAfterStartblockTimestamp: 1486,
+        addStakeAmountWei: hre.ethers.utils.parseEther("60301.34379948"),
+        addStakeSecondsAfterStartblockTimestamp: 3217,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -468,6 +492,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("7834.10340079"),
         stakeSecondsAfterStartblockTimestamp: 1523,
+        addStakeAmountWei: hre.ethers.utils.parseEther("12550.11801626"),
+        addStakeSecondsAfterStartblockTimestamp: 3448,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -475,6 +501,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("5701.40825578"),
         stakeSecondsAfterStartblockTimestamp: 1756,
+        addStakeAmountWei: hre.ethers.utils.parseEther("43494.73394597"),
+        addStakeSecondsAfterStartblockTimestamp: 3662,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -482,6 +510,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("6253.78681137"),
         stakeSecondsAfterStartblockTimestamp: 1833,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -489,6 +519,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("731.63201142"),
         stakeSecondsAfterStartblockTimestamp: 1969,
+        addStakeAmountWei: hre.ethers.utils.parseEther("0"),
+        addStakeSecondsAfterStartblockTimestamp: 0,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -496,6 +528,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("907.23582828"),
         stakeSecondsAfterStartblockTimestamp: 2107,
+        addStakeAmountWei: hre.ethers.utils.parseEther("33808.91088145"),
+        addStakeSecondsAfterStartblockTimestamp: 3792,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -503,6 +537,8 @@ describe("StakingService", function () {
       {
         stakeAmountWei: hre.ethers.utils.parseEther("41.87133677"),
         stakeSecondsAfterStartblockTimestamp: 2242,
+        addStakeAmountWei: hre.ethers.utils.parseEther("11394.6516797"),
+        addStakeSecondsAfterStartblockTimestamp: 3957,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -537,7 +573,8 @@ describe("StakingService", function () {
       stakingPoolStats,
       stakeConfigs,
       stakingPoolStakeRewardTokenSameConfigs,
-      contractAdminRoleAccounts[0]
+      contractAdminRoleAccounts[0],
+      true
     );
 
     const rewardToken18DecimalsBalanceOfContractAfterRemove =
@@ -889,26 +926,78 @@ describe("StakingService", function () {
     rewardToBeDistributedWei,
     isStakeSuspended,
     hasClaimed,
-    afterRevoke
+    afterRevoke,
+    isAddStake
   ) {
     const signerAddress = await stakeConfig.signer.getAddress();
     const adminSignerAddress = await adminSigner.getAddress();
 
-    const expectStakeTimestamp =
-      startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+    const expectRewardForSuspendedPoolWei = hre.ethers.constants.Zero;
+
+    const stakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      !stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+    const addStakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
+    let expectStakeAmountWei;
+    let expectStakeTimestamp;
+    let expectRewardAtMaturityWei;
+
+    if (
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+      !addStakeExceedPoolReward
+    ) {
+      expectStakeAmountWei = stakeConfig.stakeAmountWei.add(
+        stakeConfig.addStakeAmountWei
+      );
+
+      expectStakeTimestamp =
+        startblockTimestamp +
+        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
+
+      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
+        stakeConfig.stakingPoolConfig.poolAprWei,
+        stakeConfig.stakingPoolConfig.stakeDurationDays,
+        stakeConfig.stakeAmountWei
+      ).add(
+        estimateRewardAtMaturityWei(
+          stakeConfig.stakingPoolConfig.poolAprWei,
+          stakeConfig.stakingPoolConfig.stakeDurationDays,
+          stakeConfig.addStakeAmountWei
+        )
+      );
+    } else {
+      expectStakeAmountWei = stakeConfig.stakeAmountWei;
+
+      expectStakeTimestamp =
+        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+
+      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
+        stakeConfig.stakingPoolConfig.poolAprWei,
+        stakeConfig.stakingPoolConfig.stakeDurationDays,
+        stakeConfig.stakeAmountWei
+      );
+    }
+
+    /*
+    const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
+      stakeConfig.stakingPoolConfig.poolAprWei,
+      stakeConfig.stakingPoolConfig.stakeDurationDays,
+      expectStakeAmountWei
+    );
+    */
+
     const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
       stakeConfig.stakingPoolConfig.stakeDurationDays,
       expectStakeTimestamp
     );
-    const expectRewardForSuspendedPoolWei = hre.ethers.constants.Zero;
-    const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-      stakeConfig.stakingPoolConfig.poolAprWei,
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      stakeConfig.stakeAmountWei
-    );
 
     if (
-      stakeConfig.exceedPoolReward ||
+      stakeExceedPoolReward ||
       (afterRevoke && stakeConfig.shouldRevokeBeforeClaim)
     ) {
       await expect(
@@ -1025,7 +1114,7 @@ describe("StakingService", function () {
           signerAddress
         );
       expect(stakeInfoBeforeMaturity.stakeAmountWei).to.equal(
-        stakeConfig.stakeAmountWei
+        expectStakeAmountWei
       );
       expect(stakeInfoBeforeMaturity.stakeTimestamp).to.equal(
         expectStakeTimestamp
@@ -1081,22 +1170,24 @@ describe("StakingService", function () {
         stakeConfig.stakingPoolConfig.poolId,
         signerAddress
       );
-    expect(claimableRewardWeiBeforeClaim).to.equal(expectRewardAtMaturityWei);
+    expect(claimableRewardWeiBeforeClaim).to.be.closeTo(
+      expectRewardAtMaturityWei,
+      1
+    );
 
     const stakeInfoBeforeClaim =
       await stakingServiceContractInstance.getStakeInfo(
         stakeConfig.stakingPoolConfig.poolId,
         signerAddress
       );
-    expect(stakeInfoBeforeClaim.stakeAmountWei).to.equal(
-      stakeConfig.stakeAmountWei
-    );
+    expect(stakeInfoBeforeClaim.stakeAmountWei).to.equal(expectStakeAmountWei);
     expect(stakeInfoBeforeClaim.stakeTimestamp).to.equal(expectStakeTimestamp);
     expect(stakeInfoBeforeClaim.stakeMaturityTimestamp).to.equal(
       expectStakeMaturityTimestamp
     );
-    expect(stakeInfoBeforeClaim.estimatedRewardAtMaturityWei).to.equal(
-      expectRewardAtMaturityWei
+    expect(stakeInfoBeforeClaim.estimatedRewardAtMaturityWei).to.be.closeTo(
+      expectRewardAtMaturityWei,
+      1
     );
     expect(stakeInfoBeforeClaim.rewardClaimedWei).to.equal(
       stakeConfig.rewardClaimedWei
@@ -1190,7 +1281,8 @@ describe("StakingService", function () {
       verifyStakeConfigs,
       true,
       hasClaimed,
-      afterRevoke
+      afterRevoke,
+      isAddStake
     );
 
     const stakingPoolStatsAfterClaim =
@@ -1238,8 +1330,9 @@ describe("StakingService", function () {
     for (const poolId in expectStakingPoolStats) {
       const stakingPoolStatsBeforeRemove =
         await stakingServiceContractInstance.getStakingPoolStats(poolId);
-      expect(stakingPoolStatsBeforeRemove.totalRewardWei).to.equal(
-        expectStakingPoolStats[poolId].totalRewardWei
+      expect(stakingPoolStatsBeforeRemove.totalRewardWei).to.be.closeTo(
+        expectStakingPoolStats[poolId].totalRewardWei,
+        1
       );
       expect(stakingPoolStatsBeforeRemove.rewardToBeDistributedWei).to.equal(
         expectStakingPoolStats[poolId].rewardToBeDistributedWei
@@ -1264,6 +1357,14 @@ describe("StakingService", function () {
     const expectBalanceOfAdminWalletAfterRemove =
       balanceOfAdminWalletBeforeRemove.add(unallocatedRewardWei);
 
+    const expectUnallocatedRewardWei = expectStakingPoolStats[
+      stakingPoolId
+    ].totalRewardWei.sub(
+      expectStakingPoolStats[stakingPoolId].rewardToBeDistributedWei
+    );
+
+    expect(unallocatedRewardWei).to.be.closeTo(expectUnallocatedRewardWei, 1);
+
     await expect(
       stakingServiceContractInstance
         .connect(adminSigner)
@@ -1275,36 +1376,40 @@ describe("StakingService", function () {
         adminSignerAddress,
         expectAdminWalletAddress,
         rewardTokenContractInstance.address,
-        unallocatedRewardWei
+        expectUnallocatedRewardWei
       );
 
     const balanceOfContractAfterRemove =
       await rewardTokenContractInstance.balanceOf(
         stakingServiceContractInstance.address
       );
-    expect(balanceOfContractAfterRemove).to.equal(
-      expectBalanceOfContractAfterRemove
+    expect(balanceOfContractAfterRemove).to.be.closeTo(
+      expectBalanceOfContractAfterRemove,
+      1
     );
 
     const balanceOfAdminWalletAfterRemove =
       await rewardTokenContractInstance.balanceOf(expectAdminWalletAddress);
-    expect(balanceOfAdminWalletAfterRemove).to.equal(
-      expectBalanceOfAdminWalletAfterRemove
+    expect(balanceOfAdminWalletAfterRemove).to.be.closeTo(
+      expectBalanceOfAdminWalletAfterRemove,
+      1
     );
 
     expectStakingPoolStats[stakingPoolId].totalRewardWei =
       expectStakingPoolStats[stakingPoolId].totalRewardWei.sub(
         unallocatedRewardWei
       );
-    expect(expectStakingPoolStats[stakingPoolId].totalRewardWei).to.equal(
-      expectTotalRewardWeiAfterRemove
+    expect(expectStakingPoolStats[stakingPoolId].totalRewardWei).to.be.closeTo(
+      expectTotalRewardWeiAfterRemove,
+      1
     );
 
     for (const poolId in expectStakingPoolStats) {
       const stakingPoolStatsAfterRemove =
         await stakingServiceContractInstance.getStakingPoolStats(poolId);
-      expect(stakingPoolStatsAfterRemove.totalRewardWei).to.equal(
-        expectStakingPoolStats[poolId].totalRewardWei
+      expect(stakingPoolStatsAfterRemove.totalRewardWei).to.be.closeTo(
+        expectStakingPoolStats[poolId].totalRewardWei,
+        1
       );
       expect(stakingPoolStatsAfterRemove.rewardToBeDistributedWei).to.equal(
         expectStakingPoolStats[poolId].rewardToBeDistributedWei
@@ -1322,7 +1427,8 @@ describe("StakingService", function () {
     adminSigner,
     verifyStakeConfigs,
     hasClaimed,
-    afterRevoke
+    afterRevoke,
+    isAddStake
   ) {
     const expectIsActiveBeforeResume = false;
     const expectIsActiveAfterResume = true;
@@ -1336,10 +1442,15 @@ describe("StakingService", function () {
       stakeConfig,
       expectIsActiveBeforeResume,
       hasClaimed,
-      afterRevoke
+      afterRevoke,
+      isAddStake
     );
 
-    if (stakeConfig.exceedPoolReward) {
+    const stakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      !stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
+    if (stakeExceedPoolReward) {
       await expect(
         stakingServiceContractInstance
           .connect(adminSigner)
@@ -1352,7 +1463,8 @@ describe("StakingService", function () {
         verifyStakeConfigs,
         expectIsActiveAfterResume,
         hasClaimed,
-        afterRevoke
+        afterRevoke,
+        isAddStake
       );
     } else {
       await expect(
@@ -1373,7 +1485,8 @@ describe("StakingService", function () {
         verifyStakeConfigs,
         expectIsActiveAfterResume,
         hasClaimed,
-        afterRevoke
+        afterRevoke,
+        isAddStake
       );
 
       await expect(
@@ -1388,7 +1501,8 @@ describe("StakingService", function () {
         verifyStakeConfigs,
         expectIsActiveAfterResume,
         hasClaimed,
-        afterRevoke
+        afterRevoke,
+        isAddStake
       );
     }
   }
@@ -1405,23 +1519,54 @@ describe("StakingService", function () {
     rewardToBeDistributedWei,
     beforeMature,
     hasClaimed,
-    afterRevoke
+    afterRevoke,
+    isAddStake
   ) {
     const signerAddress = await stakeConfig.signer.getAddress();
     const adminSignerAddress = await adminSigner.getAddress();
     const hasRevoked = afterRevoke && stakeConfig.shouldRevokeBeforeClaim;
 
-    const expectStakeTimestamp =
-      startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+    const stakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      !stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+    const addStakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
+    let expectStakeAmountWei;
+    let expectStakeTimestamp;
+
+    if (
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+      !addStakeExceedPoolReward
+    ) {
+      expectStakeAmountWei = stakeConfig.stakeAmountWei.add(
+        stakeConfig.addStakeAmountWei
+      );
+
+      expectStakeTimestamp =
+        startblockTimestamp +
+        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
+    } else {
+      expectStakeAmountWei = stakeConfig.stakeAmountWei;
+
+      expectStakeTimestamp =
+        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+    }
+
+    const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
+      stakeConfig.stakingPoolConfig.poolAprWei,
+      stakeConfig.stakingPoolConfig.stakeDurationDays,
+      expectStakeAmountWei
+    );
+
     const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
       stakeConfig.stakingPoolConfig.stakeDurationDays,
       expectStakeTimestamp
     );
-    const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-      stakeConfig.stakingPoolConfig.poolAprWei,
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      stakeConfig.stakeAmountWei
-    );
+
     const expectRewardAmountWei =
       hasClaimed && stakeConfig.shouldClaim
         ? hre.ethers.constants.Zero
@@ -1431,7 +1576,7 @@ describe("StakingService", function () {
         ? hre.ethers.constants.Zero
         : expectRewardAtMaturityWei;
 
-    if (stakeConfig.exceedPoolReward || hasRevoked) {
+    if (stakeExceedPoolReward || hasRevoked) {
       await expect(
         stakingServiceContractInstance.getClaimableRewardWei(
           stakeConfig.stakingPoolConfig.poolId,
@@ -1497,9 +1642,7 @@ describe("StakingService", function () {
         stakeConfig.stakingPoolConfig.poolId,
         signerAddress
       );
-    expect(stakeInfoBeforeRevoke.stakeAmountWei).to.equal(
-      stakeConfig.stakeAmountWei
-    );
+    expect(stakeInfoBeforeRevoke.stakeAmountWei).to.equal(expectStakeAmountWei);
     expect(stakeInfoBeforeRevoke.stakeTimestamp).to.equal(expectStakeTimestamp);
     expect(stakeInfoBeforeRevoke.stakeMaturityTimestamp).to.equal(
       expectStakeMaturityTimestamp
@@ -1527,7 +1670,7 @@ describe("StakingService", function () {
 
     const expectBalanceOfAfterRevoke = balanceOfBeforeRevoke;
     const expectTotalRewardWei = totalRewardWei;
-    const expectTotalStakedWei = totalStakedWei.sub(stakeConfig.stakeAmountWei);
+    const expectTotalStakedWei = totalStakedWei.sub(expectStakeAmountWei);
     const expectRewardToBeDistributedWei = rewardToBeDistributedWei.sub(
       expectRewardAtMaturityWei.sub(stakeConfig.rewardClaimedWei)
     );
@@ -1543,10 +1686,16 @@ describe("StakingService", function () {
         adminSignerAddress,
         signerAddress,
         stakeConfig.stakingPoolConfig.stakeTokenAddress,
-        stakeConfig.stakeAmountWei,
+        expectStakeAmountWei,
         stakeConfig.stakingPoolConfig.rewardTokenAddress,
         expectRewardAmountWei
       );
+
+    /*
+    console.log(
+      `\nrevokeStakeWithVerify StakeRevoked: poolId=${stakeConfig.stakingPoolConfig.poolId}, expectStakeAmountWei=${expectStakeAmountWei}, expectRewardAmountWei=${expectRewardAmountWei}, beforeMature=${beforeMature}, hasClaimed=${hasClaimed}, afterRevoke=${afterRevoke}, isAddStake=${isAddStake}`
+    );
+    */
 
     const balanceOfAfterRevoke = await rewardTokenContractInstance.balanceOf(
       signerAddress
@@ -1585,7 +1734,8 @@ describe("StakingService", function () {
       verifyStakeConfigs,
       true,
       hasClaimed,
-      true
+      true,
+      isAddStake
     );
 
     const stakingPoolStatsAfterClaim =
@@ -1627,10 +1777,8 @@ describe("StakingService", function () {
     fromWalletSigner
   ) {
     const stakeConfigs = [];
+    const secondsAfterOfLastStakeInPool = {};
     const totalStakeRewardsWei = {};
-
-    const exceedPoolRewardStakeIndex =
-      stakes.length - stakingPoolConfigs.length;
 
     for (let i = 0; i < stakes.length; i++) {
       const stakingPoolConfigIndex = i % stakingPoolConfigs.length;
@@ -1641,18 +1789,21 @@ describe("StakingService", function () {
         stakeAmountWei: stakes[i].stakeAmountWei,
         stakeSecondsAfterStartblockTimestamp:
           stakes[i].stakeSecondsAfterStartblockTimestamp,
+        addStakeAmountWei: stakes[i].addStakeAmountWei,
+        addStakeSecondsAfterStartblockTimestamp:
+          stakes[i].addStakeSecondsAfterStartblockTimestamp,
         signer: signers[signerIndex],
         rewardClaimedWei: hre.ethers.constants.Zero,
         shouldClaim: stakes[i].shouldClaim,
         shouldRevokeBeforeClaim: stakes[i].shouldRevokeBeforeClaim,
         shouldRevokeAfterClaim: stakes[i].shouldRevokeAfterClaim,
-        exceedPoolReward: !(i < exceedPoolRewardStakeIndex),
+        exceedPoolReward: false,
       });
 
       const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
         stakingPoolConfigs[stakingPoolConfigIndex].poolAprWei,
         stakingPoolConfigs[stakingPoolConfigIndex].stakeDurationDays,
-        stakes[i].stakeAmountWei
+        stakes[i].stakeAmountWei.add(stakes[i].addStakeAmountWei)
       );
 
       if (
@@ -1669,6 +1820,52 @@ describe("StakingService", function () {
           stakingPoolConfigs[stakingPoolConfigIndex].poolId
         ] = expectRewardAtMaturityWei;
       }
+
+      const stakeSecondsAfterStartblockTimestamp = stakes[
+        i
+      ].addStakeAmountWei.gt(hre.ethers.constants.Zero)
+        ? stakes[i].addStakeSecondsAfterStartblockTimestamp
+        : stakes[i].stakeSecondsAfterStartblockTimestamp;
+
+      if (
+        stakingPoolConfigs[stakingPoolConfigIndex].poolId in
+        secondsAfterOfLastStakeInPool
+      ) {
+        if (
+          secondsAfterOfLastStakeInPool[
+            stakingPoolConfigs[stakingPoolConfigIndex].poolId
+          ].stakeSecondsAfterStartblockTimestamp <
+          stakeSecondsAfterStartblockTimestamp
+        ) {
+          secondsAfterOfLastStakeInPool[
+            stakingPoolConfigs[stakingPoolConfigIndex].poolId
+          ] = {
+            stakeSecondsAfterStartblockTimestamp:
+              stakeSecondsAfterStartblockTimestamp,
+            stakeIndex: i,
+          };
+        }
+      } else {
+        secondsAfterOfLastStakeInPool[
+          stakingPoolConfigs[stakingPoolConfigIndex].poolId
+        ] = {
+          stakeSecondsAfterStartblockTimestamp:
+            stakeSecondsAfterStartblockTimestamp,
+          stakeIndex: i,
+        };
+      }
+    }
+
+    for (const poolId in secondsAfterOfLastStakeInPool) {
+      /*
+      console.log(
+        `${poolId}: stakeIndex=${secondsAfterOfLastStakeInPool[poolId].stakeIndex}, stakeSecondsAfterStartblockTimestamp=${secondsAfterOfLastStakeInPool[poolId].stakeSecondsAfterStartblockTimestamp}`
+      );
+      */
+
+      stakeConfigs[
+        secondsAfterOfLastStakeInPool[poolId].stakeIndex
+      ].exceedPoolReward = true;
     }
 
     let stakingPoolRewardBalanceOf = hre.ethers.constants.Zero;
@@ -1681,11 +1878,92 @@ describe("StakingService", function () {
         poolId,
         stakingPoolRewardBalanceOf,
         stakingPoolRewardStats,
-        totalStakeRewardsWei[poolId].sub(hre.ethers.constants.One)
+        totalStakeRewardsWei[poolId].sub(hre.ethers.constants.Two)
       );
+
+      /*
+      console.log(
+        `${poolId}: stakingPoolRewardBalanceOf=${stakingPoolRewardBalanceOf}, totalStakeRewardsWei=${totalStakeRewardsWei[poolId]}`
+      );
+      */
     }
 
     return stakeConfigs;
+  }
+
+  async function verifyStakeInfoClaimableRewardForAddStake(
+    stakingServiceContractInstance,
+    stakeConfig,
+    startblockTimestamp,
+    isAddStake
+  ) {
+    const signerAddress = await stakeConfig.signer.getAddress();
+
+    if (isAddStake) {
+      const expectStakeTimestampBeforeAddStake =
+        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+      const expectStakeMaturityTimestampBeforeAddStake =
+        calculateStateMaturityTimestamp(
+          stakeConfig.stakingPoolConfig.stakeDurationDays,
+          expectStakeTimestampBeforeAddStake
+        );
+      const expectClaimableRewardBeforeAddStakeWei = hre.ethers.constants.Zero;
+      const expectEstimatedRewardAtMaturityBeforeAddStakeWei =
+        estimateRewardAtMaturityWei(
+          stakeConfig.stakingPoolConfig.poolAprWei,
+          stakeConfig.stakingPoolConfig.stakeDurationDays,
+          stakeConfig.stakeAmountWei
+        );
+      const expectIsActiveBeforeAddStake = true;
+
+      const claimableRewardWeiBeforeAddStake =
+        await stakingServiceContractInstance.getClaimableRewardWei(
+          stakeConfig.stakingPoolConfig.poolId,
+          signerAddress
+        );
+      expect(claimableRewardWeiBeforeAddStake).to.equal(
+        expectClaimableRewardBeforeAddStakeWei
+      );
+
+      const stakeInfoBeforeAddStake =
+        await stakingServiceContractInstance.getStakeInfo(
+          stakeConfig.stakingPoolConfig.poolId,
+          signerAddress
+        );
+
+      expect(stakeInfoBeforeAddStake.stakeAmountWei).to.equal(
+        stakeConfig.stakeAmountWei
+      );
+      expect(stakeInfoBeforeAddStake.stakeTimestamp).to.equal(
+        expectStakeTimestampBeforeAddStake
+      );
+      expect(stakeInfoBeforeAddStake.stakeMaturityTimestamp).to.equal(
+        expectStakeMaturityTimestampBeforeAddStake
+      );
+      expect(stakeInfoBeforeAddStake.estimatedRewardAtMaturityWei).to.equal(
+        expectEstimatedRewardAtMaturityBeforeAddStakeWei
+      );
+      expect(stakeInfoBeforeAddStake.rewardClaimedWei).to.equal(
+        stakeConfig.rewardClaimedWei
+      );
+      expect(stakeInfoBeforeAddStake.isActive).to.equal(
+        expectIsActiveBeforeAddStake
+      );
+    } else {
+      await expect(
+        stakingServiceContractInstance.getClaimableRewardWei(
+          stakeConfig.stakingPoolConfig.poolId,
+          signerAddress
+        )
+      ).to.be.revertedWith("SSvcs: uninitialized");
+
+      await expect(
+        stakingServiceContractInstance.getStakeInfo(
+          stakeConfig.stakingPoolConfig.poolId,
+          signerAddress
+        )
+      ).to.be.revertedWith("SSvcs: uninitialized");
+    }
   }
 
   async function stakeWithVerify(
@@ -1697,24 +1975,67 @@ describe("StakingService", function () {
     startblockTimestamp,
     verifyStakeConfigs,
     totalStakedWei,
-    rewardToBeDistributedWei
+    rewardToBeDistributedWei,
+    isAddStake
   ) {
     const signerAddress = await stakeConfig.signer.getAddress();
     const adminSignerAddress = await adminSigner.getAddress();
 
-    await expect(
-      stakingServiceContractInstance.getClaimableRewardWei(
-        stakeConfig.stakingPoolConfig.poolId,
-        signerAddress
-      )
-    ).to.be.revertedWith("SSvcs: uninitialized");
+    const stakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      !stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+    const addStakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
 
-    await expect(
-      stakingServiceContractInstance.getStakeInfo(
-        stakeConfig.stakingPoolConfig.poolId,
-        signerAddress
-      )
-    ).to.be.revertedWith("SSvcs: uninitialized");
+    let expectStakeAmountWei;
+    let expectStakeTimestamp;
+
+    if (
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero)
+    ) {
+      expectStakeAmountWei = stakeConfig.addStakeAmountWei;
+
+      expectStakeTimestamp =
+        startblockTimestamp +
+        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
+    } else {
+      expectStakeAmountWei = stakeConfig.stakeAmountWei;
+
+      expectStakeTimestamp =
+        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+    }
+
+    const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
+      stakeConfig.stakingPoolConfig.poolAprWei,
+      stakeConfig.stakingPoolConfig.stakeDurationDays,
+      expectStakeAmountWei
+    );
+
+    /*
+    console.log(
+      `stakeWithVerify verifyStakeInfoClaimableRewardForAddStake00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
+
+    await verifyStakeInfoClaimableRewardForAddStake(
+      stakingServiceContractInstance,
+      stakeConfig,
+      startblockTimestamp,
+      isAddStake
+    );
+
+    /*
+    console.log(
+      `stakeWithVerify getStakingPoolStats00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
 
     const stakingPoolStatsBeforeAdd =
       await stakingServiceContractInstance.getStakingPoolStats(
@@ -1725,25 +2046,34 @@ describe("StakingService", function () {
       rewardToBeDistributedWei
     );
 
+    /*
+    console.log(
+      `stakeWithVerify transferAndApproveWithVerify00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
+
     await testHelpers.transferAndApproveWithVerify(
       stakeTokenContractInstance,
       governanceRoleAccounts[0],
       stakeConfig.signer,
       stakingServiceContractInstance.address,
-      stakeConfig.stakeAmountWei
+      expectStakeAmountWei
     );
 
-    const expectStakeTimestamp =
-      startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
     const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
       stakeConfig.stakingPoolConfig.stakeDurationDays,
       expectStakeTimestamp
     );
-    const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-      stakeConfig.stakingPoolConfig.poolAprWei,
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      stakeConfig.stakeAmountWei
+
+    /*
+    console.log(
+      `stakeWithVerify closeStakingPool00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
     );
+    */
 
     await expect(
       stakingPoolContractInstance
@@ -1753,25 +2083,42 @@ describe("StakingService", function () {
       .to.emit(stakingPoolContractInstance, "StakingPoolClosed")
       .withArgs(stakeConfig.stakingPoolConfig.poolId, adminSignerAddress);
 
-    await expect(
-      stakingServiceContractInstance.getClaimableRewardWei(
-        stakeConfig.stakingPoolConfig.poolId,
-        signerAddress
-      )
-    ).to.be.revertedWith("SSvcs: uninitialized");
+    /*
+    console.log(
+      `stakeWithVerify verifyStakeInfoClaimableRewardForAddStake01: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
 
-    await expect(
-      stakingServiceContractInstance.getStakeInfo(
-        stakeConfig.stakingPoolConfig.poolId,
-        signerAddress
-      )
-    ).to.be.revertedWith("SSvcs: uninitialized");
+    await verifyStakeInfoClaimableRewardForAddStake(
+      stakingServiceContractInstance,
+      stakeConfig,
+      startblockTimestamp,
+      isAddStake
+    );
+
+    /*
+    console.log(
+      `stakeWithVerify stake00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
 
     await expect(
       stakingServiceContractInstance
         .connect(stakeConfig.signer)
-        .stake(stakeConfig.stakingPoolConfig.poolId, stakeConfig.stakeAmountWei)
+        .stake(stakeConfig.stakingPoolConfig.poolId, expectStakeAmountWei)
     ).to.be.revertedWith("SSvcs: closed");
+
+    /*
+    console.log(
+      `stakeWithVerify openStakingPool00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
 
     await expect(
       stakingPoolContractInstance
@@ -1781,70 +2128,98 @@ describe("StakingService", function () {
       .to.emit(stakingPoolContractInstance, "StakingPoolOpened")
       .withArgs(stakeConfig.stakingPoolConfig.poolId, adminSignerAddress);
 
-    await expect(
-      stakingServiceContractInstance.getClaimableRewardWei(
-        stakeConfig.stakingPoolConfig.poolId,
-        signerAddress
-      )
-    ).to.be.revertedWith("SSvcs: uninitialized");
+    /*
+    console.log(
+      `stakeWithVerify verifyStakeInfoClaimableRewardForAddStake02: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
 
-    await expect(
-      stakingServiceContractInstance.getStakeInfo(
-        stakeConfig.stakingPoolConfig.poolId,
-        signerAddress
-      )
-    ).to.be.revertedWith("SSvcs: uninitialized");
+    await verifyStakeInfoClaimableRewardForAddStake(
+      stakingServiceContractInstance,
+      stakeConfig,
+      startblockTimestamp,
+      isAddStake
+    );
+
+    /*
+    console.log(
+      `stakeWithVerify setTimeNextBlock: expectStakeTimestamp=${expectStakeTimestamp}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
 
     await testHelpers.setTimeNextBlock(expectStakeTimestamp);
 
     let expectTotalStakedWei;
     let expectRewardToBeDistributedWei;
 
-    if (stakeConfig.exceedPoolReward) {
+    if (stakeExceedPoolReward || addStakeExceedPoolReward) {
       expectTotalStakedWei = totalStakedWei;
       expectRewardToBeDistributedWei = rewardToBeDistributedWei;
+
+      /*
+      console.log(
+        `stakeWithVerify stake01: isAddStake=${isAddStake}, expectTotalStakedWei=${expectTotalStakedWei}, expectRewardToBeDistributedWei=${expectRewardToBeDistributedWei}, expectStakeAmountWei=${expectStakeAmountWei}, expectRewardAtMaturityWei=${expectRewardAtMaturityWei}, stakeConfig=${JSON.stringify(
+          stakeConfig
+        )}`
+      );
+      */
 
       await expect(
         stakingServiceContractInstance
           .connect(stakeConfig.signer)
-          .stake(
-            stakeConfig.stakingPoolConfig.poolId,
-            stakeConfig.stakeAmountWei
-          )
+          .stake(stakeConfig.stakingPoolConfig.poolId, expectStakeAmountWei)
       ).to.be.revertedWith("SSvcs: insufficient");
     } else {
-      expectTotalStakedWei = totalStakedWei.add(stakeConfig.stakeAmountWei);
+      expectTotalStakedWei = totalStakedWei.add(expectStakeAmountWei);
       expectRewardToBeDistributedWei = rewardToBeDistributedWei.add(
         expectRewardAtMaturityWei
       );
 
+      /*
+      console.log(
+        `stakeWithVerify stake02: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+          stakeConfig
+        )}`
+      );
+      */
+
       await expect(
         stakingServiceContractInstance
           .connect(stakeConfig.signer)
-          .stake(
-            stakeConfig.stakingPoolConfig.poolId,
-            stakeConfig.stakeAmountWei
-          )
+          .stake(stakeConfig.stakingPoolConfig.poolId, expectStakeAmountWei)
       )
         .to.emit(stakingServiceContractInstance, "Staked")
         .withArgs(
           stakeConfig.stakingPoolConfig.poolId,
           signerAddress,
           stakeConfig.stakingPoolConfig.stakeTokenAddress,
-          stakeConfig.stakeAmountWei,
+          expectStakeAmountWei,
           expectStakeTimestamp,
           expectStakeMaturityTimestamp,
           expectRewardAtMaturityWei
         );
     }
 
+    /*
+    console.log(
+      `stakeWithVerify verifyStakesInfo00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+        stakeConfig
+      )}`
+    );
+    */
+
     await verifyStakesInfo(
       stakingServiceContractInstance,
       startblockTimestamp,
       verifyStakeConfigs,
       true,
+      isAddStake,
       false,
-      false
+      isAddStake
     );
 
     const stakingPoolStatsAfterAdd =
@@ -1867,12 +2242,28 @@ describe("StakingService", function () {
       stakingPoolStatsBeforeAdd.isActive
     );
 
-    if (stakeConfig.exceedPoolReward) {
+    if (stakeExceedPoolReward) {
+      /*
+      console.log(
+        `stakeWithVerify claimReward00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+          stakeConfig
+        )}`
+      );
+      */
+
       await expect(
         stakingServiceContractInstance
           .connect(stakeConfig.signer)
           .claimReward(stakeConfig.stakingPoolConfig.poolId)
       ).to.be.revertedWith("SSvcs: uninitialized");
+
+      /*
+      console.log(
+        `stakeWithVerify unstake00: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+          stakeConfig
+        )}`
+      );
+      */
 
       await expect(
         stakingServiceContractInstance
@@ -1880,11 +2271,27 @@ describe("StakingService", function () {
           .unstake(stakeConfig.stakingPoolConfig.poolId)
       ).to.be.revertedWith("SSvcs: uninitialized");
     } else {
+      /*
+      console.log(
+        `stakeWithVerify claimReward01: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+          stakeConfig
+        )}`
+      );
+      */
+
       await expect(
         stakingServiceContractInstance
           .connect(stakeConfig.signer)
           .claimReward(stakeConfig.stakingPoolConfig.poolId)
       ).to.be.revertedWith("SSvcs: not mature");
+
+      /*
+      console.log(
+        `stakeWithVerify unstake01: isAddStake=${isAddStake}, stakeConfig=${JSON.stringify(
+          stakeConfig
+        )}`
+      );
+      */
 
       await expect(
         stakingServiceContractInstance
@@ -1892,6 +2299,12 @@ describe("StakingService", function () {
           .unstake(stakeConfig.stakingPoolConfig.poolId)
       ).to.be.revertedWith("SSvcs: not mature");
     }
+
+    /*
+    console.log(
+      `stakeWithVerify: expectTotalStakedWei=${expectTotalStakedWei}, expectRewardToBeDistributedWei=${expectRewardToBeDistributedWei}`
+    );
+    */
 
     return [expectTotalStakedWei, expectRewardToBeDistributedWei];
   }
@@ -1903,7 +2316,8 @@ describe("StakingService", function () {
     adminSigner,
     verifyStakeConfigs,
     hasClaimed,
-    afterRevoke
+    afterRevoke,
+    isAddStake
   ) {
     const expectIsActiveBeforeSuspend = true;
     const expectIsActiveAfterSuspend = false;
@@ -1917,10 +2331,15 @@ describe("StakingService", function () {
       stakeConfig,
       expectIsActiveBeforeSuspend,
       hasClaimed,
-      afterRevoke
+      afterRevoke,
+      isAddStake
     );
 
-    if (stakeConfig.exceedPoolReward) {
+    const stakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      !stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
+    if (stakeExceedPoolReward) {
       await expect(
         stakingServiceContractInstance
           .connect(adminSigner)
@@ -1936,7 +2355,8 @@ describe("StakingService", function () {
         verifyStakeConfigs,
         expectIsActiveAfterSuspend,
         hasClaimed,
-        afterRevoke
+        afterRevoke,
+        isAddStake
       );
     } else {
       await expect(
@@ -1960,7 +2380,8 @@ describe("StakingService", function () {
         verifyStakeConfigs,
         expectIsActiveAfterSuspend,
         hasClaimed,
-        afterRevoke
+        afterRevoke,
+        isAddStake
       );
 
       await expect(
@@ -1978,7 +2399,8 @@ describe("StakingService", function () {
         verifyStakeConfigs,
         expectIsActiveAfterSuspend,
         hasClaimed,
-        afterRevoke
+        afterRevoke,
+        isAddStake
       );
     }
   }
@@ -2078,84 +2500,173 @@ describe("StakingService", function () {
     expectStakingPoolStats,
     stakeConfigs,
     stakingPoolConfigs,
-    adminSigner
+    adminSigner,
+    isAddStake
   ) {
     const unallocatedRewardsWei = {};
     const revokedStakesWei = {};
     const totalRevokedStakesWei = {};
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      const stakeExceedPoolReward =
+        stakeConfigs[i].exceedPoolReward &&
+        !stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero);
+      const addStakeExceedPoolReward =
+        stakeConfigs[i].exceedPoolReward &&
+        isAddStake &&
+        stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
+      let expectStakeAmountWei;
+      let expectRewardAtMaturityWei;
+
       if (
-        stakeConfigs[i].exceedPoolReward ||
-        stakeConfigs[i].shouldRevokeBeforeClaim ||
-        stakeConfigs[i].shouldRevokeAfterClaim
+        isAddStake &&
+        stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+        !addStakeExceedPoolReward
       ) {
-        const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
+        expectStakeAmountWei = stakeConfigs[i].stakeAmountWei.add(
+          stakeConfigs[i].addStakeAmountWei
+        );
+
+        expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
           stakeConfigs[i].stakingPoolConfig.poolAprWei,
           stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
           stakeConfigs[i].stakeAmountWei
+        ).add(
+          estimateRewardAtMaturityWei(
+            stakeConfigs[i].stakingPoolConfig.poolAprWei,
+            stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
+            stakeConfigs[i].addStakeAmountWei
+          )
         );
-        const expectUnallocatedRewardWei = expectRewardAtMaturityWei.sub(
-          stakeConfigs[i].rewardClaimedWei
+      } else {
+        expectStakeAmountWei = stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeConfigs[i].stakeAmountWei;
+
+        expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
+          stakeConfigs[i].stakingPoolConfig.poolAprWei,
+          stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
+          expectStakeAmountWei
         );
+      }
+
+      if (
+        (stakeConfigs[i].shouldRevokeBeforeClaim ||
+          stakeConfigs[i].shouldRevokeAfterClaim) &&
+        !stakeExceedPoolReward
+      ) {
+        if (
+          stakeConfigs[i].shouldRevokeBeforeClaim ||
+          (stakeConfigs[i].shouldRevokeAfterClaim &&
+            !stakeConfigs[i].shouldClaim)
+        ) {
+          const expectUnallocatedRewardWei = expectRewardAtMaturityWei;
+
+          if (
+            stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei
+          ) {
+            unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+              unallocatedRewardsWei[
+                stakeConfigs[i].stakingPoolConfig.poolId
+              ].add(expectUnallocatedRewardWei);
+          } else {
+            unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+              expectUnallocatedRewardWei;
+          }
+        }
+
+        if (stakeConfigs[i].stakingPoolConfig.poolId in revokedStakesWei) {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
+              expectStakeAmountWei
+            );
+        } else {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            expectStakeAmountWei;
+        }
+
+        if (
+          stakeConfigs[i].stakingPoolConfig.stakeTokenAddress in
+          totalRevokedStakesWei
+        ) {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
+          ] =
+            totalRevokedStakesWei[
+              stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
+            ].add(expectStakeAmountWei);
+        } else {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
+          ] = expectStakeAmountWei;
+        }
+      }
+
+      if (stakeExceedPoolReward || addStakeExceedPoolReward) {
+        const exceedPoolRewardWei = stakeExceedPoolReward
+          ? estimateRewardAtMaturityWei(
+              stakeConfigs[i].stakingPoolConfig.poolAprWei,
+              stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
+              stakeConfigs[i].stakeAmountWei
+            ).add(
+              estimateRewardAtMaturityWei(
+                stakeConfigs[i].stakingPoolConfig.poolAprWei,
+                stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
+                stakeConfigs[i].addStakeAmountWei
+              )
+            )
+          : estimateRewardAtMaturityWei(
+              stakeConfigs[i].stakingPoolConfig.poolAprWei,
+              stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
+              stakeConfigs[i].addStakeAmountWei
+            );
+
+        /*
+        console.log(
+          `removeUnallocatedStakingPoolRewardWithVerify exceedPoolReward ${i}: poolId=${
+            stakeConfigs[i].stakingPoolConfig.poolId
+          }, stakeExceedPoolReward=${stakeExceedPoolReward}, addStakeExceedPoolReward=${addStakeExceedPoolReward}, stakeAmountWei=${
+            stakeConfigs[i].stakeAmountWei
+          }, addStakeAmountWei=${
+            stakeConfigs[i].addStakeAmountWei
+          }, stakeRewardAtMaturity=${estimateRewardAtMaturityWei(
+            stakeConfigs[i].stakingPoolConfig.poolAprWei,
+            stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
+            stakeConfigs[i].stakeAmountWei
+          )}, addStakeRewardAtMaturity=${estimateRewardAtMaturityWei(
+            stakeConfigs[i].stakingPoolConfig.poolAprWei,
+            stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
+            stakeConfigs[i].addStakeAmountWei
+          )}, exceedPoolRewardWei=${exceedPoolRewardWei}`
+        );
+        */
 
         if (stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei) {
           unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
             unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
-              expectUnallocatedRewardWei
+              exceedPoolRewardWei
             );
         } else {
           unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
-            expectUnallocatedRewardWei;
-        }
-
-        if (stakeConfigs[i].exceedPoolReward) {
-          if (
-            !(
-              stakeConfigs[i].stakingPoolConfig.stakeTokenAddress in
-              totalRevokedStakesWei
-            )
-          ) {
-            totalRevokedStakesWei[
-              stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
-            ] = hre.ethers.constants.Zero;
-          }
-        } else {
-          if (stakeConfigs[i].stakingPoolConfig.poolId in revokedStakesWei) {
-            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
-              revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
-                stakeConfigs[i].stakeAmountWei
-              );
-          } else {
-            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
-              stakeConfigs[i].stakeAmountWei;
-          }
-
-          if (
-            stakeConfigs[i].stakingPoolConfig.stakeTokenAddress in
-            totalRevokedStakesWei
-          ) {
-            totalRevokedStakesWei[
-              stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
-            ] = totalRevokedStakesWei[
-              stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
-            ].add(stakeConfigs[i].stakeAmountWei);
-          } else {
-            totalRevokedStakesWei[
-              stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
-            ] = stakeConfigs[i].stakeAmountWei;
-          }
+            exceedPoolRewardWei;
         }
       }
     }
 
     for (const poolId in unallocatedRewardsWei) {
+      /*
+      console.log(
+        `removeUnallocatedStakingPoolRewardWithVerify ${poolId}: unallocatedRewardsWei=${unallocatedRewardsWei[poolId]}, revokedStakesWei=${revokedStakesWei[poolId]}, totalRewardWei=${expectStakingPoolStats[poolId].totalRewardWei}, rewardToBeDistributedWei=${expectStakingPoolStats[poolId].rewardToBeDistributedWei}, totalStakedWei=${expectStakingPoolStats[poolId].totalStakedWei}`
+      );
+      */
+
       await removeUnallocatedStakingPoolRewardWithVerify(
         stakingServiceContractInstance,
         adminSigner,
         rewardTokenContractInstance,
         poolId,
-        unallocatedRewardsWei[poolId].sub(hre.ethers.constants.One),
+        unallocatedRewardsWei[poolId].sub(hre.ethers.constants.Two),
         await governanceRoleAccounts[0].getAddress(),
         expectStakingPoolStats
       );
@@ -2269,6 +2780,12 @@ describe("StakingService", function () {
     const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
+      console.log(
+        `\n\nstake ${i}: stakeConfig=${JSON.stringify(stakeConfigs[i])}`
+      );
+      */
+
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
       if (!(poolId in expectStakingPoolStats)) {
@@ -2292,11 +2809,18 @@ describe("StakingService", function () {
         startblockTimestamp,
         stakeConfigs.slice(0, i + 1),
         expectStakingPoolStats[poolId].totalStakedWei,
-        expectStakingPoolStats[poolId].rewardToBeDistributedWei
+        expectStakingPoolStats[poolId].rewardToBeDistributedWei,
+        false
       );
     }
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
+      console.log(
+        `\n\nsuspendStake ${i}: stakeConfig=${JSON.stringify(stakeConfigs[i])}`
+      );
+      */
+
       await suspendStakeWithVerify(
         stakingServiceContractInstance,
         startblockTimestamp,
@@ -2304,11 +2828,18 @@ describe("StakingService", function () {
         adminSigner,
         stakeConfigs.slice(0, i + 1),
         true,
+        false,
         false
       );
     }
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
+      console.log(
+        `\n\nclaimReward00 ${i}: stakeConfig=${JSON.stringify(stakeConfigs[i])}`
+      );
+      */
+
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
       [
@@ -2327,11 +2858,18 @@ describe("StakingService", function () {
         expectStakingPoolStats[poolId].rewardToBeDistributedWei,
         true,
         false,
+        false,
         false
       );
     }
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
+      console.log(
+        `\n\nresumeStake ${i}: stakeConfig=${JSON.stringify(stakeConfigs[i])}`
+      );
+      */
+
       await resumeStakeWithVerify(
         stakingServiceContractInstance,
         startblockTimestamp,
@@ -2339,6 +2877,7 @@ describe("StakingService", function () {
         adminSigner,
         stakeConfigs.slice(0, i + 1),
         true,
+        false,
         false
       );
     }
@@ -2346,7 +2885,43 @@ describe("StakingService", function () {
     for (let i = 0; i < stakeConfigs.length; i++) {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
+      if (stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero)) {
+        /*
+        console.log(
+          `\n\naddStake ${i}: stakeConfig=${JSON.stringify(stakeConfigs[i])}`
+        );
+        */
+
+        [
+          expectStakingPoolStats[poolId].totalStakedWei,
+          expectStakingPoolStats[poolId].rewardToBeDistributedWei,
+        ] = await stakeWithVerify(
+          stakingServiceContractInstance,
+          stakingPoolContractInstance,
+          adminSigner,
+          stakeTokenContractInstance,
+          stakeConfigs[i],
+          startblockTimestamp,
+          stakeConfigs.slice(0, i + 1),
+          expectStakingPoolStats[poolId].totalStakedWei,
+          expectStakingPoolStats[poolId].rewardToBeDistributedWei,
+          true
+        );
+      }
+    }
+
+    for (let i = 0; i < stakeConfigs.length; i++) {
+      const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
+
       if (stakeConfigs[i].shouldRevokeBeforeClaim) {
+        /*
+        console.log(
+          `\n\nrevokeStake00 ${i}: stakeConfig=${JSON.stringify(
+            stakeConfigs[i]
+          )}`
+        );
+        */
+
         [
           expectStakingPoolStats[poolId].totalStakedWei,
           expectStakingPoolStats[poolId].rewardToBeDistributedWei,
@@ -2362,12 +2937,19 @@ describe("StakingService", function () {
           expectStakingPoolStats[poolId].rewardToBeDistributedWei,
           true,
           false,
-          false
+          false,
+          true
         );
       }
     }
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
+      console.log(
+        `\n\nclaimReward01 ${i}: stakeConfig=${JSON.stringify(stakeConfigs[i])}`
+      );
+      */
+
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
       if (stakeConfigs[i].shouldClaim) {
@@ -2387,6 +2969,7 @@ describe("StakingService", function () {
           expectStakingPoolStats[poolId].rewardToBeDistributedWei,
           false,
           false,
+          true,
           true
         );
       }
@@ -2396,6 +2979,14 @@ describe("StakingService", function () {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
       if (stakeConfigs[i].shouldRevokeAfterClaim) {
+        /*
+        console.log(
+          `\n\nrevokeStake01 ${i}: stakeConfig=${JSON.stringify(
+            stakeConfigs[i]
+          )}`
+        );
+        */
+
         [
           expectStakingPoolStats[poolId].totalStakedWei,
           expectStakingPoolStats[poolId].rewardToBeDistributedWei,
@@ -2411,12 +3002,19 @@ describe("StakingService", function () {
           expectStakingPoolStats[poolId].rewardToBeDistributedWei,
           false,
           true,
+          true,
           true
         );
       }
     }
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
+      console.log(
+        `\n\nunstake ${i}: stakeConfig=${JSON.stringify(stakeConfigs[i])}`
+      );
+      */
+
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
       [
@@ -2434,9 +3032,16 @@ describe("StakingService", function () {
         stakeConfigs.slice(0, i + 1),
         expectStakingPoolStats[poolId].totalRewardWei,
         expectStakingPoolStats[poolId].totalStakedWei,
-        expectStakingPoolStats[poolId].rewardToBeDistributedWei
+        expectStakingPoolStats[poolId].rewardToBeDistributedWei,
+        true
       );
     }
+
+    /*
+    console.log(
+      `\n\ntestStakeClaimUnstake: ${JSON.stringify(expectStakingPoolStats)}`
+    );
+    */
 
     return expectStakingPoolStats;
   }
@@ -2452,7 +3057,8 @@ describe("StakingService", function () {
     verifyStakeConfigs,
     totalRewardWei,
     totalStakedWei,
-    rewardToBeDistributedWei
+    rewardToBeDistributedWei,
+    isAddStake
   ) {
     const signerAddress = await stakeConfig.signer.getAddress();
     const adminSignerAddress = await adminSigner.getAddress();
@@ -2461,8 +3067,16 @@ describe("StakingService", function () {
     const expectRewardAfterStakeSuspendedWei = hre.ethers.constants.Zero;
     const expectRewardAfterPoolSuspendedWei = hre.ethers.constants.Zero;
 
+    const stakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      !stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+    const addStakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
     if (
-      stakeConfig.exceedPoolReward ||
+      stakeExceedPoolReward ||
       stakeConfig.shouldRevokeBeforeClaim ||
       stakeConfig.shouldRevokeAfterClaim
     ) {
@@ -2521,19 +3135,40 @@ describe("StakingService", function () {
       return [totalRewardWei, totalStakedWei, rewardToBeDistributedWei];
     }
 
-    const expectStakeTimestamp =
-      startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
-    const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      expectStakeTimestamp
-    );
+    let expectStakeAmountWei;
+    let expectStakeTimestamp;
+
+    if (
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+      !addStakeExceedPoolReward
+    ) {
+      expectStakeAmountWei = stakeConfig.stakeAmountWei.add(
+        stakeConfig.addStakeAmountWei
+      );
+
+      expectStakeTimestamp =
+        startblockTimestamp +
+        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
+    } else {
+      expectStakeAmountWei = stakeConfig.stakeAmountWei;
+
+      expectStakeTimestamp =
+        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+    }
+
     const expectRewardAtMaturityWei = stakeConfig.shouldClaim
       ? hre.ethers.constants.Zero
       : estimateRewardAtMaturityWei(
           stakeConfig.stakingPoolConfig.poolAprWei,
           stakeConfig.stakingPoolConfig.stakeDurationDays,
-          stakeConfig.stakeAmountWei
+          expectStakeAmountWei
         );
+
+    const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
+      stakeConfig.stakingPoolConfig.stakeDurationDays,
+      expectStakeTimestamp
+    );
 
     const currentBlockTimestamp = await testHelpers.getCurrentBlockTimestamp();
     if (currentBlockTimestamp < expectStakeMaturityTimestamp.toNumber()) {
@@ -2745,7 +3380,7 @@ describe("StakingService", function () {
       stakeConfig.rewardClaimedWei
     );
 
-    const expectUnstakeAmountWei = stakeConfig.stakeAmountWei;
+    const expectUnstakeAmountWei = expectStakeAmountWei;
     // const expectClaimableRewardWeiAfterUnstake = hre.ethers.constants.Zero;
     const expectTotalRewardWei = totalRewardWei.sub(expectRewardAtMaturityWei);
     const expectTotalStakedWei = totalStakedWei.sub(expectUnstakeAmountWei);
@@ -2862,7 +3497,8 @@ describe("StakingService", function () {
     stakeConfig,
     expectIsActive,
     hasClaimed,
-    afterRevoke
+    afterRevoke,
+    isAddStake
   ) {
     const signerAddress = await stakeConfig.signer.getAddress();
     const isRevoked = afterRevoke
@@ -2871,7 +3507,24 @@ describe("StakingService", function () {
         : stakeConfig.shouldRevokeBeforeClaim
       : false;
 
-    if (stakeConfig.exceedPoolReward || isRevoked) {
+    const stakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      !stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
+    const addStakeExceedPoolReward =
+      stakeConfig.exceedPoolReward &&
+      isAddStake &&
+      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
+
+    if (stakeExceedPoolReward || isRevoked) {
+      /*
+      console.log(
+        `\nverifyStakeInfo: stakeExceedPoolReward=${stakeExceedPoolReward}, isRevoked=${isRevoked}, stakeConfig=${JSON.stringify(
+          stakeConfig
+        )}`
+      );
+      */
+
       await expect(
         stakingServiceContractInstance.getStakeInfo(
           stakeConfig.stakingPoolConfig.poolId,
@@ -2879,16 +3532,38 @@ describe("StakingService", function () {
         )
       ).to.be.revertedWith("SSvcs: uninitialized");
     } else {
-      const expectStakeTimestamp =
-        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
-      const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        expectStakeTimestamp
-      );
+      let expectStakeAmountWei;
+      let expectStakeTimestamp;
+
+      if (
+        isAddStake &&
+        stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+        !addStakeExceedPoolReward
+      ) {
+        expectStakeAmountWei = stakeConfig.stakeAmountWei.add(
+          stakeConfig.addStakeAmountWei
+        );
+
+        expectStakeTimestamp =
+          startblockTimestamp +
+          stakeConfig.addStakeSecondsAfterStartblockTimestamp;
+      } else {
+        expectStakeAmountWei = stakeConfig.stakeAmountWei;
+
+        expectStakeTimestamp =
+          startblockTimestamp +
+          stakeConfig.stakeSecondsAfterStartblockTimestamp;
+      }
+
       const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
         stakeConfig.stakingPoolConfig.poolAprWei,
         stakeConfig.stakingPoolConfig.stakeDurationDays,
-        stakeConfig.stakeAmountWei
+        expectStakeAmountWei
+      );
+
+      const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
+        stakeConfig.stakingPoolConfig.stakeDurationDays,
+        expectStakeTimestamp
       );
 
       const stakeInfo = await stakingServiceContractInstance.getStakeInfo(
@@ -2896,13 +3571,22 @@ describe("StakingService", function () {
         signerAddress
       );
 
-      expect(stakeInfo.stakeAmountWei).to.equal(stakeConfig.stakeAmountWei);
+      /*
+      console.log(
+        `\nverifyStakeInfo: stakeInfo=${JSON.stringify(
+          stakeInfo
+        )}, stakeConfig=${JSON.stringify(stakeConfig)}`
+      );
+      */
+
+      expect(stakeInfo.stakeAmountWei).to.equal(expectStakeAmountWei);
       expect(stakeInfo.stakeTimestamp).to.equal(expectStakeTimestamp);
       expect(stakeInfo.stakeMaturityTimestamp).to.equal(
         expectStakeMaturityTimestamp
       );
-      expect(stakeInfo.estimatedRewardAtMaturityWei).to.equal(
-        expectRewardAtMaturityWei
+      expect(stakeInfo.estimatedRewardAtMaturityWei).to.be.closeTo(
+        expectRewardAtMaturityWei,
+        1
       );
       expect(stakeInfo.rewardClaimedWei).to.equal(stakeConfig.rewardClaimedWei);
       expect(stakeInfo.isActive).to.equal(expectIsActive);
@@ -2915,16 +3599,26 @@ describe("StakingService", function () {
     stakeConfigs,
     expectIsActive,
     hasClaimed,
-    afterRevoke
+    afterRevoke,
+    isAddStake
   ) {
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
+      console.log(
+        `\nverifyStakesInfo ${i}: stakeConfig=${JSON.stringify(
+          stakeConfigs[i]
+        )}`
+      );
+      */
+
       await verifyStakeInfo(
         stakingServiceContractInstance,
         startblockTimestamp,
         stakeConfigs[i],
         expectIsActive,
         hasClaimed,
-        afterRevoke
+        afterRevoke,
+        isAddStake
       );
     }
   }
