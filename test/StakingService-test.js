@@ -1259,7 +1259,7 @@ describe("StakingService", function () {
       .withArgs(
         stakeConfig.stakingPoolConfig.poolId,
         signerAddress,
-        stakeConfig.stakingPoolConfig.rewardTokenAddress,
+        stakeConfig.stakingPoolConfig.rewardTokenInstance.address,
         expectRewardAtMaturityWei
       );
 
@@ -1792,9 +1792,9 @@ describe("StakingService", function () {
         stakeConfig.stakingPoolConfig.poolId,
         adminSignerAddress,
         signerAddress,
-        stakeConfig.stakingPoolConfig.stakeTokenAddress,
+        stakeConfig.stakingPoolConfig.stakeTokenInstance.address,
         expectStakeAmountWei,
-        stakeConfig.stakingPoolConfig.rewardTokenAddress,
+        stakeConfig.stakingPoolConfig.rewardTokenInstance.address,
         expectRewardAmountWei
       );
 
@@ -2310,7 +2310,7 @@ describe("StakingService", function () {
         .withArgs(
           stakeConfig.stakingPoolConfig.poolId,
           signerAddress,
-          stakeConfig.stakingPoolConfig.stakeTokenAddress,
+          stakeConfig.stakingPoolConfig.stakeTokenInstance.address,
           expectStakeAmountWei,
           expectStakeTimestamp,
           expectStakeMaturityTimestamp,
@@ -2702,18 +2702,18 @@ describe("StakingService", function () {
         }
 
         if (
-          stakeConfigs[i].stakingPoolConfig.stakeTokenAddress in
+          stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address in
           totalRevokedStakesWei
         ) {
           totalRevokedStakesWei[
-            stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
           ] =
             totalRevokedStakesWei[
-              stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
+              stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
             ].add(expectStakeAmountWei);
         } else {
           totalRevokedStakesWei[
-            stakeConfigs[i].stakingPoolConfig.stakeTokenAddress
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
           ] = expectStakeAmountWei;
         }
       }
@@ -2793,9 +2793,9 @@ describe("StakingService", function () {
       );
 
       const expectBalanceOfContractAfterRemove =
-        stakingPoolConfig.stakeTokenAddress ===
-        stakingPoolConfig.rewardTokenAddress
-          ? totalRevokedStakesWei[stakingPoolConfig.stakeTokenAddress]
+        stakingPoolConfig.stakeTokenInstance.address ===
+        stakingPoolConfig.rewardTokenInstance.address
+          ? totalRevokedStakesWei[stakingPoolConfig.stakeTokenInstance.address]
           : hre.ethers.constants.Zero;
 
       const balanceOfContractAfterRemove =
@@ -3554,15 +3554,15 @@ describe("StakingService", function () {
       .withArgs(
         stakeConfig.stakingPoolConfig.poolId,
         signerAddress,
-        stakeConfig.stakingPoolConfig.stakeTokenAddress,
+        stakeConfig.stakingPoolConfig.stakeTokenInstance.address,
         expectUnstakeAmountWei,
-        stakeConfig.stakingPoolConfig.rewardTokenAddress,
+        stakeConfig.stakingPoolConfig.rewardTokenInstance.address,
         expectRewardAtMaturityWei
       );
 
     if (
-      stakeConfig.stakingPoolConfig.stakeTokenAddress ===
-      stakeConfig.stakingPoolConfig.rewardTokenAddress
+      stakeConfig.stakingPoolConfig.stakeTokenInstance.address ===
+      stakeConfig.stakingPoolConfig.rewardTokenInstance.address
     ) {
       const expectBalanceOfStakeRewardTokenAfterUnstake =
         balanceOfRewardTokenBeforeUnstake.add(

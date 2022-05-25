@@ -266,9 +266,9 @@ describe("StakingPool", function () {
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           0,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
         )
@@ -284,7 +284,7 @@ describe("StakingPool", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
           hre.ethers.constants.AddressZero,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
         )
@@ -298,9 +298,9 @@ describe("StakingPool", function () {
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           19,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
         )
@@ -314,7 +314,7 @@ describe("StakingPool", function () {
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
           hre.ethers.constants.AddressZero,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
@@ -330,9 +330,9 @@ describe("StakingPool", function () {
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           19,
           stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
         )
@@ -346,9 +346,9 @@ describe("StakingPool", function () {
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
           hre.ethers.constants.Zero
         )
@@ -362,9 +362,9 @@ describe("StakingPool", function () {
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenAddress,
+          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals - 1,
           stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
         )
