@@ -39,7 +39,7 @@ interface IStakingService is IAccessControl, IAdminWallet {
         address indexed stakeToken,
         uint256 stakeAmountWei,
         uint256 stakeTimestamp,
-        uint256 stakedMaturityTimestamp,
+        uint256 stakeMaturityTimestamp,
         uint256 rewardAtMaturityWei
     );
 
