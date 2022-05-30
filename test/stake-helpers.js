@@ -69,9 +69,9 @@ async function createStakingPoolWithVerify(
       .createStakingPool(
         stakingPoolConfig.poolId,
         stakingPoolConfig.stakeDurationDays,
-        stakingPoolConfig.stakeTokenAddress,
+        stakingPoolConfig.stakeTokenInstance.address,
         stakingPoolConfig.stakeTokenDecimals,
-        stakingPoolConfig.rewardTokenAddress,
+        stakingPoolConfig.rewardTokenInstance.address,
         stakingPoolConfig.rewardTokenDecimals,
         stakingPoolConfig.poolAprWei
       )
@@ -81,9 +81,9 @@ async function createStakingPoolWithVerify(
       stakingPoolConfig.poolId,
       signerAddress,
       stakingPoolConfig.stakeDurationDays,
-      stakingPoolConfig.stakeTokenAddress,
+      stakingPoolConfig.stakeTokenInstance.address,
       stakingPoolConfig.stakeTokenDecimals,
-      stakingPoolConfig.rewardTokenAddress,
+      stakingPoolConfig.rewardTokenInstance.address,
       stakingPoolConfig.rewardTokenDecimals,
       stakingPoolConfig.poolAprWei
     );
@@ -101,9 +101,9 @@ async function createStakingPoolWithVerify(
       .createStakingPool(
         stakingPoolConfig.poolId,
         stakingPoolConfig.stakeDurationDays,
-        stakingPoolConfig.stakeTokenAddress,
+        stakingPoolConfig.stakeTokenInstance.address,
         stakingPoolConfig.stakeTokenDecimals,
-        stakingPoolConfig.rewardTokenAddress,
+        stakingPoolConfig.rewardTokenInstance.address,
         stakingPoolConfig.rewardTokenDecimals,
         stakingPoolConfig.poolAprWei
       )
@@ -149,45 +149,45 @@ async function initializeStakingPoolTestData(
     {
       poolId: hre.ethers.utils.id("49116098-c835-458b-8890-0f1cbaf51c93"),
       stakeDurationDays: 999,
-      stakeTokenAddress: stakeRewardTokenInstance.address,
+      stakeTokenInstance: stakeRewardTokenInstance,
       stakeTokenDecimals: 18,
-      rewardTokenAddress: stakeRewardTokenInstance.address,
+      rewardTokenInstance: stakeRewardTokenInstance,
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("100"),
     },
     {
       poolId: hre.ethers.utils.id("0ade03b3-e6d4-4d15-95d7-3d9d5ba8d963"),
       stakeDurationDays: 365,
-      stakeTokenAddress: stakeRewardTokenInstance.address,
+      stakeTokenInstance: stakeRewardTokenInstance,
       stakeTokenDecimals: 18,
-      rewardTokenAddress: stakeRewardTokenInstance.address,
+      rewardTokenInstance: stakeRewardTokenInstance,
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("75"),
     },
     {
       poolId: hre.ethers.utils.id("fc1999e6-e88b-4450-bfae-80d4c6bfd775"),
       stakeDurationDays: 180,
-      stakeTokenAddress: stakeRewardTokenInstance.address,
+      stakeTokenInstance: stakeRewardTokenInstance,
       stakeTokenDecimals: 18,
-      rewardTokenAddress: stakeRewardTokenInstance.address,
+      rewardTokenInstance: stakeRewardTokenInstance,
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("50"),
     },
     {
       poolId: hre.ethers.utils.id("b6fdcc87-6475-4326-967f-8ce616cd9c23"),
       stakeDurationDays: 88,
-      stakeTokenAddress: stakeRewardTokenInstance.address,
+      stakeTokenInstance: stakeRewardTokenInstance,
       stakeTokenDecimals: 18,
-      rewardTokenAddress: stakeRewardTokenInstance.address,
+      rewardTokenInstance: stakeRewardTokenInstance,
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("25"),
     },
     {
       poolId: hre.ethers.utils.id("b2507daa-6117-4da1-a037-5483116c1397"),
       stakeDurationDays: 31,
-      stakeTokenAddress: stakeRewardTokenInstance.address,
+      stakeTokenInstance: stakeRewardTokenInstance,
       stakeTokenDecimals: 18,
-      rewardTokenAddress: stakeRewardTokenInstance.address,
+      rewardTokenInstance: stakeRewardTokenInstance,
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("5"),
     },
@@ -515,9 +515,9 @@ async function testCreateStakingPool(
           .createStakingPool(
             stakingPoolConfigs[i].poolId,
             stakingPoolConfigs[i].stakeDurationDays,
-            stakingPoolConfigs[i].stakeTokenAddress,
+            stakingPoolConfigs[i].stakeTokenInstance.address,
             stakingPoolConfigs[i].stakeTokenDecimals,
-            stakingPoolConfigs[i].rewardTokenAddress,
+            stakingPoolConfigs[i].rewardTokenInstance.address,
             stakingPoolConfigs[i].rewardTokenDecimals,
             stakingPoolConfigs[i].poolAprWei
           )
@@ -639,13 +639,13 @@ async function verifyStakingPoolInfo(
     stakingPoolConfig.stakeDurationDays
   );
   expect(stakingPoolInfo.stakeTokenAddress).to.equal(
-    stakingPoolConfig.stakeTokenAddress
+    stakingPoolConfig.stakeTokenInstance.address
   );
   expect(stakingPoolInfo.stakeTokenDecimals).to.equal(
     stakingPoolConfig.stakeTokenDecimals
   );
   expect(stakingPoolInfo.rewardTokenAddress).to.equal(
-    stakingPoolConfig.rewardTokenAddress
+    stakingPoolConfig.rewardTokenInstance.address
   );
   expect(stakingPoolInfo.rewardTokenDecimals).to.equal(
     stakingPoolConfig.rewardTokenDecimals
