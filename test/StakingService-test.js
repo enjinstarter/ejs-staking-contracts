@@ -1954,8 +1954,7 @@ describe("StakingService", function () {
           secondsAfterOfLastStakeInPool[
             stakingPoolConfigs[stakingPoolConfigIndex].poolId
           ] = {
-            stakeSecondsAfterStartblockTimestamp:
-              stakeSecondsAfterStartblockTimestamp,
+            stakeSecondsAfterStartblockTimestamp,
             stakeIndex: i,
           };
         }
@@ -1963,8 +1962,7 @@ describe("StakingService", function () {
         secondsAfterOfLastStakeInPool[
           stakingPoolConfigs[stakingPoolConfigIndex].poolId
         ] = {
-          stakeSecondsAfterStartblockTimestamp:
-            stakeSecondsAfterStartblockTimestamp,
+          stakeSecondsAfterStartblockTimestamp,
           stakeIndex: i,
         };
       }
