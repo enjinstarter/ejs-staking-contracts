@@ -9,26 +9,32 @@ describe("StakingPool", function () {
   const stakeTokenAdminMintWei = hre.ethers.utils.parseEther("1000000");
   const stakeRewardTokenAdminMintWei = rewardTokenAdminMintWei;
 
-  const rewardToken18DecimalsInfo = {
-    tokenName: "MockRewardToken",
-    tokenSymbol: "MREWARD",
-    tokenDecimals: hre.ethers.BigNumber.from(18),
-    tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
-  };
+  const rewardToken18DecimalsInfo = [
+    {
+      tokenName: "MockRewardToken",
+      tokenSymbol: "MREWARD",
+      tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+  ];
 
-  const stakeRewardToken18DecimalsInfo = {
-    tokenName: "MockStakeRewardToken",
-    tokenSymbol: "MSTAKEREWARD",
-    tokenDecimals: hre.ethers.BigNumber.from(18),
-    tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
-  };
+  const stakeRewardToken18DecimalsInfo = [
+    {
+      tokenName: "MockStakeRewardToken",
+      tokenSymbol: "MSTAKEREWARD",
+      tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+  ];
 
-  const stakeToken18DecimalsInfo = {
-    tokenName: "MockStakeToken",
-    tokenSymbol: "MSTAKE",
-    tokenDecimals: hre.ethers.BigNumber.from(18),
-    tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
-  };
+  const stakeToken18DecimalsInfo = [
+    {
+      tokenName: "MockStakeToken",
+      tokenSymbol: "MSTAKE",
+      tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+  ];
 
   const contractAdminMintAmountsWei = {
     rewardToken: rewardTokenAdminMintWei,

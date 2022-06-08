@@ -9,26 +9,32 @@ describe("StakingService", function () {
   const stakeTokenAdminMintWei = hre.ethers.utils.parseEther("1000000");
   const stakeRewardTokenAdminMintWei = rewardTokenAdminMintWei;
 
-  const rewardToken18DecimalsInfo = {
-    tokenName: "MockRewardToken",
-    tokenSymbol: "MREWARD",
-    tokenDecimals: hre.ethers.BigNumber.from(18),
-    tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
-  };
+  const rewardToken18DecimalsInfo = [
+    {
+      tokenName: "MockRewardToken",
+      tokenSymbol: "MREWARD",
+      tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+  ];
 
-  const stakeRewardToken18DecimalsInfo = {
-    tokenName: "MockStakeRewardToken",
-    tokenSymbol: "MSTAKEREWARD",
-    tokenDecimals: hre.ethers.BigNumber.from(18),
-    tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
-  };
+  const stakeRewardToken18DecimalsInfo = [
+    {
+      tokenName: "MockStakeRewardToken",
+      tokenSymbol: "MSTAKEREWARD",
+      tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+  ];
 
-  const stakeToken18DecimalsInfo = {
-    tokenName: "MockStakeToken",
-    tokenSymbol: "MSTAKE",
-    tokenDecimals: hre.ethers.BigNumber.from(18),
-    tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
-  };
+  const stakeToken18DecimalsInfo = [
+    {
+      tokenName: "MockStakeToken",
+      tokenSymbol: "MSTAKE",
+      tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+  ];
 
   const contractAdminMintAmountsWei = {
     rewardToken: rewardTokenAdminMintWei,
@@ -44,13 +50,14 @@ describe("StakingService", function () {
 
   let libUnitConverterInstance;
 
-  let rewardToken18DecimalsInstance;
-  let stakeRewardToken18DecimalsInstance;
-  let stakeToken18DecimalsInstance;
+  let rewardToken18DecimalsInstances;
+  let stakeRewardToken18DecimalsInstances;
+  let stakeToken18DecimalsInstances;
   let stakingPoolInstance;
   let stakingServiceInstance;
 
   let stakingPoolStakeRewardTokenSameConfigs;
+  let stakingPoolsRewardBalanceOf;
   // let snapshotId;
 
   before(async () => {
@@ -107,11 +114,12 @@ describe("StakingService", function () {
 
   beforeEach(async () => {
     [
-      rewardToken18DecimalsInstance,
-      stakeToken18DecimalsInstance,
-      stakeRewardToken18DecimalsInstance,
+      rewardToken18DecimalsInstances,
+      stakeToken18DecimalsInstances,
+      stakeRewardToken18DecimalsInstances,
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
+      stakingPoolsRewardBalanceOf,
     ] = await stakeHelpers.initializeStakingPoolTestData(
       rewardToken18DecimalsInfo,
       stakeToken18DecimalsInfo,
@@ -316,64 +324,102 @@ describe("StakingService", function () {
     const stakingPoolRewardConfigs = [
       {
         poolId: stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
       },
       {
         poolId: stakingPoolStakeRewardTokenSameConfigs[1].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[1].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
       },
       {
         poolId: stakingPoolStakeRewardTokenSameConfigs[2].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[2].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
       },
       {
         poolId: stakingPoolStakeRewardTokenSameConfigs[3].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[3].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
       },
       {
         poolId: stakingPoolStakeRewardTokenSameConfigs[4].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[4].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
       },
+      /*
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[5].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[5].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[6].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[6].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[7].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[7].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[8].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[8].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[9].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[9].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
+      },
+      */
     ];
 
     const stakingPoolRewardStats = {};
 
-    let stakingPoolRewardBalanceOf = await testAddStakingPoolReward(
+    await testAddStakingPoolReward(
       stakingServiceInstance,
-      stakeRewardToken18DecimalsInstance,
       stakingPoolRewardConfigs,
       governanceRoleAccounts.slice(0, 1),
-      hre.ethers.constants.Zero,
+      stakingPoolsRewardBalanceOf,
       stakingPoolRewardStats,
       true
     );
 
     await testAddStakingPoolReward(
       stakingServiceInstance,
-      stakeRewardToken18DecimalsInstance,
       stakingPoolRewardConfigs,
       governanceRoleAccounts.slice(1),
-      stakingPoolRewardBalanceOf,
+      stakingPoolsRewardBalanceOf,
       stakingPoolRewardStats,
       false
     );
 
-    stakingPoolRewardBalanceOf = await testAddStakingPoolReward(
+    await testAddStakingPoolReward(
       stakingServiceInstance,
-      stakeRewardToken18DecimalsInstance,
       stakingPoolRewardConfigs,
       contractAdminRoleAccounts,
-      stakingPoolRewardBalanceOf,
+      stakingPoolsRewardBalanceOf,
       stakingPoolRewardStats,
       true
     );
 
     await testAddStakingPoolReward(
       stakingServiceInstance,
-      stakeRewardToken18DecimalsInstance,
       stakingPoolRewardConfigs,
       enduserAccounts,
-      stakingPoolRewardBalanceOf,
+      stakingPoolsRewardBalanceOf,
       stakingPoolRewardStats,
       false
     );
@@ -552,7 +598,7 @@ describe("StakingService", function () {
       enduserAccounts,
       expectStakes,
       stakingServiceInstance,
-      stakeRewardToken18DecimalsInstance,
+      stakingPoolsRewardBalanceOf,
       stakingPoolRewardStats,
       governanceRoleAccounts[0]
     );
@@ -560,8 +606,6 @@ describe("StakingService", function () {
     const stakingPoolStats = await testStakeClaimUnstake(
       stakingServiceInstance,
       stakingPoolInstance,
-      stakeRewardToken18DecimalsInstance,
-      stakeRewardToken18DecimalsInstance,
       stakingPoolRewardStats,
       stakeConfigs,
       contractAdminRoleAccounts[0]
@@ -569,8 +613,6 @@ describe("StakingService", function () {
 
     await testRemoveUnallocatedStakingPoolReward(
       stakingServiceInstance,
-      stakeRewardToken18DecimalsInstance,
-      stakeRewardToken18DecimalsInstance,
       stakingPoolStats,
       stakeConfigs,
       stakingPoolStakeRewardTokenSameConfigs,
@@ -578,29 +620,24 @@ describe("StakingService", function () {
       true
     );
 
-    const rewardToken18DecimalsBalanceOfContractAfterRemove =
-      await rewardToken18DecimalsInstance.balanceOf(
-        stakingServiceInstance.address
-      );
-    expect(rewardToken18DecimalsBalanceOfContractAfterRemove).to.equal(
-      hre.ethers.constants.Zero
+    const allTokenInstances = rewardToken18DecimalsInstances.concat(
+      stakeRewardToken18DecimalsInstances,
+      stakeToken18DecimalsInstances
     );
 
-    const stakeToken18DecimalsBalanceOfContractAfterRemove =
-      await stakeToken18DecimalsInstance.balanceOf(
-        stakingServiceInstance.address
-      );
-    expect(stakeToken18DecimalsBalanceOfContractAfterRemove).to.equal(
-      hre.ethers.constants.Zero
-    );
+    console.log(`allTokenInstances.length=${allTokenInstances.length}`);
 
-    const stakeRewardToken18DecimalsBalanceOfContractAfterRemove =
-      await stakeRewardToken18DecimalsInstance.balanceOf(
+    for (let i = 0; i < allTokenInstances.length; i++) {
+      const balanceOfContractAfterRemove = await allTokenInstances[i].balanceOf(
         stakingServiceInstance.address
       );
-    expect(stakeRewardToken18DecimalsBalanceOfContractAfterRemove).to.equal(
-      hre.ethers.constants.Zero
-    );
+
+      console.log(
+        `${i}: tokenAddress=${allTokenInstances[i].address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
+      );
+
+      expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
+    }
   });
 
   it("Should not allow set admin wallet as zero address", async () => {
@@ -919,7 +956,6 @@ describe("StakingService", function () {
     stakingServiceContractInstance,
     stakingPoolContractInstance,
     adminSigner,
-    rewardTokenContractInstance,
     stakeConfig,
     startblockTimestamp,
     verifyStakeConfigs,
@@ -1163,9 +1199,10 @@ describe("StakingService", function () {
       );
     }
 
-    const balanceOfBeforeClaim = await rewardTokenContractInstance.balanceOf(
-      signerAddress
-    );
+    const balanceOfBeforeClaim =
+      await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
+        signerAddress
+      );
 
     const claimableRewardWeiBeforeClaim =
       await stakingServiceContractInstance.getClaimableRewardWei(
@@ -1263,9 +1300,10 @@ describe("StakingService", function () {
         expectRewardAtMaturityWei
       );
 
-    const balanceOfAfterClaim = await rewardTokenContractInstance.balanceOf(
-      signerAddress
-    );
+    const balanceOfAfterClaim =
+      await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
+        signerAddress
+      );
     expect(balanceOfAfterClaim).to.equal(expectBalanceOfAfterClaim);
 
     const claimableRewardWeiAfterClaim =
@@ -1608,7 +1646,6 @@ describe("StakingService", function () {
   async function revokeStakeWithVerify(
     stakingServiceContractInstance,
     adminSigner,
-    rewardTokenContractInstance,
     stakeConfig,
     startblockTimestamp,
     verifyStakeConfigs,
@@ -1728,9 +1765,10 @@ describe("StakingService", function () {
       return [totalStakedWei, rewardToBeDistributedWei, totalRevokedStakeWei];
     }
 
-    const balanceOfBeforeRevoke = await rewardTokenContractInstance.balanceOf(
-      signerAddress
-    );
+    const balanceOfBeforeRevoke =
+      await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
+        signerAddress
+      );
 
     const claimableRewardWeiBeforeRevoke =
       await stakingServiceContractInstance.getClaimableRewardWei(
@@ -1804,9 +1842,10 @@ describe("StakingService", function () {
     );
     */
 
-    const balanceOfAfterRevoke = await rewardTokenContractInstance.balanceOf(
-      signerAddress
-    );
+    const balanceOfAfterRevoke =
+      await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
+        signerAddress
+      );
     expect(balanceOfAfterRevoke).to.equal(expectBalanceOfAfterRevoke);
 
     await expect(
@@ -1886,7 +1925,7 @@ describe("StakingService", function () {
     signers,
     stakes,
     stakingServiceContractInstance,
-    rewardTokenContractInstance,
+    balanceOfStakingPoolRewards,
     stakingPoolRewardStats,
     fromWalletSigner
   ) {
@@ -1926,13 +1965,17 @@ describe("StakingService", function () {
       ) {
         totalStakeRewardsWei[
           stakingPoolConfigs[stakingPoolConfigIndex].poolId
-        ] = totalStakeRewardsWei[
+        ].amountWei = totalStakeRewardsWei[
           stakingPoolConfigs[stakingPoolConfigIndex].poolId
-        ].add(expectRewardAtMaturityWei);
+        ].amountWei.add(expectRewardAtMaturityWei);
       } else {
         totalStakeRewardsWei[
           stakingPoolConfigs[stakingPoolConfigIndex].poolId
-        ] = expectRewardAtMaturityWei;
+        ] = {
+          amountWei: expectRewardAtMaturityWei,
+          rewardTokenInstance:
+            stakingPoolConfigs[stakingPoolConfigIndex].rewardTokenInstance,
+        };
       }
 
       const stakeSecondsAfterStartblockTimestamp = stakes[
@@ -1980,22 +2023,24 @@ describe("StakingService", function () {
       ].exceedPoolReward = true;
     }
 
-    let stakingPoolRewardBalanceOf = hre.ethers.constants.Zero;
-
     for (const poolId in totalStakeRewardsWei) {
-      stakingPoolRewardBalanceOf = await addStakingPoolRewardWithVerify(
+      balanceOfStakingPoolRewards[
+        totalStakeRewardsWei[poolId].rewardTokenInstance.address
+      ] = await addStakingPoolRewardWithVerify(
         stakingServiceContractInstance,
-        rewardTokenContractInstance,
+        totalStakeRewardsWei[poolId].rewardTokenInstance,
         fromWalletSigner,
         poolId,
-        stakingPoolRewardBalanceOf,
+        balanceOfStakingPoolRewards[
+          totalStakeRewardsWei[poolId].rewardTokenInstance.address
+        ],
         stakingPoolRewardStats,
-        totalStakeRewardsWei[poolId].sub(hre.ethers.constants.Two)
+        totalStakeRewardsWei[poolId].amountWei.sub(hre.ethers.constants.Two)
       );
 
       /*
       console.log(
-        `${poolId}: stakingPoolRewardBalanceOf=${stakingPoolRewardBalanceOf}, totalStakeRewardsWei=${totalStakeRewardsWei[poolId]}`
+        `${poolId}: balanceOfStakingPoolRewards[${totalStakeRewardsWei[poolId].rewardTokenInstance.address}]=${balanceOfStakingPoolRewards[totalStakeRewardsWei[poolId].rewardTokenInstance.address]}, totalStakeRewardsWei=${totalStakeRewardsWei[poolId]}`
       );
       */
     }
@@ -2082,7 +2127,6 @@ describe("StakingService", function () {
     stakingServiceContractInstance,
     stakingPoolContractInstance,
     adminSigner,
-    stakeTokenContractInstance,
     stakeConfig,
     startblockTimestamp,
     verifyStakeConfigs,
@@ -2167,7 +2211,7 @@ describe("StakingService", function () {
     */
 
     await testHelpers.transferAndApproveWithVerify(
-      stakeTokenContractInstance,
+      stakeConfig.stakingPoolConfig.stakeTokenInstance,
       governanceRoleAccounts[0],
       stakeConfig.signer,
       stakingServiceContractInstance.address,
@@ -2519,10 +2563,9 @@ describe("StakingService", function () {
 
   async function testAddStakingPoolReward(
     stakingServiceContractInstance,
-    rewardTokenContractInstance,
     stakingPoolRewardConfigs,
     signers,
-    stakingPoolRewardBalanceOf,
+    balanceOfStakingPoolRewards,
     stakingPoolRewardStats,
     expectAbleToAddReward
   ) {
@@ -2531,12 +2574,16 @@ describe("StakingService", function () {
       const signerAddress = await signers[signerIndex].getAddress();
 
       if (expectAbleToAddReward) {
-        stakingPoolRewardBalanceOf = await addStakingPoolRewardWithVerify(
+        balanceOfStakingPoolRewards[
+          stakingPoolRewardConfigs[i].rewardTokenInstance.address
+        ] = await addStakingPoolRewardWithVerify(
           stakingServiceContractInstance,
-          rewardTokenContractInstance,
+          stakingPoolRewardConfigs[i].rewardTokenInstance,
           signers[signerIndex],
           stakingPoolRewardConfigs[i].poolId,
-          stakingPoolRewardBalanceOf,
+          balanceOfStakingPoolRewards[
+            stakingPoolRewardConfigs[i].rewardTokenInstance.address
+          ],
           stakingPoolRewardStats,
           stakingPoolRewardConfigs[i].rewardAmountWei
         );
@@ -2548,7 +2595,10 @@ describe("StakingService", function () {
           };
         }
 
-        const expectBalanceOfBeforeAdd = stakingPoolRewardBalanceOf;
+        const expectBalanceOfBeforeAdd =
+          balanceOfStakingPoolRewards[
+            stakingPoolRewardConfigs[i].rewardTokenInstance.address
+          ];
         const expectTotalRewardWeiBeforeAdd =
           stakingPoolRewardStats[stakingPoolRewardConfigs[i].poolId]
             .totalRewardWei;
@@ -2556,9 +2606,9 @@ describe("StakingService", function () {
           stakingPoolRewardStats[stakingPoolRewardConfigs[i].poolId]
             .rewardToBeDistributedWei;
 
-        const balanceOfBeforeAdd = await rewardTokenContractInstance.balanceOf(
-          stakingServiceContractInstance.address
-        );
+        const balanceOfBeforeAdd = await stakingPoolRewardConfigs[
+          i
+        ].rewardTokenInstance.balanceOf(stakingServiceContractInstance.address);
         expect(balanceOfBeforeAdd).to.equal(expectBalanceOfBeforeAdd);
 
         const stakingPoolStatsBeforeAdd =
@@ -2585,9 +2635,9 @@ describe("StakingService", function () {
           }`
         );
 
-        const balanceOfAfterAdd = await rewardTokenContractInstance.balanceOf(
-          stakingServiceContractInstance.address
-        );
+        const balanceOfAfterAdd = await stakingPoolRewardConfigs[
+          i
+        ].rewardTokenInstance.balanceOf(stakingServiceContractInstance.address);
         expect(balanceOfAfterAdd).to.equal(expectBalanceOfBeforeAdd);
 
         const stakingPoolStatsAfterAdd =
@@ -2602,14 +2652,10 @@ describe("StakingService", function () {
         );
       }
     }
-
-    return stakingPoolRewardBalanceOf;
   }
 
   async function testRemoveUnallocatedStakingPoolReward(
     stakingServiceContractInstance,
-    stakeTokenContractInstance,
-    rewardTokenContractInstance,
     expectStakingPoolStats,
     stakeConfigs,
     stakingPoolConfigs,
@@ -2767,19 +2813,23 @@ describe("StakingService", function () {
       }
     }
 
-    for (const poolId in unallocatedRewardsWei) {
+    for (const stakingPoolId in unallocatedRewardsWei) {
+      const stakingPoolConfig = stakingPoolConfigs.find(
+        ({ poolId }) => poolId === stakingPoolId
+      );
+
       /*
       console.log(
-        `removeUnallocatedStakingPoolRewardWithVerify ${poolId}: unallocatedRewardsWei=${unallocatedRewardsWei[poolId]}, revokedStakesWei=${revokedStakesWei[poolId]}, totalRewardWei=${expectStakingPoolStats[poolId].totalRewardWei}, rewardToBeDistributedWei=${expectStakingPoolStats[poolId].rewardToBeDistributedWei}, totalStakedWei=${expectStakingPoolStats[poolId].totalStakedWei}`
+        `removeUnallocatedStakingPoolRewardWithVerify ${stakingPoolId}: unallocatedRewardsWei=${unallocatedRewardsWei[stakingPoolId]}, revokedStakesWei=${revokedStakesWei[stakingPoolId]}, totalRewardWei=${expectStakingPoolStats[stakingPoolId].totalRewardWei}, rewardToBeDistributedWei=${expectStakingPoolStats[stakingPoolId].rewardToBeDistributedWei}, totalStakedWei=${expectStakingPoolStats[stakingPoolId].totalStakedWei}`
       );
       */
 
       await removeUnallocatedStakingPoolRewardWithVerify(
         stakingServiceContractInstance,
         adminSigner,
-        rewardTokenContractInstance,
-        poolId,
-        unallocatedRewardsWei[poolId].sub(hre.ethers.constants.Two),
+        stakingPoolConfig.rewardTokenInstance,
+        stakingPoolId,
+        unallocatedRewardsWei[stakingPoolId].sub(hre.ethers.constants.Two),
         await governanceRoleAccounts[0].getAddress(),
         expectStakingPoolStats
       );
@@ -2797,7 +2847,7 @@ describe("StakingService", function () {
           : hre.ethers.constants.Zero;
 
       const balanceOfContractAfterRemove =
-        await rewardTokenContractInstance.balanceOf(
+        await stakingPoolConfig.rewardTokenInstance.balanceOf(
           stakingServiceInstance.address
         );
 
@@ -2806,31 +2856,37 @@ describe("StakingService", function () {
       );
     }
 
-    for (const poolId in revokedStakesWei) {
+    for (const stakingPoolId in revokedStakesWei) {
+      const stakingPoolConfig = stakingPoolConfigs.find(
+        ({ poolId }) => poolId === stakingPoolId
+      );
+
       /*
       console.log(
-        `removeRevokedStakesWithVerify ${poolId}: unallocatedRewardsWei=${unallocatedRewardsWei[poolId]}, revokedStakesWei=${revokedStakesWei[poolId]}, totalRewardWei=${expectStakingPoolStats[poolId].totalRewardWei}, rewardToBeDistributedWei=${expectStakingPoolStats[poolId].rewardToBeDistributedWei}, totalStakedWei=${expectStakingPoolStats[poolId].totalStakedWei}`
+        `removeRevokedStakesWithVerify ${stakingPoolId}: unallocatedRewardsWei=${unallocatedRewardsWei[stakingPoolId]}, revokedStakesWei=${revokedStakesWei[stakingPoolId]}, totalRewardWei=${expectStakingPoolStats[poolId].totalRewardWei}, rewardToBeDistributedWei=${expectStakingPoolStats[poolId].rewardToBeDistributedWei}, totalStakedWei=${expectStakingPoolStats[poolId].totalStakedWei}`
       );
       */
 
       await removeRevokedStakesWithVerify(
         stakingServiceContractInstance,
         adminSigner,
-        stakeTokenContractInstance,
-        poolId,
-        revokedStakesWei[poolId],
+        stakingPoolConfig.stakeTokenInstance,
+        stakingPoolId,
+        revokedStakesWei[stakingPoolId],
         await governanceRoleAccounts[0].getAddress(),
         expectStakingPoolStats
       );
     }
 
-    for (const stakingPoolId in revokedStakesWei) {
-      stakingPoolConfigs.find(({ poolId }) => poolId === stakingPoolId);
+    const expectBalanceOfContractAfterRemove = hre.ethers.constants.Zero;
 
-      const expectBalanceOfContractAfterRemove = hre.ethers.constants.Zero;
+    for (const stakingPoolId in revokedStakesWei) {
+      const stakingPoolConfig = stakingPoolConfigs.find(
+        ({ poolId }) => poolId === stakingPoolId
+      );
 
       const balanceOfContractAfterRemove =
-        await stakeTokenContractInstance.balanceOf(
+        await stakingPoolConfig.stakeTokenInstance.balanceOf(
           stakingServiceInstance.address
         );
 
@@ -2915,8 +2971,6 @@ describe("StakingService", function () {
   async function testStakeClaimUnstake(
     stakingServiceContractInstance,
     stakingPoolContractInstance,
-    stakeTokenContractInstance,
-    rewardTokenContractInstance,
     stakingPoolRewardStats,
     stakeConfigs,
     adminSigner
@@ -2951,7 +3005,6 @@ describe("StakingService", function () {
         stakingServiceContractInstance,
         stakingPoolContractInstance,
         adminSigner,
-        stakeTokenContractInstance,
         stakeConfigs[i],
         startblockTimestamp,
         stakeConfigs.slice(0, i + 1),
@@ -2996,7 +3049,6 @@ describe("StakingService", function () {
         stakingServiceContractInstance,
         stakingPoolContractInstance,
         adminSigner,
-        rewardTokenContractInstance,
         stakeConfigs[i],
         startblockTimestamp,
         stakeConfigs.slice(0, i + 1),
@@ -3046,7 +3098,6 @@ describe("StakingService", function () {
           stakingServiceContractInstance,
           stakingPoolContractInstance,
           adminSigner,
-          stakeTokenContractInstance,
           stakeConfigs[i],
           startblockTimestamp,
           stakeConfigs.slice(0, i + 1),
@@ -3076,7 +3127,6 @@ describe("StakingService", function () {
         ] = await revokeStakeWithVerify(
           stakingServiceContractInstance,
           adminSigner,
-          rewardTokenContractInstance,
           stakeConfigs[i],
           startblockTimestamp,
           stakeConfigs.slice(0, i + 1),
@@ -3109,7 +3159,6 @@ describe("StakingService", function () {
           stakingServiceContractInstance,
           stakingPoolContractInstance,
           adminSigner,
-          rewardTokenContractInstance,
           stakeConfigs[i],
           startblockTimestamp,
           stakeConfigs.slice(0, i + 1),
@@ -3143,7 +3192,6 @@ describe("StakingService", function () {
         ] = await revokeStakeWithVerify(
           stakingServiceContractInstance,
           adminSigner,
-          rewardTokenContractInstance,
           stakeConfigs[i],
           startblockTimestamp,
           stakeConfigs.slice(0, i + 1),
@@ -3176,8 +3224,6 @@ describe("StakingService", function () {
         stakingServiceContractInstance,
         stakingPoolContractInstance,
         adminSigner,
-        rewardTokenContractInstance,
-        stakeTokenContractInstance,
         stakeConfigs[i],
         startblockTimestamp,
         stakeConfigs.slice(0, i + 1),
@@ -3201,8 +3247,6 @@ describe("StakingService", function () {
     stakingServiceContractInstance,
     stakingPoolContractInstance,
     adminSigner,
-    rewardTokenContractInstance,
-    stakeTokenContractInstance,
     stakeConfig,
     startblockTimestamp,
     verifyStakeConfigs,
@@ -3344,9 +3388,13 @@ describe("StakingService", function () {
     }
 
     const balanceOfRewardTokenBeforeUnstake =
-      await rewardTokenContractInstance.balanceOf(signerAddress);
+      await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
+        signerAddress
+      );
     const balanceOfStakeTokenBeforeUnstake =
-      await stakeTokenContractInstance.balanceOf(signerAddress);
+      await stakeConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+        signerAddress
+      );
 
     const claimableRewardWeiBeforeUnstake =
       await stakingServiceContractInstance.getClaimableRewardWei(
@@ -3568,7 +3616,9 @@ describe("StakingService", function () {
         );
 
       const balanceOfStakeRewardTokenAfterUnstake =
-        await rewardTokenContractInstance.balanceOf(signerAddress);
+        await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
+          signerAddress
+        );
       expect(balanceOfStakeRewardTokenAfterUnstake).to.equal(
         expectBalanceOfStakeRewardTokenAfterUnstake
       );
@@ -3579,13 +3629,17 @@ describe("StakingService", function () {
         balanceOfStakeTokenBeforeUnstake.add(expectUnstakeAmountWei);
 
       const balanceOfRewardTokenAfterUnstake =
-        await rewardTokenContractInstance.balanceOf(signerAddress);
+        await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
+          signerAddress
+        );
       expect(balanceOfRewardTokenAfterUnstake).to.equal(
         expectBalanceOfRewardTokenAfterUnstake
       );
 
       const balanceOfStakeTokenAfterUnstake =
-        await stakeTokenContractInstance.balanceOf(signerAddress);
+        await stakeConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+          signerAddress
+        );
       expect(balanceOfStakeTokenAfterUnstake).to.equal(
         expectBalanceOfStakeTokenAfterUnstake
       );
