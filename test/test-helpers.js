@@ -688,7 +688,7 @@ async function transferAndApproveWithVerify(
     tokenContractInstance,
     fromSigner,
     toAddress,
-    amountDecimals
+    scaleDecimalsToWei(amountDecimals, tokenDecimals)
   );
 }
 

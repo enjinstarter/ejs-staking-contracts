@@ -11,27 +11,45 @@ describe("StakingService", function () {
 
   const rewardToken18DecimalsInfo = [
     {
-      tokenName: "MockRewardToken",
-      tokenSymbol: "MREWARD",
+      tokenName: "MockRewardToken18",
+      tokenSymbol: "MREWARD18",
       tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+    {
+      tokenName: "MockRewardToken06",
+      tokenSymbol: "MREWARD06",
+      tokenDecimals: hre.ethers.BigNumber.from(6),
       tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
     },
   ];
 
   const stakeRewardToken18DecimalsInfo = [
     {
-      tokenName: "MockStakeRewardToken",
-      tokenSymbol: "MSTAKEREWARD",
+      tokenName: "MockStakeRewardToken18",
+      tokenSymbol: "MSTAKEREWARD18",
       tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+    {
+      tokenName: "MockStakeRewardToken06",
+      tokenSymbol: "MSTAKEREWARD06",
+      tokenDecimals: hre.ethers.BigNumber.from(6),
       tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
     },
   ];
 
   const stakeToken18DecimalsInfo = [
     {
-      tokenName: "MockStakeToken",
-      tokenSymbol: "MSTAKE",
+      tokenName: "MockStakeToken18",
+      tokenSymbol: "MSTAKE18",
       tokenDecimals: hre.ethers.BigNumber.from(18),
+      tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
+    },
+    {
+      tokenName: "MockStakeToken06",
+      tokenSymbol: "MSTAKE06",
+      tokenDecimals: hre.ethers.BigNumber.from(6),
       tokenCapWei: hre.ethers.utils.parseEther("10000000000"),
     },
   ];
@@ -352,7 +370,6 @@ describe("StakingService", function () {
           stakingPoolStakeRewardTokenSameConfigs[4].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
       },
-      /*
       {
         poolId: stakingPoolStakeRewardTokenSameConfigs[5].poolId,
         rewardTokenInstance:
@@ -383,7 +400,6 @@ describe("StakingService", function () {
           stakingPoolStakeRewardTokenSameConfigs[9].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
       },
-      */
     ];
 
     const stakingPoolRewardStats = {};
@@ -636,7 +652,10 @@ describe("StakingService", function () {
         `${i}: tokenAddress=${allTokenInstances[i].address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
       );
 
-      expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
+      expect(balanceOfContractAfterRemove).to.be.closeTo(
+        hre.ethers.constants.Zero,
+        1
+      );
     }
   });
 
@@ -887,10 +906,18 @@ describe("StakingService", function () {
     const expectRewardToBeDistributedWei =
       stakingPoolRewardStats[poolId].rewardToBeDistributedWei;
 
+    const rewardTokenDecimals = await rewardTokenContractInstance.decimals();
+
     const balanceOfBeforeAdd = await rewardTokenContractInstance.balanceOf(
       stakingServiceContractInstance.address
     );
-    expect(balanceOfBeforeAdd).to.equal(expectBalanceOfBeforeAdd);
+    expect(balanceOfBeforeAdd).to.be.closeTo(
+      testHelpers.scaleWeiToDecimals(
+        expectBalanceOfBeforeAdd,
+        rewardTokenDecimals
+      ),
+      3
+    );
 
     const stakingPoolStatsBeforeAdd =
       await stakingServiceContractInstance.getStakingPoolStats(poolId);
@@ -929,7 +956,13 @@ describe("StakingService", function () {
     const balanceOfAfterAdd = await rewardTokenContractInstance.balanceOf(
       stakingServiceContractInstance.address
     );
-    expect(balanceOfAfterAdd).to.equal(expectBalanceOfAfterAdd);
+    expect(balanceOfAfterAdd).to.be.closeTo(
+      testHelpers.scaleWeiToDecimals(
+        expectBalanceOfAfterAdd,
+        rewardTokenDecimals
+      ),
+      3
+    );
 
     const stakingPoolStatsAfterAdd =
       await stakingServiceContractInstance.getStakingPoolStats(poolId);
@@ -1199,6 +1232,9 @@ describe("StakingService", function () {
       );
     }
 
+    const rewardTokenDecimals =
+      await stakeConfig.stakingPoolConfig.rewardTokenInstance.decimals();
+
     const balanceOfBeforeClaim =
       await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(
         signerAddress
@@ -1244,7 +1280,10 @@ describe("StakingService", function () {
     );
 
     const expectBalanceOfAfterClaim = balanceOfBeforeClaim.add(
-      expectRewardAtMaturityWei
+      testHelpers.scaleWeiToDecimals(
+        expectRewardAtMaturityWei,
+        rewardTokenDecimals
+      )
     );
     const expectClaimableRewardWeiAfterClaim = hre.ethers.constants.Zero;
     const expectTotalRewardWei = totalRewardWei.sub(expectRewardAtMaturityWei);
@@ -1386,17 +1425,23 @@ describe("StakingService", function () {
     const adminWallet = await stakingServiceContractInstance.adminWallet();
     expect(adminWallet).to.equal(expectAdminWalletAddress);
 
+    const stakeTokenDecimals = await stakeTokenContractInstance.decimals();
+
     const balanceOfContractBeforeRemove =
       await stakeTokenContractInstance.balanceOf(
         stakingServiceContractInstance.address
       );
     const expectBalanceOfContractAfterRemove =
-      balanceOfContractBeforeRemove.sub(revokedStakesWei);
+      balanceOfContractBeforeRemove.sub(
+        testHelpers.scaleWeiToDecimals(revokedStakesWei, stakeTokenDecimals)
+      );
 
     const balanceOfAdminWalletBeforeRemove =
       await stakeTokenContractInstance.balanceOf(expectAdminWalletAddress);
     const expectBalanceOfAdminWalletAfterRemove =
-      balanceOfAdminWalletBeforeRemove.add(revokedStakesWei);
+      balanceOfAdminWalletBeforeRemove.add(
+        testHelpers.scaleWeiToDecimals(revokedStakesWei, stakeTokenDecimals)
+      );
 
     expect(expectStakingPoolStats[stakingPoolId].totalStakedWei).to.equal(
       expectTotalStakedWeiBeforeRemove
@@ -1481,17 +1526,29 @@ describe("StakingService", function () {
     const adminWallet = await stakingServiceContractInstance.adminWallet();
     expect(adminWallet).to.equal(expectAdminWalletAddress);
 
+    const rewardTokenDecimals = await rewardTokenContractInstance.decimals();
+
     const balanceOfContractBeforeRemove =
       await rewardTokenContractInstance.balanceOf(
         stakingServiceContractInstance.address
       );
     const expectBalanceOfContractAfterRemove =
-      balanceOfContractBeforeRemove.sub(unallocatedRewardWei);
+      balanceOfContractBeforeRemove.sub(
+        testHelpers.scaleWeiToDecimals(
+          unallocatedRewardWei,
+          rewardTokenDecimals
+        )
+      );
 
     const balanceOfAdminWalletBeforeRemove =
       await rewardTokenContractInstance.balanceOf(expectAdminWalletAddress);
     const expectBalanceOfAdminWalletAfterRemove =
-      balanceOfAdminWalletBeforeRemove.add(unallocatedRewardWei);
+      balanceOfAdminWalletBeforeRemove.add(
+        testHelpers.scaleWeiToDecimals(
+          unallocatedRewardWei,
+          rewardTokenDecimals
+        )
+      );
 
     const expectUnallocatedRewardWei = expectStakingPoolStats[
       stakingPoolId
@@ -2606,10 +2663,20 @@ describe("StakingService", function () {
           stakingPoolRewardStats[stakingPoolRewardConfigs[i].poolId]
             .rewardToBeDistributedWei;
 
+        const rewardTokenDecimals = await stakingPoolRewardConfigs[
+          i
+        ].rewardTokenInstance.decimals();
+
         const balanceOfBeforeAdd = await stakingPoolRewardConfigs[
           i
         ].rewardTokenInstance.balanceOf(stakingServiceContractInstance.address);
-        expect(balanceOfBeforeAdd).to.equal(expectBalanceOfBeforeAdd);
+        expect(balanceOfBeforeAdd).to.be.closeTo(
+          testHelpers.scaleWeiToDecimals(
+            expectBalanceOfBeforeAdd,
+            rewardTokenDecimals
+          ),
+          3
+        );
 
         const stakingPoolStatsBeforeAdd =
           await stakingServiceContractInstance.getStakingPoolStats(
@@ -2638,7 +2705,13 @@ describe("StakingService", function () {
         const balanceOfAfterAdd = await stakingPoolRewardConfigs[
           i
         ].rewardTokenInstance.balanceOf(stakingServiceContractInstance.address);
-        expect(balanceOfAfterAdd).to.equal(expectBalanceOfBeforeAdd);
+        expect(balanceOfAfterAdd).to.be.closeTo(
+          testHelpers.scaleWeiToDecimals(
+            expectBalanceOfBeforeAdd,
+            rewardTokenDecimals
+          ),
+          3
+        );
 
         const stakingPoolStatsAfterAdd =
           await stakingServiceContractInstance.getStakingPoolStats(
@@ -2840,10 +2913,18 @@ describe("StakingService", function () {
         ({ poolId }) => poolId === stakingPoolId
       );
 
+      const rewardTokenDecimals =
+        await stakingPoolConfig.rewardTokenInstance.decimals();
+
       const expectBalanceOfContractAfterRemove =
         stakingPoolConfig.stakeTokenInstance.address ===
         stakingPoolConfig.rewardTokenInstance.address
-          ? totalRevokedStakesWei[stakingPoolConfig.stakeTokenInstance.address]
+          ? testHelpers.scaleWeiToDecimals(
+              totalRevokedStakesWei[
+                stakingPoolConfig.stakeTokenInstance.address
+              ],
+              rewardTokenDecimals
+            )
           : hre.ethers.constants.Zero;
 
       const balanceOfContractAfterRemove =
@@ -2890,8 +2971,9 @@ describe("StakingService", function () {
           stakingServiceInstance.address
         );
 
-      expect(balanceOfContractAfterRemove).to.equal(
-        expectBalanceOfContractAfterRemove
+      expect(balanceOfContractAfterRemove).to.be.closeTo(
+        expectBalanceOfContractAfterRemove,
+        1
       );
     }
   }
@@ -3606,13 +3688,19 @@ describe("StakingService", function () {
         expectRewardAtMaturityWei
       );
 
+    const rewardTokenDecimals =
+      await stakeConfig.stakingPoolConfig.rewardTokenInstance.decimals();
+
     if (
       stakeConfig.stakingPoolConfig.stakeTokenInstance.address ===
       stakeConfig.stakingPoolConfig.rewardTokenInstance.address
     ) {
       const expectBalanceOfStakeRewardTokenAfterUnstake =
         balanceOfRewardTokenBeforeUnstake.add(
-          expectRewardAtMaturityWei.add(expectUnstakeAmountWei)
+          testHelpers.scaleWeiToDecimals(
+            expectRewardAtMaturityWei.add(expectUnstakeAmountWei),
+            rewardTokenDecimals
+          )
         );
 
       const balanceOfStakeRewardTokenAfterUnstake =
@@ -3624,9 +3712,19 @@ describe("StakingService", function () {
       );
     } else {
       const expectBalanceOfRewardTokenAfterUnstake =
-        balanceOfRewardTokenBeforeUnstake.add(expectRewardAtMaturityWei);
+        balanceOfRewardTokenBeforeUnstake.add(
+          testHelpers.scaleWeiToDecimals(
+            expectRewardAtMaturityWei,
+            rewardTokenDecimals
+          )
+        );
       const expectBalanceOfStakeTokenAfterUnstake =
-        balanceOfStakeTokenBeforeUnstake.add(expectUnstakeAmountWei);
+        balanceOfStakeTokenBeforeUnstake.add(
+          testHelpers.scaleWeiToDecimals(
+            expectUnstakeAmountWei,
+            rewardTokenDecimals
+          )
+        );
 
       const balanceOfRewardTokenAfterUnstake =
         await stakeConfig.stakingPoolConfig.rewardTokenInstance.balanceOf(

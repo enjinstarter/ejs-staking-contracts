@@ -214,7 +214,6 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("5"),
     },
-    /*
     {
       poolId: hre.ethers.utils.id("c30dbc87-308a-41d9-b1d1-157559a02fe0"),
       stakeDurationDays: 999,
@@ -260,7 +259,6 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("5"),
     },
-    */
   ];
 
   for (let i = 0; i < contractAdminRoleAccounts.length; i++) {
