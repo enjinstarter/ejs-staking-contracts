@@ -355,12 +355,14 @@ contract StakingService is
                 msg.sender
             );
 
-            _transferTokensToAccount(
-                rewardTokenAddress,
-                rewardTokenDecimals,
-                rewardAmountWei,
-                msg.sender
-            );
+            if (rewardAmountWei > 0) {
+                _transferTokensToAccount(
+                    rewardTokenAddress,
+                    rewardTokenDecimals,
+                    rewardAmountWei,
+                    msg.sender
+                );
+            }
         }
     }
 

@@ -400,6 +400,36 @@ describe("StakingService", function () {
           stakingPoolStakeRewardTokenSameConfigs[9].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
       },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[10].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[10].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[11].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[11].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[12].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[12].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[13].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[13].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[14].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[14].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
+      },
     ];
 
     const stakingPoolRewardStats = {};
@@ -654,7 +684,7 @@ describe("StakingService", function () {
 
       expect(balanceOfContractAfterRemove).to.be.closeTo(
         hre.ethers.constants.Zero,
-        1
+        2
       );
     }
   });
@@ -2932,8 +2962,9 @@ describe("StakingService", function () {
           stakingServiceInstance.address
         );
 
-      expect(balanceOfContractAfterRemove).to.equal(
-        expectBalanceOfContractAfterRemove
+      expect(balanceOfContractAfterRemove).to.be.closeTo(
+        expectBalanceOfContractAfterRemove,
+        2
       );
     }
 
@@ -3691,6 +3722,9 @@ describe("StakingService", function () {
     const rewardTokenDecimals =
       await stakeConfig.stakingPoolConfig.rewardTokenInstance.decimals();
 
+    const stakeTokenDecimals =
+      await stakeConfig.stakingPoolConfig.stakeTokenInstance.decimals();
+
     if (
       stakeConfig.stakingPoolConfig.stakeTokenInstance.address ===
       stakeConfig.stakingPoolConfig.rewardTokenInstance.address
@@ -3722,7 +3756,7 @@ describe("StakingService", function () {
         balanceOfStakeTokenBeforeUnstake.add(
           testHelpers.scaleWeiToDecimals(
             expectUnstakeAmountWei,
-            rewardTokenDecimals
+            stakeTokenDecimals
           )
         );
 
