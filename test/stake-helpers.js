@@ -118,94 +118,260 @@ async function createStakingPoolWithVerify(
 }
 
 async function initializeStakingPoolTestData(
-  rewardTokenInfo,
-  stakeTokenInfo,
-  stakeRewardTokenInfo,
+  rewardTokensInfo,
+  stakeTokensInfo,
+  stakeRewardTokensInfo,
   governanceRoleAccounts,
   contractAdminRoleAccounts,
   contractAdminMintAmountsWei
 ) {
-  const rewardTokenInstance = await testHelpers.newMockErc20Token(
-    rewardTokenInfo.tokenName,
-    rewardTokenInfo.tokenSymbol,
-    rewardTokenInfo.tokenDecimals,
-    rewardTokenInfo.tokenCapWei
-  );
-  const stakeTokenInstance = await testHelpers.newMockErc20Token(
-    stakeTokenInfo.tokenName,
-    stakeTokenInfo.tokenSymbol,
-    stakeTokenInfo.tokenDecimals,
-    stakeTokenInfo.tokenCapWei
-  );
-  const stakeRewardTokenInstance = await testHelpers.newMockErc20Token(
-    stakeRewardTokenInfo.tokenName,
-    stakeRewardTokenInfo.tokenSymbol,
-    stakeRewardTokenInfo.tokenDecimals,
-    stakeRewardTokenInfo.tokenCapWei
-  );
+  const stakingPoolsRewardBalanceOf = {};
+
+  const rewardTokenInstances = [];
+  for (let i = 0; i < rewardTokensInfo.length; i++) {
+    const rewardTokenInstance = await testHelpers.newMockErc20Token(
+      rewardTokensInfo[i].tokenName,
+      rewardTokensInfo[i].tokenSymbol,
+      rewardTokensInfo[i].tokenDecimals,
+      rewardTokensInfo[i].tokenCapWei
+    );
+    rewardTokenInstances.push(rewardTokenInstance);
+    stakingPoolsRewardBalanceOf[rewardTokenInstance.address] =
+      hre.ethers.constants.Zero;
+  }
+
+  const stakeTokenInstances = [];
+  for (let i = 0; i < stakeTokensInfo.length; i++) {
+    const stakeTokenInstance = await testHelpers.newMockErc20Token(
+      stakeTokensInfo[i].tokenName,
+      stakeTokensInfo[i].tokenSymbol,
+      stakeTokensInfo[i].tokenDecimals,
+      stakeTokensInfo[i].tokenCapWei
+    );
+    stakeTokenInstances.push(stakeTokenInstance);
+    stakingPoolsRewardBalanceOf[stakeTokenInstance.address] =
+      hre.ethers.constants.Zero;
+  }
+
+  const stakeRewardTokenInstances = [];
+  for (let i = 0; i < stakeRewardTokensInfo.length; i++) {
+    const stakeRewardTokenInstance = await testHelpers.newMockErc20Token(
+      stakeRewardTokensInfo[i].tokenName,
+      stakeRewardTokensInfo[i].tokenSymbol,
+      stakeRewardTokensInfo[i].tokenDecimals,
+      stakeRewardTokensInfo[i].tokenCapWei
+    );
+    stakeRewardTokenInstances.push(stakeRewardTokenInstance);
+    stakingPoolsRewardBalanceOf[stakeRewardTokenInstance.address] =
+      hre.ethers.constants.Zero;
+  }
+
   const stakingPoolInstance = await newStakingPool();
 
   const stakingPoolStakeRewardTokenSameConfigs = [
     {
       poolId: hre.ethers.utils.id("49116098-c835-458b-8890-0f1cbaf51c93"),
       stakeDurationDays: 999,
-      stakeTokenInstance: stakeRewardTokenInstance,
+      stakeTokenInstance: stakeRewardTokenInstances[0],
       stakeTokenDecimals: 18,
-      rewardTokenInstance: stakeRewardTokenInstance,
+      rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("100"),
     },
     {
       poolId: hre.ethers.utils.id("0ade03b3-e6d4-4d15-95d7-3d9d5ba8d963"),
       stakeDurationDays: 365,
-      stakeTokenInstance: stakeRewardTokenInstance,
+      stakeTokenInstance: stakeRewardTokenInstances[0],
       stakeTokenDecimals: 18,
-      rewardTokenInstance: stakeRewardTokenInstance,
+      rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("75"),
     },
     {
       poolId: hre.ethers.utils.id("fc1999e6-e88b-4450-bfae-80d4c6bfd775"),
       stakeDurationDays: 180,
-      stakeTokenInstance: stakeRewardTokenInstance,
+      stakeTokenInstance: stakeRewardTokenInstances[0],
       stakeTokenDecimals: 18,
-      rewardTokenInstance: stakeRewardTokenInstance,
+      rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("50"),
     },
     {
       poolId: hre.ethers.utils.id("b6fdcc87-6475-4326-967f-8ce616cd9c23"),
       stakeDurationDays: 88,
-      stakeTokenInstance: stakeRewardTokenInstance,
+      stakeTokenInstance: stakeRewardTokenInstances[0],
       stakeTokenDecimals: 18,
-      rewardTokenInstance: stakeRewardTokenInstance,
+      rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("25"),
     },
     {
       poolId: hre.ethers.utils.id("b2507daa-6117-4da1-a037-5483116c1397"),
       stakeDurationDays: 31,
-      stakeTokenInstance: stakeRewardTokenInstance,
+      stakeTokenInstance: stakeRewardTokenInstances[0],
       stakeTokenDecimals: 18,
-      rewardTokenInstance: stakeRewardTokenInstance,
+      rewardTokenInstance: stakeRewardTokenInstances[0],
+      rewardTokenDecimals: 18,
+      poolAprWei: hre.ethers.utils.parseEther("5"),
+    },
+    {
+      poolId: hre.ethers.utils.id("c30dbc87-308a-41d9-b1d1-157559a02fe0"),
+      stakeDurationDays: 999,
+      stakeTokenInstance: stakeRewardTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: stakeRewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("100"),
+    },
+    {
+      poolId: hre.ethers.utils.id("79f0bc0b-5059-424a-9567-c7fb9410b279"),
+      stakeDurationDays: 365,
+      stakeTokenInstance: stakeRewardTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: stakeRewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("75"),
+    },
+    {
+      poolId: hre.ethers.utils.id("ea254790-ce62-43b5-aaea-2cb3157365d5"),
+      stakeDurationDays: 180,
+      stakeTokenInstance: stakeRewardTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: stakeRewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("50"),
+    },
+    {
+      poolId: hre.ethers.utils.id("3d80ec2d-7d15-45f4-9367-53dbaf711c71"),
+      stakeDurationDays: 88,
+      stakeTokenInstance: stakeRewardTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: stakeRewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("25"),
+    },
+    {
+      poolId: hre.ethers.utils.id("a025b010-defa-4931-9fdd-403fd9ad3e80"),
+      stakeDurationDays: 31,
+      stakeTokenInstance: stakeRewardTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: stakeRewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("5"),
+    },
+    {
+      poolId: hre.ethers.utils.id("fe31cb38-ce28-47f9-b5f9-8128f1183f77"),
+      stakeDurationDays: 999,
+      stakeTokenInstance: stakeTokenInstances[0],
+      stakeTokenDecimals: 18,
+      rewardTokenInstance: rewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("100"),
+    },
+    {
+      poolId: hre.ethers.utils.id("6fb19058-be01-4fc3-8e8f-ce8977b9ddc2"),
+      stakeDurationDays: 365,
+      stakeTokenInstance: stakeTokenInstances[0],
+      stakeTokenDecimals: 18,
+      rewardTokenInstance: rewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("75"),
+    },
+    {
+      poolId: hre.ethers.utils.id("24d8b40e-e375-4045-965d-066726cfff8b"),
+      stakeDurationDays: 180,
+      stakeTokenInstance: stakeTokenInstances[0],
+      stakeTokenDecimals: 18,
+      rewardTokenInstance: rewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("50"),
+    },
+    {
+      poolId: hre.ethers.utils.id("5a816f52-9e42-4a84-b71e-03eacccf0ee1"),
+      stakeDurationDays: 88,
+      stakeTokenInstance: stakeTokenInstances[0],
+      stakeTokenDecimals: 18,
+      rewardTokenInstance: rewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("25"),
+    },
+    {
+      poolId: hre.ethers.utils.id("c8cb576b-c161-49fe-9d62-7620dc6a7040"),
+      stakeDurationDays: 31,
+      stakeTokenInstance: stakeTokenInstances[0],
+      stakeTokenDecimals: 18,
+      rewardTokenInstance: rewardTokenInstances[1],
+      rewardTokenDecimals: 6,
+      poolAprWei: hre.ethers.utils.parseEther("5"),
+    },
+    {
+      poolId: hre.ethers.utils.id("021a97f0-78ca-4159-9f5b-6c71ea623c4d"),
+      stakeDurationDays: 999,
+      stakeTokenInstance: stakeTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: rewardTokenInstances[0],
+      rewardTokenDecimals: 18,
+      poolAprWei: hre.ethers.utils.parseEther("100"),
+    },
+    {
+      poolId: hre.ethers.utils.id("1ac44bc3-57ed-4257-81cc-392236608b13"),
+      stakeDurationDays: 365,
+      stakeTokenInstance: stakeTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: rewardTokenInstances[0],
+      rewardTokenDecimals: 18,
+      poolAprWei: hre.ethers.utils.parseEther("75"),
+    },
+    {
+      poolId: hre.ethers.utils.id("b4b8cedb-bda4-4474-bd2d-2d0ba2cf386a"),
+      stakeDurationDays: 180,
+      stakeTokenInstance: stakeTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: rewardTokenInstances[0],
+      rewardTokenDecimals: 18,
+      poolAprWei: hre.ethers.utils.parseEther("50"),
+    },
+    {
+      poolId: hre.ethers.utils.id("7e5621d8-0282-4f4d-bb4b-a6e4e8ac2eb4"),
+      stakeDurationDays: 88,
+      stakeTokenInstance: stakeTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: rewardTokenInstances[0],
+      rewardTokenDecimals: 18,
+      poolAprWei: hre.ethers.utils.parseEther("25"),
+    },
+    {
+      poolId: hre.ethers.utils.id("3407b606-52cb-4e37-a9d0-a1761d1dba9d"),
+      stakeDurationDays: 31,
+      stakeTokenInstance: stakeTokenInstances[1],
+      stakeTokenDecimals: 6,
+      rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("5"),
     },
   ];
 
   for (let i = 0; i < contractAdminRoleAccounts.length; i++) {
-    await rewardTokenInstance.transfer(
-      await contractAdminRoleAccounts[i].getAddress(),
-      contractAdminMintAmountsWei.rewardToken
-    );
-    await stakeTokenInstance.transfer(
-      await contractAdminRoleAccounts[i].getAddress(),
-      contractAdminMintAmountsWei.stakeToken
-    );
-    await stakeRewardTokenInstance.transfer(
-      await contractAdminRoleAccounts[i].getAddress(),
-      contractAdminMintAmountsWei.stakeRewardToken
-    );
+    for (let j = 0; j < rewardTokenInstances.length; j++) {
+      await rewardTokenInstances[j].transfer(
+        await contractAdminRoleAccounts[i].getAddress(),
+        contractAdminMintAmountsWei.rewardToken
+      );
+    }
+
+    for (let j = 0; j < stakeTokenInstances.length; j++) {
+      await stakeTokenInstances[j].transfer(
+        await contractAdminRoleAccounts[i].getAddress(),
+        contractAdminMintAmountsWei.stakeToken
+      );
+    }
+
+    for (let j = 0; j < stakeRewardTokenInstances.length; j++) {
+      await stakeRewardTokenInstances[j].transfer(
+        await contractAdminRoleAccounts[i].getAddress(),
+        contractAdminMintAmountsWei.stakeRewardToken
+      );
+    }
   }
 
   await testHelpers.grantRole(
@@ -225,11 +391,12 @@ async function initializeStakingPoolTestData(
   );
 
   return [
-    rewardTokenInstance,
-    stakeTokenInstance,
-    stakeRewardTokenInstance,
+    rewardTokenInstances,
+    stakeTokenInstances,
+    stakeRewardTokenInstances,
     stakingPoolInstance,
     stakingPoolStakeRewardTokenSameConfigs,
+    stakingPoolsRewardBalanceOf,
   ];
 }
 

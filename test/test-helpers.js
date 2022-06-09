@@ -30,7 +30,7 @@ async function approveTransferWithVerify(
   const amountDecimals = scaleWeiToDecimals(amountWei, tokenDecimals);
 
   await expect(
-    tokenContractInstance.connect(fromSigner).approve(toAddress, amountWei)
+    tokenContractInstance.connect(fromSigner).approve(toAddress, amountDecimals)
   )
     .to.emit(tokenContractInstance, "Approval")
     .withArgs(fromAddress, toAddress, amountDecimals);
@@ -674,7 +674,9 @@ async function transferAndApproveWithVerify(
   const amountDecimals = scaleWeiToDecimals(amountWei, tokenDecimals);
 
   await expect(
-    tokenContractInstance.connect(bankSigner).transfer(fromAddress, amountWei)
+    tokenContractInstance
+      .connect(bankSigner)
+      .transfer(fromAddress, amountDecimals)
   )
     .to.emit(tokenContractInstance, "Transfer")
     .withArgs(bankAddress, fromAddress, amountDecimals);
@@ -686,7 +688,7 @@ async function transferAndApproveWithVerify(
     tokenContractInstance,
     fromSigner,
     toAddress,
-    amountWei
+    scaleDecimalsToWei(amountDecimals, tokenDecimals)
   );
 }
 
