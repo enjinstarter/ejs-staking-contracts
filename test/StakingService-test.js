@@ -430,6 +430,36 @@ describe("StakingService", function () {
           stakingPoolStakeRewardTokenSameConfigs[14].rewardTokenInstance,
         rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
       },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[15].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[15].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[16].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[16].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[17].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[17].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[18].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[18].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
+      },
+      {
+        poolId: stakingPoolStakeRewardTokenSameConfigs[19].poolId,
+        rewardTokenInstance:
+          stakingPoolStakeRewardTokenSameConfigs[19].rewardTokenInstance,
+        rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
+      },
     ];
 
     const stakingPoolRewardStats = {};
