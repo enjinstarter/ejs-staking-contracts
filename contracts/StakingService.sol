@@ -278,10 +278,17 @@ contract StakingService is
             "SSvcs: maturity timestamp"
         );
 
+        uint256 truncatedStakeAmountWei = stakeTokenDecimals <
+            TOKEN_MAX_DECIMALS
+            ? stakeAmountWei
+                .scaleWeiToDecimals(stakeTokenDecimals)
+                .scaleDecimalsToWei(stakeTokenDecimals)
+            : stakeAmountWei;
+
         uint256 estimatedRewardAtMaturityWei = _estimateRewardAtMaturityWei(
             stakeDurationDays,
             poolAprWei,
-            stakeAmountWei
+            truncatedStakeAmountWei
         );
         require(
             estimatedRewardAtMaturityWei <=
@@ -291,14 +298,14 @@ contract StakingService is
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
         if (_stakes[stakekey].isInitialized) {
-            _stakes[stakekey].stakeAmountWei += stakeAmountWei;
+            _stakes[stakekey].stakeAmountWei += truncatedStakeAmountWei;
             _stakes[stakekey].stakeTimestamp = block.timestamp;
             _stakes[stakekey].stakeMaturityTimestamp = stakeMaturityTimestamp;
             _stakes[stakekey]
                 .estimatedRewardAtMaturityWei += estimatedRewardAtMaturityWei;
         } else {
             _stakes[stakekey] = StakeInfo({
-                stakeAmountWei: stakeAmountWei,
+                stakeAmountWei: truncatedStakeAmountWei,
                 stakeTimestamp: block.timestamp,
                 stakeMaturityTimestamp: stakeMaturityTimestamp,
                 estimatedRewardAtMaturityWei: estimatedRewardAtMaturityWei,
@@ -308,7 +315,7 @@ contract StakingService is
             });
         }
 
-        _stakingPoolStats[poolId].totalStakedWei += stakeAmountWei;
+        _stakingPoolStats[poolId].totalStakedWei += truncatedStakeAmountWei;
         _stakingPoolStats[poolId]
             .rewardToBeDistributedWei += estimatedRewardAtMaturityWei;
 
@@ -316,7 +323,7 @@ contract StakingService is
             poolId,
             msg.sender,
             stakeTokenAddress,
-            stakeAmountWei,
+            truncatedStakeAmountWei,
             block.timestamp,
             stakeMaturityTimestamp,
             estimatedRewardAtMaturityWei
@@ -325,7 +332,7 @@ contract StakingService is
         _transferTokensToContract(
             stakeTokenAddress,
             stakeTokenDecimals,
-            stakeAmountWei,
+            truncatedStakeAmountWei,
             msg.sender
         );
     }
