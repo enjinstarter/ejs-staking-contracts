@@ -1466,8 +1466,6 @@ describe("StakingService", function () {
     let lastDigitDeltaRewardAtMaturityWei;
     let toStakeAmountWei;
 
-    console.log(`\n`);
-
     if (
       isAddStake &&
       stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
