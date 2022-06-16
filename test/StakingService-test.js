@@ -1093,7 +1093,7 @@ describe("StakingService", function () {
 
       expect(balanceOfContractAfterRemove).to.be.closeTo(
         hre.ethers.constants.Zero,
-        3
+        5
       );
     }
   });
@@ -1367,6 +1367,11 @@ describe("StakingService", function () {
       expectRewardToBeDistributedWei
     );
 
+    const truncatedRewardAmountWei = computeTruncatedAmountWei(
+      rewardAmountWei,
+      rewardTokenDecimals
+    );
+
     await testHelpers.approveTransferWithVerify(
       rewardTokenContractInstance,
       fromWalletSigner,
@@ -1384,27 +1389,49 @@ describe("StakingService", function () {
         poolId,
         await fromWalletSigner.getAddress(),
         rewardTokenContractInstance.address,
-        rewardAmountWei
+        truncatedRewardAmountWei
       );
 
-    const expectBalanceOfAfterAdd =
+    const expectedBalanceOfAfterAdd =
       stakingPoolRewardBalanceOf.add(rewardAmountWei);
-    stakingPoolRewardStats[poolId].totalRewardWei =
+    const expectBalanceOfAfterAdd = stakingPoolRewardBalanceOf.add(
+      truncatedRewardAmountWei
+    );
+
+    const expectedTotalRewardWei =
       stakingPoolRewardStats[poolId].totalRewardWei.add(rewardAmountWei);
+    stakingPoolRewardStats[poolId].totalRewardWei = stakingPoolRewardStats[
+      poolId
+    ].totalRewardWei.add(truncatedRewardAmountWei);
 
     const balanceOfAfterAdd = await rewardTokenContractInstance.balanceOf(
       stakingServiceContractInstance.address
     );
     expect(balanceOfAfterAdd).to.be.closeTo(
       testHelpers.scaleWeiToDecimals(
-        expectBalanceOfAfterAdd,
+        expectedBalanceOfAfterAdd,
         rewardTokenDecimals
       ),
       3
     );
+    expect(balanceOfAfterAdd).to.equal(
+      testHelpers.scaleWeiToDecimals(
+        expectBalanceOfAfterAdd,
+        rewardTokenDecimals
+      )
+    );
 
     const stakingPoolStatsAfterAdd =
       await stakingServiceContractInstance.getStakingPoolStats(poolId);
+
+    verifyActualWithTruncatedValueWei(
+      10,
+      rewardTokenDecimals,
+      stakingPoolStatsAfterAdd.totalRewardWei,
+      expectedTotalRewardWei,
+      hre.ethers.constants.Zero
+    );
+
     expect(stakingPoolStatsAfterAdd.totalRewardWei).to.equal(
       stakingPoolRewardStats[poolId].totalRewardWei
     );
@@ -1479,11 +1506,11 @@ describe("StakingService", function () {
         stakeConfig.addStakeAmountWei
       );
 
-      const truncatedStakeAmountWei = computeTruncatedStakeAmountWei(
+      const truncatedStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
-      const truncatedAddStakeAmountWei = computeTruncatedStakeAmountWei(
+      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.addStakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -1511,7 +1538,7 @@ describe("StakingService", function () {
       );
     } else {
       toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedStakeAmountWei(
+      expectStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -1967,6 +1994,9 @@ describe("StakingService", function () {
       const stakeTokenDecimals =
         await stakingPoolConfig.stakeTokenInstance.decimals();
 
+      const rewardTokenDecimals =
+        await stakingPoolConfig.rewardTokenInstance.decimals();
+
       /*
       console.log(
         `removeRevokedStakesWithVerify stakingPoolStatsBeforeRemove: spid=${spid}, poolUuid=${stakingPoolConfig.poolUuid}, totalRewardWei=${stakingPoolStatsBeforeRemove.totalRewardWei}, totalStakedWei=${stakingPoolStatsBeforeRemove.totalStakedWei}, rewardToBeDistributedWei=${stakingPoolStatsBeforeRemove.rewardToBeDistributedWei}, totalRevokedStakeWei=${stakingPoolStatsBeforeRemove.totalRevokedStakeWei}, expectTotalRevokedStakeWei=${expectTotalRevokedStakeWei}, revokedStakesWei=${revokedStakesWei[spid]}`
@@ -1975,7 +2005,7 @@ describe("StakingService", function () {
 
       verifyActualWithTruncatedValueWei(
         60,
-        stakeTokenDecimals,
+        Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsBeforeRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
         hre.ethers.constants.Two
@@ -2089,12 +2119,15 @@ describe("StakingService", function () {
       const stakeTokenDecimals =
         await stakingPoolConfig.stakeTokenInstance.decimals();
 
+      const rewardTokenDecimals =
+        await stakingPoolConfig.rewardTokenInstance.decimals();
+
       const stakingPoolStatsAfterRemove =
         await stakingServiceContractInstance.getStakingPoolStats(spid);
 
       verifyActualWithTruncatedValueWei(
         60,
-        stakeTokenDecimals,
+        Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsAfterRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
         hre.ethers.constants.Two
@@ -2143,6 +2176,9 @@ describe("StakingService", function () {
       const stakeTokenDecimals =
         await stakingPoolConfig.stakeTokenInstance.decimals();
 
+      const rewardTokenDecimals =
+        await stakingPoolConfig.rewardTokenInstance.decimals();
+
       /*
       console.log(
         `removeUnallocatedStakingPoolRewardWithVerify: spid=${spid}, poolUuid=${stakingPoolConfig.poolUuid}, stakeTokenDecimals=${stakeTokenDecimals}, totalRewardWei=${stakingPoolStatsBeforeRemove.totalRewardWei}, expectTotalRewardWei=${expectStakingPoolStats[spid].totalRewardWei}, totalStakedWei=${stakingPoolStatsBeforeRemove.totalStakedWei}, expectTotalStakedWei=${expectStakingPoolStats[spid].totalStakedWei}, rewardToBeDistributedWei=${stakingPoolStatsBeforeRemove.rewardToBeDistributedWei}, expectRewardToBeDistributedWei=${expectStakingPoolStats[spid].rewardToBeDistributedWei}, totalRevokedStakeWei=${stakingPoolStatsBeforeRemove.totalRevokedStakeWei}`
@@ -2150,8 +2186,8 @@ describe("StakingService", function () {
       */
 
       verifyActualWithTruncatedValueWei(
-        60,
-        stakeTokenDecimals,
+        50,
+        Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsBeforeRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
         hre.ethers.constants.Two
@@ -2214,8 +2250,11 @@ describe("StakingService", function () {
     */
 
     verifyActualWithTruncatedValueWei(
-      60,
-      specifiedStakingPoolStakeTokenDecimals,
+      50,
+      Math.min(
+        specifiedStakingPoolRewardTokenDecimals,
+        specifiedStakingPoolStakeTokenDecimals
+      ),
       unallocatedRewardWei,
       expectUnallocatedRewardWei,
       hre.ethers.constants.Two
@@ -2267,8 +2306,11 @@ describe("StakingService", function () {
       );
 
     verifyActualWithTruncatedValueWei(
-      60,
-      specifiedStakingPoolStakeTokenDecimals,
+      50,
+      Math.min(
+        specifiedStakingPoolRewardTokenDecimals,
+        specifiedStakingPoolStakeTokenDecimals
+      ),
       expectStakingPoolStats[stakingPoolId].totalRewardWei,
       expectTotalRewardWeiAfterRemove,
       hre.ethers.constants.Two
@@ -2282,12 +2324,15 @@ describe("StakingService", function () {
       const stakeTokenDecimals =
         await stakingPoolConfig.stakeTokenInstance.decimals();
 
+      const rewardTokenDecimals =
+        await stakingPoolConfig.rewardTokenInstance.decimals();
+
       const stakingPoolStatsAfterRemove =
         await stakingServiceContractInstance.getStakingPoolStats(spid);
 
       verifyActualWithTruncatedValueWei(
-        60,
-        stakeTokenDecimals,
+        50,
+        Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsAfterRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
         hre.ethers.constants.Two
@@ -2431,11 +2476,11 @@ describe("StakingService", function () {
       toStakeAmountWei = stakeConfig.stakeAmountWei.add(
         stakeConfig.addStakeAmountWei
       );
-      const truncatedStakeAmountWei = computeTruncatedStakeAmountWei(
+      const truncatedStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
-      const truncatedAddStakeAmountWei = computeTruncatedStakeAmountWei(
+      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.addStakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -2462,7 +2507,7 @@ describe("StakingService", function () {
       );
     } else {
       toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedStakeAmountWei(
+      expectStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -2917,7 +2962,7 @@ describe("StakingService", function () {
     const signerAddress = await stakeConfig.signer.getAddress();
 
     if (isAddStake) {
-      const expectStakeAmountWei = computeTruncatedStakeAmountWei(
+      const expectStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -3049,7 +3094,7 @@ describe("StakingService", function () {
       stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero)
     ) {
       toStakeAmountWei = stakeConfig.addStakeAmountWei;
-      expectStakeAmountWei = computeTruncatedStakeAmountWei(
+      expectStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.addStakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -3058,7 +3103,7 @@ describe("StakingService", function () {
         stakeConfig.addStakeSecondsAfterStartblockTimestamp;
     } else {
       toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedStakeAmountWei(
+      expectStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -3871,11 +3916,11 @@ describe("StakingService", function () {
         toStakeAmountWei = stakeConfigs[i].stakeAmountWei.add(
           stakeConfigs[i].addStakeAmountWei
         );
-        const truncatedStakeAmountWei = computeTruncatedStakeAmountWei(
+        const truncatedStakeAmountWei = computeTruncatedAmountWei(
           stakeConfigs[i].stakeAmountWei,
           stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
         );
-        const truncatedAddStakeAmountWei = computeTruncatedStakeAmountWei(
+        const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
           stakeConfigs[i].addStakeAmountWei,
           stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
         );
@@ -3901,7 +3946,7 @@ describe("StakingService", function () {
           ? hre.ethers.constants.Zero
           : stakeConfigs[i].stakeAmountWei;
 
-        expectStakeAmountWei = computeTruncatedStakeAmountWei(
+        expectStakeAmountWei = computeTruncatedAmountWei(
           toStakeAmountWei,
           stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
         );
@@ -4080,7 +4125,7 @@ describe("StakingService", function () {
 
       expect(balanceOfContractAfterRemove).to.be.closeTo(
         expectBalanceOfContractAfterRemove,
-        4
+        5
       );
     }
 
@@ -4131,7 +4176,7 @@ describe("StakingService", function () {
 
       expect(balanceOfContractAfterRemove).to.be.closeTo(
         expectBalanceOfContractAfterRemove,
-        2
+        4
       );
     }
   }
@@ -4774,11 +4819,11 @@ describe("StakingService", function () {
       toStakeAmountWei = stakeConfig.stakeAmountWei.add(
         stakeConfig.addStakeAmountWei
       );
-      const truncatedStakeAmountWei = computeTruncatedStakeAmountWei(
+      const truncatedStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
-      const truncatedAddStakeAmountWei = computeTruncatedStakeAmountWei(
+      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.addStakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -4808,7 +4853,7 @@ describe("StakingService", function () {
       );
     } else {
       toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedStakeAmountWei(
+      expectStakeAmountWei = computeTruncatedAmountWei(
         stakeConfig.stakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals
       );
@@ -5319,11 +5364,11 @@ describe("StakingService", function () {
         toStakeAmountWei = stakeConfig.stakeAmountWei.add(
           stakeConfig.addStakeAmountWei
         );
-        expectStakeAmountWei = computeTruncatedStakeAmountWei(
+        expectStakeAmountWei = computeTruncatedAmountWei(
           stakeConfig.stakeAmountWei,
           stakeConfig.stakingPoolConfig.stakeTokenDecimals
         ).add(
-          computeTruncatedStakeAmountWei(
+          computeTruncatedAmountWei(
             stakeConfig.addStakeAmountWei,
             stakeConfig.stakingPoolConfig.stakeTokenDecimals
           )
@@ -5335,7 +5380,7 @@ describe("StakingService", function () {
           stakeConfig.addStakeSecondsAfterStartblockTimestamp;
       } else {
         toStakeAmountWei = stakeConfig.stakeAmountWei;
-        expectStakeAmountWei = computeTruncatedStakeAmountWei(
+        expectStakeAmountWei = computeTruncatedAmountWei(
           stakeConfig.stakeAmountWei,
           stakeConfig.stakingPoolConfig.stakeTokenDecimals
         );
@@ -5503,13 +5548,13 @@ describe("StakingService", function () {
       .mul(hre.ethers.BigNumber.from(lastDigitDelta));
   }
 
-  function computeTruncatedStakeAmountWei(stakeAmountWei, stakeTokenDecimals) {
-    return stakeTokenDecimals < testHelpers.TOKEN_MAX_DECIMALS
+  function computeTruncatedAmountWei(amountWei, tokenDecimals) {
+    return tokenDecimals < testHelpers.TOKEN_MAX_DECIMALS
       ? testHelpers.scaleDecimalsToWei(
-          testHelpers.scaleWeiToDecimals(stakeAmountWei, stakeTokenDecimals),
-          stakeTokenDecimals
+          testHelpers.scaleWeiToDecimals(amountWei, tokenDecimals),
+          tokenDecimals
         )
-      : stakeAmountWei;
+      : amountWei;
   }
 
   function verifyActualWithTruncatedValueWei(

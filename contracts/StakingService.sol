@@ -438,8 +438,6 @@ contract StakingService is
     {
         require(rewardAmountWei > 0, "SSvcs: reward amount");
 
-        _stakingPoolStats[poolId].totalRewardWei += rewardAmountWei;
-
         (
             uint256 stakeDurationDays,
             address stakeTokenAddress,
@@ -463,17 +461,26 @@ contract StakingService is
         );
         require(poolAprWei > 0, "SSvcs: pool APR");
 
+        uint256 truncatedRewardAmountWei = rewardTokenDecimals <
+            TOKEN_MAX_DECIMALS
+            ? rewardAmountWei
+                .scaleWeiToDecimals(rewardTokenDecimals)
+                .scaleDecimalsToWei(rewardTokenDecimals)
+            : rewardAmountWei;
+
+        _stakingPoolStats[poolId].totalRewardWei += truncatedRewardAmountWei;
+
         emit StakingPoolRewardAdded(
             poolId,
             msg.sender,
             rewardTokenAddress,
-            rewardAmountWei
+            truncatedRewardAmountWei
         );
 
         _transferTokensToContract(
             rewardTokenAddress,
             rewardTokenDecimals,
-            rewardAmountWei,
+            truncatedRewardAmountWei,
             msg.sender
         );
     }
