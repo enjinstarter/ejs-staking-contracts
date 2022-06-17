@@ -1486,93 +1486,23 @@ describe("StakingService", function () {
     );
     */
 
-    let expectStakeAmountWei;
-    let expectStakeTimestamp;
-    let expectRewardAtMaturityWei;
-    // let lastDigitDeltaStakeAmountWei;
-    let lastDigitDeltaRewardAtMaturityWei;
-    let toStakeAmountWei;
-
-    if (
-      isAddStake &&
-      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
-      !addStakeExceedPoolReward
-    ) {
-      console.log(
-        `claimRewardWithVerify (stake more): isAddStake=${isAddStake}, addStakeAmountWei=${stakeConfig.addStakeAmountWei}, addStakeExceedPoolReward=${addStakeExceedPoolReward}, exceedPoolReward=${stakeConfig.exceedPoolReward}`
-      );
-
-      toStakeAmountWei = stakeConfig.stakeAmountWei.add(
-        stakeConfig.addStakeAmountWei
-      );
-
-      const truncatedStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.stakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.addStakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      expectStakeAmountWei = truncatedStakeAmountWei.add(
-        truncatedAddStakeAmountWei
-      );
-
-      // lastDigitDeltaStakeAmountWei = 20;
-      lastDigitDeltaRewardAtMaturityWei = 50;
-
-      expectStakeTimestamp =
-        startblockTimestamp +
-        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
-
-      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        truncatedStakeAmountWei
-      ).add(
-        estimateRewardAtMaturityWei(
-          stakeConfig.stakingPoolConfig.poolAprWei,
-          stakeConfig.stakingPoolConfig.stakeDurationDays,
-          truncatedAddStakeAmountWei
-        )
-      );
-    } else {
-      toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.stakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-
-      // lastDigitDeltaStakeAmountWei = 10;
-      lastDigitDeltaRewardAtMaturityWei = 30;
-
-      expectStakeTimestamp =
-        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
-
-      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        expectStakeAmountWei
-      );
-    }
-
-    const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
-      stakeConfig.stakingPoolConfig.poolAprWei,
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      toStakeAmountWei
-    );
-
-    verifyActualWithTruncatedValueWei(
-      lastDigitDeltaRewardAtMaturityWei,
-      stakeConfig.stakingPoolConfig.stakeTokenDecimals,
+    const {
+      expectStakeAmountWei,
+      expectStakeTimestamp,
+      expectStakeMaturityTimestamp,
       expectRewardAtMaturityWei,
-      estimatedRewardAtMaturityWei,
-      hre.ethers.constants.One
-    );
-
-    const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      expectStakeTimestamp
+    } = verifyRewardAtMaturity(
+      stakeConfig,
+      startblockTimestamp,
+      10,
+      30,
+      20,
+      60,
+      hre.ethers.constants.One,
+      isAddStake &&
+        stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+        !addStakeExceedPoolReward,
+      false
     );
 
     const currentBlockTimestamp = await testHelpers.getCurrentBlockTimestamp();
@@ -2004,7 +1934,7 @@ describe("StakingService", function () {
       */
 
       verifyActualWithTruncatedValueWei(
-        60,
+        80,
         Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsBeforeRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
@@ -2126,7 +2056,7 @@ describe("StakingService", function () {
         await stakingServiceContractInstance.getStakingPoolStats(spid);
 
       verifyActualWithTruncatedValueWei(
-        60,
+        80,
         Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsAfterRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
@@ -2186,7 +2116,7 @@ describe("StakingService", function () {
       */
 
       verifyActualWithTruncatedValueWei(
-        50,
+        80,
         Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsBeforeRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
@@ -2250,7 +2180,7 @@ describe("StakingService", function () {
     */
 
     verifyActualWithTruncatedValueWei(
-      50,
+      80,
       Math.min(
         specifiedStakingPoolRewardTokenDecimals,
         specifiedStakingPoolStakeTokenDecimals
@@ -2284,7 +2214,7 @@ describe("StakingService", function () {
       specifiedStakingPoolStakeTokenDecimals,
       balanceOfContractAfterRemove,
       expectBalanceOfContractAfterRemove,
-      hre.ethers.constants.Two
+      hre.ethers.BigNumber.from("3")
     );
 
     const balanceOfAdminWalletAfterRemove =
@@ -2297,7 +2227,7 @@ describe("StakingService", function () {
       specifiedStakingPoolStakeTokenDecimals,
       balanceOfAdminWalletAfterRemove,
       expectBalanceOfAdminWalletAfterRemove,
-      hre.ethers.constants.Two
+      hre.ethers.BigNumber.from("3")
     );
 
     expectStakingPoolStats[stakingPoolId].totalRewardWei =
@@ -2306,7 +2236,7 @@ describe("StakingService", function () {
       );
 
     verifyActualWithTruncatedValueWei(
-      50,
+      80,
       Math.min(
         specifiedStakingPoolRewardTokenDecimals,
         specifiedStakingPoolStakeTokenDecimals
@@ -2331,7 +2261,7 @@ describe("StakingService", function () {
         await stakingServiceContractInstance.getStakingPoolStats(spid);
 
       verifyActualWithTruncatedValueWei(
-        50,
+        80,
         Math.min(rewardTokenDecimals, stakeTokenDecimals),
         stakingPoolStatsAfterRemove.totalRewardWei,
         expectStakingPoolStats[spid].totalRewardWei,
@@ -2461,86 +2391,25 @@ describe("StakingService", function () {
       isAddStake &&
       stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
 
-    let expectStakeAmountWei;
-    let expectStakeTimestamp;
-    let expectRewardAtMaturityWei;
-    let lastDigitDeltaStakeAmountWei;
-    let lastDigitDeltaRewardAtMaturityWei;
-    let toStakeAmountWei;
-
-    if (
-      isAddStake &&
-      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
-      !addStakeExceedPoolReward
-    ) {
-      toStakeAmountWei = stakeConfig.stakeAmountWei.add(
-        stakeConfig.addStakeAmountWei
-      );
-      const truncatedStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.stakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.addStakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      expectStakeAmountWei = truncatedStakeAmountWei.add(
-        truncatedAddStakeAmountWei
-      );
-      lastDigitDeltaStakeAmountWei = 20;
-      lastDigitDeltaRewardAtMaturityWei = 50;
-
-      expectStakeTimestamp =
-        startblockTimestamp +
-        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
-
-      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        truncatedStakeAmountWei
-      ).add(
-        estimateRewardAtMaturityWei(
-          stakeConfig.stakingPoolConfig.poolAprWei,
-          stakeConfig.stakingPoolConfig.stakeDurationDays,
-          truncatedAddStakeAmountWei
-        )
-      );
-    } else {
-      toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.stakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      lastDigitDeltaStakeAmountWei = 10;
-      lastDigitDeltaRewardAtMaturityWei = 30;
-
-      expectStakeTimestamp =
-        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
-
-      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        expectStakeAmountWei
-      );
-    }
-
-    const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
-      stakeConfig.stakingPoolConfig.poolAprWei,
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      toStakeAmountWei
-    );
-
-    verifyActualWithTruncatedValueWei(
-      lastDigitDeltaRewardAtMaturityWei,
-      stakeConfig.stakingPoolConfig.stakeTokenDecimals,
+    const {
+      expectStakeAmountWei,
+      expectStakeTimestamp,
+      expectStakeMaturityTimestamp,
       expectRewardAtMaturityWei,
-      estimatedRewardAtMaturityWei,
-      hre.ethers.constants.One
-    );
-
-    const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      expectStakeTimestamp
+      lastDigitDeltaStakeAmountWei,
+      actualStakeAmountWei,
+    } = verifyRewardAtMaturity(
+      stakeConfig,
+      startblockTimestamp,
+      10,
+      30,
+      20,
+      60,
+      hre.ethers.constants.One,
+      isAddStake &&
+        stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+        !addStakeExceedPoolReward,
+      false
     );
 
     const expectRewardAmountWei =
@@ -2659,7 +2528,7 @@ describe("StakingService", function () {
       lastDigitDeltaStakeAmountWei,
       stakeConfig.stakingPoolConfig.stakeTokenDecimals,
       stakeInfoBeforeRevoke.stakeAmountWei,
-      toStakeAmountWei,
+      actualStakeAmountWei,
       hre.ethers.constants.Zero
     );
 
@@ -2976,10 +2845,13 @@ describe("StakingService", function () {
         );
       const expectClaimableRewardBeforeAddStakeWei = hre.ethers.constants.Zero;
       const expectEstimatedRewardAtMaturityBeforeAddStakeWei =
-        estimateRewardAtMaturityWei(
-          stakeConfig.stakingPoolConfig.poolAprWei,
-          stakeConfig.stakingPoolConfig.stakeDurationDays,
-          expectStakeAmountWei
+        computeTruncatedAmountWei(
+          estimateRewardAtMaturityWei(
+            stakeConfig.stakingPoolConfig.poolAprWei,
+            stakeConfig.stakingPoolConfig.stakeDurationDays,
+            expectStakeAmountWei
+          ),
+          stakeConfig.stakingPoolConfig.rewardTokenDecimals
         );
       const expectIsActiveBeforeAddStake = true;
 
@@ -3085,36 +2957,22 @@ describe("StakingService", function () {
       isAddStake &&
       stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero);
 
-    let expectStakeAmountWei;
-    let expectStakeTimestamp;
-    let toStakeAmountWei;
-
-    if (
-      isAddStake &&
-      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero)
-    ) {
-      toStakeAmountWei = stakeConfig.addStakeAmountWei;
-      expectStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.addStakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      expectStakeTimestamp =
-        startblockTimestamp +
-        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
-    } else {
-      toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.stakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      expectStakeTimestamp =
-        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
-    }
-
-    const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-      stakeConfig.stakingPoolConfig.poolAprWei,
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      expectStakeAmountWei
+    const {
+      expectStakeAmountWei,
+      expectStakeTimestamp,
+      expectStakeMaturityTimestamp,
+      expectRewardAtMaturityWei,
+      actualStakeAmountWei,
+    } = verifyRewardAtMaturity(
+      stakeConfig,
+      startblockTimestamp,
+      10,
+      30,
+      20,
+      50,
+      hre.ethers.constants.One,
+      isAddStake && stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero),
+      true
     );
 
     /*
@@ -3209,11 +3067,6 @@ describe("StakingService", function () {
       expectStakeAmountWei
     );
 
-    const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      expectStakeTimestamp
-    );
-
     /*
     console.log(
       `stakeWithVerify closeStakingPool00: isAddStake=${isAddStake}, poolUuid=${
@@ -3298,7 +3151,7 @@ describe("StakingService", function () {
     await expect(
       stakingServiceContractInstance
         .connect(stakeConfig.signer)
-        .stake(stakeConfig.stakingPoolConfig.poolId, toStakeAmountWei)
+        .stake(stakeConfig.stakingPoolConfig.poolId, actualStakeAmountWei)
     ).to.be.revertedWith("SSvcs: closed");
 
     /*
@@ -3431,7 +3284,7 @@ describe("StakingService", function () {
       await expect(
         stakingServiceContractInstance
           .connect(stakeConfig.signer)
-          .stake(stakeConfig.stakingPoolConfig.poolId, toStakeAmountWei)
+          .stake(stakeConfig.stakingPoolConfig.poolId, actualStakeAmountWei)
       ).to.be.revertedWith("SSvcs: insufficient");
     } else {
       expectTotalStakedWei = totalStakedWei.add(expectStakeAmountWei);
@@ -3464,7 +3317,7 @@ describe("StakingService", function () {
       await expect(
         stakingServiceContractInstance
           .connect(stakeConfig.signer)
-          .stake(stakeConfig.stakingPoolConfig.poolId, toStakeAmountWei)
+          .stake(stakeConfig.stakingPoolConfig.poolId, actualStakeAmountWei)
       )
         .to.emit(stakingServiceContractInstance, "Staked")
         .withArgs(
@@ -3480,9 +3333,9 @@ describe("StakingService", function () {
 
     /*
     console.log(
-      `stakeWithVerify verifyStakesInfo00: isAddStake=${isAddStake}, poolId=${
-        stakeConfig.stakingPoolConfig.poolId
-      }, stakeAmountWei=${
+      `stakeWithVerify verifyStakesInfo00: isAddStake=${isAddStake}, poolUuid=${
+        stakeConfig.stakingPoolConfig.poolUuid
+      }, poolId=${stakeConfig.stakingPoolConfig.poolId}, stakeAmountWei=${
         stakeConfig.stakeAmountWei
       }, stakeSecondsAfterStartblockTimestamp=${
         stakeConfig.stakeSecondsAfterStartblockTimestamp
@@ -3903,75 +3756,20 @@ describe("StakingService", function () {
         isAddStake &&
         stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero);
 
-      let expectStakeAmountWei;
-      let expectRewardAtMaturityWei;
-      let lastDigitDeltaRewardAtMaturityWei;
-      let toStakeAmountWei;
-
-      if (
-        isAddStake &&
-        stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
-        !addStakeExceedPoolReward
-      ) {
-        toStakeAmountWei = stakeConfigs[i].stakeAmountWei.add(
-          stakeConfigs[i].addStakeAmountWei
+      const { expectStakeAmountWei, expectRewardAtMaturityWei } =
+        verifyRewardAtMaturity(
+          stakeConfigs[i],
+          0, // unused
+          10,
+          30,
+          20,
+          60,
+          hre.ethers.constants.One,
+          isAddStake &&
+            stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+            !addStakeExceedPoolReward,
+          false
         );
-        const truncatedStakeAmountWei = computeTruncatedAmountWei(
-          stakeConfigs[i].stakeAmountWei,
-          stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
-        );
-        const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
-          stakeConfigs[i].addStakeAmountWei,
-          stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
-        );
-
-        expectStakeAmountWei = truncatedStakeAmountWei.add(
-          truncatedAddStakeAmountWei
-        );
-        lastDigitDeltaRewardAtMaturityWei = 50;
-
-        expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-          stakeConfigs[i].stakingPoolConfig.poolAprWei,
-          stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-          truncatedStakeAmountWei
-        ).add(
-          estimateRewardAtMaturityWei(
-            stakeConfigs[i].stakingPoolConfig.poolAprWei,
-            stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-            truncatedAddStakeAmountWei
-          )
-        );
-      } else {
-        toStakeAmountWei = stakeExceedPoolReward
-          ? hre.ethers.constants.Zero
-          : stakeConfigs[i].stakeAmountWei;
-
-        expectStakeAmountWei = computeTruncatedAmountWei(
-          toStakeAmountWei,
-          stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
-        );
-        lastDigitDeltaRewardAtMaturityWei = 30;
-
-        expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-          stakeConfigs[i].stakingPoolConfig.poolAprWei,
-          stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-          expectStakeAmountWei
-        );
-      }
-
-      const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfigs[i].stakingPoolConfig.poolAprWei,
-        stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-        toStakeAmountWei
-      );
-
-      verifyActualWithTruncatedValueWei(
-        lastDigitDeltaRewardAtMaturityWei,
-        stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals,
-        expectRewardAtMaturityWei,
-        estimatedRewardAtMaturityWei,
-        hre.ethers.constants.One
-      );
 
       if (
         (stakeConfigs[i].shouldRevokeBeforeClaim ||
@@ -4804,98 +4602,29 @@ describe("StakingService", function () {
       return [totalRewardWei, totalStakedWei, rewardToBeDistributedWei];
     }
 
-    let expectStakeAmountWei;
-    // let expectStakeTimestamp;
-    let expectRewardAtMaturityWei;
-    let lastDigitDeltaStakeAmountWei;
-    let lastDigitDeltaRewardAtMaturityWei;
-    let toStakeAmountWei;
-
-    if (
+    const {
+      expectStakeAmountWei,
+      expectRewardAtMaturityWei: expectedRewardAtMaturityWei,
+      lastDigitDeltaStakeAmountWei,
+    } = verifyRewardAtMaturity(
+      stakeConfig,
+      startblockTimestamp,
+      10,
+      20,
+      20,
+      50,
+      hre.ethers.constants.Zero,
       isAddStake &&
-      stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
-      !addStakeExceedPoolReward
-    ) {
-      toStakeAmountWei = stakeConfig.stakeAmountWei.add(
-        stakeConfig.addStakeAmountWei
-      );
-      const truncatedStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.stakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.addStakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      expectStakeAmountWei = truncatedStakeAmountWei.add(
-        truncatedAddStakeAmountWei
-      );
-
-      lastDigitDeltaStakeAmountWei = 20;
-      lastDigitDeltaRewardAtMaturityWei = 50;
-
-      /*
-      expectStakeTimestamp =
-        startblockTimestamp +
-        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
-      */
-
-      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        truncatedStakeAmountWei
-      ).add(
-        estimateRewardAtMaturityWei(
-          stakeConfig.stakingPoolConfig.poolAprWei,
-          stakeConfig.stakingPoolConfig.stakeDurationDays,
-          truncatedAddStakeAmountWei
-        )
-      );
-    } else {
-      toStakeAmountWei = stakeConfig.stakeAmountWei;
-      expectStakeAmountWei = computeTruncatedAmountWei(
-        stakeConfig.stakeAmountWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals
-      );
-      lastDigitDeltaStakeAmountWei = 10;
-      lastDigitDeltaRewardAtMaturityWei = 20;
-
-      /*
-      expectStakeTimestamp =
-        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
-      */
-
-      expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        expectStakeAmountWei
-      );
-    }
-
-    if (stakeConfig.shouldClaim) {
-      expectRewardAtMaturityWei = hre.ethers.constants.Zero;
-    } else {
-      const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        toStakeAmountWei
-      );
-
-      verifyActualWithTruncatedValueWei(
-        lastDigitDeltaRewardAtMaturityWei,
-        stakeConfig.stakingPoolConfig.stakeTokenDecimals,
-        expectRewardAtMaturityWei,
-        estimatedRewardAtMaturityWei,
-        hre.ethers.constants.Zero
-      );
-    }
-
-    /*
-    const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      expectStakeTimestamp
+        stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+        !addStakeExceedPoolReward,
+      false
     );
 
+    const expectRewardAtMaturityWei = stakeConfig.shouldClaim
+      ? hre.ethers.constants.Zero
+      : expectedRewardAtMaturityWei;
+
+    /*
     const currentBlockTimestamp = await testHelpers.getCurrentBlockTimestamp();
     if (currentBlockTimestamp < expectStakeMaturityTimestamp.toNumber()) {
       const claimableRewardWeiAfterPoolResumed =
@@ -5291,6 +5020,131 @@ describe("StakingService", function () {
     ];
   }
 
+  function verifyRewardAtMaturity(
+    stakeConfig,
+    startblockTimestamp,
+    stakeLastDigitDeltaStakeAmountWei,
+    stakeLastDigitDeltaRewardAtMaturityWei,
+    addStakeLastDigitDeltaStakeAmountWei,
+    addStakeLastDigitDeltaRewardAtMaturityWei,
+    actualRewardAtMaturityDeltaWei,
+    includeAddStake,
+    isAddStakeOnly
+  ) {
+    let expectStakeAmountWei;
+    let expectStakeTimestamp;
+    let expectRewardAtMaturityWei;
+    let lastDigitDeltaStakeAmountWei;
+    let lastDigitDeltaRewardAtMaturityWei;
+    let actualStakeAmountWei;
+
+    if (includeAddStake) {
+      actualStakeAmountWei = isAddStakeOnly
+        ? stakeConfig.addStakeAmountWei
+        : stakeConfig.stakeAmountWei.add(stakeConfig.addStakeAmountWei);
+      const truncatedStakeAmountWei = computeTruncatedAmountWei(
+        stakeConfig.stakeAmountWei,
+        stakeConfig.stakingPoolConfig.stakeTokenDecimals
+      );
+      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
+        stakeConfig.addStakeAmountWei,
+        stakeConfig.stakingPoolConfig.stakeTokenDecimals
+      );
+      expectStakeAmountWei = isAddStakeOnly
+        ? truncatedAddStakeAmountWei
+        : truncatedStakeAmountWei.add(truncatedAddStakeAmountWei);
+
+      lastDigitDeltaStakeAmountWei = addStakeLastDigitDeltaStakeAmountWei;
+      lastDigitDeltaRewardAtMaturityWei =
+        addStakeLastDigitDeltaRewardAtMaturityWei;
+
+      expectStakeTimestamp =
+        startblockTimestamp +
+        stakeConfig.addStakeSecondsAfterStartblockTimestamp;
+
+      expectRewardAtMaturityWei = isAddStakeOnly
+        ? computeTruncatedAmountWei(
+            estimateRewardAtMaturityWei(
+              stakeConfig.stakingPoolConfig.poolAprWei,
+              stakeConfig.stakingPoolConfig.stakeDurationDays,
+              truncatedAddStakeAmountWei
+            ),
+            stakeConfig.stakingPoolConfig.rewardTokenDecimals
+          )
+        : computeTruncatedAmountWei(
+            estimateRewardAtMaturityWei(
+              stakeConfig.stakingPoolConfig.poolAprWei,
+              stakeConfig.stakingPoolConfig.stakeDurationDays,
+              truncatedStakeAmountWei
+            ),
+            stakeConfig.stakingPoolConfig.rewardTokenDecimals
+          ).add(
+            computeTruncatedAmountWei(
+              estimateRewardAtMaturityWei(
+                stakeConfig.stakingPoolConfig.poolAprWei,
+                stakeConfig.stakingPoolConfig.stakeDurationDays,
+                truncatedAddStakeAmountWei
+              ),
+              stakeConfig.stakingPoolConfig.rewardTokenDecimals
+            )
+          );
+    } else {
+      actualStakeAmountWei = stakeConfig.stakeAmountWei;
+      expectStakeAmountWei = computeTruncatedAmountWei(
+        stakeConfig.stakeAmountWei,
+        stakeConfig.stakingPoolConfig.stakeTokenDecimals
+      );
+
+      lastDigitDeltaStakeAmountWei = stakeLastDigitDeltaStakeAmountWei;
+      lastDigitDeltaRewardAtMaturityWei =
+        stakeLastDigitDeltaRewardAtMaturityWei;
+
+      expectStakeTimestamp =
+        startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
+
+      expectRewardAtMaturityWei = computeTruncatedAmountWei(
+        estimateRewardAtMaturityWei(
+          stakeConfig.stakingPoolConfig.poolAprWei,
+          stakeConfig.stakingPoolConfig.stakeDurationDays,
+          expectStakeAmountWei
+        ),
+        stakeConfig.stakingPoolConfig.rewardTokenDecimals
+      );
+    }
+
+    const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
+      stakeConfig.stakingPoolConfig.stakeDurationDays,
+      expectStakeTimestamp
+    );
+
+    const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
+      stakeConfig.stakingPoolConfig.poolAprWei,
+      stakeConfig.stakingPoolConfig.stakeDurationDays,
+      actualStakeAmountWei
+    );
+
+    verifyActualWithTruncatedValueWei(
+      lastDigitDeltaRewardAtMaturityWei,
+      Math.min(
+        stakeConfig.stakingPoolConfig.stakeTokenDecimals,
+        stakeConfig.stakingPoolConfig.rewardTokenDecimals
+      ),
+      expectRewardAtMaturityWei,
+      estimatedRewardAtMaturityWei,
+      actualRewardAtMaturityDeltaWei
+    );
+
+    return {
+      expectStakeAmountWei,
+      expectStakeTimestamp,
+      expectStakeMaturityTimestamp,
+      expectRewardAtMaturityWei,
+      lastDigitDeltaStakeAmountWei,
+      lastDigitDeltaRewardAtMaturityWei,
+      actualStakeAmountWei,
+    };
+  }
+
   async function verifyStakeInfo(
     stakingServiceContractInstance,
     startblockTimestamp,
@@ -5351,60 +5205,30 @@ describe("StakingService", function () {
         )
       ).to.be.revertedWith("SSvcs: uninitialized");
     } else {
-      let expectStakeAmountWei;
-      let expectStakeTimestamp;
-      let lastDigitDeltaStakeAmountWei;
-      let toStakeAmountWei;
-
-      if (
+      const {
+        expectStakeAmountWei,
+        expectStakeTimestamp,
+        expectStakeMaturityTimestamp,
+        expectRewardAtMaturityWei,
+        lastDigitDeltaStakeAmountWei,
+        actualStakeAmountWei,
+      } = verifyRewardAtMaturity(
+        stakeConfig,
+        startblockTimestamp,
+        10,
+        30,
+        20,
+        60,
+        hre.ethers.constants.One,
         isAddStake &&
-        stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
-        !addStakeExceedPoolReward
-      ) {
-        toStakeAmountWei = stakeConfig.stakeAmountWei.add(
-          stakeConfig.addStakeAmountWei
-        );
-        expectStakeAmountWei = computeTruncatedAmountWei(
-          stakeConfig.stakeAmountWei,
-          stakeConfig.stakingPoolConfig.stakeTokenDecimals
-        ).add(
-          computeTruncatedAmountWei(
-            stakeConfig.addStakeAmountWei,
-            stakeConfig.stakingPoolConfig.stakeTokenDecimals
-          )
-        );
-        lastDigitDeltaStakeAmountWei = 20;
-
-        expectStakeTimestamp =
-          startblockTimestamp +
-          stakeConfig.addStakeSecondsAfterStartblockTimestamp;
-      } else {
-        toStakeAmountWei = stakeConfig.stakeAmountWei;
-        expectStakeAmountWei = computeTruncatedAmountWei(
-          stakeConfig.stakeAmountWei,
-          stakeConfig.stakingPoolConfig.stakeTokenDecimals
-        );
-        lastDigitDeltaStakeAmountWei = 10;
-
-        expectStakeTimestamp =
-          startblockTimestamp +
-          stakeConfig.stakeSecondsAfterStartblockTimestamp;
-      }
-
-      const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakeConfig.stakingPoolConfig.poolAprWei,
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        expectStakeAmountWei
-      );
-
-      const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
-        stakeConfig.stakingPoolConfig.stakeDurationDays,
-        expectStakeTimestamp
+          stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
+          !addStakeExceedPoolReward,
+        false
       );
 
       /*
       console.log(
-        `\n\nverifyStakeInfo (before getStakeInfo): afterRevoke=${afterRevoke}, hasClaimed=${hasClaimed}, shouldRevokeAfterClaim=${stakeConfig.shouldRevokeAfterClaim}, shouldRevokeBeforeClaim=${stakeConfig.shouldRevokeBeforeClaim}, stakeExceedPoolReward=${stakeExceedPoolReward}, isRevoked=${isRevoked}, getStakeInfo(${stakeConfig.stakingPoolConfig.poolId}, ${signerAddress}), expectStakeAmountWei=${expectStakeAmountWei}, toStakeAmountWei=${toStakeAmountWei}, lastDigitDeltaStakeAmountWei=${lastDigitDeltaStakeAmountWei}, stakeTokenDecimals=${stakeConfig.stakingPoolConfig.stakeTokenDecimals}, stakeAmountWei=${stakeConfig.stakeAmountWei}, addStakeAmountWei=${stakeConfig.addStakeAmountWei}, expectRewardAtMaturityWei=${expectRewardAtMaturityWei}, rewardClaimedWei=${stakeConfig.rewardClaimedWei}`
+        `\n\nverifyStakeInfo (before getStakeInfo): afterRevoke=${afterRevoke}, hasClaimed=${hasClaimed}, shouldRevokeAfterClaim=${stakeConfig.shouldRevokeAfterClaim}, shouldRevokeBeforeClaim=${stakeConfig.shouldRevokeBeforeClaim}, stakeExceedPoolReward=${stakeExceedPoolReward}, isRevoked=${isRevoked}, getStakeInfo(${stakeConfig.stakingPoolConfig.poolId}, ${signerAddress}), expectStakeAmountWei=${expectStakeAmountWei}, actualStakeAmountWei=${actualStakeAmountWei}, lastDigitDeltaStakeAmountWei=${lastDigitDeltaStakeAmountWei}, stakeTokenDecimals=${stakeConfig.stakingPoolConfig.stakeTokenDecimals}, stakeAmountWei=${stakeConfig.stakeAmountWei}, addStakeAmountWei=${stakeConfig.addStakeAmountWei}, expectRewardAtMaturityWei=${expectRewardAtMaturityWei}, rewardClaimedWei=${stakeConfig.rewardClaimedWei}`
       );
       */
 
@@ -5415,23 +5239,35 @@ describe("StakingService", function () {
 
       /*
       console.log(
-        `\n\nverifyStakeInfo: stakeInfo=${JSON.stringify(stakeInfo)}, poolId=${
+        `\n\nverifyStakeInfo: stakeInfo=${JSON.stringify(
+          stakeInfo
+        )}, poolUuid=${stakeConfig.stakingPoolConfig.poolUuid}, poolId=${
           stakeConfig.stakingPoolConfig.poolId
-        }, stakeAmountWei=${
+        }, configStakeAmountWei=${
           stakeConfig.stakeAmountWei
         }, stakeSecondsAfterStartblockTimestamp=${
           stakeConfig.stakeSecondsAfterStartblockTimestamp
-        }, addStakeAmountWei=${
+        }, configAddStakeAmountWei=${
           stakeConfig.addStakeAmountWei
         }, addStakeSecondsAfterStartblockTimestamp=${
           stakeConfig.addStakeSecondsAfterStartblockTimestamp
-        }, signer=${await stakeConfig.signer.getAddress()}, rewardClaimedWei=${
+        }, signer=${await stakeConfig.signer.getAddress()}, configRewardClaimedWei=${
           stakeConfig.rewardClaimedWei
         }, shouldClaim=${stakeConfig.shouldClaim}, shouldRevokeBeforeClaim=${
           stakeConfig.shouldRevokeBeforeClaim
         }, shouldRevokeAfterClaim=${
           stakeConfig.shouldRevokeAfterClaim
-        }, exceedPoolReward=${stakeConfig.exceedPoolReward}`
+        }, exceedPoolReward=${
+          stakeConfig.exceedPoolReward
+        }, infoStakeAmountWei=${stakeInfo.stakeAmountWei}, stakeTimestamp=${
+          stakeInfo.stakeTimestamp
+        }, stakeMaturityTimestamp=${
+          stakeInfo.stakeMaturityTimestamp
+        }, estimatedRewardAtMaturityWei=${
+          stakeInfo.estimatedRewardAtMaturityWei
+        }, infoRewardClaimedWei=${stakeInfo.rewardClaimedWei}, isActive=${
+          stakeInfo.isActive
+        }`
       );
       */
 
@@ -5439,7 +5275,7 @@ describe("StakingService", function () {
         lastDigitDeltaStakeAmountWei,
         stakeConfig.stakingPoolConfig.stakeTokenDecimals,
         stakeInfo.stakeAmountWei,
-        toStakeAmountWei,
+        actualStakeAmountWei,
         hre.ethers.constants.Zero
       );
 
@@ -5448,9 +5284,8 @@ describe("StakingService", function () {
       expect(stakeInfo.stakeMaturityTimestamp).to.equal(
         expectStakeMaturityTimestamp
       );
-      expect(stakeInfo.estimatedRewardAtMaturityWei).to.be.closeTo(
-        expectRewardAtMaturityWei,
-        1
+      expect(stakeInfo.estimatedRewardAtMaturityWei).to.equal(
+        expectRewardAtMaturityWei
       );
       expect(stakeInfo.rewardClaimedWei).to.equal(stakeConfig.rewardClaimedWei);
       expect(stakeInfo.isActive).to.equal(expectIsActive);
@@ -5491,9 +5326,27 @@ describe("StakingService", function () {
     for (let i = 0; i < stakeConfigs.length; i++) {
       /*
       console.log(
-        `\nverifyStakesInfo ${i}: stakeConfig=${JSON.stringify(
-          stakeConfigs[i]
-        )}`
+        `\nverifyStakesInfo ${i}: poolUuid=${
+          stakeConfigs[i].stakingPoolConfig.poolUuid
+        }, poolId=${stakeConfigs[i].stakingPoolConfig.poolId}, stakeAmountWei=${
+          stakeConfigs[i].stakeAmountWei
+        }, stakeSecondsAfterStartblockTimestamp=${
+          stakeConfigs[i].stakeSecondsAfterStartblockTimestamp
+        }, addStakeAmountWei=${
+          stakeConfigs[i].addStakeAmountWei
+        }, addStakeSecondsAfterStartblockTimestamp=${
+          stakeConfigs[i].addStakeSecondsAfterStartblockTimestamp
+        }, signer=${await stakeConfigs[
+          i
+        ].signer.getAddress()}, rewardClaimedWei=${
+          stakeConfigs[i].rewardClaimedWei
+        }, shouldClaim=${
+          stakeConfigs[i].shouldClaim
+        }, shouldRevokeBeforeClaim=${
+          stakeConfigs[i].shouldRevokeBeforeClaim
+        }, shouldRevokeAfterClaim=${
+          stakeConfigs[i].shouldRevokeAfterClaim
+        }, exceedPoolReward=${stakeConfigs[i].exceedPoolReward}`
       );
       */
 
@@ -5565,11 +5418,15 @@ describe("StakingService", function () {
     actualValueDeltaWei
   ) {
     if (stakeTokenDecimals < testHelpers.TOKEN_MAX_DECIMALS) {
-      const closeToDelta = computeCloseToDelta(
-        lastDigitDecimalsDelta,
-        stakeTokenDecimals
-      );
-      expect(expectValueWei).to.be.closeTo(actualValueWei, closeToDelta);
+      if (lastDigitDecimalsDelta === 0) {
+        expect(expectValueWei).to.equal(actualValueWei);
+      } else {
+        const closeToDelta = computeCloseToDelta(
+          lastDigitDecimalsDelta,
+          stakeTokenDecimals
+        );
+        expect(expectValueWei).to.be.closeTo(actualValueWei, closeToDelta);
+      }
     } else {
       if (actualValueDeltaWei.eq(hre.ethers.constants.Zero)) {
         expect(expectValueWei).to.equal(actualValueWei);
