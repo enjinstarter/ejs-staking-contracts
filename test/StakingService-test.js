@@ -502,7 +502,7 @@ describe("StakingService", function () {
     );
   });
 
-  it("Should be able to stake, claim reward and unstake", async () => {
+  it.only("Should be able to stake, claim reward and unstake", async () => {
     const expectStakes = [
       {
         stakeAmountWei: hre.ethers.utils.parseEther("562896.53017638"),
@@ -526,7 +526,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("5764.57794068"),
         stakeSecondsAfterStartblockTimestamp: 279,
         addStakeAmountWei: hre.ethers.utils.parseEther("6216.90935019"),
-        addStakeSecondsAfterStartblockTimestamp: 11109,
+        addStakeSecondsAfterStartblockTimestamp: 97509,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -535,7 +535,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("5279.76920273"),
         stakeSecondsAfterStartblockTimestamp: 415,
         addStakeAmountWei: hre.ethers.utils.parseEther("79149.44093680"),
-        addStakeSecondsAfterStartblockTimestamp: 11323,
+        addStakeSecondsAfterStartblockTimestamp: 97723,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -562,7 +562,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("4895.31994040"),
         stakeSecondsAfterStartblockTimestamp: 810,
         addStakeAmountWei: hre.ethers.utils.parseEther("22520.66832642"),
-        addStakeSecondsAfterStartblockTimestamp: 11444,
+        addStakeSecondsAfterStartblockTimestamp: 97844,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -580,7 +580,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("1140.20926502"),
         stakeSecondsAfterStartblockTimestamp: 1077,
         addStakeAmountWei: hre.ethers.utils.parseEther("53039.67090266"),
-        addStakeSecondsAfterStartblockTimestamp: 11674,
+        addStakeSecondsAfterStartblockTimestamp: 98074,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -607,7 +607,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("5645.14307150"),
         stakeSecondsAfterStartblockTimestamp: 1486,
         addStakeAmountWei: hre.ethers.utils.parseEther("60301.34379948"),
-        addStakeSecondsAfterStartblockTimestamp: 11864,
+        addStakeSecondsAfterStartblockTimestamp: 98264,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -616,7 +616,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("7834.10340079"),
         stakeSecondsAfterStartblockTimestamp: 1523,
         addStakeAmountWei: hre.ethers.utils.parseEther("12550.11801626"),
-        addStakeSecondsAfterStartblockTimestamp: 12000,
+        addStakeSecondsAfterStartblockTimestamp: 98400,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -625,7 +625,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("5701.40825578"),
         stakeSecondsAfterStartblockTimestamp: 1756,
         addStakeAmountWei: hre.ethers.utils.parseEther("43494.73394597"),
-        addStakeSecondsAfterStartblockTimestamp: 12223,
+        addStakeSecondsAfterStartblockTimestamp: 98623,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -652,7 +652,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("907.23582828"),
         stakeSecondsAfterStartblockTimestamp: 2107,
         addStakeAmountWei: hre.ethers.utils.parseEther("33808.91088145"),
-        addStakeSecondsAfterStartblockTimestamp: 12397,
+        addStakeSecondsAfterStartblockTimestamp: 98797,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -661,7 +661,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("41.87133677"),
         stakeSecondsAfterStartblockTimestamp: 2242,
         addStakeAmountWei: hre.ethers.utils.parseEther("11394.6516797"),
-        addStakeSecondsAfterStartblockTimestamp: 12607,
+        addStakeSecondsAfterStartblockTimestamp: 99007,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: false,
@@ -679,7 +679,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("68443.99537583"),
         stakeSecondsAfterStartblockTimestamp: 2667,
         addStakeAmountWei: hre.ethers.utils.parseEther("4027.4875509"),
-        addStakeSecondsAfterStartblockTimestamp: 12787,
+        addStakeSecondsAfterStartblockTimestamp: 99187,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -697,7 +697,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("60850.8963478"),
         stakeSecondsAfterStartblockTimestamp: 3015,
         addStakeAmountWei: hre.ethers.utils.parseEther("55115.78017244"),
-        addStakeSecondsAfterStartblockTimestamp: 12947,
+        addStakeSecondsAfterStartblockTimestamp: 99347,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -715,7 +715,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("50636.18046025"),
         stakeSecondsAfterStartblockTimestamp: 3448,
         addStakeAmountWei: hre.ethers.utils.parseEther("26841.85441847"),
-        addStakeSecondsAfterStartblockTimestamp: 13155,
+        addStakeSecondsAfterStartblockTimestamp: 99555,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -733,7 +733,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("34049.85968262"),
         stakeSecondsAfterStartblockTimestamp: 3792,
         addStakeAmountWei: hre.ethers.utils.parseEther("61638.84417690"),
-        addStakeSecondsAfterStartblockTimestamp: 13271,
+        addStakeSecondsAfterStartblockTimestamp: 99671,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -751,7 +751,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("22507.99010203"),
         stakeSecondsAfterStartblockTimestamp: 4134,
         addStakeAmountWei: hre.ethers.utils.parseEther("36136.28209419"),
-        addStakeSecondsAfterStartblockTimestamp: 13508,
+        addStakeSecondsAfterStartblockTimestamp: 99908,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -769,7 +769,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("53282.93858124"),
         stakeSecondsAfterStartblockTimestamp: 4422,
         addStakeAmountWei: hre.ethers.utils.parseEther("44645.9960905"),
-        addStakeSecondsAfterStartblockTimestamp: 13701,
+        addStakeSecondsAfterStartblockTimestamp: 100101,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -787,7 +787,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("44654.95684629"),
         stakeSecondsAfterStartblockTimestamp: 4855,
         addStakeAmountWei: hre.ethers.utils.parseEther("48393.158032"),
-        addStakeSecondsAfterStartblockTimestamp: 13900,
+        addStakeSecondsAfterStartblockTimestamp: 100300,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -805,7 +805,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("43533.5270135"),
         stakeSecondsAfterStartblockTimestamp: 5245,
         addStakeAmountWei: hre.ethers.utils.parseEther("45207.55807157"),
-        addStakeSecondsAfterStartblockTimestamp: 14169,
+        addStakeSecondsAfterStartblockTimestamp: 100569,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -823,7 +823,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("9255.82453339"),
         stakeSecondsAfterStartblockTimestamp: 5586,
         addStakeAmountWei: hre.ethers.utils.parseEther("65005.2227561"),
-        addStakeSecondsAfterStartblockTimestamp: 14281,
+        addStakeSecondsAfterStartblockTimestamp: 100681,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -841,7 +841,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("43090.13004908"),
         stakeSecondsAfterStartblockTimestamp: 5941,
         addStakeAmountWei: hre.ethers.utils.parseEther("34438.69021317"),
-        addStakeSecondsAfterStartblockTimestamp: 14390,
+        addStakeSecondsAfterStartblockTimestamp: 100790,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -859,7 +859,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("54713.56964903"),
         stakeSecondsAfterStartblockTimestamp: 6320,
         addStakeAmountWei: hre.ethers.utils.parseEther("74325.35704645"),
-        addStakeSecondsAfterStartblockTimestamp: 14509,
+        addStakeSecondsAfterStartblockTimestamp: 100909,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -877,7 +877,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("26947.29646902"),
         stakeSecondsAfterStartblockTimestamp: 6676,
         addStakeAmountWei: hre.ethers.utils.parseEther("6032.5894829"),
-        addStakeSecondsAfterStartblockTimestamp: 14687,
+        addStakeSecondsAfterStartblockTimestamp: 101087,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -895,7 +895,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("38838.97736064"),
         stakeSecondsAfterStartblockTimestamp: 7041,
         addStakeAmountWei: hre.ethers.utils.parseEther("55522.87140509"),
-        addStakeSecondsAfterStartblockTimestamp: 14826,
+        addStakeSecondsAfterStartblockTimestamp: 101226,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -913,7 +913,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("35727.46576127"),
         stakeSecondsAfterStartblockTimestamp: 7322,
         addStakeAmountWei: hre.ethers.utils.parseEther("48077.41339519"),
-        addStakeSecondsAfterStartblockTimestamp: 15053,
+        addStakeSecondsAfterStartblockTimestamp: 101453,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -931,7 +931,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("1226.28392521"),
         stakeSecondsAfterStartblockTimestamp: 7656,
         addStakeAmountWei: hre.ethers.utils.parseEther("73361.6535619"),
-        addStakeSecondsAfterStartblockTimestamp: 15180,
+        addStakeSecondsAfterStartblockTimestamp: 101580,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -949,7 +949,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("11807.96556326"),
         stakeSecondsAfterStartblockTimestamp: 7976,
         addStakeAmountWei: hre.ethers.utils.parseEther("10351.37770501"),
-        addStakeSecondsAfterStartblockTimestamp: 15387,
+        addStakeSecondsAfterStartblockTimestamp: 101787,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -967,7 +967,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("681.82826215"),
         stakeSecondsAfterStartblockTimestamp: 8301,
         addStakeAmountWei: hre.ethers.utils.parseEther("22502.40271541"),
-        addStakeSecondsAfterStartblockTimestamp: 15539,
+        addStakeSecondsAfterStartblockTimestamp: 101939,
         shouldClaim: false,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -985,7 +985,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("52030.49401595"),
         stakeSecondsAfterStartblockTimestamp: 8613,
         addStakeAmountWei: hre.ethers.utils.parseEther("7140.92294045"),
-        addStakeSecondsAfterStartblockTimestamp: 15741,
+        addStakeSecondsAfterStartblockTimestamp: 102141,
         shouldClaim: false,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -1003,7 +1003,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("57167.6291809"),
         stakeSecondsAfterStartblockTimestamp: 8942,
         addStakeAmountWei: hre.ethers.utils.parseEther("12693.63154096"),
-        addStakeSecondsAfterStartblockTimestamp: 15884,
+        addStakeSecondsAfterStartblockTimestamp: 102284,
         shouldClaim: true,
         shouldRevokeBeforeClaim: false,
         shouldRevokeAfterClaim: true,
@@ -1021,7 +1021,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("25842.53697776"),
         stakeSecondsAfterStartblockTimestamp: 9483,
         addStakeAmountWei: hre.ethers.utils.parseEther("64681.61196522"),
-        addStakeSecondsAfterStartblockTimestamp: 16018,
+        addStakeSecondsAfterStartblockTimestamp: 102418,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -1039,7 +1039,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("60456.53730827"),
         stakeSecondsAfterStartblockTimestamp: 9894,
         addStakeAmountWei: hre.ethers.utils.parseEther("30814.99556430"),
-        addStakeSecondsAfterStartblockTimestamp: 16172,
+        addStakeSecondsAfterStartblockTimestamp: 102572,
         shouldClaim: true,
         shouldRevokeBeforeClaim: true,
         shouldRevokeAfterClaim: true,
@@ -1497,7 +1497,7 @@ describe("StakingService", function () {
       10,
       30,
       20,
-      60,
+      70,
       hre.ethers.constants.One,
       isAddStake &&
         stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
@@ -2175,7 +2175,7 @@ describe("StakingService", function () {
 
     /*
     console.log(
-      `removeUnallocatedStakingPoolRewardWithVerify: poolId=${stakingPoolId}, stakeTokenDecimals=${specifiedStakingPoolStakeTokenDecimals}, rewardTokenDecimals=${specifiedStakingPoolRewardTokenDecimals}, unallocatedRewardWei=${unallocatedRewardWei}, expectUnallocatedRewardWei=${expectUnallocatedRewardWei}`
+      `\nremoveUnallocatedStakingPoolRewardWithVerify: poolId=${stakingPoolId}, poolUuid=${specifiedStakingPoolConfig.poolUuid}, stakeTokenDecimals=${specifiedStakingPoolStakeTokenDecimals}, rewardTokenDecimals=${specifiedStakingPoolRewardTokenDecimals}, unallocatedRewardWei=${unallocatedRewardWei}, expectUnallocatedRewardWei=${expectUnallocatedRewardWei}, totalRewardWei=${expectStakingPoolStats[stakingPoolId].totalRewardWei}, rewardToBeDistributedWei=${expectStakingPoolStats[stakingPoolId].rewardToBeDistributedWei}`
     );
     */
 
@@ -2404,7 +2404,7 @@ describe("StakingService", function () {
       10,
       30,
       20,
-      60,
+      70,
       hre.ethers.constants.One,
       isAddStake &&
         stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
@@ -2703,11 +2703,60 @@ describe("StakingService", function () {
         exceedPoolReward: false,
       });
 
-      const expectRewardAtMaturityWei = estimateRewardAtMaturityWei(
-        stakingPoolConfigs[stakingPoolConfigIndex].poolAprWei,
-        stakingPoolConfigs[stakingPoolConfigIndex].stakeDurationDays,
-        stakes[i].stakeAmountWei.add(stakes[i].addStakeAmountWei)
+      const truncatedStakeAmountWei = computeTruncatedAmountWei(
+        stakes[i].stakeAmountWei,
+        stakingPoolConfigs[stakingPoolConfigIndex].stakeTokenDecimals
       );
+      const truncatedAddStakeAmountWei = computeTruncatedAmountWei(
+        stakes[i].addStakeAmountWei,
+        stakingPoolConfigs[stakingPoolConfigIndex].stakeTokenDecimals
+      );
+
+      let expectRewardAtMaturityWei;
+
+      if (stakes[i].addStakeAmountWei.gt(hre.ethers.constants.Zero)) {
+        const stateDurationAtAddStakeDays = Math.floor(
+          (stakes[i].addStakeSecondsAfterStartblockTimestamp -
+            stakes[i].stakeSecondsAfterStartblockTimestamp) /
+            testHelpers.SECONDS_IN_DAY
+        );
+
+        const additionalRewardToDistributeWei = computeTruncatedAmountWei(
+          estimateRewardAtMaturityWei(
+            stakingPoolConfigs[stakingPoolConfigIndex].poolAprWei,
+            stakingPoolConfigs[stakingPoolConfigIndex].stakeDurationDays,
+            truncatedAddStakeAmountWei
+          ),
+          stakingPoolConfigs[stakingPoolConfigIndex].rewardTokenDecimals
+        ).add(
+          computeTruncatedAmountWei(
+            estimateRewardAtMaturityWei(
+              stakingPoolConfigs[stakingPoolConfigIndex].poolAprWei,
+              stateDurationAtAddStakeDays,
+              truncatedStakeAmountWei
+            ),
+            stakingPoolConfigs[stakingPoolConfigIndex].rewardTokenDecimals
+          )
+        );
+
+        expectRewardAtMaturityWei = computeTruncatedAmountWei(
+          estimateRewardAtMaturityWei(
+            stakingPoolConfigs[stakingPoolConfigIndex].poolAprWei,
+            stakingPoolConfigs[stakingPoolConfigIndex].stakeDurationDays,
+            truncatedStakeAmountWei
+          ),
+          stakingPoolConfigs[stakingPoolConfigIndex].rewardTokenDecimals
+        ).add(additionalRewardToDistributeWei);
+      } else {
+        expectRewardAtMaturityWei = computeTruncatedAmountWei(
+          estimateRewardAtMaturityWei(
+            stakingPoolConfigs[stakingPoolConfigIndex].poolAprWei,
+            stakingPoolConfigs[stakingPoolConfigIndex].stakeDurationDays,
+            truncatedStakeAmountWei
+          ),
+          stakingPoolConfigs[stakingPoolConfigIndex].rewardTokenDecimals
+        );
+      }
 
       if (
         stakingPoolConfigs[stakingPoolConfigIndex].poolId in
@@ -2962,6 +3011,7 @@ describe("StakingService", function () {
       expectStakeTimestamp,
       expectStakeMaturityTimestamp,
       expectRewardAtMaturityWei,
+      additionalRewardToDistributeWei,
       actualStakeAmountWei,
     } = verifyRewardAtMaturity(
       stakeConfig,
@@ -2969,7 +3019,7 @@ describe("StakingService", function () {
       10,
       30,
       20,
-      50,
+      70,
       hre.ethers.constants.One,
       isAddStake && stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero),
       true
@@ -3289,10 +3339,9 @@ describe("StakingService", function () {
     } else {
       expectTotalStakedWei = totalStakedWei.add(expectStakeAmountWei);
       expectRewardToBeDistributedWei = rewardToBeDistributedWei.add(
-        expectRewardAtMaturityWei
+        additionalRewardToDistributeWei
       );
 
-      /*
       console.log(
         `stakeWithVerify stake02: isAddStake=${isAddStake}, poolId=${
           stakeConfig.stakingPoolConfig.poolId
@@ -3310,9 +3359,10 @@ describe("StakingService", function () {
           stakeConfig.shouldRevokeBeforeClaim
         }, shouldRevokeAfterClaim=${
           stakeConfig.shouldRevokeAfterClaim
-        }, exceedPoolReward=${stakeConfig.exceedPoolReward}`
+        }, exceedPoolReward=${
+          stakeConfig.exceedPoolReward
+        }, expectStakeAmountWei=${expectStakeAmountWei}, expectStakeTimestamp=${expectStakeTimestamp}, expectStakeMaturityTimestamp=${expectStakeMaturityTimestamp}, expectRewardAtMaturityWei=${expectRewardAtMaturityWei}`
       );
-      */
 
       await expect(
         stakingServiceContractInstance
@@ -3723,30 +3773,36 @@ describe("StakingService", function () {
     const revokedStakesWei = {};
     const totalRevokedStakesWei = {};
 
-    /*
     console.log(
-      `\n\nstake, poolUuid, poolId, stakeAmountWei, stakeSecondsAfterStartblockTimestamp, addStakeAmountWei, addStakeSecondsAfterStartblockTimestamp, signer, rewardClaimedWei, shouldClaim, shouldRevokeBeforeClaim, shouldRevokeAfterClaim, exceedPoolReward`
+      `\n\nstake, poolUuid, poolId, poolAprWei, stakeDurationDays, stakeTokenAddress, rewardTokenAddress, stakeAmountWei, stakeSecondsAfterStartblockTimestamp, addStakeAmountWei, addStakeSecondsAfterStartblockTimestamp, signer, rewardClaimedWei, shouldClaim, shouldRevokeBeforeClaim, shouldRevokeAfterClaim, exceedPoolReward`
     );
-    */
 
     for (let i = 0; i < stakeConfigs.length; i++) {
-      /*
       console.log(
         `${i}, ${stakeConfigs[i].stakingPoolConfig.poolUuid}, ${
           stakeConfigs[i].stakingPoolConfig.poolId
-        }, ${stakeConfigs[i].stakeAmountWei}, ${
+        }, ${hre.ethers.utils.formatEther(
+          stakeConfigs[i].stakingPoolConfig.poolAprWei
+        )}, ${stakeConfigs[i].stakingPoolConfig.stakeDurationDays}, ${
+          stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+        }, ${
+          stakeConfigs[i].stakingPoolConfig.rewardTokenInstance.address
+        }, ${hre.ethers.utils.formatEther(stakeConfigs[i].stakeAmountWei)}, ${
           stakeConfigs[i].stakeSecondsAfterStartblockTimestamp
-        }, ${stakeConfigs[i].addStakeAmountWei}, ${
+        }, ${hre.ethers.utils.formatEther(
+          stakeConfigs[i].addStakeAmountWei
+        )}, ${
           stakeConfigs[i].addStakeSecondsAfterStartblockTimestamp
-        }, ${await stakeConfigs[i].signer.getAddress()}, ${
+        }, ${await stakeConfigs[
+          i
+        ].signer.getAddress()}, ${hre.ethers.utils.formatEther(
           stakeConfigs[i].rewardClaimedWei
-        }, ${stakeConfigs[i].shouldClaim}, ${
+        )}, ${stakeConfigs[i].shouldClaim}, ${
           stakeConfigs[i].shouldRevokeBeforeClaim
         }, ${stakeConfigs[i].shouldRevokeAfterClaim}, ${
           stakeConfigs[i].exceedPoolReward
         }`
       );
-      */
 
       const stakeExceedPoolReward =
         stakeConfigs[i].exceedPoolReward &&
@@ -3756,33 +3812,111 @@ describe("StakingService", function () {
         isAddStake &&
         stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero);
 
-      const { expectStakeAmountWei, expectRewardAtMaturityWei } =
-        verifyRewardAtMaturity(
-          stakeConfigs[i],
-          0, // unused
-          10,
-          30,
-          20,
-          60,
-          hre.ethers.constants.One,
-          isAddStake &&
-            stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
-            !addStakeExceedPoolReward,
-          false
-        );
+      const {
+        expectStakeAmountWei,
+        expectRewardAtMaturityWei,
+        additionalRewardToDistributeWei,
+      } = verifyRewardAtMaturity(
+        stakeConfigs[i],
+        0, // unused
+        10,
+        30,
+        20,
+        70,
+        hre.ethers.constants.One,
+        isAddStake &&
+          stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero),
+        false
+      );
 
-      if (
+      if (stakeExceedPoolReward) {
+        const expectUnallocatedRewardWei = expectRewardAtMaturityWei;
+
+        if (stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei) {
+          unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
+              expectUnallocatedRewardWei
+            );
+        } else {
+          unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            expectUnallocatedRewardWei;
+        }
+
+        if (stakeConfigs[i].stakingPoolConfig.poolId in revokedStakesWei) {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
+              expectStakeAmountWei
+            );
+        } else {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            expectStakeAmountWei;
+        }
+
+        if (
+          stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address in
+          totalRevokedStakesWei
+        ) {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          ] =
+            totalRevokedStakesWei[
+              stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+            ].add(expectStakeAmountWei);
+        } else {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          ] = expectStakeAmountWei;
+        }
+
+        console.log(
+          `testRemoveUnallocatedStakingPoolReward 01: stakeExceedPoolReward=${stakeExceedPoolReward}, expectUnallocatedRewardWei=${hre.ethers.utils.formatEther(
+            expectUnallocatedRewardWei
+          )}, expectRewardAtMaturityWei=${hre.ethers.utils.formatEther(
+            expectRewardAtMaturityWei
+          )}, additionalRewardToDistributeWei=${hre.ethers.utils.formatEther(
+            additionalRewardToDistributeWei
+          )}, poolUuid=${stakeConfigs[i].stakingPoolConfig.poolUuid}, poolId=${
+            stakeConfigs[i].stakingPoolConfig.poolId
+          }, stakeTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          }, rewardTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.rewardTokenInstance.address
+          }, stakeAmountWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].stakeAmountWei
+          )}, addStakeAmountWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].addStakeAmountWei
+          )}, rewardClaimedWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].rewardClaimedWei
+          )}, shouldClaim=${
+            stakeConfigs[i].shouldClaim
+          }, shouldRevokeBeforeClaim=${
+            stakeConfigs[i].shouldRevokeBeforeClaim
+          }, shouldRevokeAfterClaim=${
+            stakeConfigs[i].shouldRevokeAfterClaim
+          }, exceedPoolReward=${
+            stakeConfigs[i].exceedPoolReward
+          }, unallocatedRewardsWei=${hre.ethers.utils.formatEther(
+            unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          )}, revokedStakesWei=${hre.ethers.utils.formatEther(
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          )}, totalRevokedStakesWei=${hre.ethers.utils.formatEther(
+            totalRevokedStakesWei[
+              stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+            ]
+          )}`
+        );
+      } else if (
         (stakeConfigs[i].shouldRevokeBeforeClaim ||
           stakeConfigs[i].shouldRevokeAfterClaim) &&
-        !stakeExceedPoolReward
+        !stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero)
       ) {
-        if (
-          stakeConfigs[i].shouldRevokeBeforeClaim ||
-          (stakeConfigs[i].shouldRevokeAfterClaim &&
-            !stakeConfigs[i].shouldClaim)
-        ) {
-          const expectUnallocatedRewardWei = expectRewardAtMaturityWei;
+        const expectUnallocatedRewardWei = expectRewardAtMaturityWei;
 
+        if (
+          !stakeConfigs[i].shouldClaim ||
+          stakeConfigs[i].shouldRevokeBeforeClaim ||
+          !stakeConfigs[i].shouldRevokeAfterClaim
+        ) {
           if (
             stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei
           ) {
@@ -3821,60 +3955,239 @@ describe("StakingService", function () {
             stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
           ] = expectStakeAmountWei;
         }
-      }
 
-      if (stakeExceedPoolReward || addStakeExceedPoolReward) {
-        const exceedPoolRewardWei = stakeExceedPoolReward
-          ? estimateRewardAtMaturityWei(
-              stakeConfigs[i].stakingPoolConfig.poolAprWei,
-              stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-              stakeConfigs[i].stakeAmountWei
-            ).add(
-              estimateRewardAtMaturityWei(
-                stakeConfigs[i].stakingPoolConfig.poolAprWei,
-                stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-                stakeConfigs[i].addStakeAmountWei
-              )
-            )
-          : estimateRewardAtMaturityWei(
-              stakeConfigs[i].stakingPoolConfig.poolAprWei,
-              stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-              stakeConfigs[i].addStakeAmountWei
-            );
-
-        /*
         console.log(
-          `testRemoveUnallocatedStakingPoolReward exceedPoolReward ${i}: poolId=${
+          `testRemoveUnallocatedStakingPoolReward 02: expectUnallocatedRewardWei=${hre.ethers.utils.formatEther(
+            expectUnallocatedRewardWei
+          )}, expectRewardAtMaturityWei=${hre.ethers.utils.formatEther(
+            expectRewardAtMaturityWei
+          )}, additionalRewardToDistributeWei=${hre.ethers.utils.formatEther(
+            additionalRewardToDistributeWei
+          )}, poolUuid=${stakeConfigs[i].stakingPoolConfig.poolUuid}, poolId=${
             stakeConfigs[i].stakingPoolConfig.poolId
-          }, stakeExceedPoolReward=${stakeExceedPoolReward}, addStakeExceedPoolReward=${addStakeExceedPoolReward}, stakeAmountWei=${
+          }, stakeTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          }, rewardTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.rewardTokenInstance.address
+          }, stakeAmountWei=${hre.ethers.utils.formatEther(
             stakeConfigs[i].stakeAmountWei
-          }, addStakeAmountWei=${
+          )}, addStakeAmountWei=${hre.ethers.utils.formatEther(
             stakeConfigs[i].addStakeAmountWei
-          }, stakeRewardAtMaturity=${estimateRewardAtMaturityWei(
-            stakeConfigs[i].stakingPoolConfig.poolAprWei,
-            stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-            stakeConfigs[i].stakeAmountWei
-          )}, addStakeRewardAtMaturity=${estimateRewardAtMaturityWei(
-            stakeConfigs[i].stakingPoolConfig.poolAprWei,
-            stakeConfigs[i].stakingPoolConfig.stakeDurationDays,
-            stakeConfigs[i].addStakeAmountWei
-          )}, exceedPoolRewardWei=${exceedPoolRewardWei}`
+          )}, rewardClaimedWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].rewardClaimedWei
+          )}, shouldClaim=${
+            stakeConfigs[i].shouldClaim
+          }, shouldRevokeBeforeClaim=${
+            stakeConfigs[i].shouldRevokeBeforeClaim
+          }, shouldRevokeAfterClaim=${
+            stakeConfigs[i].shouldRevokeAfterClaim
+          }, exceedPoolReward=${
+            stakeConfigs[i].exceedPoolReward
+          }, unallocatedRewardsWei=${
+            stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei
+              ? hre.ethers.utils.formatEther(
+                  unallocatedRewardsWei[
+                    stakeConfigs[i].stakingPoolConfig.poolId
+                  ]
+                )
+              : unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          }, revokedStakesWei=${hre.ethers.utils.formatEther(
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          )}, totalRevokedStakesWei=${hre.ethers.utils.formatEther(
+            totalRevokedStakesWei[
+              stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+            ]
+          )}`
         );
-        */
+      } else if (
+        (stakeConfigs[i].shouldRevokeBeforeClaim ||
+          stakeConfigs[i].shouldRevokeAfterClaim) &&
+        stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero)
+      ) {
+        const expectUnallocatedRewardWei =
+          stakeConfigs[i].shouldClaim &&
+          !stakeConfigs[i].shouldRevokeBeforeClaim &&
+          stakeConfigs[i].shouldRevokeAfterClaim
+            ? additionalRewardToDistributeWei
+            : expectRewardAtMaturityWei;
+
+        if (
+          !stakeConfigs[i].shouldClaim ||
+          stakeConfigs[i].shouldRevokeBeforeClaim ||
+          !stakeConfigs[i].shouldRevokeAfterClaim ||
+          addStakeExceedPoolReward
+        ) {
+          if (
+            stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei
+          ) {
+            unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+              unallocatedRewardsWei[
+                stakeConfigs[i].stakingPoolConfig.poolId
+              ].add(expectUnallocatedRewardWei);
+          } else {
+            unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+              expectUnallocatedRewardWei;
+          }
+        }
+
+        if (stakeConfigs[i].stakingPoolConfig.poolId in revokedStakesWei) {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
+              expectStakeAmountWei
+            );
+        } else {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            expectStakeAmountWei;
+        }
+
+        if (
+          stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address in
+          totalRevokedStakesWei
+        ) {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          ] =
+            totalRevokedStakesWei[
+              stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+            ].add(expectStakeAmountWei);
+        } else {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          ] = expectStakeAmountWei;
+        }
+
+        console.log(
+          `testRemoveUnallocatedStakingPoolReward 03: expectUnallocatedRewardWei=${hre.ethers.utils.formatEther(
+            expectUnallocatedRewardWei
+          )}, expectRewardAtMaturityWei=${hre.ethers.utils.formatEther(
+            expectRewardAtMaturityWei
+          )}, additionalRewardToDistributeWei=${hre.ethers.utils.formatEther(
+            additionalRewardToDistributeWei
+          )}, poolUuid=${stakeConfigs[i].stakingPoolConfig.poolUuid}, poolId=${
+            stakeConfigs[i].stakingPoolConfig.poolId
+          }, stakeTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          }, rewardTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.rewardTokenInstance.address
+          }, stakeAmountWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].stakeAmountWei
+          )}, addStakeAmountWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].addStakeAmountWei
+          )}, rewardClaimedWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].rewardClaimedWei
+          )}, shouldClaim=${
+            stakeConfigs[i].shouldClaim
+          }, shouldRevokeBeforeClaim=${
+            stakeConfigs[i].shouldRevokeBeforeClaim
+          }, shouldRevokeAfterClaim=${
+            stakeConfigs[i].shouldRevokeAfterClaim
+          }, exceedPoolReward=${
+            stakeConfigs[i].exceedPoolReward
+          }, unallocatedRewardsWei=${
+            stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei
+              ? hre.ethers.utils.formatEther(
+                  unallocatedRewardsWei[
+                    stakeConfigs[i].stakingPoolConfig.poolId
+                  ]
+                )
+              : unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          }, revokedStakesWei=${hre.ethers.utils.formatEther(
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          )}, totalRevokedStakesWei=${hre.ethers.utils.formatEther(
+            totalRevokedStakesWei[
+              stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+            ]
+          )}`
+        );
+      } else if (
+        addStakeExceedPoolReward &&
+        !stakeConfigs[i].shouldRevokeBeforeClaim &&
+        !stakeConfigs[i].shouldRevokeAfterClaim
+      ) {
+        const expectRevokedStakeWei = computeTruncatedAmountWei(
+          stakeConfigs[i].addStakeAmountWei,
+          stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
+        );
+        const expectUnallocatedRewardWei = additionalRewardToDistributeWei;
 
         if (stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei) {
           unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
             unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
-              exceedPoolRewardWei
+              expectUnallocatedRewardWei
             );
         } else {
           unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
-            exceedPoolRewardWei;
+            expectUnallocatedRewardWei;
         }
+
+        if (stakeConfigs[i].stakingPoolConfig.poolId in revokedStakesWei) {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId].add(
+              expectRevokedStakeWei
+            );
+        } else {
+          revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId] =
+            expectRevokedStakeWei;
+        }
+
+        if (
+          stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address in
+          totalRevokedStakesWei
+        ) {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          ] = totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          ].add(expectRevokedStakeWei);
+        } else {
+          totalRevokedStakesWei[
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          ] = expectRevokedStakeWei;
+        }
+
+        console.log(
+          `testRemoveUnallocatedStakingPoolReward 04: expectRevokedStakeWei=${hre.ethers.utils.formatEther(
+            expectRevokedStakeWei
+          )}, expectUnallocatedRewardWei=${hre.ethers.utils.formatEther(
+            expectUnallocatedRewardWei
+          )}, expectRewardAtMaturityWei=${hre.ethers.utils.formatEther(
+            expectRewardAtMaturityWei
+          )}, additionalRewardToDistributeWei=${hre.ethers.utils.formatEther(
+            additionalRewardToDistributeWei
+          )}, poolUuid=${stakeConfigs[i].stakingPoolConfig.poolUuid}, poolId=${
+            stakeConfigs[i].stakingPoolConfig.poolId
+          }, stakeTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+          }, rewardTokenAddress=${
+            stakeConfigs[i].stakingPoolConfig.rewardTokenInstance.address
+          }, stakeAmountWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].stakeAmountWei
+          )}, addStakeAmountWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].addStakeAmountWei
+          )}, rewardClaimedWei=${hre.ethers.utils.formatEther(
+            stakeConfigs[i].rewardClaimedWei
+          )}, shouldClaim=${
+            stakeConfigs[i].shouldClaim
+          }, shouldRevokeBeforeClaim=${
+            stakeConfigs[i].shouldRevokeBeforeClaim
+          }, shouldRevokeAfterClaim=${
+            stakeConfigs[i].shouldRevokeAfterClaim
+          }, exceedPoolReward=${
+            stakeConfigs[i].exceedPoolReward
+          }, unallocatedRewardsWei=${hre.ethers.utils.formatEther(
+            unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          )}, revokedStakesWei=${hre.ethers.utils.formatEther(
+            revokedStakesWei[stakeConfigs[i].stakingPoolConfig.poolId]
+          )}, totalRevokedStakesWei=${hre.ethers.utils.formatEther(
+            totalRevokedStakesWei[
+              stakeConfigs[i].stakingPoolConfig.stakeTokenInstance.address
+            ]
+          )}`
+        );
       }
     }
 
-    // console.log(`\n`);
+    console.log(`\n`);
 
     for (const stakingPoolId in unallocatedRewardsWei) {
       /*
@@ -3882,7 +4195,25 @@ describe("StakingService", function () {
         await stakingServiceContractInstance.getStakingPoolStats(stakingPoolId);
 
       console.log(
-        `testRemoveUnallocatedStakingPoolReward removeUnallocatedStakingPoolRewardWithVerify: poolId=${stakingPoolId} unallocatedRewardsWei=${unallocatedRewardsWei[stakingPoolId]}, expectRevokedStakesWei=${revokedStakesWei[stakingPoolId]}, expectTotalRewardWei=${expectStakingPoolStats[stakingPoolId].totalRewardWei}, expectRewardToBeDistributedWei=${expectStakingPoolStats[stakingPoolId].rewardToBeDistributedWei}, expectTotalStakedWei=${expectStakingPoolStats[stakingPoolId].totalStakedWei}, totalStakedWei=${stakingPoolStatsBeforeRemove.totalStakedWei}, totalRewardWei=${stakingPoolStatsBeforeRemove.totalRewardWei}, rewardToBeDistributedWei=${stakingPoolStatsBeforeRemove.rewardToBeDistributedWei}, totalRevokedStakeWei=${stakingPoolStatsBeforeRemove.totalRevokedStakeWei}`
+        `testRemoveUnallocatedStakingPoolReward removeUnallocatedStakingPoolRewardWithVerify: poolId=${stakingPoolId} unallocatedRewardsWei=${hre.ethers.utils.formatEther(
+          unallocatedRewardsWei[stakingPoolId]
+        )}, expectRevokedStakesWei=${hre.ethers.utils.formatEther(
+          revokedStakesWei[stakingPoolId]
+        )}, expectTotalRewardWei=${hre.ethers.utils.formatEther(
+          expectStakingPoolStats[stakingPoolId].totalRewardWei
+        )}, expectRewardToBeDistributedWei=${hre.ethers.utils.formatEther(
+          expectStakingPoolStats[stakingPoolId].rewardToBeDistributedWei
+        )}, expectTotalStakedWei=${hre.ethers.utils.formatEther(
+          expectStakingPoolStats[stakingPoolId].totalStakedWei
+        )}, totalStakedWei=${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.totalStakedWei
+        )}, totalRewardWei=${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.totalRewardWei
+        )}, rewardToBeDistributedWei=${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.rewardToBeDistributedWei
+        )}, totalRevokedStakeWei=${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.totalRevokedStakeWei
+        )}`
       );
       */
 
@@ -3920,6 +4251,20 @@ describe("StakingService", function () {
         await stakingPoolConfig.rewardTokenInstance.balanceOf(
           stakingServiceInstance.address
         );
+
+      console.log(
+        `testRemoveUnallocatedStakingPoolReward balanceOfStakingService: poolUuid=${
+          stakingPoolConfig.poolUuid
+        }, poolId=${stakingPoolId}, stakeTokenAddress=${
+          stakingPoolConfig.stakeTokenInstance.address
+        }, rewardTokenAddress=${
+          stakingPoolConfig.rewardTokenInstance.address
+        }, rewardTokenDecimals=${rewardTokenDecimals}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}, expectBalanceOfContractAfterRemove=${expectBalanceOfContractAfterRemove}, totalRevokedStakesWei=${hre.ethers.utils.formatEther(
+          totalRevokedStakesWei[stakingPoolConfig.stakeTokenInstance.address]
+        )}, revokedStakesWei=${hre.ethers.utils.formatEther(
+          revokedStakesWei[stakingPoolId]
+        )}`
+      );
 
       expect(balanceOfContractAfterRemove).to.be.closeTo(
         expectBalanceOfContractAfterRemove,
@@ -4117,6 +4462,13 @@ describe("StakingService", function () {
       );
     }
 
+    console.log(`\nAFTER STAKE:`);
+    await consoleLogExpectStakingPoolStats(
+      stakingServiceContractInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      expectStakingPoolStats
+    );
+
     for (let i = 0; i < stakeConfigs.length; i++) {
       /*
       console.log(
@@ -4255,7 +4607,6 @@ describe("StakingService", function () {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
       if (stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero)) {
-        /*
         const currentBlockTimestamp =
           await testHelpers.getCurrentBlockTimestamp();
 
@@ -4284,7 +4635,6 @@ describe("StakingService", function () {
             stakeConfigs[i].shouldRevokeAfterClaim
           }, exceedPoolReward=${stakeConfigs[i].exceedPoolReward}`
         );
-        */
 
         [
           expectStakingPoolStats[poolId].totalStakedWei,
@@ -4302,6 +4652,13 @@ describe("StakingService", function () {
         );
       }
     }
+
+    console.log(`\nAFTER ADD STAKE:`);
+    await consoleLogExpectStakingPoolStats(
+      stakingServiceContractInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      expectStakingPoolStats
+    );
 
     for (let i = 0; i < stakeConfigs.length; i++) {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
@@ -4355,6 +4712,13 @@ describe("StakingService", function () {
       }
     }
 
+    console.log(`\nAFTER REVOKE BEFORE CLAIM:`);
+    await consoleLogExpectStakingPoolStats(
+      stakingServiceContractInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      expectStakingPoolStats
+    );
+
     for (let i = 0; i < stakeConfigs.length; i++) {
       /*
       console.log(
@@ -4404,6 +4768,13 @@ describe("StakingService", function () {
         true
       );
     }
+
+    console.log(`\nAFTER CLAIM:`);
+    await consoleLogExpectStakingPoolStats(
+      stakingServiceContractInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      expectStakingPoolStats
+    );
 
     for (let i = 0; i < stakeConfigs.length; i++) {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
@@ -4459,6 +4830,13 @@ describe("StakingService", function () {
       }
     }
 
+    console.log(`\nAFTER REVOKE AFTER CLAIM:`);
+    await consoleLogExpectStakingPoolStats(
+      stakingServiceContractInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      expectStakingPoolStats
+    );
+
     for (let i = 0; i < stakeConfigs.length; i++) {
       /*
       console.log(
@@ -4505,6 +4883,13 @@ describe("StakingService", function () {
         true
       );
     }
+
+    console.log(`\nAFTER UNSTAKE:`);
+    await consoleLogExpectStakingPoolStats(
+      stakingServiceContractInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      expectStakingPoolStats
+    );
 
     /*
     console.log(
@@ -5036,7 +5421,9 @@ describe("StakingService", function () {
     let expectRewardAtMaturityWei;
     let lastDigitDeltaStakeAmountWei;
     let lastDigitDeltaRewardAtMaturityWei;
+    let additionalRewardToDistributeWei;
     let actualStakeAmountWei;
+    let estimatedRewardAtMaturityWei;
 
     if (includeAddStake) {
       actualStakeAmountWei = isAddStakeOnly
@@ -5062,32 +5449,50 @@ describe("StakingService", function () {
         startblockTimestamp +
         stakeConfig.addStakeSecondsAfterStartblockTimestamp;
 
-      expectRewardAtMaturityWei = isAddStakeOnly
-        ? computeTruncatedAmountWei(
-            estimateRewardAtMaturityWei(
-              stakeConfig.stakingPoolConfig.poolAprWei,
-              stakeConfig.stakingPoolConfig.stakeDurationDays,
-              truncatedAddStakeAmountWei
-            ),
-            stakeConfig.stakingPoolConfig.rewardTokenDecimals
-          )
-        : computeTruncatedAmountWei(
-            estimateRewardAtMaturityWei(
-              stakeConfig.stakingPoolConfig.poolAprWei,
-              stakeConfig.stakingPoolConfig.stakeDurationDays,
-              truncatedStakeAmountWei
-            ),
-            stakeConfig.stakingPoolConfig.rewardTokenDecimals
-          ).add(
-            computeTruncatedAmountWei(
-              estimateRewardAtMaturityWei(
-                stakeConfig.stakingPoolConfig.poolAprWei,
-                stakeConfig.stakingPoolConfig.stakeDurationDays,
-                truncatedAddStakeAmountWei
-              ),
-              stakeConfig.stakingPoolConfig.rewardTokenDecimals
-            )
-          );
+      const stateDurationAtAddStakeDays = Math.floor(
+        (stakeConfig.addStakeSecondsAfterStartblockTimestamp -
+          stakeConfig.stakeSecondsAfterStartblockTimestamp) /
+          testHelpers.SECONDS_IN_DAY
+      );
+
+      additionalRewardToDistributeWei = computeTruncatedAmountWei(
+        estimateRewardAtMaturityWei(
+          stakeConfig.stakingPoolConfig.poolAprWei,
+          stakeConfig.stakingPoolConfig.stakeDurationDays,
+          truncatedAddStakeAmountWei
+        ),
+        stakeConfig.stakingPoolConfig.rewardTokenDecimals
+      ).add(
+        computeTruncatedAmountWei(
+          estimateRewardAtMaturityWei(
+            stakeConfig.stakingPoolConfig.poolAprWei,
+            stateDurationAtAddStakeDays,
+            truncatedStakeAmountWei
+          ),
+          stakeConfig.stakingPoolConfig.rewardTokenDecimals
+        )
+      );
+
+      expectRewardAtMaturityWei = computeTruncatedAmountWei(
+        estimateRewardAtMaturityWei(
+          stakeConfig.stakingPoolConfig.poolAprWei,
+          stakeConfig.stakingPoolConfig.stakeDurationDays,
+          truncatedStakeAmountWei
+        ),
+        stakeConfig.stakingPoolConfig.rewardTokenDecimals
+      ).add(additionalRewardToDistributeWei);
+
+      estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
+        stakeConfig.stakingPoolConfig.poolAprWei,
+        stakeConfig.stakingPoolConfig.stakeDurationDays,
+        stakeConfig.stakeAmountWei.add(stakeConfig.addStakeAmountWei)
+      ).add(
+        estimateRewardAtMaturityWei(
+          stakeConfig.stakingPoolConfig.poolAprWei,
+          stateDurationAtAddStakeDays,
+          truncatedStakeAmountWei
+        )
+      );
     } else {
       actualStakeAmountWei = stakeConfig.stakeAmountWei;
       expectStakeAmountWei = computeTruncatedAmountWei(
@@ -5102,7 +5507,7 @@ describe("StakingService", function () {
       expectStakeTimestamp =
         startblockTimestamp + stakeConfig.stakeSecondsAfterStartblockTimestamp;
 
-      expectRewardAtMaturityWei = computeTruncatedAmountWei(
+      additionalRewardToDistributeWei = computeTruncatedAmountWei(
         estimateRewardAtMaturityWei(
           stakeConfig.stakingPoolConfig.poolAprWei,
           stakeConfig.stakingPoolConfig.stakeDurationDays,
@@ -5110,17 +5515,18 @@ describe("StakingService", function () {
         ),
         stakeConfig.stakingPoolConfig.rewardTokenDecimals
       );
+      expectRewardAtMaturityWei = additionalRewardToDistributeWei;
+
+      estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
+        stakeConfig.stakingPoolConfig.poolAprWei,
+        stakeConfig.stakingPoolConfig.stakeDurationDays,
+        actualStakeAmountWei
+      );
     }
 
     const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
       stakeConfig.stakingPoolConfig.stakeDurationDays,
       expectStakeTimestamp
-    );
-
-    const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
-      stakeConfig.stakingPoolConfig.poolAprWei,
-      stakeConfig.stakingPoolConfig.stakeDurationDays,
-      actualStakeAmountWei
     );
 
     verifyActualWithTruncatedValueWei(
@@ -5141,6 +5547,7 @@ describe("StakingService", function () {
       expectRewardAtMaturityWei,
       lastDigitDeltaStakeAmountWei,
       lastDigitDeltaRewardAtMaturityWei,
+      additionalRewardToDistributeWei,
       actualStakeAmountWei,
     };
   }
@@ -5218,7 +5625,7 @@ describe("StakingService", function () {
         10,
         30,
         20,
-        60,
+        70,
         hre.ethers.constants.One,
         isAddStake &&
           stakeConfig.addStakeAmountWei.gt(hre.ethers.constants.Zero) &&
@@ -5436,6 +5843,51 @@ describe("StakingService", function () {
           actualValueDeltaWei
         );
       }
+    }
+  }
+
+  async function consoleLogExpectStakingPoolStats(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    expectStakingPoolStats
+  ) {
+    console.log(
+      `spid, poolUuid, stakeTokenDecimals, rewardTokenDecimals, totalRewardWei, expectTotalRewardWei, totalStakedWei, expectTotalStakedWei, rewardToBeDistributedWei, expectRewardToBeDistributedWei, totalRevokedStakeWei`
+    );
+
+    for (const spid in expectStakingPoolStats) {
+      const stakingPoolConfig = stakingPoolConfigs.find(
+        ({ poolId }) => poolId === spid
+      );
+
+      const stakingPoolStatsBeforeRemove =
+        await stakingServiceContractInstance.getStakingPoolStats(spid);
+
+      const stakeTokenDecimals =
+        await stakingPoolConfig.stakeTokenInstance.decimals();
+
+      const rewardTokenDecimals =
+        await stakingPoolConfig.rewardTokenInstance.decimals();
+
+      console.log(
+        `${spid}, ${
+          stakingPoolConfig.poolUuid
+        }, ${stakeTokenDecimals}, ${rewardTokenDecimals}, ${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.totalRewardWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakingPoolStats[spid].totalRewardWei
+        )}, ${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.totalStakedWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakingPoolStats[spid].totalStakedWei
+        )}, ${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.rewardToBeDistributedWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakingPoolStats[spid].rewardToBeDistributedWei
+        )}, ${hre.ethers.utils.formatEther(
+          stakingPoolStatsBeforeRemove.totalRevokedStakeWei
+        )}`
+      );
     }
   }
 });

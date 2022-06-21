@@ -305,6 +305,23 @@ contract StakingService is
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
         if (_stakes[stakekey].isInitialized) {
+            uint256 stakeDurationAtAddStakeDays = (block.timestamp -
+                _stakes[stakekey].stakeTimestamp) / SECONDS_IN_DAY;
+            uint256 earnedRewardAtAddStakeWei = _truncatedAmountWei(
+                _estimateRewardAtMaturityWei(
+                    stakeDurationAtAddStakeDays,
+                    poolAprWei,
+                    _stakes[stakekey].stakeAmountWei
+                ),
+                rewardTokenDecimals
+            );
+            estimatedRewardAtMaturityWei += earnedRewardAtAddStakeWei;
+            require(
+                estimatedRewardAtMaturityWei <=
+                    _calculatePoolRemainingRewardWei(poolId),
+                "SSvcs: insufficient"
+            );
+
             _stakes[stakekey].stakeAmountWei += truncatedStakeAmountWei;
             _stakes[stakekey].stakeTimestamp = block.timestamp;
             _stakes[stakekey].stakeMaturityTimestamp = stakeMaturityTimestamp;
@@ -333,7 +350,7 @@ contract StakingService is
             truncatedStakeAmountWei,
             block.timestamp,
             stakeMaturityTimestamp,
-            estimatedRewardAtMaturityWei
+            _stakes[stakekey].estimatedRewardAtMaturityWei
         );
 
         _transferTokensToContract(
