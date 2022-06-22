@@ -4274,12 +4274,10 @@ describe("StakingService", function () {
         )}`
       );
 
-      /*
       expect(balanceOfContractAfterRemove).to.be.closeTo(
         expectBalanceOfContractAfterRemove,
         5
       );
-      */
     }
 
     /*
