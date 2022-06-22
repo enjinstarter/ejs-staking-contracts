@@ -502,7 +502,7 @@ describe("StakingService", function () {
     );
   });
 
-  it.only("Should be able to stake, claim reward and unstake", async () => {
+  it("Should be able to stake, claim reward and unstake", async () => {
     const expectStakes = [
       {
         stakeAmountWei: hre.ethers.utils.parseEther("562896.53017638"),
