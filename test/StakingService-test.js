@@ -1910,6 +1910,7 @@ describe("StakingService", function () {
       const rewardTokenDecimals =
         await stakingPoolConfig.rewardTokenInstance.decimals();
 
+      /*
       console.log(
         `\nremoveRevokedStakesWithVerify stakingPoolStatsBeforeRemove: spid=${spid}, poolUuid=${
           stakingPoolConfig.poolUuid
@@ -1941,6 +1942,7 @@ describe("StakingService", function () {
           expectStakingPoolStats[spid].rewardToBeDistributedWei
         )}`
       );
+      */
 
       verifyActualWithTruncatedValueWei(
         0,
@@ -3351,6 +3353,7 @@ describe("StakingService", function () {
         additionalRewardToDistributeWei
       );
 
+      /*
       console.log(
         `stakeWithVerify stake02: isAddStake=${isAddStake}, poolId=${
           stakeConfig.stakingPoolConfig.poolId
@@ -3372,6 +3375,7 @@ describe("StakingService", function () {
           stakeConfig.exceedPoolReward
         }, expectStakeAmountWei=${expectStakeAmountWei}, expectStakeTimestamp=${expectStakeTimestamp}, expectStakeMaturityTimestamp=${expectStakeMaturityTimestamp}, expectRewardAtMaturityWei=${expectRewardAtMaturityWei}`
       );
+      */
 
       await expect(
         stakingServiceContractInstance
@@ -3780,11 +3784,14 @@ describe("StakingService", function () {
     const revokedStakesWei = {};
     const totalRevokedStakesWei = {};
 
+    /*
     console.log(
       `\n\nstake, poolUuid, poolId, poolAprWei, stakeDurationDays, stakeTokenAddress, rewardTokenAddress, stakeAmountWei, stakeSecondsAfterStartblockTimestamp, addStakeAmountWei, addStakeSecondsAfterStartblockTimestamp, signer, rewardClaimedWei, shouldClaim, shouldRevokeBeforeClaim, shouldRevokeAfterClaim, exceedPoolReward`
     );
+    */
 
     for (let i = 0; i < stakeConfigs.length; i++) {
+      /*
       console.log(
         `${i}, ${stakeConfigs[i].stakingPoolConfig.poolUuid}, ${
           stakeConfigs[i].stakingPoolConfig.poolId
@@ -3810,6 +3817,7 @@ describe("StakingService", function () {
           stakeConfigs[i].exceedPoolReward
         }`
       );
+      */
 
       const stakeExceedPoolReward =
         stakeConfigs[i].exceedPoolReward &&
@@ -3849,6 +3857,7 @@ describe("StakingService", function () {
             expectUnallocatedRewardWei;
         }
 
+        /*
         console.log(
           `testRemoveUnallocatedStakingPoolReward 01: stakeExceedPoolReward=${stakeExceedPoolReward}, expectUnallocatedRewardWei=${hre.ethers.utils.formatEther(
             expectUnallocatedRewardWei
@@ -3896,6 +3905,7 @@ describe("StakingService", function () {
                 ]
           }`
         );
+        */
       } else if (
         (stakeConfigs[i].shouldRevokeBeforeClaim ||
           stakeConfigs[i].shouldRevokeAfterClaim) &&
@@ -3947,6 +3957,7 @@ describe("StakingService", function () {
           ] = expectStakeAmountWei;
         }
 
+        /*
         console.log(
           `testRemoveUnallocatedStakingPoolReward 02: expectUnallocatedRewardWei=${hre.ethers.utils.formatEther(
             expectUnallocatedRewardWei
@@ -3990,6 +4001,7 @@ describe("StakingService", function () {
             ]
           )}`
         );
+        */
       } else if (
         (stakeConfigs[i].shouldRevokeBeforeClaim ||
           stakeConfigs[i].shouldRevokeAfterClaim) &&
@@ -4053,6 +4065,7 @@ describe("StakingService", function () {
           ] = expectRevokedStakeWei;
         }
 
+        /*
         console.log(
           `testRemoveUnallocatedStakingPoolReward 03: expectUnallocatedRewardWei=${hre.ethers.utils.formatEther(
             expectUnallocatedRewardWei
@@ -4096,15 +4109,12 @@ describe("StakingService", function () {
             ]
           )}`
         );
+        */
       } else if (
         addStakeExceedPoolReward &&
         !stakeConfigs[i].shouldRevokeBeforeClaim &&
         !stakeConfigs[i].shouldRevokeAfterClaim
       ) {
-        const expectRevokedStakeWei = computeTruncatedAmountWei(
-          stakeConfigs[i].addStakeAmountWei,
-          stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
-        );
         const expectUnallocatedRewardWei = additionalRewardToDistributeWei;
 
         if (stakeConfigs[i].stakingPoolConfig.poolId in unallocatedRewardsWei) {
@@ -4116,6 +4126,12 @@ describe("StakingService", function () {
           unallocatedRewardsWei[stakeConfigs[i].stakingPoolConfig.poolId] =
             expectUnallocatedRewardWei;
         }
+
+        /*
+        const expectRevokedStakeWei = computeTruncatedAmountWei(
+          stakeConfigs[i].addStakeAmountWei,
+          stakeConfigs[i].stakingPoolConfig.stakeTokenDecimals
+        );
 
         console.log(
           `testRemoveUnallocatedStakingPoolReward 04: expectRevokedStakeWei=${hre.ethers.utils.formatEther(
@@ -4166,6 +4182,7 @@ describe("StakingService", function () {
                 ]
           }`
         );
+        */
       }
     }
 
@@ -4234,6 +4251,7 @@ describe("StakingService", function () {
           stakingServiceInstance.address
         );
 
+      /*
       const stakingPoolStatsBeforeRemove =
         await stakingServiceContractInstance.getStakingPoolStats(stakingPoolId);
 
@@ -4262,6 +4280,7 @@ describe("StakingService", function () {
           stakingPoolStatsBeforeRemove.poolSizeWei
         )}`
       );
+      */
 
       expect(balanceOfContractAfterRemove).to.equal(
         expectBalanceOfContractAfterRemove
@@ -4457,12 +4476,14 @@ describe("StakingService", function () {
       );
     }
 
+    /*
     console.log(`\nAFTER STAKE:`);
     await consoleLogExpectStakingPoolStats(
       stakingServiceContractInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       expectStakingPoolStats
     );
+    */
 
     for (let i = 0; i < stakeConfigs.length; i++) {
       /*
@@ -4602,6 +4623,7 @@ describe("StakingService", function () {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
 
       if (stakeConfigs[i].addStakeAmountWei.gt(hre.ethers.constants.Zero)) {
+        /*
         const currentBlockTimestamp =
           await testHelpers.getCurrentBlockTimestamp();
 
@@ -4630,6 +4652,7 @@ describe("StakingService", function () {
             stakeConfigs[i].shouldRevokeAfterClaim
           }, exceedPoolReward=${stakeConfigs[i].exceedPoolReward}`
         );
+        */
 
         [
           expectStakingPoolStats[poolId].totalStakedWei,
@@ -4648,12 +4671,14 @@ describe("StakingService", function () {
       }
     }
 
+    /*
     console.log(`\nAFTER ADD STAKE:`);
     await consoleLogExpectStakingPoolStats(
       stakingServiceContractInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       expectStakingPoolStats
     );
+    */
 
     for (let i = 0; i < stakeConfigs.length; i++) {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
@@ -4707,12 +4732,14 @@ describe("StakingService", function () {
       }
     }
 
+    /*
     console.log(`\nAFTER REVOKE BEFORE CLAIM:`);
     await consoleLogExpectStakingPoolStats(
       stakingServiceContractInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       expectStakingPoolStats
     );
+    */
 
     for (let i = 0; i < stakeConfigs.length; i++) {
       /*
@@ -4764,12 +4791,14 @@ describe("StakingService", function () {
       );
     }
 
+    /*
     console.log(`\nAFTER CLAIM:`);
     await consoleLogExpectStakingPoolStats(
       stakingServiceContractInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       expectStakingPoolStats
     );
+    */
 
     for (let i = 0; i < stakeConfigs.length; i++) {
       const poolId = stakeConfigs[i].stakingPoolConfig.poolId;
@@ -4825,12 +4854,14 @@ describe("StakingService", function () {
       }
     }
 
+    /*
     console.log(`\nAFTER REVOKE AFTER CLAIM:`);
     await consoleLogExpectStakingPoolStats(
       stakingServiceContractInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       expectStakingPoolStats
     );
+    */
 
     for (let i = 0; i < stakeConfigs.length; i++) {
       /*
@@ -4879,12 +4910,14 @@ describe("StakingService", function () {
       );
     }
 
+    /*
     console.log(`\nAFTER UNSTAKE:`);
     await consoleLogExpectStakingPoolStats(
       stakingServiceContractInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       expectStakingPoolStats
     );
+    */
 
     /*
     console.log(
@@ -5840,6 +5873,7 @@ describe("StakingService", function () {
     }
   }
 
+  /*
   async function consoleLogExpectStakingPoolStats(
     stakingServiceContractInstance,
     stakingPoolConfigs,
@@ -5884,4 +5918,5 @@ describe("StakingService", function () {
       );
     }
   }
+  */
 });
