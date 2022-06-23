@@ -9,8 +9,8 @@
     // Use -bullseye variants on local arm64/Apple Silicon.
     "args": {
       "VARIANT": "16-bullseye",
-      "SOLC_VERSION": "0.8.13",
-      "SLITHER_VERSION": "0.8.2"
+      "SOLC_VERSION": "0.8.15",
+      "SLITHER_VERSION": "0.8.3"
     }
   },
 

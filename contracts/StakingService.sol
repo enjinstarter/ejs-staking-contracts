@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -146,12 +146,13 @@ contract StakingService is
         )
     {
         uint256 stakeDurationDays;
+        uint256 stakeTokenDecimals;
         uint256 poolAprWei;
 
         (
             stakeDurationDays,
             ,
-            ,
+            stakeTokenDecimals,
             ,
             ,
             poolAprWei,
@@ -159,12 +160,17 @@ contract StakingService is
             isActive
         ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
         require(stakeDurationDays > 0, "SSvcs: stake duration");
+        require(
+            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
+            "SSvcs: stake decimals"
+        );
         require(poolAprWei > 0, "SSvcs: pool APR");
 
         poolSizeWei = _getPoolSizeWei(
             stakeDurationDays,
             poolAprWei,
-            _stakingPoolStats[poolId].totalRewardWei
+            _stakingPoolStats[poolId].totalRewardWei,
+            stakeTokenDecimals
         );
 
         totalRewardWei = _stakingPoolStats[poolId].totalRewardWei;
@@ -278,10 +284,18 @@ contract StakingService is
             "SSvcs: maturity timestamp"
         );
 
-        uint256 estimatedRewardAtMaturityWei = _estimateRewardAtMaturityWei(
-            stakeDurationDays,
-            poolAprWei,
-            stakeAmountWei
+        uint256 truncatedStakeAmountWei = _truncatedAmountWei(
+            stakeAmountWei,
+            stakeTokenDecimals
+        );
+
+        uint256 estimatedRewardAtMaturityWei = _truncatedAmountWei(
+            _estimateRewardAtMaturityWei(
+                stakeDurationDays,
+                poolAprWei,
+                truncatedStakeAmountWei
+            ),
+            rewardTokenDecimals
         );
         require(
             estimatedRewardAtMaturityWei <=
@@ -291,14 +305,31 @@ contract StakingService is
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
         if (_stakes[stakekey].isInitialized) {
-            _stakes[stakekey].stakeAmountWei += stakeAmountWei;
+            uint256 stakeDurationAtAddStakeDays = (block.timestamp -
+                _stakes[stakekey].stakeTimestamp) / SECONDS_IN_DAY;
+            uint256 earnedRewardAtAddStakeWei = _truncatedAmountWei(
+                _estimateRewardAtMaturityWei(
+                    stakeDurationAtAddStakeDays,
+                    poolAprWei,
+                    _stakes[stakekey].stakeAmountWei
+                ),
+                rewardTokenDecimals
+            );
+            estimatedRewardAtMaturityWei += earnedRewardAtAddStakeWei;
+            require(
+                estimatedRewardAtMaturityWei <=
+                    _calculatePoolRemainingRewardWei(poolId),
+                "SSvcs: insufficient"
+            );
+
+            _stakes[stakekey].stakeAmountWei += truncatedStakeAmountWei;
             _stakes[stakekey].stakeTimestamp = block.timestamp;
             _stakes[stakekey].stakeMaturityTimestamp = stakeMaturityTimestamp;
             _stakes[stakekey]
                 .estimatedRewardAtMaturityWei += estimatedRewardAtMaturityWei;
         } else {
             _stakes[stakekey] = StakeInfo({
-                stakeAmountWei: stakeAmountWei,
+                stakeAmountWei: truncatedStakeAmountWei,
                 stakeTimestamp: block.timestamp,
                 stakeMaturityTimestamp: stakeMaturityTimestamp,
                 estimatedRewardAtMaturityWei: estimatedRewardAtMaturityWei,
@@ -308,7 +339,7 @@ contract StakingService is
             });
         }
 
-        _stakingPoolStats[poolId].totalStakedWei += stakeAmountWei;
+        _stakingPoolStats[poolId].totalStakedWei += truncatedStakeAmountWei;
         _stakingPoolStats[poolId]
             .rewardToBeDistributedWei += estimatedRewardAtMaturityWei;
 
@@ -316,16 +347,16 @@ contract StakingService is
             poolId,
             msg.sender,
             stakeTokenAddress,
-            stakeAmountWei,
+            truncatedStakeAmountWei,
             block.timestamp,
             stakeMaturityTimestamp,
-            estimatedRewardAtMaturityWei
+            _stakes[stakekey].estimatedRewardAtMaturityWei
         );
 
         _transferTokensToContract(
             stakeTokenAddress,
             stakeTokenDecimals,
-            stakeAmountWei,
+            truncatedStakeAmountWei,
             msg.sender
         );
     }
@@ -431,8 +462,6 @@ contract StakingService is
     {
         require(rewardAmountWei > 0, "SSvcs: reward amount");
 
-        _stakingPoolStats[poolId].totalRewardWei += rewardAmountWei;
-
         (
             uint256 stakeDurationDays,
             address stakeTokenAddress,
@@ -456,17 +485,26 @@ contract StakingService is
         );
         require(poolAprWei > 0, "SSvcs: pool APR");
 
+        uint256 truncatedRewardAmountWei = rewardTokenDecimals <
+            TOKEN_MAX_DECIMALS
+            ? rewardAmountWei
+                .scaleWeiToDecimals(rewardTokenDecimals)
+                .scaleDecimalsToWei(rewardTokenDecimals)
+            : rewardAmountWei;
+
+        _stakingPoolStats[poolId].totalRewardWei += truncatedRewardAmountWei;
+
         emit StakingPoolRewardAdded(
             poolId,
             msg.sender,
             rewardTokenAddress,
-            rewardAmountWei
+            truncatedRewardAmountWei
         );
 
         _transferTokensToContract(
             rewardTokenAddress,
             rewardTokenDecimals,
-            rewardAmountWei,
+            truncatedRewardAmountWei,
             msg.sender
         );
     }
@@ -751,6 +789,19 @@ contract StakingService is
         stakekey = abi.encode(account, poolId);
     }
 
+    function _truncatedAmountWei(uint256 amountWei, uint256 tokenDecimals)
+        internal
+        pure
+        virtual
+        returns (uint256 truncatedAmountWei)
+    {
+        truncatedAmountWei = tokenDecimals < TOKEN_MAX_DECIMALS
+            ? amountWei.scaleWeiToDecimals(tokenDecimals).scaleDecimalsToWei(
+                tokenDecimals
+            )
+            : amountWei;
+    }
+
     /**
      * @dev calculate remaining reward for pool in wei.
      */
@@ -816,11 +867,14 @@ contract StakingService is
     function _getPoolSizeWei(
         uint256 stakeDurationDays,
         uint256 poolAprWei,
-        uint256 totalRewardWei
+        uint256 totalRewardWei,
+        uint256 stakeTokenDecimals
     ) internal view virtual returns (uint256 poolSizeWei) {
-        poolSizeWei =
+        poolSizeWei = _truncatedAmountWei(
             (DAYS_IN_YEAR * PERCENT_100_WEI * totalRewardWei) /
-            (stakeDurationDays * poolAprWei);
+                (stakeDurationDays * poolAprWei),
+            stakeTokenDecimals
+        );
     }
 
     /**
