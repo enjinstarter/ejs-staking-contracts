@@ -21,6 +21,16 @@
 -   `BSC_TESTNET_MOCK_ERC20_TOKEN_DECIMALS`: Mock ERC20 token decimals on BSC testnet
 -   `BSC_TESTNET_MOCK_ERC20_TOKEN_CAP_ETHER`: Mock ERC20 token cap in ether on BSC testnet
 
+-   `GOERLI_ETHERSCAN_API_KEY`: Etherscan API Key to verify contracts on Ethereum Goerli testnet
+-   `GOERLI_PRIVATE_KEY`: Private key to deploy contracts to Ethereum Goerli testnet
+-   `GOERLI_URL`: RPC endpoint for Ethereum Goerli testnet
+-   `GOERLI_STAKING_POOL_ADDRESS`: Staking pool contract address on Ethereum Goerli testnet
+-   `GOERLI_UNIT_CONVERTER_ADDRESS`: Unit converter contract address on Ethereum Goerli testnet
+-   `GOERLI_MOCK_ERC20_TOKEN_NAME`: Mock ERC20 token name on BSC testnet
+-   `GOERLI_MOCK_ERC20_TOKEN_SYMBOL`: Mock ERC20 token symbol on BSC testnet
+-   `GOERLI_MOCK_ERC20_TOKEN_DECIMALS`: Mock ERC20 token decimals on BSC testnet
+-   `GOERLI_MOCK_ERC20_TOKEN_CAP_ETHER`: Mock ERC20 token cap in ether on BSC testnet
+
 -   `MAINNET_ETHERSCAN_API_KEY`: Etherscan API Key to verify contracts on Ethereum mainnet
 -   `MAINNET_PRIVATE_KEY`: Private key to deploy contracts to Ethereum mainnet
 -   `MAINNET_URL`: RPC endpoint for Ethereum mainnet

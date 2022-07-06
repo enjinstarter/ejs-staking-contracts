@@ -23,7 +23,11 @@ async function main() {
   let stakingPoolAddress;
   let unitConverterAddress;
 
-  if (networkName === "ropsten") {
+  if (networkName === "goerli") {
+    isPublicNetwork = true;
+    stakingPoolAddress = process.env.GOERLI_STAKING_POOL_ADDRESS;
+    unitConverterAddress = process.env.GOERLI_UNIT_CONVERTER_ADDRESS;
+  } else if (networkName === "ropsten") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.ROPSTEN_STAKING_POOL_ADDRESS;
     unitConverterAddress = process.env.ROPSTEN_UNIT_CONVERTER_ADDRESS;
