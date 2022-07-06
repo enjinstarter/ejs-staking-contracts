@@ -21,7 +21,9 @@ async function main() {
 
   let isPublicNetwork;
 
-  if (networkName === "ropsten") {
+  if (networkName === "goerli") {
+    isPublicNetwork = true;
+  } else if (networkName === "ropsten") {
     isPublicNetwork = true;
   } else if (networkName === "mainnet") {
     isPublicNetwork = true;

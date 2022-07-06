@@ -25,7 +25,13 @@ async function main() {
   let mockErc20TokenDecimals;
   let mockErc20TokenCapEther;
 
-  if (networkName === "ropsten") {
+  if (networkName === "goerli") {
+    isPublicNetwork = true;
+    mockErc20TokenName = process.env.GOERLI_MOCK_ERC20_TOKEN_NAME;
+    mockErc20TokenSymbol = process.env.GOERLI_MOCK_ERC20_TOKEN_SYMBOL;
+    mockErc20TokenDecimals = process.env.GOERLI_MOCK_ERC20_TOKEN_DECIMALS;
+    mockErc20TokenCapEther = process.env.GOERLI_MOCK_ERC20_TOKEN_CAP_ETHER;
+  } else if (networkName === "ropsten") {
     isPublicNetwork = true;
     mockErc20TokenName = process.env.ROPSTEN_MOCK_ERC20_TOKEN_NAME;
     mockErc20TokenSymbol = process.env.ROPSTEN_MOCK_ERC20_TOKEN_SYMBOL;

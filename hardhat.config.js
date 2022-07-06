@@ -46,6 +46,14 @@ module.exports = {
     hardhat: {
       accounts: { count: 210 },
     },
+    goerli: {
+      url: process.env.GOERLI_URL || "",
+      chainId: 5,
+      accounts:
+        process.env.GOERLI_PRIVATE_KEY !== undefined
+          ? [process.env.GOERLI_PRIVATE_KEY]
+          : [],
+    },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       chainId: 3,
@@ -116,7 +124,9 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
+      // ethereum
       mainnet: process.env.MAINNET_ETHERSCAN_API_KEY || "",
+      goerli: process.env.GOERLI_ETHERSCAN_API_KEY || "",
       ropsten: process.env.ROPSTEN_ETHERSCAN_API_KEY || "",
       // binance smart chain
       bsc: process.env.BSC_MAINNET_BSCSCAN_API_KEY || "",
