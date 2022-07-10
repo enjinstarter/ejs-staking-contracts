@@ -24,6 +24,7 @@ contract StakingService is
 
     struct StakeInfo {
         uint256 stakeAmountWei;
+        uint256 lastStakeAmountWei;
         uint256 stakeTimestamp;
         uint256 stakeMaturityTimestamp; // timestamp when stake matures
         uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in wei
@@ -311,7 +312,7 @@ contract StakingService is
                 _estimateRewardAtMaturityWei(
                     stakeDurationAtAddStakeDays,
                     poolAprWei,
-                    _stakes[stakekey].stakeAmountWei
+                    _stakes[stakekey].lastStakeAmountWei
                 ),
                 rewardTokenDecimals
             );
@@ -323,6 +324,7 @@ contract StakingService is
             );
 
             _stakes[stakekey].stakeAmountWei += truncatedStakeAmountWei;
+            _stakes[stakekey].lastStakeAmountWei = truncatedStakeAmountWei;
             _stakes[stakekey].stakeTimestamp = block.timestamp;
             _stakes[stakekey].stakeMaturityTimestamp = stakeMaturityTimestamp;
             _stakes[stakekey]
@@ -330,6 +332,7 @@ contract StakingService is
         } else {
             _stakes[stakekey] = StakeInfo({
                 stakeAmountWei: truncatedStakeAmountWei,
+                lastStakeAmountWei: truncatedStakeAmountWei,
                 stakeTimestamp: block.timestamp,
                 stakeMaturityTimestamp: stakeMaturityTimestamp,
                 estimatedRewardAtMaturityWei: estimatedRewardAtMaturityWei,
@@ -405,6 +408,7 @@ contract StakingService is
 
         _stakes[stakekey] = StakeInfo({
             stakeAmountWei: 0,
+            lastStakeAmountWei: 0,
             stakeTimestamp: 0,
             stakeMaturityTimestamp: 0,
             estimatedRewardAtMaturityWei: 0,
@@ -660,6 +664,7 @@ contract StakingService is
 
         _stakes[stakekey] = StakeInfo({
             stakeAmountWei: 0,
+            lastStakeAmountWei: 0,
             stakeTimestamp: 0,
             stakeMaturityTimestamp: 0,
             estimatedRewardAtMaturityWei: 0,
