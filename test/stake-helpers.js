@@ -357,7 +357,7 @@ async function initializeStakingPoolTestData(
       stakeTokenDecimals: 6,
       rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
-      poolAprWei: hre.ethers.utils.parseEther("25"),
+      poolAprWei: hre.ethers.utils.parseEther("25.43"),
     },
     {
       poolUuid: "3407b606-52cb-4e37-a9d0-a1761d1dba9d",
