@@ -3,8 +3,9 @@ const dotenvExpand = require("dotenv-expand");
 
 dotenvExpand.expand(dotenv.config());
 
+require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
-require("@nomiclabs/hardhat-waffle");
+require("@nomicfoundation/hardhat-chai-matchers");
 require("@atixlabs/hardhat-time-n-mine");
 require("hardhat-contract-sizer");
 require("hardhat-gas-reporter");
