@@ -1236,6 +1236,17 @@ describe("StakingService", function () {
       lastStakeMoreConfig.truncatedTotalStakeAmountsWei,
       lastStakeMoreConfig.expectRewardAtMaturityWei
     );
+
+    const balanceOfContractAfterRemove =
+      await lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+        stakingServiceInstance.address
+      );
+
+    console.log(
+      `tokenAddress=${lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
+    );
+
+    expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
   });
 
   it("Should be able to stake more using same stake and reward token with 6 decimals", async () => {
@@ -1379,6 +1390,325 @@ describe("StakingService", function () {
       lastStakeMoreConfig.truncatedTotalStakeAmountsWei,
       lastStakeMoreConfig.expectRewardAtMaturityWei
     );
+
+    const balanceOfContractAfterRemove =
+      await lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+        stakingServiceInstance.address
+      );
+
+    console.log(
+      `tokenAddress=${lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
+    );
+
+    expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
+  });
+
+  it("Should be able to stake more using stake token with 18 decimals and reward token with 6 decimals", async () => {
+    const expectStakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[10];
+    const enduser = enduserAccounts[0];
+
+    const stakeMoreInfo = [
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("33687.78329325"),
+        stakeSecondsAfterStartblockTimestamp: 10,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 10,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("790282.8319459"),
+        stakeSecondsAfterStartblockTimestamp: 90258,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 20,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("864942.27974346"),
+        stakeSecondsAfterStartblockTimestamp: 185959,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 30,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("12767.27475306"),
+        stakeSecondsAfterStartblockTimestamp: 277810,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 40,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("741305.67988497"),
+        stakeSecondsAfterStartblockTimestamp: 370888,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 60,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("510154.90180235"),
+        stakeSecondsAfterStartblockTimestamp: 457287,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 70,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("110020.33942366"),
+        stakeSecondsAfterStartblockTimestamp: 905048,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 80,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("386669.49521599"),
+        stakeSecondsAfterStartblockTimestamp: 1284697,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 90,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("525518.24746399"),
+        stakeSecondsAfterStartblockTimestamp: 1477450,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 100,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("480118.12460864"),
+        stakeSecondsAfterStartblockTimestamp: 1968191,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 110,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("572457.57581124"),
+        stakeSecondsAfterStartblockTimestamp: 2169285,
+        lastDigitDeltaStakeAmountWei: 0,
+        lastDigitDeltaRewardAtMaturityWei: 120,
+      },
+    ];
+
+    const stakingPoolRewardStats = {};
+
+    const expectStakeMoresWithRewards = await setupStakeMoresWithRewards(
+      stakeMoreInfo,
+      enduser,
+      expectStakingPoolConfig,
+      stakingServiceInstance,
+      stakingPoolsRewardBalanceOf,
+      stakingPoolRewardStats,
+      governanceRoleAccounts[0]
+    );
+
+    /*
+    console.log(`\nexpectStakeMoresWithRewards:`);
+    console.log(
+      `stakingPoolId, actualStakeAmountWei, expectStakeAmountWei, actualTotalStakeAmountsWei, truncatedTotalStakeAmountsWei, estimatedRewardAtMaturityWei, expectRewardAtMaturityWei, lastDigitDeltaStakeAmountWei, lastDigitDeltaRewardAtMaturityWei, stakeSecondsAfterStartblockTimestamp`
+    );
+    for (let i = 0; i < expectStakeMoresWithRewards.length; i++) {
+      console.log(
+        `${
+          expectStakeMoresWithRewards[i].stakingPoolConfig.poolId
+        }, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].actualStakeAmountWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].expectStakeAmountWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].actualTotalStakeAmountsWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].truncatedTotalStakeAmountsWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].estimatedRewardAtMaturityWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].expectRewardAtMaturityWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].lastDigitDeltaStakeAmountWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].lastDigitDeltaRewardAtMaturityWei
+        )}, ${
+          expectStakeMoresWithRewards[i].stakeSecondsAfterStartblockTimestamp
+        }`
+      );
+    }
+    */
+
+    const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
+
+    await stakeMoreWithVerify(
+      stakingServiceInstance,
+      expectStakeMoresWithRewards,
+      startblockTimestamp,
+      hre.ethers.constants.Zero,
+      hre.ethers.constants.Zero
+    );
+
+    const lastStakeMoreConfig =
+      expectStakeMoresWithRewards[expectStakeMoresWithRewards.length - 1];
+
+    await unstakeStakeMoreWithVerify(
+      stakingServiceInstance,
+      stakingPoolInstance,
+      contractAdminRoleAccounts[0],
+      lastStakeMoreConfig,
+      startblockTimestamp,
+      stakingPoolRewardStats[lastStakeMoreConfig.stakingPoolConfig.poolId]
+        .totalRewardWei,
+      lastStakeMoreConfig.truncatedTotalStakeAmountsWei,
+      lastStakeMoreConfig.expectRewardAtMaturityWei
+    );
+
+    const balanceOfContractAfterRemove =
+      await lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+        stakingServiceInstance.address
+      );
+
+    console.log(
+      `tokenAddress=${lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
+    );
+
+    expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
+  });
+
+  it("Should be able to stake more using stake token with 6 decimals and reward token with 18 decimals", async () => {
+    const expectStakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[16];
+    const enduser = enduserAccounts[0];
+
+    const stakeMoreInfo = [
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("33687.78329325"),
+        stakeSecondsAfterStartblockTimestamp: 10,
+        lastDigitDeltaStakeAmountWei: 10,
+        lastDigitDeltaRewardAtMaturityWei: 10,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("790282.8319459"),
+        stakeSecondsAfterStartblockTimestamp: 90258,
+        lastDigitDeltaStakeAmountWei: 20,
+        lastDigitDeltaRewardAtMaturityWei: 10,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("864942.27974346"),
+        stakeSecondsAfterStartblockTimestamp: 185959,
+        lastDigitDeltaStakeAmountWei: 20,
+        lastDigitDeltaRewardAtMaturityWei: 20,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("12767.27475306"),
+        stakeSecondsAfterStartblockTimestamp: 277810,
+        lastDigitDeltaStakeAmountWei: 20,
+        lastDigitDeltaRewardAtMaturityWei: 20,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("741305.67988497"),
+        stakeSecondsAfterStartblockTimestamp: 370888,
+        lastDigitDeltaStakeAmountWei: 30,
+        lastDigitDeltaRewardAtMaturityWei: 30,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("510154.90180235"),
+        stakeSecondsAfterStartblockTimestamp: 457287,
+        lastDigitDeltaStakeAmountWei: 30,
+        lastDigitDeltaRewardAtMaturityWei: 30,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("110020.33942366"),
+        stakeSecondsAfterStartblockTimestamp: 905048,
+        lastDigitDeltaStakeAmountWei: 40,
+        lastDigitDeltaRewardAtMaturityWei: 30,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("386669.49521599"),
+        stakeSecondsAfterStartblockTimestamp: 1284697,
+        lastDigitDeltaStakeAmountWei: 50,
+        lastDigitDeltaRewardAtMaturityWei: 40,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("525518.24746399"),
+        stakeSecondsAfterStartblockTimestamp: 1477450,
+        lastDigitDeltaStakeAmountWei: 60,
+        lastDigitDeltaRewardAtMaturityWei: 50,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("480118.12460864"),
+        stakeSecondsAfterStartblockTimestamp: 1968191,
+        lastDigitDeltaStakeAmountWei: 70,
+        lastDigitDeltaRewardAtMaturityWei: 50,
+      },
+      {
+        stakeAmountWei: hre.ethers.utils.parseEther("572457.57581124"),
+        stakeSecondsAfterStartblockTimestamp: 2169285,
+        lastDigitDeltaStakeAmountWei: 70,
+        lastDigitDeltaRewardAtMaturityWei: 50,
+      },
+    ];
+
+    const stakingPoolRewardStats = {};
+
+    const expectStakeMoresWithRewards = await setupStakeMoresWithRewards(
+      stakeMoreInfo,
+      enduser,
+      expectStakingPoolConfig,
+      stakingServiceInstance,
+      stakingPoolsRewardBalanceOf,
+      stakingPoolRewardStats,
+      governanceRoleAccounts[0]
+    );
+
+    /*
+    console.log(`\nexpectStakeMoresWithRewards:`);
+    console.log(
+      `stakingPoolId, actualStakeAmountWei, expectStakeAmountWei, actualTotalStakeAmountsWei, truncatedTotalStakeAmountsWei, estimatedRewardAtMaturityWei, expectRewardAtMaturityWei, lastDigitDeltaStakeAmountWei, lastDigitDeltaRewardAtMaturityWei, stakeSecondsAfterStartblockTimestamp`
+    );
+    for (let i = 0; i < expectStakeMoresWithRewards.length; i++) {
+      console.log(
+        `${
+          expectStakeMoresWithRewards[i].stakingPoolConfig.poolId
+        }, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].actualStakeAmountWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].expectStakeAmountWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].actualTotalStakeAmountsWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].truncatedTotalStakeAmountsWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].estimatedRewardAtMaturityWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].expectRewardAtMaturityWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].lastDigitDeltaStakeAmountWei
+        )}, ${hre.ethers.utils.formatEther(
+          expectStakeMoresWithRewards[i].lastDigitDeltaRewardAtMaturityWei
+        )}, ${
+          expectStakeMoresWithRewards[i].stakeSecondsAfterStartblockTimestamp
+        }`
+      );
+    }
+    */
+
+    const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
+
+    await stakeMoreWithVerify(
+      stakingServiceInstance,
+      expectStakeMoresWithRewards,
+      startblockTimestamp,
+      hre.ethers.constants.Zero,
+      hre.ethers.constants.Zero
+    );
+
+    const lastStakeMoreConfig =
+      expectStakeMoresWithRewards[expectStakeMoresWithRewards.length - 1];
+
+    await unstakeStakeMoreWithVerify(
+      stakingServiceInstance,
+      stakingPoolInstance,
+      contractAdminRoleAccounts[0],
+      lastStakeMoreConfig,
+      startblockTimestamp,
+      stakingPoolRewardStats[lastStakeMoreConfig.stakingPoolConfig.poolId]
+        .totalRewardWei,
+      lastStakeMoreConfig.truncatedTotalStakeAmountsWei,
+      lastStakeMoreConfig.expectRewardAtMaturityWei
+    );
+
+    const balanceOfContractAfterRemove =
+      await lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+        stakingServiceInstance.address
+      );
+
+    console.log(
+      `tokenAddress=${lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
+    );
+
+    expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
   });
 
   it("Should not allow set admin wallet as zero address", async () => {
@@ -4106,7 +4436,7 @@ describe("StakingService", function () {
 
       /*
       console.log(
-        `\nstakeMoreWithVerify verifyStakeMoreRewardAtMaturity ${i}: poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}, ${stakeMoreConfigs[i].actualStakeAmountWei}, ${stakeMoreConfigs[i].expectStakeAmountWei}, ${stakeMoreConfigs[i].estimatedRewardAtMaturityWei}, ${stakeMoreConfigs[i].expectRewardAtMaturityWei}, ${stakeMoreConfigs[i].lastDigitDeltaStakeAmountWei}, ${stakeMoreConfigs[i].lastDigitDeltaRewardAtMaturityWei}, ${stakeMoreConfigs[i].stakeSecondsAfterStartblockTimestamp}, startblockTimestamp=${startblockTimestamp}`
+        `\nstakeMoreWithVerify verifyStakeMoreRewardAtMaturity ${i}: poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}, actualStakeAmountWei=${stakeMoreConfigs[i].actualStakeAmountWei}, expectStakeAmountWei=${stakeMoreConfigs[i].expectStakeAmountWei}, estimateRewardAtMaturityWei=${stakeMoreConfigs[i].estimatedRewardAtMaturityWei}, expectRewardAtMaturityWei=${stakeMoreConfigs[i].expectRewardAtMaturityWei}, lastDigitDeltaStakeAmountWei=${stakeMoreConfigs[i].lastDigitDeltaStakeAmountWei}, lastDigitDeltaRewardAtMaturityWei=${stakeMoreConfigs[i].lastDigitDeltaRewardAtMaturityWei}, stakeSecondsAfterStartblockTimestamp=${stakeMoreConfigs[i].stakeSecondsAfterStartblockTimestamp}, startblockTimestamp=${startblockTimestamp}`
       );
       */
 
