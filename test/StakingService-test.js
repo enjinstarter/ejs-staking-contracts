@@ -4434,9 +4434,11 @@ describe("StakingService", function () {
     for (let i = 0; i < stakeMoreConfigs.length; i++) {
       const signerAddress = await stakeMoreConfigs[i].signer.getAddress();
 
+      /*
       console.log(
         `\nstakeMoreWithVerify verifyStakeMoreRewardAtMaturity ${i}: poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}, actualStakeAmountWei=${stakeMoreConfigs[i].actualStakeAmountWei}, expectStakeAmountWei=${stakeMoreConfigs[i].expectStakeAmountWei}, estimateRewardAtMaturityWei=${stakeMoreConfigs[i].estimatedRewardAtMaturityWei}, expectRewardAtMaturityWei=${stakeMoreConfigs[i].expectRewardAtMaturityWei}, lastDigitDeltaStakeAmountWei=${stakeMoreConfigs[i].lastDigitDeltaStakeAmountWei}, lastDigitDeltaRewardAtMaturityWei=${stakeMoreConfigs[i].lastDigitDeltaRewardAtMaturityWei}, stakeSecondsAfterStartblockTimestamp=${stakeMoreConfigs[i].stakeSecondsAfterStartblockTimestamp}, startblockTimestamp=${startblockTimestamp}`
       );
+      */
 
       const { expectStakeTimestamp, expectStakeMaturityTimestamp } =
         verifyStakeMoreRewardAtMaturity(
