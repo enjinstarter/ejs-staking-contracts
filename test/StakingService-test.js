@@ -1236,6 +1236,17 @@ describe("StakingService", function () {
       lastStakeMoreConfig.truncatedTotalStakeAmountsWei,
       lastStakeMoreConfig.expectRewardAtMaturityWei
     );
+
+    const balanceOfContractAfterRemove =
+      await lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+        stakingServiceInstance.address
+      );
+
+    console.log(
+      `tokenAddress=${lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
+    );
+
+    expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
   });
 
   it("Should be able to stake more using same stake and reward token with 6 decimals", async () => {
@@ -1379,6 +1390,17 @@ describe("StakingService", function () {
       lastStakeMoreConfig.truncatedTotalStakeAmountsWei,
       lastStakeMoreConfig.expectRewardAtMaturityWei
     );
+
+    const balanceOfContractAfterRemove =
+      await lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.balanceOf(
+        stakingServiceInstance.address
+      );
+
+    console.log(
+      `tokenAddress=${lastStakeMoreConfig.stakingPoolConfig.stakeTokenInstance.address}, balanceOfContractAfterRemove=${balanceOfContractAfterRemove}`
+    );
+
+    expect(balanceOfContractAfterRemove).to.equal(hre.ethers.constants.Zero);
   });
 
   it("Should not allow set admin wallet as zero address", async () => {
