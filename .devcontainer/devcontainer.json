@@ -26,6 +26,7 @@
     "hbenl.vscode-mocha-test-adapter",
     "juanblanco.solidity",
     "streetsidesoftware.code-spell-checker",
+    "tintinweb.solidity-visual-auditor",
     "dbaeumer.vscode-eslint"
   ],
 
