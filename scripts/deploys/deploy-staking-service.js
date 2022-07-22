@@ -43,6 +43,14 @@ async function main() {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.BSC_MAINNET_STAKING_POOL_ADDRESS;
     unitConverterAddress = process.env.BSC_MAINNET_UNIT_CONVERTER_ADDRESS;
+  } else if (networkName === "okc_testnet") {
+    isPublicNetwork = true;
+    stakingPoolAddress = process.env.OKC_TESTNET_STAKING_POOL_ADDRESS;
+    unitConverterAddress = process.env.OKC_TESTNET_UNIT_CONVERTER_ADDRESS;
+  } else if (networkName === "okc_mainnet") {
+    isPublicNetwork = true;
+    stakingPoolAddress = process.env.OKC_MAINNET_STAKING_POOL_ADDRESS;
+    unitConverterAddress = process.env.OKC_MAINNET_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "polygon_mumbai") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.POLYGON_MUMBAI_STAKING_POOL_ADDRESS;

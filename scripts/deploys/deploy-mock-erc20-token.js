@@ -43,6 +43,12 @@ async function main() {
     mockErc20TokenSymbol = process.env.BSC_TESTNET_MOCK_ERC20_TOKEN_SYMBOL;
     mockErc20TokenDecimals = process.env.BSC_TESTNET_MOCK_ERC20_TOKEN_DECIMALS;
     mockErc20TokenCapEther = process.env.BSC_TESTNET_MOCK_ERC20_TOKEN_CAP_ETHER;
+  } else if (networkName === "okc_testnet") {
+    isPublicNetwork = true;
+    mockErc20TokenName = process.env.OKC_TESTNET_MOCK_ERC20_TOKEN_NAME;
+    mockErc20TokenSymbol = process.env.OKC_TESTNET_MOCK_ERC20_TOKEN_SYMBOL;
+    mockErc20TokenDecimals = process.env.OKC_TESTNET_MOCK_ERC20_TOKEN_DECIMALS;
+    mockErc20TokenCapEther = process.env.OKC_TESTNET_MOCK_ERC20_TOKEN_CAP_ETHER;
   } else if (networkName === "polygon_mumbai") {
     isPublicNetwork = true;
     mockErc20TokenName = process.env.POLYGON_MUMBAI_MOCK_ERC20_TOKEN_NAME;

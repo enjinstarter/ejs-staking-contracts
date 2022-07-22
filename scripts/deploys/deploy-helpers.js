@@ -68,6 +68,12 @@ async function isDeployed(contractInstance, isPublicNetwork) {
       case 56:
         numberOfConfirmations = 20; // 1 min for 3s block time (https://academy.binance.com/en/articles/an-introduction-to-binance-smart-chain-bsc)
         break;
+      case 65:
+        numberOfConfirmations = 5;
+        break;
+      case 66:
+        numberOfConfirmations = 15; // 1 min for average block time of 4s
+        break;
       case 97:
         numberOfConfirmations = 5;
         break;
@@ -136,6 +142,16 @@ async function verifyContract(
       explorer = "Fuse Explorer";
       numberOfConfirmations = 5;
       verifyTask = "blockscout-verify";
+      break;
+    case 65:
+      explorer = "OKLink";
+      numberOfConfirmations = 5;
+      verifyTask = "verify:verify";
+      break;
+    case 66:
+      explorer = "OKLink";
+      numberOfConfirmations = 15; // 1 min for average block time of 4s
+      verifyTask = "verify:verify";
       break;
     case "polygon_mainnet":
       explorer = "Polygonscan";

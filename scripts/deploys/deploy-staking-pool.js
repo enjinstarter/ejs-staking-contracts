@@ -31,6 +31,10 @@ async function main() {
     isPublicNetwork = true;
   } else if (networkName === "bsc_mainnet") {
     isPublicNetwork = true;
+  } else if (networkName === "okc_testnet") {
+    isPublicNetwork = true;
+  } else if (networkName === "okc_mainnet") {
+    isPublicNetwork = true;
   } else if (networkName === "polygon_mumbai") {
     isPublicNetwork = true;
   } else if (networkName === "polygon_mainnet") {
