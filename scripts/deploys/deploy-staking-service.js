@@ -21,40 +21,31 @@ async function main() {
 
   let isPublicNetwork;
   let stakingPoolAddress;
-  let unitConverterAddress;
 
   if (networkName === "goerli") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.GOERLI_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.GOERLI_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "ropsten") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.ROPSTEN_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.ROPSTEN_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "mainnet") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.MAINNET_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.MAINNET_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "bsc_testnet") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.BSC_TESTNET_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.BSC_TESTNET_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "bsc_mainnet") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.BSC_MAINNET_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.BSC_MAINNET_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "polygon_mumbai") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.POLYGON_MUMBAI_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.POLYGON_MUMBAI_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "polygon_mainnet") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.POLYGON_MAINNET_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.POLYGON_MAINNET_UNIT_CONVERTER_ADDRESS;
   } else if (networkName === "localhost") {
     isPublicNetwork = false;
     stakingPoolAddress = process.env.LOCALHOST_STAKING_POOL_ADDRESS;
-    unitConverterAddress = process.env.LOCALHOST_UNIT_CONVERTER_ADDRESS;
   } else {
     throw new Error(`Unknown network: ${networkName}`);
   }
@@ -63,17 +54,10 @@ async function main() {
     throw new Error("Unknown is public network");
   } else if (stakingPoolAddress === undefined) {
     throw new Error("Unknown staking pool address");
-  } else if (unitConverterAddress === undefined) {
-    throw new Error("Unknown unit converter address");
   }
 
   const StakingServiceFactory = await hre.ethers.getContractFactory(
-    stakingServiceContractName,
-    {
-      libraries: {
-        UnitConverter: unitConverterAddress,
-      },
-    }
+    stakingServiceContractName
   );
   const stakingServiceArgs = [stakingPoolAddress];
   const stakingServiceInstance = await deployHelpers.deployContract(

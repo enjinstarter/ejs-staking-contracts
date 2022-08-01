@@ -428,14 +428,9 @@ async function newStakingPool() {
   return stakingPoolContractInstance;
 }
 
-async function newStakingService(libUnitConverterAddress, stakingPoolAddress) {
+async function newStakingService(stakingPoolAddress) {
   const StakingServiceFactory = await hre.ethers.getContractFactory(
-    "StakingService",
-    {
-      libraries: {
-        UnitConverter: libUnitConverterAddress,
-      },
-    }
+    "StakingService"
   );
   const stakingServiceContractInstance = await StakingServiceFactory.deploy(
     stakingPoolAddress
