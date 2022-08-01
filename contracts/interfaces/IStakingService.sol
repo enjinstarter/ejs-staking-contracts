@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Enjinstarter
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/IAccessControl.sol";
 import "./IAdminWallet.sol";

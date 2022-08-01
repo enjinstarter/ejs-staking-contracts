@@ -67,8 +67,6 @@ describe("StakingService", function () {
   let enduserAccounts;
   let unusedRoleAccounts;
 
-  let libUnitConverterInstance;
-
   let rewardToken18DecimalsInstances;
   let stakeRewardToken18DecimalsInstances;
   let stakeToken18DecimalsInstances;
@@ -123,8 +121,6 @@ describe("StakingService", function () {
     }
     console.log();
     */
-
-    libUnitConverterInstance = await testHelpers.newLibrary("UnitConverter");
   });
 
   after(async () => {
@@ -149,7 +145,6 @@ describe("StakingService", function () {
     );
 
     stakingServiceInstance = await stakeHelpers.newStakingService(
-      libUnitConverterInstance.address,
       stakingPoolInstance.address
     );
 
@@ -248,10 +243,7 @@ describe("StakingService", function () {
 
   it("Should not allow initialization of zero staking pool address", async () => {
     await expect(
-      stakeHelpers.newStakingService(
-        libUnitConverterInstance.address,
-        hre.ethers.constants.AddressZero
-      )
+      stakeHelpers.newStakingService(hre.ethers.constants.AddressZero)
     ).to.be.revertedWith("SSvcs: staking pool");
   });
 
