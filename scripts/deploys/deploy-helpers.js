@@ -120,52 +120,62 @@ async function verifyContract(
 ) {
   let explorer;
   let numberOfConfirmations;
+  let verifyPlugin;
   let verifyTask;
 
   switch (networkName) {
     case "bsc_mainnet":
       explorer = "BscScan";
       numberOfConfirmations = 20; // 1 min for 3s block time (https://academy.binance.com/en/articles/an-introduction-to-binance-smart-chain-bsc)
+      verifyPlugin = "verify";
       verifyTask = "verify:verify";
       break;
     case "bsc_testnet":
       explorer = "BscScan";
       numberOfConfirmations = 5;
+      verifyPlugin = "verify";
       verifyTask = "verify:verify";
       break;
     case "fuse_mainnet":
       explorer = "Fuse Explorer";
       numberOfConfirmations = 12; // 1 min for 5s block time (https://developers.fuse.io/fuse-dev-docs/developer-resources-and-tools)
+      verifyPlugin = "blockscout-verify";
       verifyTask = "blockscout-verify";
       break;
     case "fuse_spark":
       explorer = "Fuse Explorer";
       numberOfConfirmations = 5;
+      verifyPlugin = "blockscout-verify";
       verifyTask = "blockscout-verify";
       break;
-    case 65:
+    case "okc_testnet":
       explorer = "OKLink";
       numberOfConfirmations = 5;
-      verifyTask = "verify:verify";
+      verifyPlugin = "oklink-verify";
+      verifyTask = "oklink-verify:verify";
       break;
-    case 66:
+    case "okc_mainnet":
       explorer = "OKLink";
       numberOfConfirmations = 15; // 1 min for average block time of 4s
-      verifyTask = "verify:verify";
+      verifyPlugin = "oklink-verify";
+      verifyTask = "oklink-verify:verify";
       break;
     case "polygon_mainnet":
       explorer = "Polygonscan";
       numberOfConfirmations = 30; // 1 min for 2s block time (https://polygonscan.com/chart/blocktime)
+      verifyPlugin = "verify";
       verifyTask = "verify:verify";
       break;
     case "polygon_mumbai":
       explorer = "Polygonscan";
       numberOfConfirmations = 5;
+      verifyPlugin = "verify";
       verifyTask = "verify:verify";
       break;
     default:
       explorer = "Etherscan";
       numberOfConfirmations = 5;
+      verifyPlugin = "verify";
       verifyTask = "verify:verify";
       break;
   }
@@ -288,12 +298,12 @@ async function verifyContract(
           `module.exports = ${JSON.stringify(verifyTaskArgs, null, 4)};`
         );
 
-        verifyCommand = `npx hardhat verify --network ${network} --constructor-args ${projectConstructorArgsFilePath} ${contractAddress}`;
+        verifyCommand = `npx hardhat ${verifyPlugin} --network ${network} --constructor-args ${projectConstructorArgsFilePath} ${contractAddress}`;
       } else {
         const quotedConstructorArgs = verifyTaskArgs.map(
           (x) => `"${x.toString().replace(/"/g, '\\"')}"`
         );
-        verifyCommand = `npx hardhat verify --network ${network} ${contractAddress} ${quotedConstructorArgs.join(
+        verifyCommand = `npx hardhat ${verifyPlugin} --network ${network} ${contractAddress} ${quotedConstructorArgs.join(
           " "
         )}`;
       }
