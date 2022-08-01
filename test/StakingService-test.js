@@ -67,8 +67,6 @@ describe("StakingService", function () {
   let enduserAccounts;
   let unusedRoleAccounts;
 
-  let libUnitConverterInstance;
-
   let rewardToken18DecimalsInstances;
   let stakeRewardToken18DecimalsInstances;
   let stakeToken18DecimalsInstances;
@@ -123,8 +121,6 @@ describe("StakingService", function () {
     }
     console.log();
     */
-
-    libUnitConverterInstance = await testHelpers.newLibrary("UnitConverter");
   });
 
   after(async () => {
@@ -149,7 +145,6 @@ describe("StakingService", function () {
     );
 
     stakingServiceInstance = await stakeHelpers.newStakingService(
-      libUnitConverterInstance.address,
       stakingPoolInstance.address
     );
 
@@ -248,10 +243,7 @@ describe("StakingService", function () {
 
   it("Should not allow initialization of zero staking pool address", async () => {
     await expect(
-      stakeHelpers.newStakingService(
-        libUnitConverterInstance.address,
-        hre.ethers.constants.AddressZero
-      )
+      stakeHelpers.newStakingService(hre.ethers.constants.AddressZero)
     ).to.be.revertedWith("SSvcs: staking pool");
   });
 
@@ -4460,7 +4452,7 @@ describe("StakingService", function () {
         i > 0
       );
 
-      // console.log(`stakeMoreWithVerify getStakingPoolStats ${i}`);
+      // console.log(`stakeMoreWithVerify getStakingPoolStats before ${i}`);
 
       const stakingPoolStatsBeforeAdd =
         await stakingServiceContractInstance.getStakingPoolStats(
@@ -4469,7 +4461,7 @@ describe("StakingService", function () {
 
       /*
       console.log(
-        `stakeMoreWithVerify getStakingPoolStats ${i}: totalStakedWei=${stakingPoolStatsBeforeAdd.totalStakedWei}, expectTotalStakedWei=${expectTotalStakedWei}, rewardToBeDistributedWei=${stakingPoolStatsBeforeAdd.rewardToBeDistributedWei}, expectRewardToBeDistributedWei=${expectRewardToBeDistributedWei}`
+        `stakeMoreWithVerify getStakingPoolStats before ${i}: poolUuid=${stakeMoreConfigs[i].stakingPoolConfig.poolUuid}, poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}, totalStakedWei=${stakingPoolStatsBeforeAdd.totalStakedWei}, expectTotalStakedWei=${expectTotalStakedWei}, rewardToBeDistributedWei=${stakingPoolStatsBeforeAdd.rewardToBeDistributedWei}, expectRewardToBeDistributedWei=${expectRewardToBeDistributedWei}, totalRewardWei=${stakingPoolStatsBeforeAdd.totalRewardWei}`
       );
       */
 
@@ -4548,7 +4540,7 @@ describe("StakingService", function () {
 
       /*
       console.log(
-        `stakeMoreWithVerify getStakingPoolStats ${i}: poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}`
+        `stakeMoreWithVerify getStakingPoolStats after ${i}: poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}`
       );
       */
 
@@ -4559,7 +4551,7 @@ describe("StakingService", function () {
 
       /*
       console.log(
-        `stakeMoreWithVerify getStakingPoolStats ${i}: poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}, totalStakedWei=${stakingPoolStatsAfterAdd.totalStakedWei}, expectTotalStakedWei=${expectTotalStakedWei}, rewardToBeDistributedWei=${stakingPoolStatsAfterAdd.rewardToBeDistributedWei}, expectRewardToBeDistributedWei=${expectRewardToBeDistributedWei}, totalRewardWei=${stakingPoolStatsAfterAdd.totalRewardWei}, expectTotalRewardWei=${stakingPoolStatsBeforeAdd.totalRewardWei}, isOpen=${stakingPoolStatsAfterAdd.isOpen}, expectIsOpen=${stakingPoolStatsBeforeAdd.isOpen}, isActive=${stakingPoolStatsAfterAdd.isActive}, expectIsActive=${stakingPoolStatsBeforeAdd.isActive}`
+        `stakeMoreWithVerify getStakingPoolStats after ${i}: poolUuid=${stakeMoreConfigs[i].stakingPoolConfig.poolUuid}, poolId=${stakeMoreConfigs[i].stakingPoolConfig.poolId}, totalStakedWei=${stakingPoolStatsAfterAdd.totalStakedWei}, expectTotalStakedWei=${expectTotalStakedWei}, rewardToBeDistributedWei=${stakingPoolStatsAfterAdd.rewardToBeDistributedWei}, expectRewardToBeDistributedWei=${expectRewardToBeDistributedWei}, totalRewardWei=${stakingPoolStatsAfterAdd.totalRewardWei}, expectTotalRewardWei=${stakingPoolStatsBeforeAdd.totalRewardWei}, isOpen=${stakingPoolStatsAfterAdd.isOpen}, expectIsOpen=${stakingPoolStatsBeforeAdd.isOpen}, isActive=${stakingPoolStatsAfterAdd.isActive}, expectIsActive=${stakingPoolStatsBeforeAdd.isActive}`
       );
       */
 
