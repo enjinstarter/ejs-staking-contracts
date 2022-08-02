@@ -7,6 +7,7 @@ require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
 require("@nomicfoundation/hardhat-chai-matchers");
 require("@atixlabs/hardhat-time-n-mine");
+require("@enjinstarter/hardhat-oklink-verify");
 require("hardhat-contract-sizer");
 require("hardhat-gas-reporter");
 require("solidity-coverage");
@@ -107,6 +108,24 @@ module.exports = {
           : [],
       gasMultiplier: 1.02,
     },
+    okc_testnet: {
+      chainId: 65,
+      url: `https://exchaintestrpc.okex.org`,
+      accounts:
+        process.env.OKC_TESTNET_PRIVATE_KEY !== undefined
+          ? [`0x${process.env.OKC_TESTNET_PRIVATE_KEY}`]
+          : [],
+      gasMultiplier: 2, // For testnet only
+    },
+    okc_mainnet: {
+      chainId: 66,
+      url: `https://exchainrpc.okex.org`,
+      accounts:
+        process.env.OKC_MAINNET_PRIVATE_KEY !== undefined
+          ? [`0x${process.env.OKC_MAINNET_PRIVATE_KEY}`]
+          : [],
+      gasMultiplier: 1.02,
+    },
   },
   contractSizer: {
     alphaSort: false,
@@ -135,6 +154,13 @@ module.exports = {
       // polygon
       polygon: process.env.POLYGON_MAINNET_POLYGONSCAN_API_KEY || "",
       polygonMumbai: process.env.POLYGON_MUMBAI_POLYGONSCAN_API_KEY || "",
+    },
+  },
+  oklink: {
+    apiKey: {
+      // okc
+      okc: process.env.OKC_MAINNET_OKLINK_API_KEY || "",
+      okcTestnet: process.env.OKC_TESTNET_OKLINK_API_KEY || "",
     },
   },
 };

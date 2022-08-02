@@ -33,6 +33,20 @@
 -   `MAINNET_URL`: RPC endpoint for Ethereum mainnet
 -   `MAINNET_STAKING_POOL_ADDRESS`: Staking pool contract address on Ethereum mainnet
 
+-   `OKC_MAINNET_OKLINK_API_KEY`: OKLink API Key to verify contracts on OKC mainnet
+-   `OKC_MAINNET_PRIVATE_KEY`: Private key to deploy contracts to OKC mainnet
+-   `OKC_MAINNET_URL`: RPC endpoint for OKC mainnet
+-   `OKC_MAINNET_STAKING_POOL_ADDRESS`: Staking pool contract address on OKC mainnet
+
+-   `OKC_TESTNET_OKLINK_API_KEY`: OKLink API Key to verify contracts on OKC testnet
+-   `OKC_TESTNET_PRIVATE_KEY`: Private key to deploy contracts to OKC testnet
+-   `OKC_TESTNET_URL`: RPC endpoint for OKC testnet
+-   `OKC_TESTNET_STAKING_POOL_ADDRESS`: Staking pool contract address on OKC testnet
+-   `OKC_TESTNET_MOCK_ERC20_TOKEN_NAME`: Mock ERC20 token name on OKC testnet
+-   `OKC_TESTNET_MOCK_ERC20_TOKEN_SYMBOL`: Mock ERC20 token symbol on OKC testnet
+-   `OKC_TESTNET_MOCK_ERC20_TOKEN_DECIMALS`: Mock ERC20 token decimals on OKC testnet
+-   `OKC_TESTNET_MOCK_ERC20_TOKEN_CAP_ETHER`: Mock ERC20 token cap in ether on OKC testnet
+
 -   `POLYGON_MAINNET_POLYGONSCAN_API_KEY`: Polygonscan API Key to verify contracts on Polygon mainnet
 -   `POLYGON_MAINNET_PRIVATE_KEY`: Private key to deploy contracts to Polygon mainnet
 -   `POLYGON_MAINNET_URL`: RPC endpoint for Polygon mainnet
