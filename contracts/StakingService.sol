@@ -70,28 +70,7 @@ contract StakingService is
         bytes memory stakekey = _getStakeKey(poolId, account);
         require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
 
-        (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
-            ,
-            bool isPoolActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        (, , , , , , , bool isPoolActive) = _getStakingPoolInfo(poolId);
 
         if (!isPoolActive) {
             return 0;
@@ -160,13 +139,7 @@ contract StakingService is
             poolAprWei,
             isOpen,
             isActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         poolSizeWei = _getPoolSizeWei(
             stakeDurationDays,
@@ -192,27 +165,15 @@ contract StakingService is
         whenNotPaused
     {
         (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
+            ,
+            ,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
             bool isPoolActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
         require(isPoolActive, "SSvcs: pool suspended");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
@@ -257,24 +218,12 @@ contract StakingService is
             uint256 stakeDurationDays,
             address stakeTokenAddress,
             uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
+            ,
             uint256 rewardTokenDecimals,
             uint256 poolAprWei,
             bool isPoolOpen,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
         require(isPoolOpen, "SSvcs: closed");
 
         uint256 stakeMaturityTimestamp = _calculateStakeMaturityTimestamp(
@@ -370,27 +319,15 @@ contract StakingService is
      */
     function unstake(bytes32 poolId) external virtual override whenNotPaused {
         (
-            uint256 stakeDurationDays,
+            ,
             address stakeTokenAddress,
             uint256 stakeTokenDecimals,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
             bool isPoolActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
         require(isPoolActive, "SSvcs: pool suspended");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
@@ -468,27 +405,15 @@ contract StakingService is
         require(rewardAmountWei > 0, "SSvcs: reward amount");
 
         (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
+            ,
+            ,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         uint256 truncatedRewardAmountWei = rewardTokenDecimals <
             TOKEN_MAX_DECIMALS
@@ -524,27 +449,15 @@ contract StakingService is
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
         (
-            uint256 stakeDurationDays,
+            ,
             address stakeTokenAddress,
             uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
+            ,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         require(
             _stakingPoolStats[poolId].totalRevokedStakeWei > 0,
@@ -581,27 +494,15 @@ contract StakingService is
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
         (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
+            ,
+            ,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         uint256 unallocatedRewardWei = _calculatePoolRemainingRewardWei(poolId);
         require(unallocatedRewardWei > 0, "SSvcs: no unallocated");
@@ -675,27 +576,15 @@ contract StakingService is
         });
 
         (
-            uint256 stakeDurationDays,
+            ,
             address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
             address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         emit StakeRevoked(
             poolId,
@@ -865,6 +754,45 @@ contract StakingService is
         } else {
             claimableRewardWei = 0;
         }
+    }
+
+    function _getStakingPoolInfo(bytes32 poolId)
+        internal
+        view
+        virtual
+        returns (
+            uint256 stakeDurationDays,
+            address stakeTokenAddress,
+            uint256 stakeTokenDecimals,
+            address rewardTokenAddress,
+            uint256 rewardTokenDecimals,
+            uint256 poolAprWei,
+            bool isOpen,
+            bool isPoolActive
+        )
+    {
+        (
+            stakeDurationDays,
+            stakeTokenAddress,
+            stakeTokenDecimals,
+            rewardTokenAddress,
+            rewardTokenDecimals,
+            poolAprWei,
+            isOpen,
+            isPoolActive
+        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
+        require(stakeDurationDays > 0, "SSvcs: stake duration");
+        require(stakeTokenAddress != address(0), "SSvcs: stake token");
+        require(
+            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
+            "SSvcs: stake decimals"
+        );
+        require(rewardTokenAddress != address(0), "SSvcs: reward token");
+        require(
+            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
+            "SSvcs: reward decimals"
+        );
+        require(poolAprWei > 0, "SSvcs: pool APR");
     }
 
     /**
