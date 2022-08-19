@@ -713,6 +713,11 @@ contract StakingService is
             _stakingPoolStats[poolId].rewardToBeDistributedWei;
     }
 
+    /**
+     * @dev calculate when stake matures.
+     */
+    // https://github.com/crytic/slither/wiki/Detector-Documentation#dead-code
+    // slither-disable-next-line dead-code
     function _calculateStakeMaturityTimestamp(
         uint256 stakeDurationDays,
         uint256 stakeTimestamp
