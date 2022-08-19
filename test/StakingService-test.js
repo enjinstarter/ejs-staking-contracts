@@ -2101,6 +2101,23 @@ describe("StakingService", function () {
     ).to.be.revertedWith("SSvcs: maturity timestamp");
   });
 
+  it("should not allow scaling with invalid decimals", async () => {
+    const scaleAmount = hre.ethers.utils.parseEther("0.1");
+    const invalidDecimals = 19;
+
+    const testServiceInstance = await stakeHelpers.newMockStakingService(
+      stakingPoolInstance.address
+    );
+
+    await expect(
+      testServiceInstance.scaleWeiToDecimals(scaleAmount, invalidDecimals)
+    ).to.be.revertedWith("UnitConverter: decimals");
+
+    await expect(
+      testServiceInstance.scaleDecimalsToWei(scaleAmount, invalidDecimals)
+    ).to.be.revertedWith("UnitConverter: decimals");
+  });
+
   async function addStakingPoolRewardWithVerify(
     stakingServiceContractInstance,
     rewardTokenContractInstance,
