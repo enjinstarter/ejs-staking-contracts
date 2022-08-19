@@ -12,7 +12,10 @@ import "../StakingService.sol";
 contract MockStakingService is StakingService {
     constructor(address stakingPoolContract_)
         StakingService(stakingPoolContract_)
-    {}
+    // solhint-disable-next-line no-empty-blocks
+    {
+
+    }
 
     function transferTokensToAccount(
         address tokenAddress,
