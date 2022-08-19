@@ -1956,6 +1956,49 @@ describe("StakingService", function () {
     ).to.be.revertedWith("SPool: uninitialized");
   });
 
+  it("should not allow invalid staking pool info", async () => {
+    const testPoolInstance = await stakeHelpers.newMockStakingPool();
+    const testServiceInstance = await stakeHelpers.newStakingService(
+      testPoolInstance.address
+    );
+
+    const poolIdStakeDurationZero =
+      await testPoolInstance.POOL_ID_STAKE_DURATION_ZERO();
+    const poolIdStakeTokenAddressZero =
+      await testPoolInstance.POOL_ID_STAKE_TOKEN_ADDRESS_ZERO();
+    const poolIdStakeTokenDecimalsNineteen =
+      await testPoolInstance.POOL_ID_STAKE_TOKEN_DECIMALS_NINETEEN();
+    const poolIdRewardTokenAddressZero =
+      await testPoolInstance.POOL_ID_REWARD_TOKEN_ADDRESS_ZERO();
+    const poolIdRewardTokenDecimalsNineteen =
+      await testPoolInstance.POOL_ID_REWARD_TOKEN_DECIMALS_NINETEEN();
+    const poolIdPoolAprZero = await testPoolInstance.POOL_ID_POOL_APR_ZERO();
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeDurationZero)
+    ).to.be.revertedWith("SSvcs: stake duration");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeTokenAddressZero)
+    ).to.be.revertedWith("SSvcs: stake token");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeTokenDecimalsNineteen)
+    ).to.be.revertedWith("SSvcs: stake decimals");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdRewardTokenAddressZero)
+    ).to.be.revertedWith("SSvcs: reward token");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdRewardTokenDecimalsNineteen)
+    ).to.be.revertedWith("SSvcs: reward decimals");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdPoolAprZero)
+    ).to.be.revertedWith("SSvcs: pool APR");
+  });
+
   async function addStakingPoolRewardWithVerify(
     stakingServiceContractInstance,
     rewardTokenContractInstance,
