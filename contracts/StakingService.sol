@@ -239,6 +239,7 @@ contract StakingService is
             stakeAmountWei,
             stakeTokenDecimals
         );
+        require(truncatedStakeAmountWei > 0, "SSvcs: truncated stake amount");
 
         uint256 estimatedRewardAtMaturityWei = _truncatedAmountWei(
             _estimateRewardAtMaturityWei(
@@ -248,6 +249,7 @@ contract StakingService is
             ),
             rewardTokenDecimals
         );
+        require(estimatedRewardAtMaturityWei > 0, "SSvcs: zero reward");
         require(
             estimatedRewardAtMaturityWei <=
                 _calculatePoolRemainingRewardWei(poolId),
@@ -756,6 +758,25 @@ contract StakingService is
         }
     }
 
+    /**
+     * @dev get pool size in wei.
+     */
+    function _getPoolSizeWei(
+        uint256 stakeDurationDays,
+        uint256 poolAprWei,
+        uint256 totalRewardWei,
+        uint256 stakeTokenDecimals
+    ) internal view virtual returns (uint256 poolSizeWei) {
+        poolSizeWei = _truncatedAmountWei(
+            (DAYS_IN_YEAR * PERCENT_100_WEI * totalRewardWei) /
+                (stakeDurationDays * poolAprWei),
+            stakeTokenDecimals
+        );
+    }
+
+    /**
+     * @dev get staking pool info.
+     */
     function _getStakingPoolInfo(bytes32 poolId)
         internal
         view
@@ -793,22 +814,6 @@ contract StakingService is
             "SSvcs: reward decimals"
         );
         require(poolAprWei > 0, "SSvcs: pool APR");
-    }
-
-    /**
-     * @dev get pool size in wei.
-     */
-    function _getPoolSizeWei(
-        uint256 stakeDurationDays,
-        uint256 poolAprWei,
-        uint256 totalRewardWei,
-        uint256 stakeTokenDecimals
-    ) internal view virtual returns (uint256 poolSizeWei) {
-        poolSizeWei = _truncatedAmountWei(
-            (DAYS_IN_YEAR * PERCENT_100_WEI * totalRewardWei) /
-                (stakeDurationDays * poolAprWei),
-            stakeTokenDecimals
-        );
     }
 
     /**

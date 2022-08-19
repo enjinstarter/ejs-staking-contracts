@@ -1897,6 +1897,34 @@ describe("StakingService", function () {
     ).to.be.revertedWith("SSvcs: stake amount");
   });
 
+  it("should not allow stake of zero amount after truncation", async () => {
+    const STAKING_POOL_CONFIGS_STAKE_TOKEN_6_DECIMALS_INDEX = 5;
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000999999999999");
+
+    await expect(
+      stakingServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[
+          STAKING_POOL_CONFIGS_STAKE_TOKEN_6_DECIMALS_INDEX
+        ].poolId,
+        stakeAmountWei
+      )
+    ).to.be.revertedWith("SSvcs: truncated stake amount");
+  });
+
+  it("should not allow stake with zero reward at maturity", async () => {
+    const STAKING_POOL_CONFIGS_REWARD_TOKEN_6_DECIMALS_INDEX = 14;
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000000000000001");
+
+    await expect(
+      stakingServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[
+          STAKING_POOL_CONFIGS_REWARD_TOKEN_6_DECIMALS_INDEX
+        ].poolId,
+        stakeAmountWei
+      )
+    ).to.be.revertedWith("SSvcs: zero reward");
+  });
+
   it("should not allow stake for uninitialized staking pool", async () => {
     const uninitializedPoolId = hre.ethers.utils.id(
       "da61b654-4973-4879-9166-723c0017dd6d"
