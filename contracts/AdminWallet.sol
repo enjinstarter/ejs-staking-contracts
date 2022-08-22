@@ -7,6 +7,7 @@ import "./interfaces/IAdminWallet.sol";
 /**
  * @title AdminWallet
  * @author Tim Loh
+ * @notice Provides an implementation of the admin wallet interface that is inherited by other contracts
  */
 contract AdminWallet is IAdminWallet {
     address private _adminWallet;
@@ -16,14 +17,15 @@ contract AdminWallet is IAdminWallet {
     }
 
     /**
-     * @dev See {IAdminWallet-adminWallet}.
+     * @inheritdoc IAdminWallet
      */
     function adminWallet() public view virtual override returns (address) {
         return _adminWallet;
     }
 
     /**
-     * @dev Change admin wallet to a new wallet address (`newWallet`).
+     * @dev Change admin wallet to a new wallet address
+     * @param newWallet The new admin wallet address
      */
     function _setAdminWallet(address newWallet) internal virtual {
         require(newWallet != address(0), "AdminWallet: new wallet");

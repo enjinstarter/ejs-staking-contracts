@@ -13,6 +13,7 @@ import "./interfaces/IStakingService.sol";
 /**
  * @title StakingService
  * @author Tim Loh
+ * @notice Provides staking functionalities
  */
 contract StakingService is
     Pausable,
@@ -28,17 +29,17 @@ contract StakingService is
         uint256 lastStakeAmountWei;
         uint256 stakeTimestamp;
         uint256 stakeMaturityTimestamp; // timestamp when stake matures
-        uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in wei
-        uint256 rewardClaimedWei; // reward claimed in wei
+        uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in Wei
+        uint256 rewardClaimedWei; // reward claimed in Wei
         bool isActive; // true if allow claim rewards and unstake
         bool isInitialized; // true if stake info has been initialized
     }
 
     struct StakingPoolStats {
-        uint256 totalRewardWei; // total pool reward in wei
-        uint256 totalStakedWei; // total staked inside pool in wei
-        uint256 rewardToBeDistributedWei; // allocated pool reward to be distributed in wei
-        uint256 totalRevokedStakeWei; // total revoked stake in wei
+        uint256 totalRewardWei; // total pool reward in Wei
+        uint256 totalStakedWei; // total staked inside pool in Wei
+        uint256 rewardToBeDistributedWei; // allocated pool reward to be distributed in Wei
+        uint256 totalRevokedStakeWei; // total revoked stake in Wei
     }
 
     uint256 public constant DAYS_IN_YEAR = 365;
@@ -58,7 +59,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-getClaimableRewardWei}.
+     * @inheritdoc IStakingService
      */
     function getClaimableRewardWei(bytes32 poolId, address account)
         external
@@ -80,7 +81,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-getStakeInfo}.
+     * @inheritdoc IStakingService
      */
     function getStakeInfo(bytes32 poolId, address account)
         external
@@ -109,7 +110,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-getStakingPoolStats}.
+     * @inheritdoc IStakingService
      */
     function getStakingPoolStats(bytes32 poolId)
         external
@@ -156,7 +157,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-claimReward}.
+     * @inheritdoc IStakingService
      */
     function claimReward(bytes32 poolId)
         external
@@ -204,7 +205,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-stake}.
+     * @inheritdoc IStakingService
      */
     function stake(bytes32 poolId, uint256 stakeAmountWei)
         external
@@ -317,7 +318,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-unstake}.
+     * @inheritdoc IStakingService
      */
     function unstake(bytes32 poolId) external virtual override whenNotPaused {
         (
@@ -396,7 +397,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-addStakingPoolReward}.
+     * @inheritdoc IStakingService
      */
     function addStakingPoolReward(bytes32 poolId, uint256 rewardAmountWei)
         external
@@ -442,7 +443,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-removeRevokedStakes}.
+     * @inheritdoc IStakingService
      */
     function removeRevokedStakes(bytes32 poolId)
         external
@@ -487,7 +488,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-removeUnallocatedStakingPoolReward}.
+     * @inheritdoc IStakingService
      */
     function removeUnallocatedStakingPoolReward(bytes32 poolId)
         external
@@ -528,7 +529,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-resumeStake}.
+     * @inheritdoc IStakingService
      */
     function resumeStake(bytes32 poolId, address account)
         external
@@ -547,7 +548,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-revokeStake}.
+     * @inheritdoc IStakingService
      */
     function revokeStake(bytes32 poolId, address account)
         external
@@ -600,7 +601,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-suspendStake}.
+     * @inheritdoc IStakingService
      */
     function suspendStake(bytes32 poolId, address account)
         external
@@ -619,7 +620,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-pauseContract}.
+     * @inheritdoc IStakingService
      */
     function pauseContract()
         external
@@ -631,7 +632,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-setAdminWallet}.
+     * @inheritdoc IStakingService
      */
     function setAdminWallet(address newWallet)
         external
@@ -643,7 +644,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-setStakingPoolContract}.
+     * @inheritdoc IStakingService
      */
     function setStakingPoolContract(address newStakingPool)
         external
@@ -664,7 +665,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-unpauseContract}.
+     * @inheritdoc IStakingService
      */
     function unpauseContract()
         external
@@ -675,6 +676,12 @@ contract StakingService is
         _unpause();
     }
 
+    /**
+     * @dev Returns the stake identifier for the given staking pool identifier and account
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that placed the stake
+     * @return stakekey The stake identifier which is the ABI-encoded value of account and poolId
+     */
     function _getStakeKey(bytes32 poolId, address account)
         internal
         pure
@@ -686,6 +693,12 @@ contract StakingService is
         stakekey = abi.encode(account, poolId);
     }
 
+    /**
+     * @dev Returns the given amount in Wei truncated to the given number of decimals
+     * @param amountWei The amount in Wei
+     * @param tokenDecimals The number of decimal places
+     * @return truncatedAmountWei The truncated amount in Wei
+     */
     function _truncatedAmountWei(uint256 amountWei, uint256 tokenDecimals)
         internal
         pure
@@ -700,7 +713,9 @@ contract StakingService is
     }
 
     /**
-     * @dev calculate remaining reward for pool in wei.
+     * @dev Returns the remaining reward for the given staking pool in Wei
+     * @param poolId The staking pool identifier
+     * @return calculatedRemainingRewardWei The calculaated remaining reward in Wei
      */
     function _calculatePoolRemainingRewardWei(bytes32 poolId)
         internal
@@ -714,7 +729,10 @@ contract StakingService is
     }
 
     /**
-     * @dev calculate when stake matures.
+     * @dev Returns the calculated timestamp when the stake matures given the stake duration and timestamp
+     * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @param stakeTimestamp The timestamp as seconds since unix epoch when the stake was placed
+     * @return calculatedStakeMaturityTimestamp The timestamp as seconds since unix epoch when the stake matures
      */
     // https://github.com/crytic/slither/wiki/Detector-Documentation#dead-code
     // slither-disable-next-line dead-code
@@ -729,7 +747,11 @@ contract StakingService is
     }
 
     /**
-     * @dev estimate reward at maturity in wei.
+     * @dev Returns the estimated reward in Wei at maturity for the given stake duration, pool APR and stake amount
+     * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @param poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
+     * @param stakeAmountWei The amount of tokens staked in Wei
+     * @return estimatedRewardAtMaturityWei The estimated reward in Wei at maturity
      */
     function _estimateRewardAtMaturityWei(
         uint256 stakeDurationDays,
@@ -742,7 +764,9 @@ contract StakingService is
     }
 
     /**
-     * @dev get claimable reward in wei by stake key.
+     * @dev Returns the claimable reward in Wei for the given stake key, returns zero if stake has been suspended
+     * @param stakekey The stake identifier
+     * @return claimableRewardWei The claimable reward in Wei
      */
     function _getClaimableRewardWeiByStakekey(bytes memory stakekey)
         internal
@@ -764,7 +788,12 @@ contract StakingService is
     }
 
     /**
-     * @dev get pool size in wei.
+     * @dev Returns the staking pool size in Wei for the given parameters
+     * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @param poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
+     * @param totalRewardWei The total amount of staking pool reward in Wei
+     * @param stakeTokenDecimals The ERC20 stake token decimal places
+     * @return poolSizeWei The staking pool size in Wei
      */
     function _getPoolSizeWei(
         uint256 stakeDurationDays,
@@ -780,7 +809,16 @@ contract StakingService is
     }
 
     /**
-     * @dev get staking pool info.
+     * @dev Returns the staking pool info for the given staking pool
+     * @param poolId The staking pool identifier
+     * @return stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @return stakeTokenAddress The address of the ERC20 stake token for staking pool
+     * @return stakeTokenDecimals The ERC20 stake token decimal places
+     * @return rewardTokenAddress The address of the ERC20 reward token for staking pool
+     * @return rewardTokenDecimals The ERC20 reward token decimal places
+     * @return poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
+     * @return isOpen True if staking pool is open to accept user stakes
+     * @return isPoolActive True if user is allowed to claim reward and unstake from staking pool
      */
     function _getStakingPoolInfo(bytes32 poolId)
         internal
@@ -822,7 +860,9 @@ contract StakingService is
     }
 
     /**
-     * @dev is stake matured by stake key.
+     * @dev Returns whether stake has matured for given stake key
+     * @param stakekey The stake identifier
+     * @return True if stake has matured
      */
     function _isStakeMaturedByStakekey(bytes memory stakekey)
         internal
@@ -836,7 +876,11 @@ contract StakingService is
     }
 
     /**
-     * @dev transfer tokens from this contract to specified account
+     * @dev Transfer ERC20 tokens from this contract to the given account
+     * @param tokenAddress The address of the ERC20 token to be transferred
+     * @param tokenDecimals The ERC20 token decimal places
+     * @param amountWei The amount to transfer in Wei
+     * @param account The account to receive the ERC20 tokens
      */
     function _transferTokensToAccount(
         address tokenAddress,
@@ -855,7 +899,11 @@ contract StakingService is
     }
 
     /**
-     * @dev transfer tokens from account to this contract.
+     * @dev Transfer tokens from the given account to this contract
+     * @param tokenAddress The address of the ERC20 token to be transferred
+     * @param tokenDecimals The ERC20 token decimal places
+     * @param amountWei The amount to transfer in Wei
+     * @param account The account to transfer the ERC20 tokens from
      */
     function _transferTokensToContract(
         address tokenAddress,
