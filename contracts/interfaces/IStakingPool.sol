@@ -61,32 +61,6 @@ interface IStakingPool is IAccessControl {
     event StakingPoolSuspended(bytes32 indexed poolId, address indexed sender);
 
     /**
-     * @notice Returns the given staking pool info
-     * @param poolId The staking pool identifier
-     * @return stakeDurationDays The duration in days that user stakes will be locked in staking pool
-     * @return stakeTokenAddress The address of the ERC20 stake token for staking pool
-     * @return stakeTokenDecimals The ERC20 stake token decimal places
-     * @return rewardTokenAddress The address of the ERC20 reward token for staking pool
-     * @return rewardTokenDecimals The ERC20 reward token decimal places
-     * @return poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
-     * @return isOpen True if staking pool is open to accept user stakes
-     * @return isActive True if user is allowed to claim reward and unstake from staking pool
-     */
-    function getStakingPoolInfo(bytes32 poolId)
-        external
-        view
-        returns (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
-            bool isOpen,
-            bool isActive
-        );
-
-    /**
      * @notice Closes the given staking pool to reject user stakes
      * @dev Must be called by contract admin role
      * @param poolId The staking pool identifier
@@ -134,4 +108,30 @@ interface IStakingPool is IAccessControl {
      * @param poolId The staking pool identifier
      */
     function suspendStakingPool(bytes32 poolId) external;
+
+    /**
+     * @notice Returns the given staking pool info
+     * @param poolId The staking pool identifier
+     * @return stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @return stakeTokenAddress The address of the ERC20 stake token for staking pool
+     * @return stakeTokenDecimals The ERC20 stake token decimal places
+     * @return rewardTokenAddress The address of the ERC20 reward token for staking pool
+     * @return rewardTokenDecimals The ERC20 reward token decimal places
+     * @return poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
+     * @return isOpen True if staking pool is open to accept user stakes
+     * @return isActive True if user is allowed to claim reward and unstake from staking pool
+     */
+    function getStakingPoolInfo(bytes32 poolId)
+        external
+        view
+        returns (
+            uint256 stakeDurationDays,
+            address stakeTokenAddress,
+            uint256 stakeTokenDecimals,
+            address rewardTokenAddress,
+            uint256 rewardTokenDecimals,
+            uint256 poolAprWei,
+            bool isOpen,
+            bool isActive
+        );
 }

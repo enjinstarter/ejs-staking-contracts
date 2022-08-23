@@ -61,104 +61,6 @@ contract StakingService is
     /**
      * @inheritdoc IStakingService
      */
-    function getClaimableRewardWei(bytes32 poolId, address account)
-        external
-        view
-        virtual
-        override
-        returns (uint256)
-    {
-        bytes memory stakekey = _getStakeKey(poolId, account);
-        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
-
-        (, , , , , , , bool isPoolActive) = _getStakingPoolInfo(poolId);
-
-        if (!isPoolActive) {
-            return 0;
-        }
-
-        return _getClaimableRewardWeiByStakekey(stakekey);
-    }
-
-    /**
-     * @inheritdoc IStakingService
-     */
-    function getStakeInfo(bytes32 poolId, address account)
-        external
-        view
-        virtual
-        override
-        returns (
-            uint256 stakeAmountWei,
-            uint256 stakeTimestamp,
-            uint256 stakeMaturityTimestamp,
-            uint256 estimatedRewardAtMaturityWei,
-            uint256 rewardClaimedWei,
-            bool isActive
-        )
-    {
-        bytes memory stakekey = _getStakeKey(poolId, account);
-        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
-
-        stakeAmountWei = _stakes[stakekey].stakeAmountWei;
-        stakeTimestamp = _stakes[stakekey].stakeTimestamp;
-        stakeMaturityTimestamp = _stakes[stakekey].stakeMaturityTimestamp;
-        estimatedRewardAtMaturityWei = _stakes[stakekey]
-            .estimatedRewardAtMaturityWei;
-        rewardClaimedWei = _stakes[stakekey].rewardClaimedWei;
-        isActive = _stakes[stakekey].isActive;
-    }
-
-    /**
-     * @inheritdoc IStakingService
-     */
-    function getStakingPoolStats(bytes32 poolId)
-        external
-        view
-        virtual
-        override
-        returns (
-            uint256 totalRewardWei,
-            uint256 totalStakedWei,
-            uint256 rewardToBeDistributedWei,
-            uint256 totalRevokedStakeWei,
-            uint256 poolSizeWei,
-            bool isOpen,
-            bool isActive
-        )
-    {
-        uint256 stakeDurationDays;
-        uint256 stakeTokenDecimals;
-        uint256 poolAprWei;
-
-        (
-            stakeDurationDays,
-            ,
-            stakeTokenDecimals,
-            ,
-            ,
-            poolAprWei,
-            isOpen,
-            isActive
-        ) = _getStakingPoolInfo(poolId);
-
-        poolSizeWei = _getPoolSizeWei(
-            stakeDurationDays,
-            poolAprWei,
-            _stakingPoolStats[poolId].totalRewardWei,
-            stakeTokenDecimals
-        );
-
-        totalRewardWei = _stakingPoolStats[poolId].totalRewardWei;
-        totalStakedWei = _stakingPoolStats[poolId].totalStakedWei;
-        rewardToBeDistributedWei = _stakingPoolStats[poolId]
-            .rewardToBeDistributedWei;
-        totalRevokedStakeWei = _stakingPoolStats[poolId].totalRevokedStakeWei;
-    }
-
-    /**
-     * @inheritdoc IStakingService
-     */
     function claimReward(bytes32 poolId)
         external
         virtual
@@ -677,39 +579,151 @@ contract StakingService is
     }
 
     /**
-     * @dev Returns the stake identifier for the given staking pool identifier and account
-     * @param poolId The staking pool identifier
-     * @param account The address of the user wallet that placed the stake
-     * @return stakekey The stake identifier which is the ABI-encoded value of account and poolId
+     * @inheritdoc IStakingService
      */
-    function _getStakeKey(bytes32 poolId, address account)
-        internal
-        pure
+    function getClaimableRewardWei(bytes32 poolId, address account)
+        external
+        view
         virtual
-        returns (bytes memory stakekey)
+        override
+        returns (uint256)
     {
-        require(account != address(0), "SSvcs: account");
+        bytes memory stakekey = _getStakeKey(poolId, account);
+        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
 
-        stakekey = abi.encode(account, poolId);
+        (, , , , , , , bool isPoolActive) = _getStakingPoolInfo(poolId);
+
+        if (!isPoolActive) {
+            return 0;
+        }
+
+        return _getClaimableRewardWeiByStakekey(stakekey);
     }
 
     /**
-     * @dev Returns the given amount in Wei truncated to the given number of decimals
-     * @param amountWei The amount in Wei
-     * @param tokenDecimals The number of decimal places
-     * @return truncatedAmountWei The truncated amount in Wei
+     * @inheritdoc IStakingService
      */
-    function _truncatedAmountWei(uint256 amountWei, uint256 tokenDecimals)
-        internal
-        pure
+    function getStakeInfo(bytes32 poolId, address account)
+        external
+        view
         virtual
-        returns (uint256 truncatedAmountWei)
+        override
+        returns (
+            uint256 stakeAmountWei,
+            uint256 stakeTimestamp,
+            uint256 stakeMaturityTimestamp,
+            uint256 estimatedRewardAtMaturityWei,
+            uint256 rewardClaimedWei,
+            bool isActive
+        )
     {
-        truncatedAmountWei = tokenDecimals < TOKEN_MAX_DECIMALS
-            ? amountWei.scaleWeiToDecimals(tokenDecimals).scaleDecimalsToWei(
-                tokenDecimals
-            )
-            : amountWei;
+        bytes memory stakekey = _getStakeKey(poolId, account);
+        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
+
+        stakeAmountWei = _stakes[stakekey].stakeAmountWei;
+        stakeTimestamp = _stakes[stakekey].stakeTimestamp;
+        stakeMaturityTimestamp = _stakes[stakekey].stakeMaturityTimestamp;
+        estimatedRewardAtMaturityWei = _stakes[stakekey]
+            .estimatedRewardAtMaturityWei;
+        rewardClaimedWei = _stakes[stakekey].rewardClaimedWei;
+        isActive = _stakes[stakekey].isActive;
+    }
+
+    /**
+     * @inheritdoc IStakingService
+     */
+    function getStakingPoolStats(bytes32 poolId)
+        external
+        view
+        virtual
+        override
+        returns (
+            uint256 totalRewardWei,
+            uint256 totalStakedWei,
+            uint256 rewardToBeDistributedWei,
+            uint256 totalRevokedStakeWei,
+            uint256 poolSizeWei,
+            bool isOpen,
+            bool isActive
+        )
+    {
+        uint256 stakeDurationDays;
+        uint256 stakeTokenDecimals;
+        uint256 poolAprWei;
+
+        (
+            stakeDurationDays,
+            ,
+            stakeTokenDecimals,
+            ,
+            ,
+            poolAprWei,
+            isOpen,
+            isActive
+        ) = _getStakingPoolInfo(poolId);
+
+        poolSizeWei = _getPoolSizeWei(
+            stakeDurationDays,
+            poolAprWei,
+            _stakingPoolStats[poolId].totalRewardWei,
+            stakeTokenDecimals
+        );
+
+        totalRewardWei = _stakingPoolStats[poolId].totalRewardWei;
+        totalStakedWei = _stakingPoolStats[poolId].totalStakedWei;
+        rewardToBeDistributedWei = _stakingPoolStats[poolId]
+            .rewardToBeDistributedWei;
+        totalRevokedStakeWei = _stakingPoolStats[poolId].totalRevokedStakeWei;
+    }
+
+    /**
+     * @dev Transfer ERC20 tokens from this contract to the given account
+     * @param tokenAddress The address of the ERC20 token to be transferred
+     * @param tokenDecimals The ERC20 token decimal places
+     * @param amountWei The amount to transfer in Wei
+     * @param account The account to receive the ERC20 tokens
+     */
+    function _transferTokensToAccount(
+        address tokenAddress,
+        uint256 tokenDecimals,
+        uint256 amountWei,
+        address account
+    ) internal virtual {
+        require(tokenAddress != address(0), "SSvcs: token address");
+        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
+        require(amountWei > 0, "SSvcs: amount");
+        require(account != address(0), "SSvcs: account");
+
+        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
+
+        IERC20(tokenAddress).safeTransfer(account, amountDecimals);
+    }
+
+    /**
+     * @dev Transfer tokens from the given account to this contract
+     * @param tokenAddress The address of the ERC20 token to be transferred
+     * @param tokenDecimals The ERC20 token decimal places
+     * @param amountWei The amount to transfer in Wei
+     * @param account The account to transfer the ERC20 tokens from
+     */
+    function _transferTokensToContract(
+        address tokenAddress,
+        uint256 tokenDecimals,
+        uint256 amountWei,
+        address account
+    ) internal virtual {
+        require(tokenAddress != address(0), "SSvcs: token address");
+        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
+        require(amountWei > 0, "SSvcs: amount");
+        require(account != address(0), "SSvcs: account");
+
+        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
+
+        IERC20(tokenAddress).safeTransferFrom(
+            account,
+            address(this),
+            amountDecimals
+        );
     }
 
     /**
@@ -876,52 +890,38 @@ contract StakingService is
     }
 
     /**
-     * @dev Transfer ERC20 tokens from this contract to the given account
-     * @param tokenAddress The address of the ERC20 token to be transferred
-     * @param tokenDecimals The ERC20 token decimal places
-     * @param amountWei The amount to transfer in Wei
-     * @param account The account to receive the ERC20 tokens
+     * @dev Returns the stake identifier for the given staking pool identifier and account
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that placed the stake
+     * @return stakekey The stake identifier which is the ABI-encoded value of account and poolId
      */
-    function _transferTokensToAccount(
-        address tokenAddress,
-        uint256 tokenDecimals,
-        uint256 amountWei,
-        address account
-    ) internal virtual {
-        require(tokenAddress != address(0), "SSvcs: token address");
-        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
-        require(amountWei > 0, "SSvcs: amount");
+    function _getStakeKey(bytes32 poolId, address account)
+        internal
+        pure
+        virtual
+        returns (bytes memory stakekey)
+    {
         require(account != address(0), "SSvcs: account");
 
-        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
-
-        IERC20(tokenAddress).safeTransfer(account, amountDecimals);
+        stakekey = abi.encode(account, poolId);
     }
 
     /**
-     * @dev Transfer tokens from the given account to this contract
-     * @param tokenAddress The address of the ERC20 token to be transferred
-     * @param tokenDecimals The ERC20 token decimal places
-     * @param amountWei The amount to transfer in Wei
-     * @param account The account to transfer the ERC20 tokens from
+     * @dev Returns the given amount in Wei truncated to the given number of decimals
+     * @param amountWei The amount in Wei
+     * @param tokenDecimals The number of decimal places
+     * @return truncatedAmountWei The truncated amount in Wei
      */
-    function _transferTokensToContract(
-        address tokenAddress,
-        uint256 tokenDecimals,
-        uint256 amountWei,
-        address account
-    ) internal virtual {
-        require(tokenAddress != address(0), "SSvcs: token address");
-        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
-        require(amountWei > 0, "SSvcs: amount");
-        require(account != address(0), "SSvcs: account");
-
-        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
-
-        IERC20(tokenAddress).safeTransferFrom(
-            account,
-            address(this),
-            amountDecimals
-        );
+    function _truncatedAmountWei(uint256 amountWei, uint256 tokenDecimals)
+        internal
+        pure
+        virtual
+        returns (uint256 truncatedAmountWei)
+    {
+        truncatedAmountWei = tokenDecimals < TOKEN_MAX_DECIMALS
+            ? amountWei.scaleWeiToDecimals(tokenDecimals).scaleDecimalsToWei(
+                tokenDecimals
+            )
+            : amountWei;
     }
 }

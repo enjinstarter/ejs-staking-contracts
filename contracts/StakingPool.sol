@@ -30,37 +30,6 @@ contract StakingPool is AdminPrivileges, IStakingPool {
     /**
      * @inheritdoc IStakingPool
      */
-    function getStakingPoolInfo(bytes32 poolId)
-        external
-        view
-        virtual
-        override
-        returns (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
-            bool isOpen,
-            bool isActive
-        )
-    {
-        require(_stakingPools[poolId].isInitialized, "SPool: uninitialized");
-
-        stakeDurationDays = _stakingPools[poolId].stakeDurationDays;
-        stakeTokenAddress = _stakingPools[poolId].stakeTokenAddress;
-        stakeTokenDecimals = _stakingPools[poolId].stakeTokenDecimals;
-        rewardTokenAddress = _stakingPools[poolId].rewardTokenAddress;
-        rewardTokenDecimals = _stakingPools[poolId].rewardTokenDecimals;
-        poolAprWei = _stakingPools[poolId].poolAprWei;
-        isOpen = _stakingPools[poolId].isOpen;
-        isActive = _stakingPools[poolId].isActive;
-    }
-
-    /**
-     * @inheritdoc IStakingPool
-     */
     function closeStakingPool(bytes32 poolId)
         external
         virtual
@@ -180,5 +149,36 @@ contract StakingPool is AdminPrivileges, IStakingPool {
         _stakingPools[poolId].isActive = false;
 
         emit StakingPoolSuspended(poolId, msg.sender);
+    }
+
+    /**
+     * @inheritdoc IStakingPool
+     */
+    function getStakingPoolInfo(bytes32 poolId)
+        external
+        view
+        virtual
+        override
+        returns (
+            uint256 stakeDurationDays,
+            address stakeTokenAddress,
+            uint256 stakeTokenDecimals,
+            address rewardTokenAddress,
+            uint256 rewardTokenDecimals,
+            uint256 poolAprWei,
+            bool isOpen,
+            bool isActive
+        )
+    {
+        require(_stakingPools[poolId].isInitialized, "SPool: uninitialized");
+
+        stakeDurationDays = _stakingPools[poolId].stakeDurationDays;
+        stakeTokenAddress = _stakingPools[poolId].stakeTokenAddress;
+        stakeTokenDecimals = _stakingPools[poolId].stakeTokenDecimals;
+        rewardTokenAddress = _stakingPools[poolId].rewardTokenAddress;
+        rewardTokenDecimals = _stakingPools[poolId].rewardTokenDecimals;
+        poolAprWei = _stakingPools[poolId].poolAprWei;
+        isOpen = _stakingPools[poolId].isOpen;
+        isActive = _stakingPools[poolId].isActive;
     }
 }

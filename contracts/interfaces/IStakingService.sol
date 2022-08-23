@@ -166,70 +166,6 @@ interface IStakingService is IAccessControl, IAdminWallet {
     );
 
     /**
-     * @notice Returns the staking pool contract address
-     * @return Staking pool contract address
-     */
-    function stakingPoolContract() external view returns (address);
-
-    /**
-     * @notice Returns the claimable reward in Wei for given staking pool and account
-     * @param poolId The staking pool identifier
-     * @param account The address of the user wallet that staked
-     * @return Claimable reward in Wei
-     */
-    function getClaimableRewardWei(bytes32 poolId, address account)
-        external
-        view
-        returns (uint256);
-
-    /**
-     * @notice Returns the stake info for given staking pool and account
-     * @param poolId The staking pool identifier
-     * @param account The address of the user wallet that staked
-     * @return stakeAmountWei The amount of tokens staked in Wei
-     * @return stakeTimestamp The timestamp as seconds since unix epoch when the stake was placed
-     * @return stakeMaturityTimestamp The timestamp as seconds since unix epoch when the stake matures
-     * @return estimatedRewardAtMaturityWei The estimated reward in Wei at maturity
-     * @return rewardClaimedWei The reward in Wei that has already been claimed
-     * @return isActive True if stake has not been suspended
-     */
-    function getStakeInfo(bytes32 poolId, address account)
-        external
-        view
-        returns (
-            uint256 stakeAmountWei,
-            uint256 stakeTimestamp,
-            uint256 stakeMaturityTimestamp,
-            uint256 estimatedRewardAtMaturityWei,
-            uint256 rewardClaimedWei,
-            bool isActive
-        );
-
-    /**
-     * @notice Returns the staking pool statistics for given staking pool
-     * @param poolId The staking pool identifier
-     * @return totalRewardWei The total amount of staking pool reward in Wei
-     * @return totalStakedWei The total amount of stakes inside staking pool in Wei
-     * @return rewardToBeDistributedWei The total amount of allocated staking pool reward to be distributed in Wei
-     * @return totalRevokedStakeWei The total amount of revoked stakes in Wei
-     * @return poolSizeWei The pool size in Wei
-     * @return isOpen True if staking pool is open to accept user stakes
-     * @return isActive True if user is allowed to claim reward and unstake from staking pool
-     */
-    function getStakingPoolStats(bytes32 poolId)
-        external
-        view
-        returns (
-            uint256 totalRewardWei,
-            uint256 totalStakedWei,
-            uint256 rewardToBeDistributedWei,
-            uint256 totalRevokedStakeWei,
-            uint256 poolSizeWei,
-            bool isOpen,
-            bool isActive
-        );
-
-    /**
      * @notice Claim reward from given staking pool for message sender
      * @param poolId The staking pool identifier
      */
@@ -324,4 +260,68 @@ interface IStakingService is IAccessControl, IAdminWallet {
      * @dev Must be called by governance role
      */
     function unpauseContract() external;
+
+    /**
+     * @notice Returns the claimable reward in Wei for given staking pool and account
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that staked
+     * @return Claimable reward in Wei
+     */
+    function getClaimableRewardWei(bytes32 poolId, address account)
+        external
+        view
+        returns (uint256);
+
+    /**
+     * @notice Returns the stake info for given staking pool and account
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that staked
+     * @return stakeAmountWei The amount of tokens staked in Wei
+     * @return stakeTimestamp The timestamp as seconds since unix epoch when the stake was placed
+     * @return stakeMaturityTimestamp The timestamp as seconds since unix epoch when the stake matures
+     * @return estimatedRewardAtMaturityWei The estimated reward in Wei at maturity
+     * @return rewardClaimedWei The reward in Wei that has already been claimed
+     * @return isActive True if stake has not been suspended
+     */
+    function getStakeInfo(bytes32 poolId, address account)
+        external
+        view
+        returns (
+            uint256 stakeAmountWei,
+            uint256 stakeTimestamp,
+            uint256 stakeMaturityTimestamp,
+            uint256 estimatedRewardAtMaturityWei,
+            uint256 rewardClaimedWei,
+            bool isActive
+        );
+
+    /**
+     * @notice Returns the staking pool statistics for given staking pool
+     * @param poolId The staking pool identifier
+     * @return totalRewardWei The total amount of staking pool reward in Wei
+     * @return totalStakedWei The total amount of stakes inside staking pool in Wei
+     * @return rewardToBeDistributedWei The total amount of allocated staking pool reward to be distributed in Wei
+     * @return totalRevokedStakeWei The total amount of revoked stakes in Wei
+     * @return poolSizeWei The pool size in Wei
+     * @return isOpen True if staking pool is open to accept user stakes
+     * @return isActive True if user is allowed to claim reward and unstake from staking pool
+     */
+    function getStakingPoolStats(bytes32 poolId)
+        external
+        view
+        returns (
+            uint256 totalRewardWei,
+            uint256 totalStakedWei,
+            uint256 rewardToBeDistributedWei,
+            uint256 totalRevokedStakeWei,
+            uint256 poolSizeWei,
+            bool isOpen,
+            bool isActive
+        );
+
+    /**
+     * @notice Returns the staking pool contract address
+     * @return Staking pool contract address
+     */
+    function stakingPoolContract() external view returns (address);
 }
