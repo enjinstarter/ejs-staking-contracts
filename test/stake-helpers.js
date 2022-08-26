@@ -420,6 +420,27 @@ async function initializeStakingPoolTestData(
   ];
 }
 
+async function newMockStakingPool() {
+  const MockStakingPoolFactory = await hre.ethers.getContractFactory(
+    "MockStakingPool"
+  );
+  const mockStakingPoolContractInstance = await MockStakingPoolFactory.deploy();
+  await mockStakingPoolContractInstance.deployed();
+
+  return mockStakingPoolContractInstance;
+}
+
+async function newMockStakingService(stakingPoolAddress) {
+  const MockStakingServiceFactory = await hre.ethers.getContractFactory(
+    "MockStakingService"
+  );
+  const mockStakingServiceContractInstance =
+    await MockStakingServiceFactory.deploy(stakingPoolAddress);
+  await mockStakingServiceContractInstance.deployed();
+
+  return mockStakingServiceContractInstance;
+}
+
 async function newStakingPool() {
   const StakingPoolFactory = await hre.ethers.getContractFactory("StakingPool");
   const stakingPoolContractInstance = await StakingPoolFactory.deploy();
@@ -859,6 +880,8 @@ module.exports = {
   closeStakingPoolWithVerify,
   createStakingPoolWithVerify,
   initializeStakingPoolTestData,
+  newMockStakingPool,
+  newMockStakingService,
   newStakingPool,
   newStakingService,
   openStakingPoolWithVerify,

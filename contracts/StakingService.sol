@@ -13,6 +13,7 @@ import "./interfaces/IStakingService.sol";
 /**
  * @title StakingService
  * @author Tim Loh
+ * @notice Provides staking functionalities
  */
 contract StakingService is
     Pausable,
@@ -28,17 +29,17 @@ contract StakingService is
         uint256 lastStakeAmountWei;
         uint256 stakeTimestamp;
         uint256 stakeMaturityTimestamp; // timestamp when stake matures
-        uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in wei
-        uint256 rewardClaimedWei; // reward claimed in wei
+        uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in Wei
+        uint256 rewardClaimedWei; // reward claimed in Wei
         bool isActive; // true if allow claim rewards and unstake
         bool isInitialized; // true if stake info has been initialized
     }
 
     struct StakingPoolStats {
-        uint256 totalRewardWei; // total pool reward in wei
-        uint256 totalStakedWei; // total staked inside pool in wei
-        uint256 rewardToBeDistributedWei; // allocated pool reward to be distributed in wei
-        uint256 totalRevokedStakeWei; // total revoked stake in wei
+        uint256 totalRewardWei; // total pool reward in Wei
+        uint256 totalStakedWei; // total staked inside pool in Wei
+        uint256 rewardToBeDistributedWei; // allocated pool reward to be distributed in Wei
+        uint256 totalRevokedStakeWei; // total revoked stake in Wei
     }
 
     uint256 public constant DAYS_IN_YEAR = 365;
@@ -58,132 +59,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-getClaimableRewardWei}.
-     */
-    function getClaimableRewardWei(bytes32 poolId, address account)
-        external
-        view
-        virtual
-        override
-        returns (uint256)
-    {
-        bytes memory stakekey = _getStakeKey(poolId, account);
-        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
-
-        (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
-            ,
-            bool isPoolActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
-
-        if (!isPoolActive) {
-            return 0;
-        }
-
-        return _getClaimableRewardWeiByStakekey(stakekey);
-    }
-
-    /**
-     * @dev See {IStakingService-getStakeInfo}.
-     */
-    function getStakeInfo(bytes32 poolId, address account)
-        external
-        view
-        virtual
-        override
-        returns (
-            uint256 stakeAmountWei,
-            uint256 stakeTimestamp,
-            uint256 stakeMaturityTimestamp,
-            uint256 estimatedRewardAtMaturityWei,
-            uint256 rewardClaimedWei,
-            bool isActive
-        )
-    {
-        bytes memory stakekey = _getStakeKey(poolId, account);
-        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
-
-        stakeAmountWei = _stakes[stakekey].stakeAmountWei;
-        stakeTimestamp = _stakes[stakekey].stakeTimestamp;
-        stakeMaturityTimestamp = _stakes[stakekey].stakeMaturityTimestamp;
-        estimatedRewardAtMaturityWei = _stakes[stakekey]
-            .estimatedRewardAtMaturityWei;
-        rewardClaimedWei = _stakes[stakekey].rewardClaimedWei;
-        isActive = _stakes[stakekey].isActive;
-    }
-
-    /**
-     * @dev See {IStakingService-getStakingPoolStats}.
-     */
-    function getStakingPoolStats(bytes32 poolId)
-        external
-        view
-        virtual
-        override
-        returns (
-            uint256 totalRewardWei,
-            uint256 totalStakedWei,
-            uint256 rewardToBeDistributedWei,
-            uint256 totalRevokedStakeWei,
-            uint256 poolSizeWei,
-            bool isOpen,
-            bool isActive
-        )
-    {
-        uint256 stakeDurationDays;
-        uint256 stakeTokenDecimals;
-        uint256 poolAprWei;
-
-        (
-            stakeDurationDays,
-            ,
-            stakeTokenDecimals,
-            ,
-            ,
-            poolAprWei,
-            isOpen,
-            isActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
-
-        poolSizeWei = _getPoolSizeWei(
-            stakeDurationDays,
-            poolAprWei,
-            _stakingPoolStats[poolId].totalRewardWei,
-            stakeTokenDecimals
-        );
-
-        totalRewardWei = _stakingPoolStats[poolId].totalRewardWei;
-        totalStakedWei = _stakingPoolStats[poolId].totalStakedWei;
-        rewardToBeDistributedWei = _stakingPoolStats[poolId]
-            .rewardToBeDistributedWei;
-        totalRevokedStakeWei = _stakingPoolStats[poolId].totalRevokedStakeWei;
-    }
-
-    /**
-     * @dev See {IStakingService-claimReward}.
+     * @inheritdoc IStakingService
      */
     function claimReward(bytes32 poolId)
         external
@@ -192,27 +68,15 @@ contract StakingService is
         whenNotPaused
     {
         (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
+            ,
+            ,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
             bool isPoolActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
         require(isPoolActive, "SSvcs: pool suspended");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
@@ -243,7 +107,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-stake}.
+     * @inheritdoc IStakingService
      */
     function stake(bytes32 poolId, uint256 stakeAmountWei)
         external
@@ -257,24 +121,12 @@ contract StakingService is
             uint256 stakeDurationDays,
             address stakeTokenAddress,
             uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
+            ,
             uint256 rewardTokenDecimals,
             uint256 poolAprWei,
             bool isPoolOpen,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
         require(isPoolOpen, "SSvcs: closed");
 
         uint256 stakeMaturityTimestamp = _calculateStakeMaturityTimestamp(
@@ -290,6 +142,7 @@ contract StakingService is
             stakeAmountWei,
             stakeTokenDecimals
         );
+        require(truncatedStakeAmountWei > 0, "SSvcs: truncated stake amount");
 
         uint256 estimatedRewardAtMaturityWei = _truncatedAmountWei(
             _estimateRewardAtMaturityWei(
@@ -299,6 +152,7 @@ contract StakingService is
             ),
             rewardTokenDecimals
         );
+        require(estimatedRewardAtMaturityWei > 0, "SSvcs: zero reward");
         require(
             estimatedRewardAtMaturityWei <=
                 _calculatePoolRemainingRewardWei(poolId),
@@ -366,31 +220,19 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-unstake}.
+     * @inheritdoc IStakingService
      */
     function unstake(bytes32 poolId) external virtual override whenNotPaused {
         (
-            uint256 stakeDurationDays,
+            ,
             address stakeTokenAddress,
             uint256 stakeTokenDecimals,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
             bool isPoolActive
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
         require(isPoolActive, "SSvcs: pool suspended");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender);
@@ -457,7 +299,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-addStakingPoolReward}.
+     * @inheritdoc IStakingService
      */
     function addStakingPoolReward(bytes32 poolId, uint256 rewardAmountWei)
         external
@@ -468,27 +310,15 @@ contract StakingService is
         require(rewardAmountWei > 0, "SSvcs: reward amount");
 
         (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
+            ,
+            ,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         uint256 truncatedRewardAmountWei = rewardTokenDecimals <
             TOKEN_MAX_DECIMALS
@@ -515,7 +345,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-removeRevokedStakes}.
+     * @inheritdoc IStakingService
      */
     function removeRevokedStakes(bytes32 poolId)
         external
@@ -524,27 +354,15 @@ contract StakingService is
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
         (
-            uint256 stakeDurationDays,
+            ,
             address stakeTokenAddress,
             uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
+            ,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         require(
             _stakingPoolStats[poolId].totalRevokedStakeWei > 0,
@@ -572,7 +390,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-removeUnallocatedStakingPoolReward}.
+     * @inheritdoc IStakingService
      */
     function removeUnallocatedStakingPoolReward(bytes32 poolId)
         external
@@ -581,27 +399,15 @@ contract StakingService is
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
         (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
+            ,
+            ,
             address rewardTokenAddress,
             uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         uint256 unallocatedRewardWei = _calculatePoolRemainingRewardWei(poolId);
         require(unallocatedRewardWei > 0, "SSvcs: no unallocated");
@@ -625,7 +431,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-resumeStake}.
+     * @inheritdoc IStakingService
      */
     function resumeStake(bytes32 poolId, address account)
         external
@@ -644,7 +450,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-revokeStake}.
+     * @inheritdoc IStakingService
      */
     function revokeStake(bytes32 poolId, address account)
         external
@@ -675,27 +481,15 @@ contract StakingService is
         });
 
         (
-            uint256 stakeDurationDays,
+            ,
             address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
+            ,
             address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
+            ,
+            ,
             ,
 
-        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakeDurationDays > 0, "SSvcs: stake duration");
-        require(stakeTokenAddress != address(0), "SSvcs: stake token");
-        require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: stake decimals"
-        );
-        require(rewardTokenAddress != address(0), "SSvcs: reward token");
-        require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
-            "SSvcs: reward decimals"
-        );
-        require(poolAprWei > 0, "SSvcs: pool APR");
+        ) = _getStakingPoolInfo(poolId);
 
         emit StakeRevoked(
             poolId,
@@ -709,7 +503,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-suspendStake}.
+     * @inheritdoc IStakingService
      */
     function suspendStake(bytes32 poolId, address account)
         external
@@ -728,7 +522,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-pauseContract}.
+     * @inheritdoc IStakingService
      */
     function pauseContract()
         external
@@ -740,7 +534,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-setAdminWallet}.
+     * @inheritdoc IStakingService
      */
     function setAdminWallet(address newWallet)
         external
@@ -752,7 +546,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-setStakingPoolContract}.
+     * @inheritdoc IStakingService
      */
     function setStakingPoolContract(address newStakingPool)
         external
@@ -773,7 +567,7 @@ contract StakingService is
     }
 
     /**
-     * @dev See {IStakingService-unpauseContract}.
+     * @inheritdoc IStakingService
      */
     function unpauseContract()
         external
@@ -784,32 +578,158 @@ contract StakingService is
         _unpause();
     }
 
-    function _getStakeKey(bytes32 poolId, address account)
-        internal
-        pure
+    /**
+     * @inheritdoc IStakingService
+     */
+    function getClaimableRewardWei(bytes32 poolId, address account)
+        external
+        view
         virtual
-        returns (bytes memory stakekey)
+        override
+        returns (uint256)
     {
-        require(account != address(0), "SSvcs: account");
+        bytes memory stakekey = _getStakeKey(poolId, account);
+        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
 
-        stakekey = abi.encode(account, poolId);
-    }
+        (, , , , , , , bool isPoolActive) = _getStakingPoolInfo(poolId);
 
-    function _truncatedAmountWei(uint256 amountWei, uint256 tokenDecimals)
-        internal
-        pure
-        virtual
-        returns (uint256 truncatedAmountWei)
-    {
-        truncatedAmountWei = tokenDecimals < TOKEN_MAX_DECIMALS
-            ? amountWei.scaleWeiToDecimals(tokenDecimals).scaleDecimalsToWei(
-                tokenDecimals
-            )
-            : amountWei;
+        if (!isPoolActive) {
+            return 0;
+        }
+
+        return _getClaimableRewardWeiByStakekey(stakekey);
     }
 
     /**
-     * @dev calculate remaining reward for pool in wei.
+     * @inheritdoc IStakingService
+     */
+    function getStakeInfo(bytes32 poolId, address account)
+        external
+        view
+        virtual
+        override
+        returns (
+            uint256 stakeAmountWei,
+            uint256 stakeTimestamp,
+            uint256 stakeMaturityTimestamp,
+            uint256 estimatedRewardAtMaturityWei,
+            uint256 rewardClaimedWei,
+            bool isActive
+        )
+    {
+        bytes memory stakekey = _getStakeKey(poolId, account);
+        require(_stakes[stakekey].isInitialized, "SSvcs: uninitialized");
+
+        stakeAmountWei = _stakes[stakekey].stakeAmountWei;
+        stakeTimestamp = _stakes[stakekey].stakeTimestamp;
+        stakeMaturityTimestamp = _stakes[stakekey].stakeMaturityTimestamp;
+        estimatedRewardAtMaturityWei = _stakes[stakekey]
+            .estimatedRewardAtMaturityWei;
+        rewardClaimedWei = _stakes[stakekey].rewardClaimedWei;
+        isActive = _stakes[stakekey].isActive;
+    }
+
+    /**
+     * @inheritdoc IStakingService
+     */
+    function getStakingPoolStats(bytes32 poolId)
+        external
+        view
+        virtual
+        override
+        returns (
+            uint256 totalRewardWei,
+            uint256 totalStakedWei,
+            uint256 rewardToBeDistributedWei,
+            uint256 totalRevokedStakeWei,
+            uint256 poolSizeWei,
+            bool isOpen,
+            bool isActive
+        )
+    {
+        uint256 stakeDurationDays;
+        uint256 stakeTokenDecimals;
+        uint256 poolAprWei;
+
+        (
+            stakeDurationDays,
+            ,
+            stakeTokenDecimals,
+            ,
+            ,
+            poolAprWei,
+            isOpen,
+            isActive
+        ) = _getStakingPoolInfo(poolId);
+
+        poolSizeWei = _getPoolSizeWei(
+            stakeDurationDays,
+            poolAprWei,
+            _stakingPoolStats[poolId].totalRewardWei,
+            stakeTokenDecimals
+        );
+
+        totalRewardWei = _stakingPoolStats[poolId].totalRewardWei;
+        totalStakedWei = _stakingPoolStats[poolId].totalStakedWei;
+        rewardToBeDistributedWei = _stakingPoolStats[poolId]
+            .rewardToBeDistributedWei;
+        totalRevokedStakeWei = _stakingPoolStats[poolId].totalRevokedStakeWei;
+    }
+
+    /**
+     * @dev Transfer ERC20 tokens from this contract to the given account
+     * @param tokenAddress The address of the ERC20 token to be transferred
+     * @param tokenDecimals The ERC20 token decimal places
+     * @param amountWei The amount to transfer in Wei
+     * @param account The account to receive the ERC20 tokens
+     */
+    function _transferTokensToAccount(
+        address tokenAddress,
+        uint256 tokenDecimals,
+        uint256 amountWei,
+        address account
+    ) internal virtual {
+        require(tokenAddress != address(0), "SSvcs: token address");
+        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
+        require(amountWei > 0, "SSvcs: amount");
+        require(account != address(0), "SSvcs: account");
+
+        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
+
+        IERC20(tokenAddress).safeTransfer(account, amountDecimals);
+    }
+
+    /**
+     * @dev Transfer tokens from the given account to this contract
+     * @param tokenAddress The address of the ERC20 token to be transferred
+     * @param tokenDecimals The ERC20 token decimal places
+     * @param amountWei The amount to transfer in Wei
+     * @param account The account to transfer the ERC20 tokens from
+     */
+    function _transferTokensToContract(
+        address tokenAddress,
+        uint256 tokenDecimals,
+        uint256 amountWei,
+        address account
+    ) internal virtual {
+        require(tokenAddress != address(0), "SSvcs: token address");
+        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
+        require(amountWei > 0, "SSvcs: amount");
+        require(account != address(0), "SSvcs: account");
+
+        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
+
+        IERC20(tokenAddress).safeTransferFrom(
+            account,
+            address(this),
+            amountDecimals
+        );
+    }
+
+    /**
+     * @dev Returns the remaining reward for the given staking pool in Wei
+     * @param poolId The staking pool identifier
+     * @return calculatedRemainingRewardWei The calculaated remaining reward in Wei
      */
     function _calculatePoolRemainingRewardWei(bytes32 poolId)
         internal
@@ -822,6 +742,14 @@ contract StakingService is
             _stakingPoolStats[poolId].rewardToBeDistributedWei;
     }
 
+    /**
+     * @dev Returns the calculated timestamp when the stake matures given the stake duration and timestamp
+     * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @param stakeTimestamp The timestamp as seconds since unix epoch when the stake was placed
+     * @return calculatedStakeMaturityTimestamp The timestamp as seconds since unix epoch when the stake matures
+     */
+    // https://github.com/crytic/slither/wiki/Detector-Documentation#dead-code
+    // slither-disable-next-line dead-code
     function _calculateStakeMaturityTimestamp(
         uint256 stakeDurationDays,
         uint256 stakeTimestamp
@@ -833,7 +761,11 @@ contract StakingService is
     }
 
     /**
-     * @dev estimate reward at maturity in wei.
+     * @dev Returns the estimated reward in Wei at maturity for the given stake duration, pool APR and stake amount
+     * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @param poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
+     * @param stakeAmountWei The amount of tokens staked in Wei
+     * @return estimatedRewardAtMaturityWei The estimated reward in Wei at maturity
      */
     function _estimateRewardAtMaturityWei(
         uint256 stakeDurationDays,
@@ -846,7 +778,9 @@ contract StakingService is
     }
 
     /**
-     * @dev get claimable reward in wei by stake key.
+     * @dev Returns the claimable reward in Wei for the given stake key, returns zero if stake has been suspended
+     * @param stakekey The stake identifier
+     * @return claimableRewardWei The claimable reward in Wei
      */
     function _getClaimableRewardWeiByStakekey(bytes memory stakekey)
         internal
@@ -868,7 +802,12 @@ contract StakingService is
     }
 
     /**
-     * @dev get pool size in wei.
+     * @dev Returns the staking pool size in Wei for the given parameters
+     * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @param poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
+     * @param totalRewardWei The total amount of staking pool reward in Wei
+     * @param stakeTokenDecimals The ERC20 stake token decimal places
+     * @return poolSizeWei The staking pool size in Wei
      */
     function _getPoolSizeWei(
         uint256 stakeDurationDays,
@@ -884,7 +823,60 @@ contract StakingService is
     }
 
     /**
-     * @dev is stake matured by stake key.
+     * @dev Returns the staking pool info for the given staking pool
+     * @param poolId The staking pool identifier
+     * @return stakeDurationDays The duration in days that user stakes will be locked in staking pool
+     * @return stakeTokenAddress The address of the ERC20 stake token for staking pool
+     * @return stakeTokenDecimals The ERC20 stake token decimal places
+     * @return rewardTokenAddress The address of the ERC20 reward token for staking pool
+     * @return rewardTokenDecimals The ERC20 reward token decimal places
+     * @return poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
+     * @return isOpen True if staking pool is open to accept user stakes
+     * @return isPoolActive True if user is allowed to claim reward and unstake from staking pool
+     */
+    function _getStakingPoolInfo(bytes32 poolId)
+        internal
+        view
+        virtual
+        returns (
+            uint256 stakeDurationDays,
+            address stakeTokenAddress,
+            uint256 stakeTokenDecimals,
+            address rewardTokenAddress,
+            uint256 rewardTokenDecimals,
+            uint256 poolAprWei,
+            bool isOpen,
+            bool isPoolActive
+        )
+    {
+        (
+            stakeDurationDays,
+            stakeTokenAddress,
+            stakeTokenDecimals,
+            rewardTokenAddress,
+            rewardTokenDecimals,
+            poolAprWei,
+            isOpen,
+            isPoolActive
+        ) = IStakingPool(stakingPoolContract).getStakingPoolInfo(poolId);
+        require(stakeDurationDays > 0, "SSvcs: stake duration");
+        require(stakeTokenAddress != address(0), "SSvcs: stake token");
+        require(
+            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
+            "SSvcs: stake decimals"
+        );
+        require(rewardTokenAddress != address(0), "SSvcs: reward token");
+        require(
+            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
+            "SSvcs: reward decimals"
+        );
+        require(poolAprWei > 0, "SSvcs: pool APR");
+    }
+
+    /**
+     * @dev Returns whether stake has matured for given stake key
+     * @param stakekey The stake identifier
+     * @return True if stake has matured
      */
     function _isStakeMaturedByStakekey(bytes memory stakekey)
         internal
@@ -898,44 +890,38 @@ contract StakingService is
     }
 
     /**
-     * @dev transfer tokens from this contract to specified account
+     * @dev Returns the stake identifier for the given staking pool identifier and account
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that placed the stake
+     * @return stakekey The stake identifier which is the ABI-encoded value of account and poolId
      */
-    function _transferTokensToAccount(
-        address tokenAddress,
-        uint256 tokenDecimals,
-        uint256 amountWei,
-        address account
-    ) internal virtual {
-        require(tokenAddress != address(0), "SSvcs: token address");
-        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
-        require(amountWei > 0, "SSvcs: amount");
+    function _getStakeKey(bytes32 poolId, address account)
+        internal
+        pure
+        virtual
+        returns (bytes memory stakekey)
+    {
         require(account != address(0), "SSvcs: account");
 
-        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
-
-        IERC20(tokenAddress).safeTransfer(account, amountDecimals);
+        stakekey = abi.encode(account, poolId);
     }
 
     /**
-     * @dev transfer tokens from account to this contract.
+     * @dev Returns the given amount in Wei truncated to the given number of decimals
+     * @param amountWei The amount in Wei
+     * @param tokenDecimals The number of decimal places
+     * @return truncatedAmountWei The truncated amount in Wei
      */
-    function _transferTokensToContract(
-        address tokenAddress,
-        uint256 tokenDecimals,
-        uint256 amountWei,
-        address account
-    ) internal virtual {
-        require(tokenAddress != address(0), "SSvcs: token address");
-        require(tokenDecimals <= TOKEN_MAX_DECIMALS, "SSvcs: token decimals");
-        require(amountWei > 0, "SSvcs: amount");
-        require(account != address(0), "SSvcs: account");
-
-        uint256 amountDecimals = amountWei.scaleWeiToDecimals(tokenDecimals);
-
-        IERC20(tokenAddress).safeTransferFrom(
-            account,
-            address(this),
-            amountDecimals
-        );
+    function _truncatedAmountWei(uint256 amountWei, uint256 tokenDecimals)
+        internal
+        pure
+        virtual
+        returns (uint256 truncatedAmountWei)
+    {
+        truncatedAmountWei = tokenDecimals < TOKEN_MAX_DECIMALS
+            ? amountWei.scaleWeiToDecimals(tokenDecimals).scaleDecimalsToWei(
+                tokenDecimals
+            )
+            : amountWei;
     }
 }

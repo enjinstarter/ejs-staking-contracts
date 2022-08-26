@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 /**
  * @title AdminPrivileges
  * @author Tim Loh
+ * @notice Provides role definitions that are inherited by other contracts and grants the owner all the defined roles
  */
 contract AdminPrivileges is AccessControl {
     bytes32 public constant GOVERNANCE_ROLE = keccak256("GOVERNANCE_ROLE");

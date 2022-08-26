@@ -1897,6 +1897,34 @@ describe("StakingService", function () {
     ).to.be.revertedWith("SSvcs: stake amount");
   });
 
+  it("should not allow stake of zero amount after truncation", async () => {
+    const STAKING_POOL_CONFIGS_STAKE_TOKEN_6_DECIMALS_INDEX = 5;
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000999999999999");
+
+    await expect(
+      stakingServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[
+          STAKING_POOL_CONFIGS_STAKE_TOKEN_6_DECIMALS_INDEX
+        ].poolId,
+        stakeAmountWei
+      )
+    ).to.be.revertedWith("SSvcs: truncated stake amount");
+  });
+
+  it("should not allow stake with zero reward at maturity", async () => {
+    const STAKING_POOL_CONFIGS_REWARD_TOKEN_6_DECIMALS_INDEX = 14;
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000000000000001");
+
+    await expect(
+      stakingServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[
+          STAKING_POOL_CONFIGS_REWARD_TOKEN_6_DECIMALS_INDEX
+        ].poolId,
+        stakeAmountWei
+      )
+    ).to.be.revertedWith("SSvcs: zero reward");
+  });
+
   it("should not allow stake for uninitialized staking pool", async () => {
     const uninitializedPoolId = hre.ethers.utils.id(
       "da61b654-4973-4879-9166-723c0017dd6d"
@@ -1926,6 +1954,168 @@ describe("StakingService", function () {
     await expect(
       stakingServiceInstance.unstake(uninitializedPoolId)
     ).to.be.revertedWith("SPool: uninitialized");
+  });
+
+  it("should not allow invalid staking pool info", async () => {
+    const testPoolInstance = await stakeHelpers.newMockStakingPool();
+    const testServiceInstance = await stakeHelpers.newStakingService(
+      testPoolInstance.address
+    );
+
+    const poolIdStakeDurationZero =
+      await testPoolInstance.POOL_ID_STAKE_DURATION_ZERO();
+    const poolIdStakeTokenAddressZero =
+      await testPoolInstance.POOL_ID_STAKE_TOKEN_ADDRESS_ZERO();
+    const poolIdStakeTokenDecimalsNineteen =
+      await testPoolInstance.POOL_ID_STAKE_TOKEN_DECIMALS_NINETEEN();
+    const poolIdRewardTokenAddressZero =
+      await testPoolInstance.POOL_ID_REWARD_TOKEN_ADDRESS_ZERO();
+    const poolIdRewardTokenDecimalsNineteen =
+      await testPoolInstance.POOL_ID_REWARD_TOKEN_DECIMALS_NINETEEN();
+    const poolIdPoolAprZero = await testPoolInstance.POOL_ID_POOL_APR_ZERO();
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeDurationZero)
+    ).to.be.revertedWith("SSvcs: stake duration");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeTokenAddressZero)
+    ).to.be.revertedWith("SSvcs: stake token");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeTokenDecimalsNineteen)
+    ).to.be.revertedWith("SSvcs: stake decimals");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdRewardTokenAddressZero)
+    ).to.be.revertedWith("SSvcs: reward token");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdRewardTokenDecimalsNineteen)
+    ).to.be.revertedWith("SSvcs: reward decimals");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdPoolAprZero)
+    ).to.be.revertedWith("SSvcs: pool APR");
+  });
+
+  it("should not allow invalid transfer of tokens from contract to account and vice versa", async () => {
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+    const tokenInstance = stakeToken18DecimalsInstances[0];
+    const tokenAddress = tokenInstance.address;
+    const tokenDecimals = await tokenInstance.decimals();
+    const transferAmountWei = hre.ethers.utils.parseEther(
+      "0.000000000000000001"
+    );
+
+    const testPoolInstance = await stakeHelpers.newMockStakingPool();
+    const testServiceInstance = await stakeHelpers.newMockStakingService(
+      testPoolInstance.address
+    );
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        hre.ethers.constants.AddressZero,
+        tokenDecimals,
+        transferAmountWei,
+        enduserAccountAddress
+      )
+    ).to.be.revertedWith("SSvcs: token address");
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        tokenAddress,
+        19,
+        transferAmountWei,
+        enduserAccountAddress
+      )
+    ).to.be.revertedWith("SSvcs: token decimals");
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        tokenAddress,
+        tokenDecimals,
+        hre.ethers.constants.Zero,
+        enduserAccountAddress
+      )
+    ).to.be.revertedWith("SSvcs: amount");
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        tokenAddress,
+        tokenDecimals,
+        transferAmountWei,
+        hre.ethers.constants.AddressZero
+      )
+    ).to.be.revertedWith("SSvcs: account");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        hre.ethers.constants.AddressZero,
+        tokenDecimals,
+        transferAmountWei,
+        enduserAccountAddress
+      )
+    ).to.be.revertedWith("SSvcs: token address");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        tokenAddress,
+        19,
+        transferAmountWei,
+        enduserAccountAddress
+      )
+    ).to.be.revertedWith("SSvcs: token decimals");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        tokenAddress,
+        tokenDecimals,
+        hre.ethers.constants.Zero,
+        enduserAccountAddress
+      )
+    ).to.be.revertedWith("SSvcs: amount");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        tokenAddress,
+        tokenDecimals,
+        transferAmountWei,
+        hre.ethers.constants.AddressZero
+      )
+    ).to.be.revertedWith("SSvcs: account");
+  });
+
+  it("should not allow invalid stake maturity timestamp", async () => {
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000000000000001");
+
+    const testServiceInstance = await stakeHelpers.newMockStakingService(
+      stakingPoolInstance.address
+    );
+
+    await expect(
+      testServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        stakeAmountWei
+      )
+    ).to.be.revertedWith("SSvcs: maturity timestamp");
+  });
+
+  it("should not allow scaling with invalid decimals", async () => {
+    const scaleAmount = hre.ethers.utils.parseEther("0.1");
+    const invalidDecimals = 19;
+
+    const testServiceInstance = await stakeHelpers.newMockStakingService(
+      stakingPoolInstance.address
+    );
+
+    await expect(
+      testServiceInstance.scaleWeiToDecimals(scaleAmount, invalidDecimals)
+    ).to.be.revertedWith("UnitConverter: decimals");
+
+    await expect(
+      testServiceInstance.scaleDecimalsToWei(scaleAmount, invalidDecimals)
+    ).to.be.revertedWith("UnitConverter: decimals");
   });
 
   async function addStakingPoolRewardWithVerify(

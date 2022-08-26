@@ -8,6 +8,7 @@ import "./interfaces/IStakingPool.sol";
 /**
  * @title StakingPool
  * @author Tim Loh
+ * @notice Contains the staking pool configs used by StakingService
  */
 contract StakingPool is AdminPrivileges, IStakingPool {
     struct StakingPoolInfo {
@@ -16,7 +17,7 @@ contract StakingPool is AdminPrivileges, IStakingPool {
         uint256 stakeTokenDecimals;
         address rewardTokenAddress;
         uint256 rewardTokenDecimals;
-        uint256 poolAprWei; // pool APR in wei
+        uint256 poolAprWei; // pool APR in Wei
         bool isOpen; // true if staking pool allows staking
         bool isActive; // true if staking pool allows claim rewards and unstake
         bool isInitialized; // true if staking pool has been initialized
@@ -27,38 +28,7 @@ contract StakingPool is AdminPrivileges, IStakingPool {
     mapping(bytes32 => StakingPoolInfo) private _stakingPools;
 
     /**
-     * @dev See {IStakingPool-getStakingPoolInfo}.
-     */
-    function getStakingPoolInfo(bytes32 poolId)
-        external
-        view
-        virtual
-        override
-        returns (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
-            bool isOpen,
-            bool isActive
-        )
-    {
-        require(_stakingPools[poolId].isInitialized, "SPool: uninitialized");
-
-        stakeDurationDays = _stakingPools[poolId].stakeDurationDays;
-        stakeTokenAddress = _stakingPools[poolId].stakeTokenAddress;
-        stakeTokenDecimals = _stakingPools[poolId].stakeTokenDecimals;
-        rewardTokenAddress = _stakingPools[poolId].rewardTokenAddress;
-        rewardTokenDecimals = _stakingPools[poolId].rewardTokenDecimals;
-        poolAprWei = _stakingPools[poolId].poolAprWei;
-        isOpen = _stakingPools[poolId].isOpen;
-        isActive = _stakingPools[poolId].isActive;
-    }
-
-    /**
-     * @dev See {IStakingPool-closeStakingPool}.
+     * @inheritdoc IStakingPool
      */
     function closeStakingPool(bytes32 poolId)
         external
@@ -75,7 +45,7 @@ contract StakingPool is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @dev See {IStakingPool-createStakingPool}.
+     * @inheritdoc IStakingPool
      */
     function createStakingPool(
         bytes32 poolId,
@@ -131,7 +101,7 @@ contract StakingPool is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @dev See {IStakingPool-openStakingPool}.
+     * @inheritdoc IStakingPool
      */
     function openStakingPool(bytes32 poolId)
         external
@@ -148,7 +118,7 @@ contract StakingPool is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @dev See {IStakingPool-resumeStakingPool}.
+     * @inheritdoc IStakingPool
      */
     function resumeStakingPool(bytes32 poolId)
         external
@@ -165,7 +135,7 @@ contract StakingPool is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @dev See {IStakingPool-suspendStakingPool}.
+     * @inheritdoc IStakingPool
      */
     function suspendStakingPool(bytes32 poolId)
         external
@@ -179,5 +149,36 @@ contract StakingPool is AdminPrivileges, IStakingPool {
         _stakingPools[poolId].isActive = false;
 
         emit StakingPoolSuspended(poolId, msg.sender);
+    }
+
+    /**
+     * @inheritdoc IStakingPool
+     */
+    function getStakingPoolInfo(bytes32 poolId)
+        external
+        view
+        virtual
+        override
+        returns (
+            uint256 stakeDurationDays,
+            address stakeTokenAddress,
+            uint256 stakeTokenDecimals,
+            address rewardTokenAddress,
+            uint256 rewardTokenDecimals,
+            uint256 poolAprWei,
+            bool isOpen,
+            bool isActive
+        )
+    {
+        require(_stakingPools[poolId].isInitialized, "SPool: uninitialized");
+
+        stakeDurationDays = _stakingPools[poolId].stakeDurationDays;
+        stakeTokenAddress = _stakingPools[poolId].stakeTokenAddress;
+        stakeTokenDecimals = _stakingPools[poolId].stakeTokenDecimals;
+        rewardTokenAddress = _stakingPools[poolId].rewardTokenAddress;
+        rewardTokenDecimals = _stakingPools[poolId].rewardTokenDecimals;
+        poolAprWei = _stakingPools[poolId].poolAprWei;
+        isOpen = _stakingPools[poolId].isOpen;
+        isActive = _stakingPools[poolId].isActive;
     }
 }
