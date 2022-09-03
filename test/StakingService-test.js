@@ -1211,7 +1211,8 @@ describe("StakingService", function () {
       expectStakeMoresWithRewards,
       startblockTimestamp,
       hre.ethers.constants.Zero,
-      hre.ethers.constants.Zero
+      hre.ethers.constants.Zero,
+      hre.ethers.BigNumber.from(5)
     );
 
     const lastStakeMoreConfig =
@@ -1365,6 +1366,7 @@ describe("StakingService", function () {
       expectStakeMoresWithRewards,
       startblockTimestamp,
       hre.ethers.constants.Zero,
+      hre.ethers.constants.Zero,
       hre.ethers.constants.Zero
     );
 
@@ -1464,7 +1466,7 @@ describe("StakingService", function () {
         stakeAmountWei: hre.ethers.utils.parseEther("572457.57581124"),
         stakeSecondsAfterStartblockTimestamp: 2169285,
         lastDigitDeltaStakeAmountWei: 0,
-        lastDigitDeltaRewardAtMaturityWei: 120,
+        lastDigitDeltaRewardAtMaturityWei: 130,
       },
     ];
 
@@ -1518,6 +1520,7 @@ describe("StakingService", function () {
       stakingServiceInstance,
       expectStakeMoresWithRewards,
       startblockTimestamp,
+      hre.ethers.constants.Zero,
       hre.ethers.constants.Zero,
       hre.ethers.constants.Zero
     );
@@ -1672,6 +1675,7 @@ describe("StakingService", function () {
       stakingServiceInstance,
       expectStakeMoresWithRewards,
       startblockTimestamp,
+      hre.ethers.constants.Zero,
       hre.ethers.constants.Zero,
       hre.ethers.constants.Zero
     );
@@ -3705,7 +3709,7 @@ describe("StakingService", function () {
       const expectStakeAmountWei = truncatedStakeAmountWei;
 
       actualTotalStakeAmountsWei = actualStakeAmountWei;
-      truncatedTotalStakeAmountsWei = truncatedStakeAmountWei;
+      truncatedTotalStakeAmountsWei = hre.ethers.constants.Zero;
       additionalRewardToDistributeWei = hre.ethers.constants.Zero;
       expectRewardAtMaturityWei = computeTruncatedAmountWei(
         estimateRewardAtMaturityWei(
@@ -3750,7 +3754,7 @@ describe("StakingService", function () {
               estimateRewardAtMaturityWei(
                 stakingPoolConfig.poolAprWei,
                 stateDurationAtAddStakeDays,
-                truncatedPastStakeAmountWei
+                truncatedTotalStakeAmountsWei
               ),
               stakingPoolConfig.rewardTokenDecimals
             )
@@ -3760,10 +3764,14 @@ describe("StakingService", function () {
           estimateRewardAtMaturityWei(
             stakingPoolConfig.poolAprWei,
             stateDurationAtAddStakeDays,
-            truncatedPastStakeAmountWei
+            truncatedTotalStakeAmountsWei
           )
         );
       }
+
+      truncatedTotalStakeAmountsWei = truncatedTotalStakeAmountsWei.add(
+        truncatedStakeAmountWei
+      );
 
       const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
         stakingPoolConfig.poolAprWei,
@@ -4602,7 +4610,8 @@ describe("StakingService", function () {
     stakeMoreConfigs,
     startblockTimestamp,
     totalStakedWei,
-    rewardToBeDistributedWei
+    rewardToBeDistributedWei,
+    rewardAtMaturityDeltaWei
   ) {
     let expectTotalStakedWei = totalStakedWei;
     let expectRewardToBeDistributedWei = rewardToBeDistributedWei;
@@ -4626,7 +4635,7 @@ describe("StakingService", function () {
         verifyStakeMoreRewardAtMaturity(
           stakeMoreConfigs[i],
           startblockTimestamp,
-          hre.ethers.BigNumber.from(5)
+          rewardAtMaturityDeltaWei
         );
 
       /*
