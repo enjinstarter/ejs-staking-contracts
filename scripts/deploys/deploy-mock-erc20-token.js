@@ -80,7 +80,7 @@ async function main() {
   }
 
   const MockErc20TokenFactory = await hre.ethers.getContractFactory(
-    mockErc20TokenContractName
+    mockErc20TokenContractName,
   );
   const mockErc20TokenArgs = [
     mockErc20TokenName,
@@ -91,13 +91,13 @@ async function main() {
   const mockErc20TokenInstance = await deployHelpers.deployContract(
     MockErc20TokenFactory,
     mockErc20TokenArgs,
-    true
+    true,
   );
 
   await deployHelpers.isDeployed(mockErc20TokenInstance, isPublicNetwork);
 
   console.log(
-    `${mockErc20TokenContractName}: ${mockErc20TokenInstance.address}`
+    `${mockErc20TokenContractName}: ${mockErc20TokenInstance.address}`,
   );
 
   // Verify contract source code if deployed to public network
@@ -108,7 +108,7 @@ async function main() {
       networkName,
       mockErc20TokenInstance.address,
       mockErc20TokenInstance.deployTransaction.hash,
-      mockErc20TokenArgs
+      mockErc20TokenArgs,
     );
   }
 }

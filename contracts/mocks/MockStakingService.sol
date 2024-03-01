@@ -2,9 +2,8 @@
 // Copyright 2022 Enjinstarter
 pragma solidity ^0.8.0;
 
-import "../libraries/UnitConverter.sol";
-import "../AdminPrivileges.sol";
-import "../StakingService.sol";
+import {UnitConverter} from "../libraries/UnitConverter.sol";
+import {StakingService} from "../StakingService.sol";
 
 /**
  * @title MockStakingService

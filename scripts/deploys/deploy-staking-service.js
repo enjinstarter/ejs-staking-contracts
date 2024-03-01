@@ -63,19 +63,19 @@ async function main() {
   }
 
   const StakingServiceFactory = await hre.ethers.getContractFactory(
-    stakingServiceContractName
+    stakingServiceContractName,
   );
   const stakingServiceArgs = [stakingPoolAddress];
   const stakingServiceInstance = await deployHelpers.deployContract(
     StakingServiceFactory,
     stakingServiceArgs,
-    true
+    true,
   );
 
   await deployHelpers.isDeployed(stakingServiceInstance, isPublicNetwork);
 
   console.log(
-    `${stakingServiceContractName}: ${stakingServiceInstance.address}`
+    `${stakingServiceContractName}: ${stakingServiceInstance.address}`,
   );
 
   // Verify contract source code if deployed to public network
@@ -86,7 +86,7 @@ async function main() {
       networkName,
       stakingServiceInstance.address,
       stakingServiceInstance.deployTransaction.hash,
-      stakingServiceArgs
+      stakingServiceArgs,
     );
   }
 }

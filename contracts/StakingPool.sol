@@ -2,8 +2,8 @@
 // Copyright 2022 Enjinstarter
 pragma solidity ^0.8.0;
 
-import "./AdminPrivileges.sol";
-import "./interfaces/IStakingPool.sol";
+import {AdminPrivileges} from "./AdminPrivileges.sol";
+import {IStakingPool} from "./interfaces/IStakingPool.sol";
 
 /**
  * @title StakingPool

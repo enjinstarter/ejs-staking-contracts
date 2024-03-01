@@ -39,6 +39,7 @@
     "precoverage": "npm run compile",
     "pretest": "npm run compile",
     "prettier-check": "npx prettier -c .",
+    "prettier-fix": "npx prettier -w .",
     "solhint": "npx solhint 'contracts/**/*.sol'",
     "test": "npx hardhat test"
   },

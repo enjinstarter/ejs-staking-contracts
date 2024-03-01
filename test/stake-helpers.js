@@ -6,7 +6,7 @@ async function closeStakingPoolWithVerify(
   stakingPoolContractInstance,
   stakingPoolConfig,
   signer,
-  verifyStakingPoolConfigs
+  verifyStakingPoolConfigs,
 ) {
   const expectIsOpenBeforeClose = true;
   const expectIsOpenAfterClose = false;
@@ -16,13 +16,13 @@ async function closeStakingPoolWithVerify(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpenBeforeClose,
-    expectIsActive
+    expectIsActive,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .closeStakingPool(stakingPoolConfig.poolId)
+      .closeStakingPool(stakingPoolConfig.poolId),
   )
     .to.emit(stakingPoolContractInstance, "StakingPoolClosed")
     .withArgs(stakingPoolConfig.poolId, await signer.getAddress());
@@ -31,20 +31,20 @@ async function closeStakingPoolWithVerify(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpenAfterClose,
-    expectIsActive
+    expectIsActive,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .closeStakingPool(stakingPoolConfig.poolId)
+      .closeStakingPool(stakingPoolConfig.poolId),
   ).to.be.revertedWith("SPool: closed");
 
   await verifyStakingPoolsInfo(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpenAfterClose,
-    expectIsActive
+    expectIsActive,
   );
 }
 
@@ -52,7 +52,7 @@ async function createStakingPoolWithVerify(
   stakingPoolContractInstance,
   stakingPoolConfig,
   signer,
-  verifyStakingPoolConfigs
+  verifyStakingPoolConfigs,
 ) {
   const expectIsOpen = true;
   const expectIsActive = true;
@@ -60,7 +60,7 @@ async function createStakingPoolWithVerify(
   const signerAddress = await signer.getAddress();
 
   await expect(
-    stakingPoolContractInstance.getStakingPoolInfo(stakingPoolConfig.poolId)
+    stakingPoolContractInstance.getStakingPoolInfo(stakingPoolConfig.poolId),
   ).to.be.revertedWith("SPool: uninitialized");
 
   await expect(
@@ -73,8 +73,8 @@ async function createStakingPoolWithVerify(
         stakingPoolConfig.stakeTokenDecimals,
         stakingPoolConfig.rewardTokenInstance.address,
         stakingPoolConfig.rewardTokenDecimals,
-        stakingPoolConfig.poolAprWei
-      )
+        stakingPoolConfig.poolAprWei,
+      ),
   )
     .to.emit(stakingPoolContractInstance, "StakingPoolCreated")
     .withArgs(
@@ -85,14 +85,14 @@ async function createStakingPoolWithVerify(
       stakingPoolConfig.stakeTokenDecimals,
       stakingPoolConfig.rewardTokenInstance.address,
       stakingPoolConfig.rewardTokenDecimals,
-      stakingPoolConfig.poolAprWei
+      stakingPoolConfig.poolAprWei,
     );
 
   await verifyStakingPoolsInfo(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpen,
-    expectIsActive
+    expectIsActive,
   );
 
   await expect(
@@ -105,15 +105,15 @@ async function createStakingPoolWithVerify(
         stakingPoolConfig.stakeTokenDecimals,
         stakingPoolConfig.rewardTokenInstance.address,
         stakingPoolConfig.rewardTokenDecimals,
-        stakingPoolConfig.poolAprWei
-      )
+        stakingPoolConfig.poolAprWei,
+      ),
   ).to.be.revertedWith("SPool: exists");
 
   await verifyStakingPoolsInfo(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpen,
-    expectIsActive
+    expectIsActive,
   );
 }
 
@@ -123,7 +123,7 @@ async function initializeStakingPoolTestData(
   stakeRewardTokensInfo,
   governanceRoleAccounts,
   contractAdminRoleAccounts,
-  contractAdminMintAmountsWei
+  contractAdminMintAmountsWei,
 ) {
   const stakingPoolsRewardBalanceOf = {};
 
@@ -133,7 +133,7 @@ async function initializeStakingPoolTestData(
       rewardTokensInfo[i].tokenName,
       rewardTokensInfo[i].tokenSymbol,
       rewardTokensInfo[i].tokenDecimals,
-      rewardTokensInfo[i].tokenCapWei
+      rewardTokensInfo[i].tokenCapWei,
     );
     rewardTokenInstances.push(rewardTokenInstance);
     stakingPoolsRewardBalanceOf[rewardTokenInstance.address] =
@@ -146,7 +146,7 @@ async function initializeStakingPoolTestData(
       stakeTokensInfo[i].tokenName,
       stakeTokensInfo[i].tokenSymbol,
       stakeTokensInfo[i].tokenDecimals,
-      stakeTokensInfo[i].tokenCapWei
+      stakeTokensInfo[i].tokenCapWei,
     );
     stakeTokenInstances.push(stakeTokenInstance);
     stakingPoolsRewardBalanceOf[stakeTokenInstance.address] =
@@ -159,7 +159,7 @@ async function initializeStakingPoolTestData(
       stakeRewardTokensInfo[i].tokenName,
       stakeRewardTokensInfo[i].tokenSymbol,
       stakeRewardTokensInfo[i].tokenDecimals,
-      stakeRewardTokensInfo[i].tokenCapWei
+      stakeRewardTokensInfo[i].tokenCapWei,
     );
     stakeRewardTokenInstances.push(stakeRewardTokenInstance);
     stakingPoolsRewardBalanceOf[stakeRewardTokenInstance.address] =
@@ -375,21 +375,21 @@ async function initializeStakingPoolTestData(
     for (let j = 0; j < rewardTokenInstances.length; j++) {
       await rewardTokenInstances[j].transfer(
         await contractAdminRoleAccounts[i].getAddress(),
-        contractAdminMintAmountsWei.rewardToken
+        contractAdminMintAmountsWei.rewardToken,
       );
     }
 
     for (let j = 0; j < stakeTokenInstances.length; j++) {
       await stakeTokenInstances[j].transfer(
         await contractAdminRoleAccounts[i].getAddress(),
-        contractAdminMintAmountsWei.stakeToken
+        contractAdminMintAmountsWei.stakeToken,
       );
     }
 
     for (let j = 0; j < stakeRewardTokenInstances.length; j++) {
       await stakeRewardTokenInstances[j].transfer(
         await contractAdminRoleAccounts[i].getAddress(),
-        contractAdminMintAmountsWei.stakeRewardToken
+        contractAdminMintAmountsWei.stakeRewardToken,
       );
     }
   }
@@ -399,7 +399,7 @@ async function initializeStakingPoolTestData(
     testHelpers.GOVERNANCE_ROLE,
     governanceRoleAccounts.slice(1),
     governanceRoleAccounts[0],
-    true
+    true,
   );
 
   await testHelpers.grantRole(
@@ -407,7 +407,7 @@ async function initializeStakingPoolTestData(
     testHelpers.CONTRACT_ADMIN_ROLE,
     contractAdminRoleAccounts,
     governanceRoleAccounts[0],
-    true
+    true,
   );
 
   return [
@@ -421,9 +421,8 @@ async function initializeStakingPoolTestData(
 }
 
 async function newMockStakingPool() {
-  const MockStakingPoolFactory = await hre.ethers.getContractFactory(
-    "MockStakingPool"
-  );
+  const MockStakingPoolFactory =
+    await hre.ethers.getContractFactory("MockStakingPool");
   const mockStakingPoolContractInstance = await MockStakingPoolFactory.deploy();
   await mockStakingPoolContractInstance.deployed();
 
@@ -431,9 +430,8 @@ async function newMockStakingPool() {
 }
 
 async function newMockStakingService(stakingPoolAddress) {
-  const MockStakingServiceFactory = await hre.ethers.getContractFactory(
-    "MockStakingService"
-  );
+  const MockStakingServiceFactory =
+    await hre.ethers.getContractFactory("MockStakingService");
   const mockStakingServiceContractInstance =
     await MockStakingServiceFactory.deploy(stakingPoolAddress);
   await mockStakingServiceContractInstance.deployed();
@@ -450,12 +448,10 @@ async function newStakingPool() {
 }
 
 async function newStakingService(stakingPoolAddress) {
-  const StakingServiceFactory = await hre.ethers.getContractFactory(
-    "StakingService"
-  );
-  const stakingServiceContractInstance = await StakingServiceFactory.deploy(
-    stakingPoolAddress
-  );
+  const StakingServiceFactory =
+    await hre.ethers.getContractFactory("StakingService");
+  const stakingServiceContractInstance =
+    await StakingServiceFactory.deploy(stakingPoolAddress);
   await stakingServiceContractInstance.deployed();
 
   return stakingServiceContractInstance;
@@ -465,7 +461,7 @@ async function openStakingPoolWithVerify(
   stakingPoolContractInstance,
   stakingPoolConfig,
   signer,
-  verifyStakingPoolConfigs
+  verifyStakingPoolConfigs,
 ) {
   const expectIsOpenBeforeOpen = false;
   const expectIsOpenAfterOpen = true;
@@ -475,13 +471,13 @@ async function openStakingPoolWithVerify(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpenBeforeOpen,
-    expectIsActive
+    expectIsActive,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .openStakingPool(stakingPoolConfig.poolId)
+      .openStakingPool(stakingPoolConfig.poolId),
   )
     .to.emit(stakingPoolContractInstance, "StakingPoolOpened")
     .withArgs(stakingPoolConfig.poolId, await signer.getAddress());
@@ -490,20 +486,20 @@ async function openStakingPoolWithVerify(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpenAfterOpen,
-    expectIsActive
+    expectIsActive,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .openStakingPool(stakingPoolConfig.poolId)
+      .openStakingPool(stakingPoolConfig.poolId),
   ).to.be.revertedWith("SPool: opened");
 
   await verifyStakingPoolsInfo(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpenAfterOpen,
-    expectIsActive
+    expectIsActive,
   );
 }
 
@@ -511,7 +507,7 @@ async function resumeStakingPoolWithVerify(
   stakingPoolContractInstance,
   stakingPoolConfig,
   signer,
-  verifyStakingPoolConfigs
+  verifyStakingPoolConfigs,
 ) {
   const expectIsOpen = true;
   const expectIsActiveBeforeResume = false;
@@ -521,13 +517,13 @@ async function resumeStakingPoolWithVerify(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpen,
-    expectIsActiveBeforeResume
+    expectIsActiveBeforeResume,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .resumeStakingPool(stakingPoolConfig.poolId)
+      .resumeStakingPool(stakingPoolConfig.poolId),
   )
     .to.emit(stakingPoolContractInstance, "StakingPoolResumed")
     .withArgs(stakingPoolConfig.poolId, await signer.getAddress());
@@ -536,20 +532,20 @@ async function resumeStakingPoolWithVerify(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpen,
-    expectIsActiveAfterResume
+    expectIsActiveAfterResume,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .resumeStakingPool(stakingPoolConfig.poolId)
+      .resumeStakingPool(stakingPoolConfig.poolId),
   ).to.be.revertedWith("SPool: active");
 
   await verifyStakingPoolsInfo(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpen,
-    expectIsActiveAfterResume
+    expectIsActiveAfterResume,
   );
 }
 
@@ -557,7 +553,7 @@ async function suspendStakingPoolWithVerify(
   stakingPoolContractInstance,
   stakingPoolConfig,
   signer,
-  verifyStakingPoolConfigs
+  verifyStakingPoolConfigs,
 ) {
   const expectIsOpen = true;
   const expectIsActiveBeforeSuspend = true;
@@ -567,13 +563,13 @@ async function suspendStakingPoolWithVerify(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpen,
-    expectIsActiveBeforeSuspend
+    expectIsActiveBeforeSuspend,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .suspendStakingPool(stakingPoolConfig.poolId)
+      .suspendStakingPool(stakingPoolConfig.poolId),
   )
     .to.emit(stakingPoolContractInstance, "StakingPoolSuspended")
     .withArgs(stakingPoolConfig.poolId, await signer.getAddress());
@@ -582,20 +578,20 @@ async function suspendStakingPoolWithVerify(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpen,
-    expectIsActiveAfterSuspend
+    expectIsActiveAfterSuspend,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .suspendStakingPool(stakingPoolConfig.poolId)
+      .suspendStakingPool(stakingPoolConfig.poolId),
   ).to.be.revertedWith("SPool: suspended");
 
   await verifyStakingPoolsInfo(
     stakingPoolContractInstance,
     verifyStakingPoolConfigs,
     expectIsOpen,
-    expectIsActiveAfterSuspend
+    expectIsActiveAfterSuspend,
   );
 }
 
@@ -603,7 +599,7 @@ async function testCloseOpenStakingPool(
   stakingPoolContractInstance,
   stakingPoolConfigs,
   signers,
-  expectAbleToCloseOpen
+  expectAbleToCloseOpen,
 ) {
   for (let i = 0; i < stakingPoolConfigs.length; i++) {
     const signerIndex = i % signers.length;
@@ -614,7 +610,7 @@ async function testCloseOpenStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         signers[signerIndex],
-        stakingPoolConfigs.slice(0, i + 1)
+        stakingPoolConfigs.slice(0, i + 1),
       );
     } else {
       const expectIsOpen = true;
@@ -624,24 +620,24 @@ async function testCloseOpenStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
 
       await expect(
         stakingPoolContractInstance
           .connect(signers[signerIndex])
-          .closeStakingPool(stakingPoolConfigs[i].poolId)
+          .closeStakingPool(stakingPoolConfigs[i].poolId),
       ).to.be.revertedWith(
         `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
           testHelpers.CONTRACT_ADMIN_ROLE
-        }`
+        }`,
       );
 
       await verifyStakingPoolsInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
     }
   }
@@ -655,7 +651,7 @@ async function testCloseOpenStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         signers[signerIndex],
-        stakingPoolConfigs.slice(0, i + 1)
+        stakingPoolConfigs.slice(0, i + 1),
       );
     } else {
       const expectIsOpen = true;
@@ -665,24 +661,24 @@ async function testCloseOpenStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
 
       await expect(
         stakingPoolContractInstance
           .connect(signers[signerIndex])
-          .openStakingPool(stakingPoolConfigs[i].poolId)
+          .openStakingPool(stakingPoolConfigs[i].poolId),
       ).to.be.revertedWith(
         `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
           testHelpers.CONTRACT_ADMIN_ROLE
-        }`
+        }`,
       );
 
       await verifyStakingPoolsInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
     }
   }
@@ -692,7 +688,7 @@ async function testCreateStakingPool(
   stakingPoolContractInstance,
   stakingPoolConfigs,
   signers,
-  expectAbleToCreate
+  expectAbleToCreate,
 ) {
   for (let i = 0; i < stakingPoolConfigs.length; i++) {
     const signerIndex = i % signers.length;
@@ -703,13 +699,13 @@ async function testCreateStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         signers[signerIndex],
-        stakingPoolConfigs.slice(0, i + 1)
+        stakingPoolConfigs.slice(0, i + 1),
       );
     } else {
       await expect(
         stakingPoolContractInstance.getStakingPoolInfo(
-          stakingPoolConfigs[i].poolId
-        )
+          stakingPoolConfigs[i].poolId,
+        ),
       ).to.be.revertedWith("SPool: uninitialized");
 
       await expect(
@@ -722,18 +718,18 @@ async function testCreateStakingPool(
             stakingPoolConfigs[i].stakeTokenDecimals,
             stakingPoolConfigs[i].rewardTokenInstance.address,
             stakingPoolConfigs[i].rewardTokenDecimals,
-            stakingPoolConfigs[i].poolAprWei
-          )
+            stakingPoolConfigs[i].poolAprWei,
+          ),
       ).to.be.revertedWith(
         `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
           testHelpers.CONTRACT_ADMIN_ROLE
-        }`
+        }`,
       );
 
       await expect(
         stakingPoolContractInstance.getStakingPoolInfo(
-          stakingPoolConfigs[i].poolId
-        )
+          stakingPoolConfigs[i].poolId,
+        ),
       ).to.be.revertedWith("SPool: uninitialized");
     }
   }
@@ -743,7 +739,7 @@ async function testSuspendResumeStakingPool(
   stakingPoolContractInstance,
   stakingPoolConfigs,
   signers,
-  expectAbleToSuspendResume
+  expectAbleToSuspendResume,
 ) {
   for (let i = 0; i < stakingPoolConfigs.length; i++) {
     const signerIndex = i % signers.length;
@@ -754,7 +750,7 @@ async function testSuspendResumeStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         signers[signerIndex],
-        stakingPoolConfigs.slice(0, i + 1)
+        stakingPoolConfigs.slice(0, i + 1),
       );
     } else {
       const expectIsOpen = true;
@@ -764,24 +760,24 @@ async function testSuspendResumeStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
 
       await expect(
         stakingPoolContractInstance
           .connect(signers[signerIndex])
-          .suspendStakingPool(stakingPoolConfigs[i].poolId)
+          .suspendStakingPool(stakingPoolConfigs[i].poolId),
       ).to.be.revertedWith(
         `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
           testHelpers.CONTRACT_ADMIN_ROLE
-        }`
+        }`,
       );
 
       await verifyStakingPoolsInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
     }
   }
@@ -795,7 +791,7 @@ async function testSuspendResumeStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         signers[signerIndex],
-        stakingPoolConfigs.slice(0, i + 1)
+        stakingPoolConfigs.slice(0, i + 1),
       );
     } else {
       const expectIsOpen = true;
@@ -805,24 +801,24 @@ async function testSuspendResumeStakingPool(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
 
       await expect(
         stakingPoolContractInstance
           .connect(signers[signerIndex])
-          .resumeStakingPool(stakingPoolConfigs[i].poolId)
+          .resumeStakingPool(stakingPoolConfigs[i].poolId),
       ).to.be.revertedWith(
         `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
           testHelpers.CONTRACT_ADMIN_ROLE
-        }`
+        }`,
       );
 
       await verifyStakingPoolsInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
-        expectIsActive
+        expectIsActive,
       );
     }
   }
@@ -832,26 +828,26 @@ async function verifyStakingPoolInfo(
   stakingPoolContractInstance,
   stakingPoolConfig,
   expectIsOpen,
-  expectIsActive
+  expectIsActive,
 ) {
   const stakingPoolInfo = await stakingPoolContractInstance.getStakingPoolInfo(
-    stakingPoolConfig.poolId
+    stakingPoolConfig.poolId,
   );
 
   expect(stakingPoolInfo.stakeDurationDays).to.equal(
-    stakingPoolConfig.stakeDurationDays
+    stakingPoolConfig.stakeDurationDays,
   );
   expect(stakingPoolInfo.stakeTokenAddress).to.equal(
-    stakingPoolConfig.stakeTokenInstance.address
+    stakingPoolConfig.stakeTokenInstance.address,
   );
   expect(stakingPoolInfo.stakeTokenDecimals).to.equal(
-    stakingPoolConfig.stakeTokenDecimals
+    stakingPoolConfig.stakeTokenDecimals,
   );
   expect(stakingPoolInfo.rewardTokenAddress).to.equal(
-    stakingPoolConfig.rewardTokenInstance.address
+    stakingPoolConfig.rewardTokenInstance.address,
   );
   expect(stakingPoolInfo.rewardTokenDecimals).to.equal(
-    stakingPoolConfig.rewardTokenDecimals
+    stakingPoolConfig.rewardTokenDecimals,
   );
   expect(stakingPoolInfo.poolAprWei).to.equal(stakingPoolConfig.poolAprWei);
   expect(stakingPoolInfo.isOpen).to.equal(expectIsOpen);
@@ -864,14 +860,14 @@ async function verifyStakingPoolsInfo(
   stakingPoolContractInstance,
   stakingPoolConfigs,
   expectIsOpen,
-  expectIsActive
+  expectIsActive,
 ) {
   for (let i = 0; i < stakingPoolConfigs.length; i++) {
     await verifyStakingPoolInfo(
       stakingPoolContractInstance,
       stakingPoolConfigs[i],
       expectIsOpen,
-      expectIsActive
+      expectIsActive,
     );
   }
 }

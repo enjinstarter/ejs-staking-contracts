@@ -2,14 +2,14 @@
 // Copyright 2022 Enjinstarter
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
+import {ERC20, ERC20Capped} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 
 /**
  * @title MockErc20Token
  * @author Tim Loh
  */
 contract MockErc20Token is ERC20Capped {
-    uint8 private _tokenDecimals;
+    uint8 private immutable _tokenDecimals;
 
     constructor(
         string memory tokenName,

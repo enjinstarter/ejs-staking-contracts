@@ -120,7 +120,7 @@ describe("StakingPool", function () {
         stakeRewardToken18DecimalsInfo,
         governanceRoleAccounts,
         contractAdminRoleAccounts,
-        contractAdminMintAmountsWei
+        contractAdminMintAmountsWei,
       );
   });
 
@@ -129,52 +129,52 @@ describe("StakingPool", function () {
       stakingPoolInstance,
       testHelpers.GOVERNANCE_ROLE,
       governanceRoleAccounts,
-      true
+      true,
     );
     await testHelpers.verifyRole(
       stakingPoolInstance,
       testHelpers.GOVERNANCE_ROLE,
       contractAdminRoleAccounts,
-      false
+      false,
     );
     await testHelpers.verifyRole(
       stakingPoolInstance,
       testHelpers.GOVERNANCE_ROLE,
       enduserAccounts,
-      false
+      false,
     );
 
     await testHelpers.verifyRole(
       stakingPoolInstance,
       testHelpers.CONTRACT_ADMIN_ROLE,
       contractAdminRoleAccounts,
-      true
+      true,
     );
     await testHelpers.verifyRole(
       stakingPoolInstance,
       testHelpers.CONTRACT_ADMIN_ROLE,
       governanceRoleAccounts.slice(0, 1),
-      true
+      true,
     );
     await testHelpers.verifyRole(
       stakingPoolInstance,
       testHelpers.CONTRACT_ADMIN_ROLE,
       governanceRoleAccounts.slice(1),
-      false
+      false,
     );
     await testHelpers.verifyRole(
       stakingPoolInstance,
       testHelpers.CONTRACT_ADMIN_ROLE,
       enduserAccounts,
-      false
+      false,
     );
 
     const uninitializedPoolId = hre.ethers.utils.id(
-      "da61b654-4973-4879-9166-723c0017dd6d"
+      "da61b654-4973-4879-9166-723c0017dd6d",
     );
 
     await expect(
-      stakingPoolInstance.getStakingPoolInfo(uninitializedPoolId)
+      stakingPoolInstance.getStakingPoolInfo(uninitializedPoolId),
     ).to.be.revertedWith("SPool: uninitialized");
   });
 
@@ -184,7 +184,7 @@ describe("StakingPool", function () {
       governanceRoleAccounts,
       contractAdminRoleAccounts,
       enduserAccounts,
-      accounts
+      accounts,
     );
   });
 
@@ -193,25 +193,25 @@ describe("StakingPool", function () {
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs.slice(0, 1),
       governanceRoleAccounts.slice(0, 1),
-      true
+      true,
     );
     await stakeHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs.slice(1, 2),
       governanceRoleAccounts.slice(1),
-      false
+      false,
     );
     await stakeHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs.slice(2, 4),
       contractAdminRoleAccounts,
-      true
+      true,
     );
     await stakeHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs.slice(4),
       enduserAccounts,
-      false
+      false,
     );
   });
 
@@ -220,32 +220,32 @@ describe("StakingPool", function () {
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
-      true
+      true,
     );
 
     await stakeHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(0, 1),
-      true
+      true,
     );
     await stakeHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(1),
-      false
+      false,
     );
     await stakeHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts,
-      true
+      true,
     );
     await stakeHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       enduserAccounts,
-      false
+      false,
     );
   });
 
@@ -254,32 +254,32 @@ describe("StakingPool", function () {
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
-      true
+      true,
     );
 
     await stakeHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(0, 1),
-      true
+      true,
     );
     await stakeHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(1),
-      false
+      false,
     );
     await stakeHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts,
-      true
+      true,
     );
     await stakeHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       enduserAccounts,
-      false
+      false,
     );
   });
 
@@ -294,8 +294,8 @@ describe("StakingPool", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
-        )
+          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+        ),
     ).to.be.revertedWith("SPool: stake duration");
   });
 
@@ -310,8 +310,8 @@ describe("StakingPool", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
-        )
+          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+        ),
     ).to.be.revertedWith("SPool: stake token");
   });
 
@@ -326,8 +326,8 @@ describe("StakingPool", function () {
           19,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
-        )
+          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+        ),
     ).to.be.revertedWith("SPool: stake decimals");
   });
 
@@ -342,8 +342,8 @@ describe("StakingPool", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
           hre.ethers.constants.AddressZero,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
-        )
+          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+        ),
     ).to.be.revertedWith("SPool: reward token");
   });
 
@@ -358,8 +358,8 @@ describe("StakingPool", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           19,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
-        )
+          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+        ),
     ).to.be.revertedWith("SPool: reward decimals");
   });
 
@@ -374,8 +374,8 @@ describe("StakingPool", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          hre.ethers.constants.Zero
-        )
+          hre.ethers.constants.Zero,
+        ),
     ).to.be.revertedWith("SPool: pool APR");
   });
 
@@ -390,8 +390,8 @@ describe("StakingPool", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
           stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals - 1,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei
-        )
+          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+        ),
     ).to.be.revertedWith("SPool: decimals different");
   });
 
@@ -399,7 +399,7 @@ describe("StakingPool", function () {
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
-        .closeStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId)
+        .closeStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId),
     ).to.be.revertedWith("SPool: uninitialized");
   });
 
@@ -407,7 +407,7 @@ describe("StakingPool", function () {
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
-        .openStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId)
+        .openStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId),
     ).to.be.revertedWith("SPool: uninitialized");
   });
 
@@ -415,7 +415,7 @@ describe("StakingPool", function () {
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
-        .suspendStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId)
+        .suspendStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId),
     ).to.be.revertedWith("SPool: uninitialized");
   });
 
@@ -423,7 +423,7 @@ describe("StakingPool", function () {
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
-        .resumeStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId)
+        .resumeStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId),
     ).to.be.revertedWith("SPool: uninitialized");
   });
 });

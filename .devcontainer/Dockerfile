@@ -26,7 +26,7 @@ ENV PATH="/home/vscode/.local/bin:${PATH}"
 # Set the default solc version: https://github.com/crytic/solc-select#usage
 ENV SOLC_VERSION="${SOLC_VERSION}"
 
-ENV SOLC_INSTALL_DIR="/usr/bin"
+ENV SOLC_INSTALL_DIR="/usr/local/sbin"
 ENV SOLC_PATH="${SOLC_INSTALL_DIR}/solc-v${SOLC_VERSION}"
 
 # Install solc (required by Slither)

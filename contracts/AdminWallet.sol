@@ -2,7 +2,7 @@
 // Copyright 2022 Enjinstarter
 pragma solidity ^0.8.0;
 
-import "./interfaces/IAdminWallet.sol";
+import {IAdminWallet} from "./interfaces/IAdminWallet.sol";
 
 /**
  * @title AdminWallet

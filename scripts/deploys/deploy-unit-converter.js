@@ -50,13 +50,13 @@ async function main() {
   }
 
   const UnitConverterFactory = await hre.ethers.getContractFactory(
-    unitConverterContractName
+    unitConverterContractName,
   );
   const unitConverterArgs = [];
   const unitConverterInstance = await deployHelpers.deployContract(
     UnitConverterFactory,
     unitConverterArgs,
-    true
+    true,
   );
 
   await deployHelpers.isDeployed(unitConverterInstance, isPublicNetwork);
@@ -71,7 +71,7 @@ async function main() {
       networkName,
       unitConverterInstance.address,
       unitConverterInstance.deployTransaction.hash,
-      unitConverterArgs
+      unitConverterArgs,
     );
   }
 }

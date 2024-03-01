@@ -2,7 +2,7 @@
 // Copyright 2022 Enjinstarter
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/IAccessControl.sol";
+import {IAccessControl} from  "@openzeppelin/contracts/access/IAccessControl.sol";
 
 /**
  * @title StakingPool Interface

@@ -50,13 +50,13 @@ async function main() {
   }
 
   const StakingPoolFactory = await hre.ethers.getContractFactory(
-    stakingPoolContractName
+    stakingPoolContractName,
   );
   const stakingPoolArgs = [];
   const stakingPoolInstance = await deployHelpers.deployContract(
     StakingPoolFactory,
     stakingPoolArgs,
-    true
+    true,
   );
 
   await deployHelpers.isDeployed(stakingPoolInstance, isPublicNetwork);
@@ -71,7 +71,7 @@ async function main() {
       networkName,
       stakingPoolInstance.address,
       stakingPoolInstance.deployTransaction.hash,
-      stakingPoolArgs
+      stakingPoolArgs,
     );
   }
 }

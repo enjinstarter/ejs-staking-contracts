@@ -7,13 +7,13 @@ const TOKEN_MAX_DECIMALS = 18;
 async function deployContract(
   contractFactory,
   constructorArgs,
-  logConstructorArgs
+  logConstructorArgs,
 ) {
   const contractInstance = await contractFactory.deploy(...constructorArgs);
 
   if (logConstructorArgs) {
     console.log(
-      `Constructor arguments for contract at ${contractInstance.address}:`
+      `Constructor arguments for contract at ${contractInstance.address}:`,
     );
     constructorArgs.forEach((x) =>
       console.log(
@@ -21,8 +21,8 @@ async function deployContract(
           x.toString().includes("[object Object]")
             ? JSON.stringify(x)
             : x.toString()
-        }`
-      )
+        }`,
+      ),
     );
   }
 
@@ -32,16 +32,16 @@ async function deployContract(
 async function deployProxy(
   contractFactory,
   constructorArgs,
-  logConstructorArgs
+  logConstructorArgs,
 ) {
   const contractInstance = await hre.upgrades.deployProxy(
     contractFactory,
-    constructorArgs
+    constructorArgs,
   );
 
   if (logConstructorArgs) {
     console.log(
-      `Constructor arguments for contract at ${contractInstance.address}:`
+      `Constructor arguments for contract at ${contractInstance.address}:`,
     );
     constructorArgs.forEach((x) =>
       console.log(
@@ -49,8 +49,8 @@ async function deployProxy(
           x.toString().includes("[object Object]")
             ? JSON.stringify(x)
             : x.toString()
-        }`
-      )
+        }`,
+      ),
     );
   }
 
@@ -95,7 +95,7 @@ async function isDeployed(contractInstance, isPublicNetwork) {
     }
 
     console.log(
-      `Waiting for ${numberOfConfirmations} confirmations for contract at ${contractInstance.address}`
+      `Waiting for ${numberOfConfirmations} confirmations for contract at ${contractInstance.address}`,
     );
     await contractInstance.deployTransaction.wait(numberOfConfirmations);
   }
@@ -106,7 +106,7 @@ async function isDeployed(contractInstance, isPublicNetwork) {
 async function upgradeProxy(proxyAddress, contractFactory) {
   const contractInstance = await hre.upgrades.upgradeProxy(
     proxyAddress,
-    contractFactory
+    contractFactory,
   );
 
   return contractInstance;
@@ -116,7 +116,7 @@ async function verifyContract(
   networkName,
   contractAddress,
   deployTransactionHash,
-  verifyTaskArgs
+  verifyTaskArgs,
 ) {
   let explorer;
   let numberOfConfirmations;
@@ -182,13 +182,13 @@ async function verifyContract(
 
   try {
     console.log(
-      `Verifying the contract ${contractAddress} on ${explorer} after ${numberOfConfirmations} confirmations ...`
+      `Verifying the contract ${contractAddress} on ${explorer} after ${numberOfConfirmations} confirmations ...`,
     );
 
     await hre.ethers.provider.waitForTransaction(
       deployTransactionHash,
       numberOfConfirmations,
-      1800000
+      1800000,
     ); // 30 mins timeout for 300 confirmations in BSC mainnet at 3s block time
 
     if (verifyTask === "blockscout-verify") {
@@ -203,19 +203,19 @@ async function verifyContract(
         projectContractsDirPath = hre.config.paths.sources;
         projectFlattenedSourcesDirPath = path.join(
           hre.config.paths.artifacts,
-          "flattenedSources"
+          "flattenedSources",
         );
       } else {
         projectContractsDirPath = path.join(hre.config.paths.sources, subdir);
         projectFlattenedSourcesDirPath = path.join(
           hre.config.paths.artifacts,
-          `flattenedSources/${subdir}`
+          `flattenedSources/${subdir}`,
         );
       }
 
       const projectContractFilePath = path.join(
         projectContractsDirPath,
-        `${filename}.sol`
+        `${filename}.sol`,
       );
       const flattenedFileContent = await getFlattenedFileContent([
         projectContractFilePath,
@@ -224,17 +224,17 @@ async function verifyContract(
       const projectFlattenedSourcesFilename = `${filename}-flattened-${contractAddress}.sol`;
       const projectConstructorArgsFilePath = path.join(
         projectFlattenedSourcesDirPath,
-        projectFlattenedSourcesFilename
+        projectFlattenedSourcesFilename,
       );
 
       await writeFile(
         projectFlattenedSourcesDirPath,
         projectFlattenedSourcesFilename,
-        flattenedFileContent
+        flattenedFileContent,
       );
 
       console.log(
-        `Please manually verify ${projectConstructorArgsFilePath} on ${explorer} at address ${contractAddress}`
+        `Please manually verify ${projectConstructorArgsFilePath} on ${explorer} at address ${contractAddress}`,
       );
 
       /*
@@ -245,7 +245,7 @@ async function verifyContract(
       */
     } else {
       console.log(
-        `Running ${verifyTask} for address ${contractAddress} with constructor arguments ${verifyTaskArgs}`
+        `Running ${verifyTask} for address ${contractAddress} with constructor arguments ${verifyTaskArgs}`,
       );
 
       await hre.run(verifyTask, {
@@ -270,7 +270,7 @@ async function verifyContract(
 
     console.error(
       `An error has occurred during verifying on ${explorer}:\n`,
-      err
+      err,
     );
 
     const network = hre.network.name;
@@ -284,27 +284,27 @@ async function verifyContract(
         const projectArtifactsDirPath = hre.config.paths.artifacts;
         const projectConstructorArgsDirPath = path.join(
           projectArtifactsDirPath,
-          "constructorArgs"
+          "constructorArgs",
         );
         const projectConstructorArgsFilename = `${contractAddress}.js`;
         const projectConstructorArgsFilePath = path.join(
           projectConstructorArgsDirPath,
-          projectConstructorArgsFilename
+          projectConstructorArgsFilename,
         );
 
         await writeFile(
           projectConstructorArgsDirPath,
           projectConstructorArgsFilename,
-          `module.exports = ${JSON.stringify(verifyTaskArgs, null, 4)};`
+          `module.exports = ${JSON.stringify(verifyTaskArgs, null, 4)};`,
         );
 
         verifyCommand = `npx hardhat ${verifyPlugin} --network ${network} --constructor-args ${projectConstructorArgsFilePath} ${contractAddress}`;
       } else {
         const quotedConstructorArgs = verifyTaskArgs.map(
-          (x) => `"${x.toString().replace(/"/g, '\\"')}"`
+          (x) => `"${x.toString().replace(/"/g, '\\"')}"`,
         );
         verifyCommand = `npx hardhat ${verifyPlugin} --network ${network} ${contractAddress} ${quotedConstructorArgs.join(
-          " "
+          " ",
         )}`;
       }
     }
@@ -315,7 +315,7 @@ async function verifyContract(
         "--------------------",
         verifyCommand,
         "--------------------",
-      ].join("\n")
+      ].join("\n"),
     );
 
     return false;
@@ -360,7 +360,7 @@ async function getFlattenedFileContent(filenames) {
         count++;
         return "";
       }
-    }
+    },
   );
 
   return flattenedFileContent;

@@ -2,8 +2,8 @@
 // Copyright 2022 Enjinstarter
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/IAccessControl.sol";
-import "./IAdminWallet.sol";
+import {IAccessControl} from "@openzeppelin/contracts/access/IAccessControl.sol";
+import {IAdminWallet} from "./IAdminWallet.sol";
 
 /**
  * @title StakingService Interface

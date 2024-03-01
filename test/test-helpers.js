@@ -24,21 +24,23 @@ async function approveTransferWithVerify(
   tokenContractInstance,
   fromSigner,
   toAddress,
-  amountWei
+  amountWei,
 ) {
   const fromAddress = await fromSigner.getAddress();
   const tokenDecimals = await tokenContractInstance.decimals();
   const amountDecimals = scaleWeiToDecimals(amountWei, tokenDecimals);
 
   await expect(
-    tokenContractInstance.connect(fromSigner).approve(toAddress, amountDecimals)
+    tokenContractInstance
+      .connect(fromSigner)
+      .approve(toAddress, amountDecimals),
   )
     .to.emit(tokenContractInstance, "Approval")
     .withArgs(fromAddress, toAddress, amountDecimals);
 
   const allowance = await tokenContractInstance.allowance(
     fromAddress,
-    toAddress
+    toAddress,
   );
   expect(allowance).to.equal(amountDecimals);
 }
@@ -66,7 +68,7 @@ async function grantRole(
   role,
   signers,
   expectMsgSender,
-  expectAbleToGrantRole
+  expectAbleToGrantRole,
 ) {
   const expectMsgSenderAddress = await expectMsgSender.getAddress();
 
@@ -75,7 +77,7 @@ async function grantRole(
       await expect(
         contractInstance
           .connect(expectMsgSender)
-          .grantRole(role, await signers[i].getAddress())
+          .grantRole(role, await signers[i].getAddress()),
       )
         .to.emit(contractInstance, "RoleGranted")
         .withArgs(role, await signers[i].getAddress(), expectMsgSenderAddress);
@@ -83,9 +85,9 @@ async function grantRole(
       await expect(
         contractInstance
           .connect(expectMsgSender)
-          .grantRole(role, await signers[i].getAddress())
+          .grantRole(role, await signers[i].getAddress()),
       ).to.be.revertedWith(
-        `AccessControl: account ${expectMsgSenderAddress.toLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`
+        `AccessControl: account ${expectMsgSenderAddress.toLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`,
       );
     }
   }
@@ -109,7 +111,7 @@ async function newMockErc20Token(
   tokenName,
   tokenSymbol,
   tokenDecimals,
-  tokenCap
+  tokenCap,
 ) {
   const defaults = {
     tokenName: "MockErc20Token",
@@ -120,29 +122,28 @@ async function newMockErc20Token(
 
   const tokenNameValue = await getValueOrDefault(
     tokenName,
-    () => defaults.tokenName
+    () => defaults.tokenName,
   );
   const tokenSymbolValue = await getValueOrDefault(
     tokenSymbol,
-    () => defaults.tokenSymbol
+    () => defaults.tokenSymbol,
   );
   const tokenDecimalsValue = await getValueOrDefault(
     tokenDecimals,
-    () => defaults.tokenDecimals
+    () => defaults.tokenDecimals,
   );
   const tokenCapValue = await getValueOrDefault(
     tokenCap,
-    () => defaults.tokenCap
+    () => defaults.tokenCap,
   );
 
-  const MockErc20TokenFactory = await hre.ethers.getContractFactory(
-    "MockErc20Token"
-  );
+  const MockErc20TokenFactory =
+    await hre.ethers.getContractFactory("MockErc20Token");
   const mockErc20TokenInstance = await MockErc20TokenFactory.deploy(
     tokenNameValue,
     tokenSymbolValue,
     tokenDecimalsValue,
-    tokenCapValue
+    tokenCapValue,
   );
   await mockErc20TokenInstance.deployed();
 
@@ -154,7 +155,7 @@ async function revokeRole(
   role,
   signers,
   expectMsgSender,
-  expectAbleToGrantRole
+  expectAbleToGrantRole,
 ) {
   const expectMsgSenderAddress = await expectMsgSender.getAddress();
 
@@ -163,7 +164,7 @@ async function revokeRole(
       await expect(
         contractInstance
           .connect(expectMsgSender)
-          .revokeRole(role, await signers[i].getAddress())
+          .revokeRole(role, await signers[i].getAddress()),
       )
         .to.emit(contractInstance, "RoleRevoked")
         .withArgs(role, await signers[i].getAddress(), expectMsgSenderAddress);
@@ -171,9 +172,9 @@ async function revokeRole(
       await expect(
         contractInstance
           .connect(expectMsgSender)
-          .revokeRole(role, await signers[i].getAddress())
+          .revokeRole(role, await signers[i].getAddress()),
       ).to.be.revertedWith(
-        `AccessControl: account ${expectMsgSenderAddress.toLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`
+        `AccessControl: account ${expectMsgSenderAddress.toLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`,
       );
     }
   }
@@ -182,14 +183,18 @@ async function revokeRole(
 function scaleDecimalsToWei(decimalsAmount, decimals) {
   const decimalsDiff = TOKEN_MAX_DECIMALS - decimals;
   return decimalsAmount.mul(
-    hre.ethers.BigNumber.from("10").pow(hre.ethers.BigNumber.from(decimalsDiff))
+    hre.ethers.BigNumber.from("10").pow(
+      hre.ethers.BigNumber.from(decimalsDiff),
+    ),
   );
 }
 
 function scaleWeiToDecimals(weiAmount, decimals) {
   const decimalsDiff = TOKEN_MAX_DECIMALS - decimals;
   return weiAmount.div(
-    hre.ethers.BigNumber.from("10").pow(hre.ethers.BigNumber.from(decimalsDiff))
+    hre.ethers.BigNumber.from("10").pow(
+      hre.ethers.BigNumber.from(decimalsDiff),
+    ),
   );
 }
 
@@ -204,44 +209,44 @@ async function testGrantRevokeRoles(
   governanceRoleAccounts,
   contractAdminRoleAccounts,
   enduserAccounts,
-  accountsWithRole
+  accountsWithRole,
 ) {
   await verifyRole(
     contractInstance,
     DEFAULT_ADMIN_ROLE,
     governanceRoleAccounts.slice(0, 1),
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     DEFAULT_ADMIN_ROLE,
     governanceRoleAccounts.slice(1),
-    false
+    false,
   );
   await verifyRole(
     contractInstance,
     DEFAULT_ADMIN_ROLE,
     contractAdminRoleAccounts,
-    false
+    false,
   );
   await verifyRole(
     contractInstance,
     DEFAULT_ADMIN_ROLE,
     enduserAccounts,
-    false
+    false,
   );
 
   await verifyRole(
     contractInstance,
     GOVERNANCE_ROLE,
     governanceRoleAccounts,
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     GOVERNANCE_ROLE,
     contractAdminRoleAccounts,
-    false
+    false,
   );
   await verifyRole(contractInstance, GOVERNANCE_ROLE, enduserAccounts, false);
 
@@ -249,25 +254,25 @@ async function testGrantRevokeRoles(
     contractInstance,
     CONTRACT_ADMIN_ROLE,
     contractAdminRoleAccounts,
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     CONTRACT_ADMIN_ROLE,
     governanceRoleAccounts.slice(0, 1),
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     CONTRACT_ADMIN_ROLE,
     governanceRoleAccounts.slice(1),
-    false
+    false,
   );
   await verifyRole(
     contractInstance,
     CONTRACT_ADMIN_ROLE,
     enduserAccounts,
-    false
+    false,
   );
 
   const nonDefaultAdminRoleAccounts = accountsWithRole.slice(5, 6);
@@ -279,13 +284,13 @@ async function testGrantRevokeRoles(
     DEFAULT_ADMIN_ROLE,
     nonDefaultAdminRoleAccounts,
     governanceRoleAccounts[0],
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     DEFAULT_ADMIN_ROLE,
     nonDefaultAdminRoleAccounts,
-    true
+    true,
   );
 
   await revokeRole(
@@ -293,13 +298,13 @@ async function testGrantRevokeRoles(
     DEFAULT_ADMIN_ROLE,
     nonDefaultAdminRoleAccounts,
     governanceRoleAccounts[0],
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     DEFAULT_ADMIN_ROLE,
     nonDefaultAdminRoleAccounts,
-    false
+    false,
   );
 
   await grantRole(
@@ -307,13 +312,13 @@ async function testGrantRevokeRoles(
     GOVERNANCE_ROLE,
     nonGovernanceRoleAccounts,
     governanceRoleAccounts[0],
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     GOVERNANCE_ROLE,
     nonGovernanceRoleAccounts,
-    true
+    true,
   );
 
   await revokeRole(
@@ -321,13 +326,13 @@ async function testGrantRevokeRoles(
     GOVERNANCE_ROLE,
     nonGovernanceRoleAccounts,
     governanceRoleAccounts[0],
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     GOVERNANCE_ROLE,
     nonGovernanceRoleAccounts,
-    false
+    false,
   );
 
   await grantRole(
@@ -335,13 +340,13 @@ async function testGrantRevokeRoles(
     CONTRACT_ADMIN_ROLE,
     nonContractAdminRoleAccounts,
     governanceRoleAccounts[0],
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     CONTRACT_ADMIN_ROLE,
     nonContractAdminRoleAccounts,
-    true
+    true,
   );
 
   await revokeRole(
@@ -349,13 +354,13 @@ async function testGrantRevokeRoles(
     CONTRACT_ADMIN_ROLE,
     nonContractAdminRoleAccounts,
     governanceRoleAccounts[0],
-    true
+    true,
   );
   await verifyRole(
     contractInstance,
     CONTRACT_ADMIN_ROLE,
     nonContractAdminRoleAccounts,
-    false
+    false,
   );
 
   for (let i = 1; i < governanceRoleAccounts.length; i++) {
@@ -364,7 +369,7 @@ async function testGrantRevokeRoles(
       DEFAULT_ADMIN_ROLE,
       nonGovernanceRoleAccounts,
       governanceRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -374,7 +379,7 @@ async function testGrantRevokeRoles(
       DEFAULT_ADMIN_ROLE,
       nonGovernanceRoleAccounts,
       contractAdminRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -384,7 +389,7 @@ async function testGrantRevokeRoles(
       DEFAULT_ADMIN_ROLE,
       nonGovernanceRoleAccounts,
       enduserAccounts[i],
-      false
+      false,
     );
   }
 
@@ -394,7 +399,7 @@ async function testGrantRevokeRoles(
       GOVERNANCE_ROLE,
       nonGovernanceRoleAccounts,
       governanceRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -404,7 +409,7 @@ async function testGrantRevokeRoles(
       GOVERNANCE_ROLE,
       nonGovernanceRoleAccounts,
       contractAdminRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -414,7 +419,7 @@ async function testGrantRevokeRoles(
       GOVERNANCE_ROLE,
       nonGovernanceRoleAccounts,
       enduserAccounts[i],
-      false
+      false,
     );
   }
 
@@ -424,7 +429,7 @@ async function testGrantRevokeRoles(
       CONTRACT_ADMIN_ROLE,
       nonContractAdminRoleAccounts,
       governanceRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -434,7 +439,7 @@ async function testGrantRevokeRoles(
       CONTRACT_ADMIN_ROLE,
       nonContractAdminRoleAccounts,
       contractAdminRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -444,7 +449,7 @@ async function testGrantRevokeRoles(
       CONTRACT_ADMIN_ROLE,
       nonContractAdminRoleAccounts,
       enduserAccounts[i],
-      false
+      false,
     );
   }
 
@@ -454,7 +459,7 @@ async function testGrantRevokeRoles(
       DEFAULT_ADMIN_ROLE,
       nonGovernanceRoleAccounts,
       governanceRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -464,7 +469,7 @@ async function testGrantRevokeRoles(
       DEFAULT_ADMIN_ROLE,
       nonGovernanceRoleAccounts,
       contractAdminRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -474,7 +479,7 @@ async function testGrantRevokeRoles(
       DEFAULT_ADMIN_ROLE,
       nonGovernanceRoleAccounts,
       enduserAccounts[i],
-      false
+      false,
     );
   }
 
@@ -484,7 +489,7 @@ async function testGrantRevokeRoles(
       GOVERNANCE_ROLE,
       nonGovernanceRoleAccounts,
       governanceRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -494,7 +499,7 @@ async function testGrantRevokeRoles(
       GOVERNANCE_ROLE,
       nonGovernanceRoleAccounts,
       contractAdminRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -504,7 +509,7 @@ async function testGrantRevokeRoles(
       GOVERNANCE_ROLE,
       nonGovernanceRoleAccounts,
       enduserAccounts[i],
-      false
+      false,
     );
   }
 
@@ -514,7 +519,7 @@ async function testGrantRevokeRoles(
       CONTRACT_ADMIN_ROLE,
       nonContractAdminRoleAccounts,
       governanceRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -524,7 +529,7 @@ async function testGrantRevokeRoles(
       CONTRACT_ADMIN_ROLE,
       nonContractAdminRoleAccounts,
       contractAdminRoleAccounts[i],
-      false
+      false,
     );
   }
 
@@ -534,7 +539,7 @@ async function testGrantRevokeRoles(
       CONTRACT_ADMIN_ROLE,
       nonContractAdminRoleAccounts,
       enduserAccounts[i],
-      false
+      false,
     );
   }
 }
@@ -542,7 +547,7 @@ async function testGrantRevokeRoles(
 async function testPauseUnpauseContract(
   contractInstance,
   signers,
-  expectAbleToPauseUnpause
+  expectAbleToPauseUnpause,
 ) {
   const expectPausedBeforePause = false;
   const expectPausedAfterPause = true;
@@ -563,7 +568,7 @@ async function testPauseUnpauseContract(
       expect(pausedAfterPause).to.equal(expectPausedAfterPause);
 
       await expect(
-        contractInstance.connect(signers[i]).pauseContract()
+        contractInstance.connect(signers[i]).pauseContract(),
       ).to.be.revertedWith("Pausable: paused");
 
       const pausedAfterPauseAgain = await contractInstance.paused();
@@ -577,25 +582,25 @@ async function testPauseUnpauseContract(
       expect(pausedAfterUnpause).to.equal(expectPausedAfterUnpause);
 
       await expect(
-        contractInstance.connect(signers[i]).unpauseContract()
+        contractInstance.connect(signers[i]).unpauseContract(),
       ).to.be.revertedWith("Pausable: not paused");
 
       const pausedAfterUnpauseAgain = await contractInstance.paused();
       expect(pausedAfterUnpauseAgain).to.equal(expectPausedAfterUnpause);
     } else {
       await expect(
-        contractInstance.connect(signers[i]).pauseContract()
+        contractInstance.connect(signers[i]).pauseContract(),
       ).to.be.revertedWith(
-        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`
+        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`,
       );
 
       const pausedAfterPauseFail = await contractInstance.paused();
       expect(pausedAfterPauseFail).to.equal(expectPausedBeforePause);
 
       await expect(
-        contractInstance.connect(signers[i]).unpauseContract()
+        contractInstance.connect(signers[i]).unpauseContract(),
       ).to.be.revertedWith(
-        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`
+        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`,
       );
 
       const pausedAfterUnpauseFail = await contractInstance.paused();
@@ -609,7 +614,7 @@ async function testSetAdminWallet(
   signers,
   expectAdminWalletBeforeSet,
   expectAdminWalletAfterSet,
-  expectAbleToSetAdminWallet
+  expectAbleToSetAdminWallet,
 ) {
   const adminWalletBeforeSet = await contractInstance.adminWallet();
   expect(adminWalletBeforeSet).to.equal(expectAdminWalletBeforeSet);
@@ -621,13 +626,13 @@ async function testSetAdminWallet(
       await expect(
         contractInstance
           .connect(signers[i])
-          .setAdminWallet(expectAdminWalletAfterSet)
+          .setAdminWallet(expectAdminWalletAfterSet),
       )
         .to.emit(contractInstance, "AdminWalletChanged")
         .withArgs(
           expectAdminWalletBeforeSet,
           expectAdminWalletAfterSet,
-          signerAddress
+          signerAddress,
         );
 
       const adminWalletAfterSet = await contractInstance.adminWallet();
@@ -636,13 +641,13 @@ async function testSetAdminWallet(
       await expect(
         contractInstance
           .connect(signers[i])
-          .setAdminWallet(expectAdminWalletBeforeSet)
+          .setAdminWallet(expectAdminWalletBeforeSet),
       )
         .to.emit(contractInstance, "AdminWalletChanged")
         .withArgs(
           expectAdminWalletAfterSet,
           expectAdminWalletBeforeSet,
-          signerAddress
+          signerAddress,
         );
 
       const adminWalletAfterRestore = await contractInstance.adminWallet();
@@ -651,9 +656,9 @@ async function testSetAdminWallet(
       await expect(
         contractInstance
           .connect(signers[i])
-          .setAdminWallet(expectAdminWalletAfterSet)
+          .setAdminWallet(expectAdminWalletAfterSet),
       ).to.be.revertedWith(
-        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`
+        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`,
       );
 
       const adminWalletAfterSetFail = await contractInstance.adminWallet();
@@ -667,7 +672,7 @@ async function transferAndApproveWithVerify(
   bankSigner,
   fromSigner,
   toAddress,
-  amountWei
+  amountWei,
 ) {
   const bankAddress = await bankSigner.getAddress();
   const fromAddress = await fromSigner.getAddress();
@@ -677,7 +682,7 @@ async function transferAndApproveWithVerify(
   await expect(
     tokenContractInstance
       .connect(bankSigner)
-      .transfer(fromAddress, amountDecimals)
+      .transfer(fromAddress, amountDecimals),
   )
     .to.emit(tokenContractInstance, "Transfer")
     .withArgs(bankAddress, fromAddress, amountDecimals);
@@ -689,7 +694,7 @@ async function transferAndApproveWithVerify(
     tokenContractInstance,
     fromSigner,
     toAddress,
-    scaleDecimalsToWei(amountDecimals, tokenDecimals)
+    scaleDecimalsToWei(amountDecimals, tokenDecimals),
   );
 }
 
@@ -697,7 +702,7 @@ async function verifyRole(contractInstance, role, signers, expectHasRole) {
   for (let i = 0; i < signers.length; i++) {
     const hasRole = await contractInstance.hasRole(
       role,
-      await signers[i].getAddress()
+      await signers[i].getAddress(),
     );
     expect(hasRole).to.equal(expectHasRole);
   }

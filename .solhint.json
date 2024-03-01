@@ -3,6 +3,7 @@
   "rules": {
     "compiler-version": ["error", "^0.8.0"],
     "func-visibility": ["warn", { "ignoreConstructors": true }],
+    "immutable-vars-naming": ["warn", { "immutablesAsConstants": false }],
     "not-rely-on-time": "off"
   }
 }
