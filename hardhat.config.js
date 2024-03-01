@@ -12,7 +12,7 @@ require("hardhat-contract-sizer");
 require("hardhat-gas-reporter");
 require("solidity-coverage");
 
-const SOLIDITY_VERSION = "0.8.15";
+const SOLIDITY_VERSION = "0.8.19";
 const SOLIDITY_OPTIMIZER_RUNS = 200;
 
 // This is a sample Hardhat task. To learn how to create your own go to

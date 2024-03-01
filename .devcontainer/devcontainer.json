@@ -8,9 +8,9 @@
     // Append -bullseye or -buster to pin to an OS version.
     // Use -bullseye variants on local arm64/Apple Silicon.
     "args": {
-      "VARIANT": "16-bullseye",
-      "SOLC_VERSION": "0.8.15",
-      "SLITHER_VERSION": "0.8.3"
+      "VARIANT": "20-bullseye",
+      "SOLC_VERSION": "0.8.19",
+      "SLITHER_VERSION": "0.10.1"
     }
   },
 
