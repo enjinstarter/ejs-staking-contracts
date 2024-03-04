@@ -1,34 +1,23 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2022 Enjinstarter
+// Copyright 2024 Enjinstarter
 pragma solidity ^0.8.0;
 
 import {AdminPrivileges} from "./AdminPrivileges.sol";
-import {IStakingPool} from "./interfaces/IStakingPool.sol";
+import {IStakingPoolV2} from "./interfaces/IStakingPoolV2.sol";
 
 /**
  * @title StakingPoolV2
  * @author Tim Loh
- * @notice Contains the staking pool configs used by StakingService
+ * @notice Contains the staking pool configs used by StakingServiceV2
  */
-contract StakingPoolV2 is AdminPrivileges, IStakingPool {
-    struct StakingPoolInfo {
-        uint256 stakeDurationDays;
-        address stakeTokenAddress;
-        uint256 stakeTokenDecimals;
-        address rewardTokenAddress;
-        uint256 rewardTokenDecimals;
-        uint256 poolAprWei; // pool APR in Wei
-        bool isOpen; // true if staking pool allows staking
-        bool isActive; // true if staking pool allows claim rewards and unstake
-        bool isInitialized; // true if staking pool has been initialized
-    }
-
+contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
+    uint256 public constant PERCENT_100_WEI = 100 ether;
     uint256 public constant TOKEN_MAX_DECIMALS = 18;
 
     mapping(bytes32 => StakingPoolInfo) private _stakingPools;
 
     /**
-     * @inheritdoc IStakingPool
+     * @inheritdoc IStakingPoolV2
      */
     function closeStakingPool(bytes32 poolId)
         external
@@ -45,43 +34,40 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @inheritdoc IStakingPool
+     * @inheritdoc IStakingPoolV2
      */
-    function createStakingPool(
-        bytes32 poolId,
-        uint256 stakeDurationDays,
-        address stakeTokenAddress,
-        uint256 stakeTokenDecimals,
-        address rewardTokenAddress,
-        uint256 rewardTokenDecimals,
-        uint256 poolAprWei
-    ) external virtual override onlyRole(CONTRACT_ADMIN_ROLE) {
-        require(stakeDurationDays > 0, "SPool2: stake duration");
-        require(stakeTokenAddress != address(0), "SPool2: stake token");
+    function createStakingPool(bytes32 poolId, StakingPoolDto calldata stakingPoolDto)
+        external virtual override onlyRole(CONTRACT_ADMIN_ROLE) {
+        require(stakingPoolDto.stakeDurationDays > 0, "SPool2: stake duration");
+        require(stakingPoolDto.stakeTokenAddress != address(0), "SPool2: stake token");
         require(
-            stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
+            stakingPoolDto.stakeTokenDecimals <= TOKEN_MAX_DECIMALS,
             "SPool2: stake decimals"
         );
-        require(rewardTokenAddress != address(0), "SPool2: reward token");
+        require(stakingPoolDto.rewardTokenAddress != address(0), "SPool2: reward token");
         require(
-            rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
+            stakingPoolDto.rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
             "SPool2: reward decimals"
         );
         require(
-            stakeTokenAddress != rewardTokenAddress ||
-                stakeTokenDecimals == rewardTokenDecimals,
+            stakingPoolDto.stakeTokenAddress != stakingPoolDto.rewardTokenAddress ||
+                stakingPoolDto.stakeTokenDecimals == stakingPoolDto.rewardTokenDecimals,
             "SPool2: decimals different"
         );
+        require(stakingPoolDto.earlyUnstakePenaltyPercentWei <= PERCENT_100_WEI, "SPool2: penalty");
 
         require(!_stakingPools[poolId].isInitialized, "SPool2: exists");
 
         _stakingPools[poolId] = StakingPoolInfo({
-            stakeDurationDays: stakeDurationDays,
-            stakeTokenAddress: stakeTokenAddress,
-            stakeTokenDecimals: stakeTokenDecimals,
-            rewardTokenAddress: rewardTokenAddress,
-            rewardTokenDecimals: rewardTokenDecimals,
-            poolAprWei: poolAprWei,
+            stakeDurationDays: stakingPoolDto.stakeDurationDays,
+            stakeTokenAddress: stakingPoolDto.stakeTokenAddress,
+            stakeTokenDecimals: stakingPoolDto.stakeTokenDecimals,
+            rewardTokenAddress: stakingPoolDto.rewardTokenAddress,
+            rewardTokenDecimals: stakingPoolDto.rewardTokenDecimals,
+            poolAprWei: stakingPoolDto.poolAprWei,
+            earlyUnstakeCooldownPeriodDays: stakingPoolDto.earlyUnstakeCooldownPeriodDays,
+            earlyUnstakePenaltyPercentWei: stakingPoolDto.earlyUnstakePenaltyPercentWei,
+            revshareStakeDurationExtensionDays: stakingPoolDto.revshareStakeDurationExtensionDays,
             isOpen: true,
             isActive: true,
             isInitialized: true
@@ -90,17 +76,20 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPool {
         emit StakingPoolCreated(
             poolId,
             msg.sender,
-            stakeDurationDays,
-            stakeTokenAddress,
-            stakeTokenDecimals,
-            rewardTokenAddress,
-            rewardTokenDecimals,
-            poolAprWei
+            stakingPoolDto.stakeDurationDays,
+            stakingPoolDto.stakeTokenAddress,
+            stakingPoolDto.stakeTokenDecimals,
+            stakingPoolDto.rewardTokenAddress,
+            stakingPoolDto.rewardTokenDecimals,
+            stakingPoolDto.poolAprWei,
+            stakingPoolDto.earlyUnstakeCooldownPeriodDays,
+            stakingPoolDto.earlyUnstakePenaltyPercentWei,
+            stakingPoolDto.revshareStakeDurationExtensionDays
         );
     }
 
     /**
-     * @inheritdoc IStakingPool
+     * @inheritdoc IStakingPoolV2
      */
     function openStakingPool(bytes32 poolId)
         external
@@ -117,7 +106,7 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @inheritdoc IStakingPool
+     * @inheritdoc IStakingPoolV2
      */
     function resumeStakingPool(bytes32 poolId)
         external
@@ -134,7 +123,55 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @inheritdoc IStakingPool
+     * @inheritdoc IStakingPoolV2
+     */
+    function setEarlyUnstakeCooldownPeriod(bytes32 poolId, uint256 newCooldownPeriodDays)
+        external virtual override onlyRole(CONTRACT_ADMIN_ROLE)
+    {
+        require(_stakingPools[poolId].isInitialized, "SPool2: uninitialized");
+
+        uint256 oldCooldownPeriodDays = _stakingPools[poolId].earlyUnstakeCooldownPeriodDays;
+        _stakingPools[poolId].earlyUnstakeCooldownPeriodDays = newCooldownPeriodDays;
+
+        emit EarlyUnstakeCooldownPeriodChanged(poolId, msg.sender, oldCooldownPeriodDays, newCooldownPeriodDays);
+    }
+
+    /**
+     * @inheritdoc IStakingPoolV2
+     */
+    function setEarlyUnstakePenaltyPercent(bytes32 poolId, uint256 newPenaltyPercentWei)
+        external virtual override onlyRole(CONTRACT_ADMIN_ROLE)
+    {
+        require(_stakingPools[poolId].isInitialized, "SPool2: uninitialized");
+        require(newPenaltyPercentWei <= PERCENT_100_WEI, "SPool2: penalty");
+
+        uint256 oldPenaltyPercentWei = _stakingPools[poolId].earlyUnstakePenaltyPercentWei;
+        _stakingPools[poolId].earlyUnstakePenaltyPercentWei = newPenaltyPercentWei;
+
+        emit EarlyUnstakePenaltyPercentChanged(poolId, msg.sender, oldPenaltyPercentWei, newPenaltyPercentWei);
+    }
+
+    /**
+     * @inheritdoc IStakingPoolV2
+     */
+    function setRevshareStakeDurationExtension(bytes32 poolId, uint256 newStakeDurationExtensionDays)
+        external virtual override onlyRole(CONTRACT_ADMIN_ROLE)
+    {
+        require(_stakingPools[poolId].isInitialized, "SPool2: uninitialized");
+
+        uint256 oldStakeDurationExtensionDays = _stakingPools[poolId].revshareStakeDurationExtensionDays;
+        _stakingPools[poolId].revshareStakeDurationExtensionDays = newStakeDurationExtensionDays;
+
+        emit RevshareStakeDurationExtensionChanged(
+            poolId,
+            msg.sender,
+            oldStakeDurationExtensionDays,
+            newStakeDurationExtensionDays
+        );
+    }
+
+    /**
+     * @inheritdoc IStakingPoolV2
      */
     function suspendStakingPool(bytes32 poolId)
         external
@@ -151,33 +188,28 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPool {
     }
 
     /**
-     * @inheritdoc IStakingPool
+     * @inheritdoc IStakingPoolV2
      */
     function getStakingPoolInfo(bytes32 poolId)
         external
         view
         virtual
         override
-        returns (
-            uint256 stakeDurationDays,
-            address stakeTokenAddress,
-            uint256 stakeTokenDecimals,
-            address rewardTokenAddress,
-            uint256 rewardTokenDecimals,
-            uint256 poolAprWei,
-            bool isOpen,
-            bool isActive
-        )
+        returns (StakingPoolInfo memory stakingPoolInfo)
     {
         require(_stakingPools[poolId].isInitialized, "SPool2: uninitialized");
 
-        stakeDurationDays = _stakingPools[poolId].stakeDurationDays;
-        stakeTokenAddress = _stakingPools[poolId].stakeTokenAddress;
-        stakeTokenDecimals = _stakingPools[poolId].stakeTokenDecimals;
-        rewardTokenAddress = _stakingPools[poolId].rewardTokenAddress;
-        rewardTokenDecimals = _stakingPools[poolId].rewardTokenDecimals;
-        poolAprWei = _stakingPools[poolId].poolAprWei;
-        isOpen = _stakingPools[poolId].isOpen;
-        isActive = _stakingPools[poolId].isActive;
+        stakingPoolInfo.stakeDurationDays = _stakingPools[poolId].stakeDurationDays;
+        stakingPoolInfo.stakeTokenAddress = _stakingPools[poolId].stakeTokenAddress;
+        stakingPoolInfo.stakeTokenDecimals = _stakingPools[poolId].stakeTokenDecimals;
+        stakingPoolInfo.rewardTokenAddress = _stakingPools[poolId].rewardTokenAddress;
+        stakingPoolInfo.rewardTokenDecimals = _stakingPools[poolId].rewardTokenDecimals;
+        stakingPoolInfo.poolAprWei = _stakingPools[poolId].poolAprWei;
+        stakingPoolInfo.earlyUnstakeCooldownPeriodDays = _stakingPools[poolId].earlyUnstakeCooldownPeriodDays;
+        stakingPoolInfo.earlyUnstakePenaltyPercentWei = _stakingPools[poolId].earlyUnstakePenaltyPercentWei;
+        stakingPoolInfo.revshareStakeDurationExtensionDays = _stakingPools[poolId].revshareStakeDurationExtensionDays;
+        stakingPoolInfo.isOpen = _stakingPools[poolId].isOpen;
+        stakingPoolInfo.isActive = _stakingPools[poolId].isActive;
+        stakingPoolInfo.isInitialized = _stakingPools[poolId].isInitialized;
     }
 }

@@ -5,6 +5,7 @@
     //
     "atixlabs",
     "bscscan",
+    "cooldown",
     "dbaeumer",
     "enduser",
     "enjinstarter",
@@ -19,6 +20,7 @@
     "oklink",
     "precoverage",
     "polygonscan",
+    "revshare",
     "unstake",
     "Solhint"
   ],

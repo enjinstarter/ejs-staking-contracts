@@ -11,12 +11,14 @@ async function closeStakingPoolWithVerify(
   const expectIsOpenBeforeClose = true;
   const expectIsOpenAfterClose = false;
   const expectIsActive = true;
+  const expectIsInitialized = true;
 
   await verifyStakingPoolInfo(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpenBeforeClose,
     expectIsActive,
+    expectIsInitialized,
   );
 
   await expect(
@@ -32,6 +34,7 @@ async function closeStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpenAfterClose,
     expectIsActive,
+    expectIsInitialized,
   );
 
   await expect(
@@ -45,6 +48,7 @@ async function closeStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpenAfterClose,
     expectIsActive,
+    expectIsInitialized,
   );
 }
 
@@ -56,6 +60,7 @@ async function createStakingPoolWithVerify(
 ) {
   const expectIsOpen = true;
   const expectIsActive = true;
+  const expectIsInitialized = true;
 
   const signerAddress = await signer.getAddress();
 
@@ -69,18 +74,25 @@ async function createStakingPoolWithVerify(
   );
   */
 
+  const stakingPoolDto = {
+    stakeDurationDays: stakingPoolConfig.stakeDurationDays,
+    stakeTokenAddress: stakingPoolConfig.stakeTokenInstance.address,
+    stakeTokenDecimals: stakingPoolConfig.stakeTokenDecimals,
+    rewardTokenAddress: stakingPoolConfig.rewardTokenInstance.address,
+    rewardTokenDecimals: stakingPoolConfig.rewardTokenDecimals,
+    poolAprWei: stakingPoolConfig.poolAprWei,
+    earlyUnstakeCooldownPeriodDays:
+      stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
+    earlyUnstakePenaltyPercentWei:
+      stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+    revshareStakeDurationExtensionDays:
+      stakingPoolConfig.revshareStakeDurationExtensionDays,
+  };
+
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .createStakingPool(
-        stakingPoolConfig.poolId,
-        stakingPoolConfig.stakeDurationDays,
-        stakingPoolConfig.stakeTokenInstance.address,
-        stakingPoolConfig.stakeTokenDecimals,
-        stakingPoolConfig.rewardTokenInstance.address,
-        stakingPoolConfig.rewardTokenDecimals,
-        stakingPoolConfig.poolAprWei,
-      ),
+      .createStakingPool(stakingPoolConfig.poolId, stakingPoolDto),
   )
     .to.emit(stakingPoolContractInstance, "StakingPoolCreated")
     .withArgs(
@@ -92,6 +104,9 @@ async function createStakingPoolWithVerify(
       stakingPoolConfig.rewardTokenInstance.address,
       stakingPoolConfig.rewardTokenDecimals,
       stakingPoolConfig.poolAprWei,
+      stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
+      stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+      stakingPoolConfig.revshareStakeDurationExtensionDays,
     );
 
   await verifyStakingPoolsInfo(
@@ -99,20 +114,13 @@ async function createStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpen,
     expectIsActive,
+    expectIsInitialized,
   );
 
   await expect(
     stakingPoolContractInstance
       .connect(signer)
-      .createStakingPool(
-        stakingPoolConfig.poolId,
-        stakingPoolConfig.stakeDurationDays,
-        stakingPoolConfig.stakeTokenInstance.address,
-        stakingPoolConfig.stakeTokenDecimals,
-        stakingPoolConfig.rewardTokenInstance.address,
-        stakingPoolConfig.rewardTokenDecimals,
-        stakingPoolConfig.poolAprWei,
-      ),
+      .createStakingPool(stakingPoolConfig.poolId, stakingPoolDto),
   ).to.be.revertedWith("SPool2: exists");
 
   await verifyStakingPoolsInfo(
@@ -120,6 +128,7 @@ async function createStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpen,
     expectIsActive,
+    expectIsInitialized,
   );
 }
 
@@ -184,6 +193,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakeCooldownPeriodDays: 0,
+      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      revshareStakeDurationExtensionDays: 0,
     },
     {
       poolUuid: "0ade03b3-e6d4-4d15-95d7-3d9d5ba8d963",
@@ -194,6 +206,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("75"),
+      earlyUnstakeCooldownPeriodDays: 0,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      revshareStakeDurationExtensionDays: 0,
     },
     {
       poolUuid: "fc1999e6-e88b-4450-bfae-80d4c6bfd775",
@@ -204,6 +219,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("50"),
+      earlyUnstakeCooldownPeriodDays: 5,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("10"),
+      revshareStakeDurationExtensionDays: 7,
     },
     {
       poolUuid: "b6fdcc87-6475-4326-967f-8ce616cd9c23",
@@ -214,6 +232,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("25"),
+      earlyUnstakeCooldownPeriodDays: 12,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("9"),
+      revshareStakeDurationExtensionDays: 3,
     },
     {
       poolUuid: "b2507daa-6117-4da1-a037-5483116c1397",
@@ -224,6 +245,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("5"),
+      earlyUnstakeCooldownPeriodDays: 13,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("13"),
+      revshareStakeDurationExtensionDays: 13,
     },
     {
       poolUuid: "81bfecad-21aa-4253-8f3c-8e2a5a5a7908",
@@ -234,6 +258,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.constants.Zero,
+      earlyUnstakeCooldownPeriodDays: 19,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("25"),
+      revshareStakeDurationExtensionDays: 1,
     },
     {
       poolUuid: "c30dbc87-308a-41d9-b1d1-157559a02fe0",
@@ -244,6 +271,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakeCooldownPeriodDays: 1,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("18"),
+      revshareStakeDurationExtensionDays: 6,
     },
     {
       poolUuid: "79f0bc0b-5059-424a-9567-c7fb9410b279",
@@ -254,6 +284,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("75"),
+      earlyUnstakeCooldownPeriodDays: 30,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("11"),
+      revshareStakeDurationExtensionDays: 30,
     },
     {
       poolUuid: "ea254790-ce62-43b5-aaea-2cb3157365d5",
@@ -264,6 +297,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("50"),
+      earlyUnstakeCooldownPeriodDays: 60,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("50"),
+      revshareStakeDurationExtensionDays: 60,
     },
     {
       poolUuid: "3d80ec2d-7d15-45f4-9367-53dbaf711c71",
@@ -274,6 +310,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("25"),
+      earlyUnstakeCooldownPeriodDays: 90,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      revshareStakeDurationExtensionDays: 90,
     },
     {
       poolUuid: "a025b010-defa-4931-9fdd-403fd9ad3e80",
@@ -284,6 +323,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("5"),
+      earlyUnstakeCooldownPeriodDays: 7,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("90"),
+      revshareStakeDurationExtensionDays: 7,
     },
     {
       poolUuid: "582f031e-24fc-4a01-b739-e731b46218a6",
@@ -294,6 +336,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: stakeRewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.constants.Zero,
+      earlyUnstakeCooldownPeriodDays: 10,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("30"),
+      revshareStakeDurationExtensionDays: 60,
     },
     {
       poolUuid: "fe31cb38-ce28-47f9-b5f9-8128f1183f77",
@@ -304,6 +349,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakeCooldownPeriodDays: 180,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("75"),
+      revshareStakeDurationExtensionDays: 2,
     },
     {
       poolUuid: "6fb19058-be01-4fc3-8e8f-ce8977b9ddc2",
@@ -314,6 +362,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("75"),
+      earlyUnstakeCooldownPeriodDays: 365,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("80"),
+      revshareStakeDurationExtensionDays: 88,
     },
     {
       poolUuid: "24d8b40e-e375-4045-965d-066726cfff8b",
@@ -324,6 +375,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("50"),
+      earlyUnstakeCooldownPeriodDays: 188,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("68"),
+      revshareStakeDurationExtensionDays: 366,
     },
     {
       poolUuid: "5a816f52-9e42-4a84-b71e-03eacccf0ee1",
@@ -334,6 +388,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("25"),
+      earlyUnstakeCooldownPeriodDays: 8,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("33"),
+      revshareStakeDurationExtensionDays: 0,
     },
     {
       poolUuid: "c8cb576b-c161-49fe-9d62-7620dc6a7040",
@@ -344,6 +401,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("5"),
+      earlyUnstakeCooldownPeriodDays: 0,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("23"),
+      revshareStakeDurationExtensionDays: 4,
     },
     {
       poolUuid: "4c5d59b3-370c-4fd0-b0aa-929c6681f066",
@@ -354,6 +414,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[1],
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.constants.Zero,
+      earlyUnstakeCooldownPeriodDays: 0,
+      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      revshareStakeDurationExtensionDays: 11,
     },
     {
       poolUuid: "021a97f0-78ca-4159-9f5b-6c71ea623c4d",
@@ -364,6 +427,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakeCooldownPeriodDays: 0,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      revshareStakeDurationExtensionDays: 0,
     },
     {
       poolUuid: "1ac44bc3-57ed-4257-81cc-392236608b13",
@@ -374,6 +440,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("75"),
+      earlyUnstakeCooldownPeriodDays: 17,
+      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      revshareStakeDurationExtensionDays: 0,
     },
     {
       poolUuid: "b4b8cedb-bda4-4474-bd2d-2d0ba2cf386a",
@@ -384,6 +453,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("50"),
+      earlyUnstakeCooldownPeriodDays: 0,
+      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      revshareStakeDurationExtensionDays: 37,
     },
     {
       poolUuid: "7e5621d8-0282-4f4d-bb4b-a6e4e8ac2eb4",
@@ -394,6 +466,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("25.43"),
+      earlyUnstakeCooldownPeriodDays: 1,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      revshareStakeDurationExtensionDays: 0,
     },
     {
       poolUuid: "3407b606-52cb-4e37-a9d0-a1761d1dba9d",
@@ -404,6 +479,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("5"),
+      earlyUnstakeCooldownPeriodDays: 0,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      revshareStakeDurationExtensionDays: 1,
     },
     {
       poolUuid: "77ec9f64-9efb-4dff-b42d-519657a01bfa",
@@ -414,6 +492,9 @@ async function initializeStakingPoolTestData(
       rewardTokenInstance: rewardTokenInstances[0],
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.constants.Zero,
+      earlyUnstakeCooldownPeriodDays: 1,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      revshareStakeDurationExtensionDays: 1,
     },
   ];
 
@@ -468,7 +549,7 @@ async function initializeStakingPoolTestData(
 
 async function newMockStakingPool() {
   const MockStakingPoolFactory =
-    await hre.ethers.getContractFactory("MockStakingPool");
+    await hre.ethers.getContractFactory("MockStakingPoolV2");
   const mockStakingPoolContractInstance = await MockStakingPoolFactory.deploy();
   await mockStakingPoolContractInstance.deployed();
 
@@ -513,12 +594,14 @@ async function openStakingPoolWithVerify(
   const expectIsOpenBeforeOpen = false;
   const expectIsOpenAfterOpen = true;
   const expectIsActive = true;
+  const expectIsInitialized = true;
 
   await verifyStakingPoolInfo(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpenBeforeOpen,
     expectIsActive,
+    expectIsInitialized,
   );
 
   await expect(
@@ -534,6 +617,7 @@ async function openStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpenAfterOpen,
     expectIsActive,
+    expectIsInitialized,
   );
 
   await expect(
@@ -547,6 +631,7 @@ async function openStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpenAfterOpen,
     expectIsActive,
+    expectIsInitialized,
   );
 }
 
@@ -559,12 +644,14 @@ async function resumeStakingPoolWithVerify(
   const expectIsOpen = true;
   const expectIsActiveBeforeResume = false;
   const expectIsActiveAfterResume = true;
+  const expectIsInitialized = true;
 
   await verifyStakingPoolInfo(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpen,
     expectIsActiveBeforeResume,
+    expectIsInitialized,
   );
 
   await expect(
@@ -580,6 +667,7 @@ async function resumeStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpen,
     expectIsActiveAfterResume,
+    expectIsInitialized,
   );
 
   await expect(
@@ -593,6 +681,7 @@ async function resumeStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpen,
     expectIsActiveAfterResume,
+    expectIsInitialized,
   );
 }
 
@@ -605,12 +694,14 @@ async function suspendStakingPoolWithVerify(
   const expectIsOpen = true;
   const expectIsActiveBeforeSuspend = true;
   const expectIsActiveAfterSuspend = false;
+  const expectIsInitialized = true;
 
   await verifyStakingPoolInfo(
     stakingPoolContractInstance,
     stakingPoolConfig,
     expectIsOpen,
     expectIsActiveBeforeSuspend,
+    expectIsInitialized,
   );
 
   await expect(
@@ -626,6 +717,7 @@ async function suspendStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpen,
     expectIsActiveAfterSuspend,
+    expectIsInitialized,
   );
 
   await expect(
@@ -639,6 +731,7 @@ async function suspendStakingPoolWithVerify(
     verifyStakingPoolConfigs,
     expectIsOpen,
     expectIsActiveAfterSuspend,
+    expectIsInitialized,
   );
 }
 
@@ -662,12 +755,14 @@ async function testCloseOpenStakingPool(
     } else {
       const expectIsOpen = true;
       const expectIsActive = true;
+      const expectIsInitialized = true;
 
       await verifyStakingPoolInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
 
       await expect(
@@ -685,6 +780,7 @@ async function testCloseOpenStakingPool(
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
     }
   }
@@ -703,12 +799,14 @@ async function testCloseOpenStakingPool(
     } else {
       const expectIsOpen = true;
       const expectIsActive = true;
+      const expectIsInitialized = true;
 
       await verifyStakingPoolInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
 
       await expect(
@@ -726,6 +824,7 @@ async function testCloseOpenStakingPool(
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
     }
   }
@@ -755,18 +854,25 @@ async function testCreateStakingPool(
         ),
       ).to.be.revertedWith("SPool2: uninitialized");
 
+      const stakingPoolDto = {
+        stakeDurationDays: stakingPoolConfigs[i].stakeDurationDays,
+        stakeTokenAddress: stakingPoolConfigs[i].stakeTokenInstance.address,
+        stakeTokenDecimals: stakingPoolConfigs[i].stakeTokenDecimals,
+        rewardTokenAddress: stakingPoolConfigs[i].rewardTokenInstance.address,
+        rewardTokenDecimals: stakingPoolConfigs[i].rewardTokenDecimals,
+        poolAprWei: stakingPoolConfigs[i].poolAprWei,
+        earlyUnstakeCooldownPeriodDays:
+          stakingPoolConfigs[i].earlyUnstakeCooldownPeriodDays,
+        earlyUnstakePenaltyPercentWei:
+          stakingPoolConfigs[i].earlyUnstakePenaltyPercentWei,
+        revshareStakeDurationExtensionDays:
+          stakingPoolConfigs[i].revshareStakeDurationExtensionDays,
+      };
+
       await expect(
         stakingPoolContractInstance
           .connect(signers[signerIndex])
-          .createStakingPool(
-            stakingPoolConfigs[i].poolId,
-            stakingPoolConfigs[i].stakeDurationDays,
-            stakingPoolConfigs[i].stakeTokenInstance.address,
-            stakingPoolConfigs[i].stakeTokenDecimals,
-            stakingPoolConfigs[i].rewardTokenInstance.address,
-            stakingPoolConfigs[i].rewardTokenDecimals,
-            stakingPoolConfigs[i].poolAprWei,
-          ),
+          .createStakingPool(stakingPoolConfigs[i].poolId, stakingPoolDto),
       ).to.be.revertedWith(
         `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
           testHelpers.CONTRACT_ADMIN_ROLE
@@ -802,12 +908,14 @@ async function testSuspendResumeStakingPool(
     } else {
       const expectIsOpen = true;
       const expectIsActive = true;
+      const expectIsInitialized = true;
 
       await verifyStakingPoolInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
 
       await expect(
@@ -825,6 +933,7 @@ async function testSuspendResumeStakingPool(
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
     }
   }
@@ -843,12 +952,14 @@ async function testSuspendResumeStakingPool(
     } else {
       const expectIsOpen = true;
       const expectIsActive = true;
+      const expectIsInitialized = true;
 
       await verifyStakingPoolInfo(
         stakingPoolContractInstance,
         stakingPoolConfigs[i],
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
 
       await expect(
@@ -866,6 +977,7 @@ async function testSuspendResumeStakingPool(
         stakingPoolConfigs.slice(0, i + 1),
         expectIsOpen,
         expectIsActive,
+        expectIsInitialized,
       );
     }
   }
@@ -876,6 +988,7 @@ async function verifyStakingPoolInfo(
   stakingPoolConfig,
   expectIsOpen,
   expectIsActive,
+  expectIsInitialized,
 ) {
   const stakingPoolInfo = await stakingPoolContractInstance.getStakingPoolInfo(
     stakingPoolConfig.poolId,
@@ -897,8 +1010,18 @@ async function verifyStakingPoolInfo(
     stakingPoolConfig.rewardTokenDecimals,
   );
   expect(stakingPoolInfo.poolAprWei).to.equal(stakingPoolConfig.poolAprWei);
+  expect(stakingPoolInfo.earlyUnstakeCooldownPeriodDays).to.equal(
+    stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
+  );
+  expect(stakingPoolInfo.earlyUnstakePenaltyPercentWei).to.equal(
+    stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+  );
+  expect(stakingPoolInfo.revshareStakeDurationExtensionDays).to.equal(
+    stakingPoolConfig.revshareStakeDurationExtensionDays,
+  );
   expect(stakingPoolInfo.isOpen).to.equal(expectIsOpen);
   expect(stakingPoolInfo.isActive).to.equal(expectIsActive);
+  expect(stakingPoolInfo.isInitialized).to.equal(expectIsInitialized);
 
   return stakingPoolInfo;
 }
@@ -908,6 +1031,7 @@ async function verifyStakingPoolsInfo(
   stakingPoolConfigs,
   expectIsOpen,
   expectIsActive,
+  expectIsInitialized,
 ) {
   for (let i = 0; i < stakingPoolConfigs.length; i++) {
     await verifyStakingPoolInfo(
@@ -915,6 +1039,7 @@ async function verifyStakingPoolsInfo(
       stakingPoolConfigs[i],
       expectIsOpen,
       expectIsActive,
+      expectIsInitialized,
     );
   }
 }

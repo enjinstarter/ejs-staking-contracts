@@ -285,97 +285,194 @@ describe("StakingPoolV2", function () {
   });
 
   it("should not allow creation of staking pool with zero duration", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays: 0,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-          0,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+          stakingPoolDto,
         ),
     ).to.be.revertedWith("SPool2: stake duration");
   });
 
   it("should not allow creation of staking pool with zero stake token address", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress: hre.ethers.constants.AddressZero,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          hre.ethers.constants.AddressZero,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+          stakingPoolDto,
         ),
     ).to.be.revertedWith("SPool2: stake token");
   });
 
   it("should not allow creation of staking pool with more than 18 decimals for stake token", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals: 19,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
-          19,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+          stakingPoolDto,
         ),
     ).to.be.revertedWith("SPool2: stake decimals");
   });
 
   it("should not allow creation of staking pool with zero reward token address", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress: hre.ethers.constants.AddressZero,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          hre.ethers.constants.AddressZero,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+          stakingPoolDto,
         ),
     ).to.be.revertedWith("SPool2: reward token");
   });
 
   it("should not allow creation of staking pool with more than 18 decimals for reward token", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
+      rewardTokenDecimals: 19,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
-          19,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+          stakingPoolDto,
         ),
     ).to.be.revertedWith("SPool2: reward decimals");
   });
 
   it("should not allow creation of staking pool with same stake/reward token but different decimals", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals - 1,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
     await expect(
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
         .createStakingPool(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
-          stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals - 1,
-          stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+          stakingPoolDto,
         ),
     ).to.be.revertedWith("SPool2: decimals different");
   });
