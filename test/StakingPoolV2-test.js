@@ -284,6 +284,42 @@ describe("StakingPoolV2", function () {
     );
   });
 
+  it("Should only allow contract admin role to set early unstake cooldown period for staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakeHelpers.testSetEarlyUnstakeCooldownPeriod(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      10,
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
+  it("Should only allow contract admin role to set zero early unstake cooldown period for staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakeHelpers.testSetEarlyUnstakeCooldownPeriod(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      0,
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
   it("should not allow creation of staking pool with zero duration", async () => {
     const stakingPoolDto = {
       stakeDurationDays: 0,
@@ -477,6 +513,40 @@ describe("StakingPoolV2", function () {
     ).to.be.revertedWith("SPool2: decimals different");
   });
 
+  it("should not allow creation of staking pool with early unstake penalty percentage more than 100%", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther(
+        "100.000000000000000001",
+      ),
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .createStakingPool(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          stakingPoolDto,
+        ),
+    ).to.be.revertedWith("SPool2: penalty");
+  });
+
   it("should not allow closure of uninitialized staking pool", async () => {
     await expect(
       stakingPoolInstance
@@ -506,6 +576,57 @@ describe("StakingPoolV2", function () {
       stakingPoolInstance
         .connect(contractAdminRoleAccounts[0])
         .resumeStakingPool(stakingPoolStakeRewardTokenSameConfigs[0].poolId),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("should not allow setting early unstake cooldown period of uninitialized staking pool", async () => {
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .setEarlyUnstakeCooldownPeriod(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          hre.ethers.constants.One,
+        ),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("should not allow setting early unstake penalty percentage of uninitialized staking pool", async () => {
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .setEarlyUnstakePenaltyPercent(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          hre.ethers.constants.One,
+        ),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("should not allow setting early unstake penalty percentage to more than 100% for staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .setEarlyUnstakePenaltyPercent(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          hre.ethers.utils.parseEther("100.000000000000000001"),
+        ),
+    ).to.be.revertedWith("SPool2: penalty");
+  });
+
+  it("should not allow setting stake duration extension for claim revshare of uninitialized staking pool", async () => {
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .setRevshareStakeDurationExtension(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          hre.ethers.constants.One,
+        ),
     ).to.be.revertedWith("SPool2: uninitialized");
   });
 });
