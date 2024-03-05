@@ -1046,6 +1046,88 @@ async function testSetEarlyUnstakePenaltyPercent(
   );
 }
 
+async function testSetRevshareStakeDurationExtension(
+  stakingPoolContractInstance,
+  stakingPoolConfig,
+  authorizedSigner,
+  unauthorizedSigner,
+  newRevshareStakeDurationExtensionDays,
+  verifyStakingPoolConfigs,
+) {
+  const expectIsOpen = true;
+  const expectIsActive = true;
+  const expectIsInitialized = true;
+  const unauthorizedSignerAddress = await unauthorizedSigner.getAddress();
+
+  await verifyStakingPoolInfo(
+    stakingPoolContractInstance,
+    stakingPoolConfig,
+    expectIsOpen,
+    expectIsActive,
+    expectIsInitialized,
+  );
+
+  await expect(
+    stakingPoolContractInstance
+      .connect(authorizedSigner)
+      .setRevshareStakeDurationExtension(
+        stakingPoolConfig.poolId,
+        newRevshareStakeDurationExtensionDays,
+      ),
+  )
+    .to.emit(
+      stakingPoolContractInstance,
+      "RevshareStakeDurationExtensionChanged",
+    )
+    .withArgs(
+      stakingPoolConfig.poolId,
+      await authorizedSigner.getAddress(),
+      stakingPoolConfig.revshareStakeDurationExtensionDays,
+      newRevshareStakeDurationExtensionDays,
+    );
+
+  const stakingPoolConfigAfterSet = Object.assign({}, stakingPoolConfig, {
+    revshareStakeDurationExtensionDays: newRevshareStakeDurationExtensionDays,
+  });
+
+  await verifyStakingPoolInfo(
+    stakingPoolContractInstance,
+    stakingPoolConfigAfterSet,
+    expectIsOpen,
+    expectIsActive,
+    expectIsInitialized,
+  );
+
+  await verifyStakingPoolsInfo(
+    stakingPoolContractInstance,
+    verifyStakingPoolConfigs,
+    expectIsOpen,
+    expectIsActive,
+    expectIsInitialized,
+  );
+
+  await expect(
+    stakingPoolContractInstance
+      .connect(unauthorizedSigner)
+      .setRevshareStakeDurationExtension(
+        stakingPoolConfig.poolId,
+        newRevshareStakeDurationExtensionDays,
+      ),
+  ).to.be.revertedWith(
+    `AccessControl: account ${unauthorizedSignerAddress.toLowerCase()} is missing role ${
+      testHelpers.CONTRACT_ADMIN_ROLE
+    }`,
+  );
+
+  await verifyStakingPoolsInfo(
+    stakingPoolContractInstance,
+    verifyStakingPoolConfigs,
+    expectIsOpen,
+    expectIsActive,
+    expectIsInitialized,
+  );
+}
+
 async function testSuspendResumeStakingPool(
   stakingPoolContractInstance,
   stakingPoolConfigs,
@@ -1217,6 +1299,7 @@ module.exports = {
   testCreateStakingPool,
   testSetEarlyUnstakeCooldownPeriod,
   testSetEarlyUnstakePenaltyPercent,
+  testSetRevshareStakeDurationExtension,
   testSuspendResumeStakingPool,
   verifyStakingPoolInfo,
   verifyStakingPoolsInfo,

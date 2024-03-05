@@ -374,6 +374,42 @@ describe("StakingPoolV2", function () {
     );
   });
 
+  it("Should only allow contract admin role to set stake duration extension for claim revshare of staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakeHelpers.testSetRevshareStakeDurationExtension(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      60,
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
+  it("Should only allow contract admin role to set stake duration extension for claim revshare of staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakeHelpers.testSetRevshareStakeDurationExtension(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      0,
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
   it("should not allow creation of staking pool with zero duration", async () => {
     const stakingPoolDto = {
       stakeDurationDays: 0,
