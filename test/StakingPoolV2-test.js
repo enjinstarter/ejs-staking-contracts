@@ -320,6 +320,60 @@ describe("StakingPoolV2", function () {
     );
   });
 
+  it("Should only allow contract admin role to set early unstake penalty percentage for staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakeHelpers.testSetEarlyUnstakePenaltyPercent(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      hre.ethers.utils.parseEther("30"),
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
+  it("Should only allow contract admin role to set zero early unstake penalty percentage for staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakeHelpers.testSetEarlyUnstakePenaltyPercent(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      hre.ethers.constants.Zero,
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
+  it("Should only allow contract admin role to set 100% early unstake penalty percentage for staking pool", async () => {
+    await stakeHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakeHelpers.testSetEarlyUnstakePenaltyPercent(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      hre.ethers.utils.parseEther("100"),
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
   it("should not allow creation of staking pool with zero duration", async () => {
     const stakingPoolDto = {
       stakeDurationDays: 0,
