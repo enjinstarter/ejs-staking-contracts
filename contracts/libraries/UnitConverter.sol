@@ -47,4 +47,20 @@ library UnitConverter {
             weiAmount = decimalsAmount;
         }
     }
+
+    /**
+     * @dev Returns the given amount in Wei truncated to the given number of decimals
+     * @param weiAmount Amount in Wei
+     * @param decimals Number of decimal places
+     * @return truncatedWeiAmount Amount in Wei truncated to given number of decimal places
+     */
+    // https://github.com/crytic/slither/wiki/Detector-Documentation#dead-code
+    // slither-disable-next-line dead-code
+    function truncateWeiToDecimals(uint256 weiAmount, uint256 decimals) internal pure returns (uint256 truncatedWeiAmount) {
+        require(decimals <= TOKEN_MAX_DECIMALS, "UnitConverter: decimals");
+
+        truncatedWeiAmount = decimals < TOKEN_MAX_DECIMALS
+            ? scaleDecimalsToWei(scaleWeiToDecimals(weiAmount, decimals), decimals)
+            : weiAmount;
+    }
 }

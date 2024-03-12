@@ -20,6 +20,10 @@ function bnAbsDiffLte(bn1, bn2, bnMaxDiff) {
   return absDiff.lte(bnMaxDiff);
 }
 
+function bnNeg(bn) {
+  return ethers.constants.Zero.sub(bn);
+}
+
 async function approveTransferWithVerify(
   tokenContractInstance,
   fromSigner,
@@ -111,7 +115,7 @@ async function newMockErc20Token(
   tokenName,
   tokenSymbol,
   tokenDecimals,
-  tokenCap,
+  tokenCapDecimals,
 ) {
   const defaults = {
     tokenName: "MockErc20Token",
@@ -132,8 +136,8 @@ async function newMockErc20Token(
     tokenDecimals,
     () => defaults.tokenDecimals,
   );
-  const tokenCapValue = await getValueOrDefault(
-    tokenCap,
+  const tokenCapDecimalsValue = await getValueOrDefault(
+    tokenCapDecimals,
     () => defaults.tokenCap,
   );
 
@@ -143,11 +147,61 @@ async function newMockErc20Token(
     tokenNameValue,
     tokenSymbolValue,
     tokenDecimalsValue,
-    tokenCapValue,
+    tokenCapDecimalsValue,
   );
   await mockErc20TokenInstance.deployed();
 
   return mockErc20TokenInstance;
+}
+
+async function newMockErc20TokenWithDeposit(
+  tokenName,
+  tokenSymbol,
+  tokenDecimals,
+  tokenCapWei,
+  fromAccount,
+  depositAddresses,
+  depositsWei,
+) {
+  const tokenInstance = await newMockErc20Token(
+    tokenName,
+    tokenSymbol,
+    tokenDecimals,
+    scaleWeiToDecimals(tokenCapWei, tokenDecimals),
+  );
+
+  for (let i = 0; i < depositAddresses.length; i++) {
+    if (depositsWei[i].gt(ethers.constants.Zero)) {
+      const depositDecimals = scaleWeiToDecimals(depositsWei[i], tokenDecimals);
+
+      const transferTransactionResponse = await tokenInstance
+        .connect(fromAccount)
+        .transfer(depositAddresses[i], depositDecimals);
+
+      const transferTransactionReceipt =
+        await transferTransactionResponse.wait();
+    }
+  }
+
+  return tokenInstance;
+}
+
+async function newMockTransferErc20() {
+  const contractFactory =
+    await hre.ethers.getContractFactory("MockTransferErc20");
+  const contractInstance = await contractFactory.deploy();
+  await contractInstance.deployed();
+
+  return contractInstance;
+}
+
+async function newMockUnitConverter() {
+  const MockUnitConverterFactory =
+    await hre.ethers.getContractFactory("MockUnitConverter");
+  const mockUnitConverterInstance = await MockUnitConverterFactory.deploy();
+  await mockUnitConverterInstance.deployed();
+
+  return mockUnitConverterInstance;
 }
 
 async function revokeRole(
@@ -719,6 +773,7 @@ module.exports = {
   TOKEN_MAX_DECIMALS,
   bnAbsDiff,
   bnAbsDiffLte,
+  bnNeg,
   approveTransferWithVerify,
   getBlockTimestamp,
   getCurrentBlockTimestamp,
@@ -727,6 +782,9 @@ module.exports = {
   mineBlockAtTime,
   newLibrary,
   newMockErc20Token,
+  newMockErc20TokenWithDeposit,
+  newMockTransferErc20,
+  newMockUnitConverter,
   revokeRole,
   scaleDecimalsToWei,
   scaleWeiToDecimals,
