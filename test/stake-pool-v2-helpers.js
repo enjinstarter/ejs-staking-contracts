@@ -565,16 +565,6 @@ async function newStakingPool() {
   return stakingPoolContractInstance;
 }
 
-async function newStakingService(stakingPoolAddress) {
-  const StakingServiceFactory =
-    await hre.ethers.getContractFactory("StakingServiceV2");
-  const stakingServiceContractInstance =
-    await StakingServiceFactory.deploy(stakingPoolAddress);
-  await stakingServiceContractInstance.deployed();
-
-  return stakingServiceContractInstance;
-}
-
 async function openStakingPoolWithVerify(
   stakingPoolContractInstance,
   stakingPoolConfig,
@@ -1280,7 +1270,6 @@ module.exports = {
   initializeStakingPoolTestData,
   newMockStakingPool,
   newStakingPool,
-  newStakingService,
   openStakingPoolWithVerify,
   resumeStakingPoolWithVerify,
   suspendStakingPoolWithVerify,
