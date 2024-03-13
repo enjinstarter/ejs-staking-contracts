@@ -639,9 +639,9 @@ contract StakingServiceV2 is
         uint256 poolAprWei,
         uint256 stakeAmountWei
     ) internal view virtual returns (uint256 estimatedRewardAtMaturityWei) {
-        estimatedRewardAtMaturityWei =
-            (poolAprWei * stakeDurationDays * stakeAmountWei) /
-            (DAYS_IN_YEAR * PERCENT_100_WEI);
+        estimatedRewardAtMaturityWei = poolAprWei > 0
+            ? (poolAprWei * stakeDurationDays * stakeAmountWei) / (DAYS_IN_YEAR * PERCENT_100_WEI)
+            : 0;
     }
 
     /**
@@ -711,10 +711,10 @@ contract StakingServiceV2 is
         uint256 poolRewardWei,
         uint256 stakeTokenDecimals
     ) internal view virtual returns (uint256 poolSizeWei) {
-        poolSizeWei = (
-            (DAYS_IN_YEAR * PERCENT_100_WEI * poolRewardWei) /
-                (stakeDurationDays * poolAprWei)
-        ).truncateWeiToDecimals(stakeTokenDecimals);
+        poolSizeWei = poolAprWei > 0
+            ? ((DAYS_IN_YEAR * PERCENT_100_WEI * poolRewardWei) / (stakeDurationDays * poolAprWei))
+                .truncateWeiToDecimals(stakeTokenDecimals)
+            : type(uint256).max.truncateWeiToDecimals(stakeTokenDecimals);
     }
 
     /**
@@ -741,7 +741,6 @@ contract StakingServiceV2 is
             stakingPoolInfo.rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
             "SSvcs2: reward decimals"
         );
-        require(stakingPoolInfo.poolAprWei > 0, "SSvcs2: pool APR");
         require(stakingPoolInfo.earlyUnstakePenaltyPercentWei <= PERCENT_100_WEI, "SSvcs2: penalty");
     }
 
