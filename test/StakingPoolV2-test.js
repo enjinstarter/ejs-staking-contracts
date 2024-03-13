@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const hre = require("hardhat");
 // const timeMachine = require("ganache-time-traveler");
 const testHelpers = require("./test-helpers.js");
-const stakeHelpers = require("./stake-v2-helpers.js");
+const stakePoolHelpers = require("./stake-pool-v2-helpers.js");
 
 describe("StakingPoolV2", function () {
   const rewardTokenAdminMintWei = hre.ethers.utils.parseEther("10000000");
@@ -114,7 +114,7 @@ describe("StakingPoolV2", function () {
 
   beforeEach(async () => {
     [, , , stakingPoolInstance, stakingPoolStakeRewardTokenSameConfigs] =
-      await stakeHelpers.initializeStakingPoolTestData(
+      await stakePoolHelpers.initializeStakingPoolTestData(
         rewardToken18DecimalsInfo,
         stakeToken18DecimalsInfo,
         stakeRewardToken18DecimalsInfo,
@@ -189,26 +189,26 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to create staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(1),
       false,
     );
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       enduserAccounts,
       false,
     );
 
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs.slice(0, 1),
       governanceRoleAccounts.slice(0, 1),
       true,
     );
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs.slice(1),
       contractAdminRoleAccounts,
@@ -217,32 +217,32 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to close/open staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testCloseOpenStakingPool(
+    await stakePoolHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(0, 1),
       true,
     );
-    await stakeHelpers.testCloseOpenStakingPool(
+    await stakePoolHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(1),
       false,
     );
-    await stakeHelpers.testCloseOpenStakingPool(
+    await stakePoolHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts,
       true,
     );
-    await stakeHelpers.testCloseOpenStakingPool(
+    await stakePoolHelpers.testCloseOpenStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       enduserAccounts,
@@ -251,32 +251,32 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to suspend/resume staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSuspendResumeStakingPool(
+    await stakePoolHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(0, 1),
       true,
     );
-    await stakeHelpers.testSuspendResumeStakingPool(
+    await stakePoolHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts.slice(1),
       false,
     );
-    await stakeHelpers.testSuspendResumeStakingPool(
+    await stakePoolHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts,
       true,
     );
-    await stakeHelpers.testSuspendResumeStakingPool(
+    await stakePoolHelpers.testSuspendResumeStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       enduserAccounts,
@@ -285,14 +285,14 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to set early unstake cooldown period for staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSetEarlyUnstakeCooldownPeriod(
+    await stakePoolHelpers.testSetEarlyUnstakeCooldownPeriod(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
@@ -303,14 +303,14 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to set zero early unstake cooldown period for staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSetEarlyUnstakeCooldownPeriod(
+    await stakePoolHelpers.testSetEarlyUnstakeCooldownPeriod(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
@@ -321,14 +321,14 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to set early unstake penalty percentage for staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSetEarlyUnstakePenaltyPercent(
+    await stakePoolHelpers.testSetEarlyUnstakePenaltyPercent(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
@@ -339,14 +339,14 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to set zero early unstake penalty percentage for staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSetEarlyUnstakePenaltyPercent(
+    await stakePoolHelpers.testSetEarlyUnstakePenaltyPercent(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
@@ -357,14 +357,14 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to set 100% early unstake penalty percentage for staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSetEarlyUnstakePenaltyPercent(
+    await stakePoolHelpers.testSetEarlyUnstakePenaltyPercent(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
@@ -375,14 +375,14 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to set stake duration extension for claim revshare of staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSetRevshareStakeDurationExtension(
+    await stakePoolHelpers.testSetRevshareStakeDurationExtension(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
@@ -393,14 +393,14 @@ describe("StakingPoolV2", function () {
   });
 
   it("Should only allow contract admin role to set stake duration extension for claim revshare of staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
       true,
     );
 
-    await stakeHelpers.testSetRevshareStakeDurationExtension(
+    await stakePoolHelpers.testSetRevshareStakeDurationExtension(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
@@ -692,7 +692,7 @@ describe("StakingPoolV2", function () {
   });
 
   it("should not allow setting early unstake penalty percentage to more than 100% for staking pool", async () => {
-    await stakeHelpers.testCreateStakingPool(
+    await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       contractAdminRoleAccounts.slice(0, 1),
