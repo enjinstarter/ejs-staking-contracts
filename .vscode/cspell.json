@@ -21,8 +21,11 @@
     "precoverage",
     "polygonscan",
     "revshare",
+    "solhint",
+    "svcs",
+    "tintinweb",
     "unstake",
-    "Solhint"
+    "unstaked"
   ],
   "ignorePaths": ["/.vscode/cspell.json", "/package-lock.json"]
 }
