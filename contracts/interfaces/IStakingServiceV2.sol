@@ -21,6 +21,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 unstakeAmountWei; // unstaked amount in Wei
         uint256 unstakeCooldownExpiryTimestamp; // timestamp when unstake cooldown expires
         uint256 unstakePenaltyAmountWei; // early unstake penalty amount in Wei
+        uint256 unstakeTimestamp; // timestamp when unstake
         uint256 withdrawUnstakeTimestamp; // timestamp when unstake is withdrawn
         bool isActive; // true if allow claim rewards and unstake
         bool isInitialized; // true if stake info has been initialized
@@ -38,6 +39,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalUnstakedAfterMatureWei; // total unstaked after maturity from pool in Wei
         uint256 totalUnstakedBeforeMatureWei; // total unstaked before maturity from pool in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount collected for pool in Wei
+        uint256 totalUnstakePenaltyRemovedWei; // total unstake penalty removed from pool in wei
     }
 
     struct StakingPoolStatsDto {
@@ -55,6 +57,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalUnstakedAfterMatureWei; // total unstaked after maturity from pool in Wei
         uint256 totalUnstakedBeforeMatureWei; // total unstaked before maturity from pool in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount collected for pool in Wei
+        uint256 totalUnstakePenaltyRemovedWei; // total unstake penalty removed from pool in wei
     }
 
     struct StakingUserStats {
@@ -238,6 +241,22 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     );
 
     /**
+     * @notice Emitted when unstake penalty have been removed from pool
+     * @param poolId The staking pool identifier
+     * @param sender The address that withdrew the unstake penalty to admin wallet
+     * @param adminWallet The address of the admin wallet receiving the funds
+     * @param stakeToken The address of the transferred ERC20 token
+     * @param unstakePenaltyRemovedWei The amount of tokens transferred in Wei
+     */
+    event UnstakePenaltyRemoved(
+        bytes32 indexed poolId,
+        address indexed sender,
+        address indexed adminWallet,
+        address stakeToken,
+        uint256 unstakePenaltyRemovedWei
+    );
+
+    /**
      * @notice Claim reward from given staking pool for message sender
      * @param poolId The staking pool identifier
      * @param stakeId The stake identifier
@@ -270,6 +289,20 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     function withdrawUnstake(bytes32 poolId, bytes32 stakeId) external;
 
     /**
+     * @notice Extend stake duration in days for claim revshare
+     * @dev Must be called by contract usage role.
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that staked
+     * @param stakeId The stake identifier
+     * @return isExtended true if stake duration has been extended
+     */
+    function revshareExtendStakeDuration(
+        bytes32 poolId,
+        address account,
+        bytes32 stakeId
+    ) external returns (bool isExtended);
+
+    /**
      * @notice Add reward to given staking pool
      * @dev Must be called by contract admin role.
      *      Requires the admin user to have approved the transfer of reward amount to this contract.
@@ -278,6 +311,12 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      */
     function addStakingPoolReward(bytes32 poolId, uint256 rewardAmountWei)
         external;
+
+    /**
+     * @notice Pause user functions (stake, claimReward, unstake)
+     * @dev Must be called by contract admin role
+     */
+    function pauseContract() external;
 
     /**
      * @notice Withdraw revoked stakes from given staking pool to admin wallet
@@ -292,6 +331,13 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @param poolId The staking pool identifier
      */
     function removeUnallocatedStakingPoolReward(bytes32 poolId) external;
+
+    /**
+     * @notice Withdraw unstake penalty from given staking pool to admin wallet
+     * @dev Must be called by contract admin role
+     * @param poolId The staking pool identifier
+     */
+    function removeUnstakePenalty(bytes32 poolId) external;
 
     /**
      * @notice Resume stake for given staking pool and account
@@ -321,10 +367,10 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     function suspendStake(bytes32 poolId, address account, bytes32 stakeId) external;
 
     /**
-     * @notice Pause user functions (stake, claimReward, unstake)
-     * @dev Must be called by governance role
+     * @notice Unpause user functions (stake, claimReward, unstake)
+     * @dev Must be called by contract admin role
      */
-    function pauseContract() external;
+    function unpauseContract() external;
 
     /**
      * @notice Change admin wallet to a new wallet address
@@ -339,12 +385,6 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @param newStakingPool The new staking pool contract address
      */
     function setStakingPoolContract(address newStakingPool) external;
-
-    /**
-     * @notice Unpause user functions (stake, claimReward, unstake)
-     * @dev Must be called by governance role
-     */
-    function unpauseContract() external;
 
     /**
      * @notice Returns the claimable reward in Wei for given staking pool and account
@@ -381,8 +421,26 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         returns (StakingPoolStatsDto memory stakingPoolStatsDto);
 
     /**
+     * @notice Returns the staking user statistics for given account address
+     * @param account The account address
+     * @return stakingUserStats The staking user statistics for given account address
+     */
+    function getStakingUserStats(address account)
+        external
+        view
+        returns (StakingUserStats memory stakingUserStats);
+
+    /**
      * @notice Returns the staking pool contract address
      * @return Staking pool contract address
      */
     function stakingPoolContract() external view returns (address);
+
+    /**
+     * @notice Get contract usage role definition
+     * @return Returns contract usage role definition
+     */
+    // https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+    // slither-disable-next-line naming-convention
+    function CONTRACT_USAGE_ROLE() external view returns (bytes32); // solhint-disable-line func-name-mixedcase
 }

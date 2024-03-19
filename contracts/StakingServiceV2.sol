@@ -24,6 +24,8 @@ contract StakingServiceV2 is
     using TransferErc20 for IERC20;
     using UnitConverter for uint256;
 
+    bytes32 public constant CONTRACT_USAGE_ROLE = keccak256("CONTRACT_USAGE_ROLE");
+
     uint256 public constant DAYS_IN_YEAR = 365;
     uint256 public constant PERCENT_100_WEI = 100 ether;
     uint256 public constant SECONDS_IN_DAY = 86400;
@@ -132,6 +134,7 @@ contract StakingServiceV2 is
             unstakeAmountWei: 0,
             unstakeCooldownExpiryTimestamp: 0,
             unstakePenaltyAmountWei: 0,
+            unstakeTimestamp: 0,
             withdrawUnstakeTimestamp: 0,
             isActive: true,
             isInitialized: true
@@ -168,7 +171,7 @@ contract StakingServiceV2 is
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
         require(_stakes[stakekey].revokeTimestamp == 0, "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
-        require(_stakes[stakekey].unstakeAmountWei == 0 && _stakes[stakekey].unstakePenaltyAmountWei == 0, "SSvcs2: unstaked");
+        require(_stakes[stakekey].unstakeTimestamp == 0, "SSvcs2: unstaked");
 
         uint256 stakeAmountWei = _stakes[stakekey].stakeAmountWei;
         require(stakeAmountWei > 0, "SSvcs2: zero stake");
@@ -193,6 +196,7 @@ contract StakingServiceV2 is
         _stakes[stakekey].unstakeAmountWei = unstakeAmountWei;
         _stakes[stakekey].unstakeCooldownExpiryTimestamp = unstakeCooldownExpiryTimestamp;
         _stakes[stakekey].unstakePenaltyAmountWei = unstakePenaltyAmountWei;
+        _stakes[stakekey].unstakeTimestamp = block.timestamp;
 
         if (isStakeMature) {
             _stakingUserStats[msg.sender].totalUnstakedAfterMatureWei += unstakeAmountWei;
@@ -230,10 +234,11 @@ contract StakingServiceV2 is
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
         require(_stakes[stakekey].revokeTimestamp == 0, "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
+        require(_stakes[stakekey].unstakeTimestamp > 0, "SSvcs2: not unstake");
         require(_stakes[stakekey].withdrawUnstakeTimestamp == 0, "SSvcs2: withdrawn");
         require(_stakes[stakekey].unstakeAmountWei > 0, "SSvcs2: nothing");
-        require(_stakes[stakekey].unstakeCooldownExpiryTimestamp > 0, "SSvcs2: cooldown timestamp");
-        require(block.timestamp >= _stakes[stakekey].unstakeCooldownExpiryTimestamp, "SSvcs2: cooldown");
+        require(_stakes[stakekey].unstakeCooldownExpiryTimestamp == 0
+            || block.timestamp >= _stakes[stakekey].unstakeCooldownExpiryTimestamp, "SSvcs2: cooldown");
 
         _stakes[stakekey].withdrawUnstakeTimestamp = block.timestamp;
 
@@ -242,6 +247,26 @@ contract StakingServiceV2 is
             _stakes[stakekey].unstakeAmountWei,
             msg.sender
         );
+    }
+
+    /**
+     * @inheritdoc IStakingServiceV2
+     */
+    function revshareExtendStakeDuration(
+        bytes32 poolId,
+        address account,
+        bytes32 stakeId
+    ) external virtual override onlyRole(CONTRACT_USAGE_ROLE) returns (bool isExtended) {
+        IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
+
+        bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].revokeTimestamp == 0, "SSvcs2: revoked");
+        require(_stakes[stakekey].unstakeTimestamp == 0, "SSvcs2: unstaked");
+
+        _stakes[stakekey].stakeMaturityTimestamp +=
+            stakingPoolInfo.revshareStakeDurationExtensionDays * SECONDS_IN_DAY;
+        isExtended = true;
     }
 
     /**
@@ -274,6 +299,18 @@ contract StakingServiceV2 is
         );
 
         IERC20(stakingPoolInfo.rewardTokenAddress).transferTokensFromSenderToContract(stakingPoolInfo.rewardTokenDecimals, truncatedRewardAmountWei);
+    }
+
+    /**
+     * @inheritdoc IStakingServiceV2
+     */
+    function pauseContract()
+        external
+        virtual
+        override
+        onlyRole(CONTRACT_ADMIN_ROLE)
+    {
+        _pause();
     }
 
     /**
@@ -342,6 +379,45 @@ contract StakingServiceV2 is
         IERC20(stakingPoolInfo.rewardTokenAddress).transferTokensFromContractToAccount(
             stakingPoolInfo.rewardTokenDecimals,
             unallocatedRewardWei,
+            adminWallet()
+        );
+    }
+
+    /**
+     * @inheritdoc IStakingServiceV2
+     */
+    function removeUnstakePenalty(bytes32 poolId)
+        external
+        virtual
+        override
+        onlyRole(CONTRACT_ADMIN_ROLE)
+    {
+        IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
+
+        require(
+            _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei > _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei,
+            "SSvcs2: no penalty"
+        );
+
+        uint256 totalRemovableUnstakePenaltyWei =
+            _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei - _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei;
+        _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei += totalRemovableUnstakePenaltyWei;
+        require(
+            _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei == _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei,
+            "SSvcs2: unequal"
+        );
+
+        emit UnstakePenaltyRemoved(
+            poolId,
+            msg.sender,
+            adminWallet(),
+            stakingPoolInfo.stakeTokenAddress,
+            totalRemovableUnstakePenaltyWei
+        );
+
+        IERC20(stakingPoolInfo.stakeTokenAddress).transferTokensFromContractToAccount(
+            stakingPoolInfo.stakeTokenDecimals,
+            totalRemovableUnstakePenaltyWei,
             adminWallet()
         );
     }
@@ -426,13 +502,13 @@ contract StakingServiceV2 is
     /**
      * @inheritdoc IStakingServiceV2
      */
-    function pauseContract()
+    function unpauseContract()
         external
         virtual
         override
-        onlyRole(GOVERNANCE_ROLE)
+        onlyRole(CONTRACT_ADMIN_ROLE)
     {
-        _pause();
+        _unpause();
     }
 
     /**
@@ -466,18 +542,6 @@ contract StakingServiceV2 is
             newStakingPool,
             msg.sender
         );
-    }
-
-    /**
-     * @inheritdoc IStakingServiceV2
-     */
-    function unpauseContract()
-        external
-        virtual
-        override
-        onlyRole(GOVERNANCE_ROLE)
-    {
-        _unpause();
     }
 
     /**
@@ -525,6 +589,7 @@ contract StakingServiceV2 is
             unstakeAmountWei: _stakes[stakekey].unstakeAmountWei,
             unstakeCooldownExpiryTimestamp: _stakes[stakekey].unstakeCooldownExpiryTimestamp,
             unstakePenaltyAmountWei: _stakes[stakekey].unstakePenaltyAmountWei,
+            unstakeTimestamp: _stakes[stakekey].unstakeTimestamp,
             withdrawUnstakeTimestamp: _stakes[stakekey].withdrawUnstakeTimestamp,
             isActive: _stakes[stakekey].isActive,
             isInitialized: _stakes[stakekey].isInitialized
@@ -562,8 +627,24 @@ contract StakingServiceV2 is
             totalStakedWei: _stakingPoolStats[poolId].totalStakedWei,
             totalUnstakedAfterMatureWei: _stakingPoolStats[poolId].totalUnstakedAfterMatureWei,
             totalUnstakedBeforeMatureWei: _stakingPoolStats[poolId].totalUnstakedBeforeMatureWei,
-            totalUnstakePenaltyAmountWei: _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei
+            totalUnstakePenaltyAmountWei: _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei,
+            totalUnstakePenaltyRemovedWei: _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei
         });
+    }
+
+    /**
+     * @inheritdoc IStakingServiceV2
+     */
+    function getStakingUserStats(address account)
+        external
+        view
+        virtual
+        override
+        returns (StakingUserStats memory stakingUserStats)
+    {
+        require(account != address(0), "SSvcs2: account");
+
+        stakingUserStats = _stakingUserStats[account];
     }
 
     /**
@@ -673,31 +754,6 @@ contract StakingServiceV2 is
     }
 
     /**
-     * @dev Returns the unstake amount, penalty, cooldown period and whether stake has matured for the given stake key
-     * @dev assumes pool is not suspended, stake is not revoked, stake is not suspended and stake has not been unstaked
-     * @param stakingPoolInfo The staking pool info
-     * @param stakekey The stake identifier
-     * @return unstakeAmountWei The unstake amount in Wei
-     * @return unstakePenaltyAmountWei The unstake penalty amount in Wei
-     * @return unstakeCooldownPeriodDays The unstake cooldown period in days
-     */
-    function _getUnstakeAmountWeiByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
-        internal
-        view
-        virtual
-        returns (uint256 unstakeAmountWei, uint256 unstakePenaltyAmountWei, uint256 unstakeCooldownPeriodDays, bool isStakeMature)
-    {
-        isStakeMature = _isStakeMaturedByStakekey(stakekey);
-        unstakePenaltyAmountWei = isStakeMature
-            ? 0
-            : stakingPoolInfo.earlyUnstakePenaltyPercentWei > 0
-                ? _stakes[stakekey].stakeAmountWei * stakingPoolInfo.earlyUnstakePenaltyPercentWei / PERCENT_100_WEI
-                : 0;
-        unstakeAmountWei =  _stakes[stakekey].stakeAmountWei - unstakePenaltyAmountWei;
-        unstakeCooldownPeriodDays = stakingPoolInfo.earlyUnstakeCooldownPeriodDays;
-    }
-
-    /**
      * @dev Returns the staking pool size in Wei for the given parameters
      * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
      * @param poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
@@ -745,6 +801,31 @@ contract StakingServiceV2 is
     }
 
     /**
+     * @dev Returns the unstake amount, penalty, cooldown period and whether stake has matured for the given stake key
+     * @dev assumes pool is not suspended, stake is not revoked, stake is not suspended and stake has not been unstaked
+     * @param stakingPoolInfo The staking pool info
+     * @param stakekey The stake identifier
+     * @return unstakeAmountWei The unstake amount in Wei
+     * @return unstakePenaltyAmountWei The unstake penalty amount in Wei
+     * @return unstakeCooldownPeriodDays The unstake cooldown period in days
+     */
+    function _getUnstakeAmountWeiByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
+        internal
+        view
+        virtual
+        returns (uint256 unstakeAmountWei, uint256 unstakePenaltyAmountWei, uint256 unstakeCooldownPeriodDays, bool isStakeMature)
+    {
+        isStakeMature = _isStakeMaturedByStakekey(stakekey);
+        unstakePenaltyAmountWei = isStakeMature
+            ? 0
+            : stakingPoolInfo.earlyUnstakePenaltyPercentWei > 0
+                ? _stakes[stakekey].stakeAmountWei * stakingPoolInfo.earlyUnstakePenaltyPercentWei / PERCENT_100_WEI
+                : 0;
+        unstakeAmountWei =  _stakes[stakekey].stakeAmountWei - unstakePenaltyAmountWei;
+        unstakeCooldownPeriodDays = stakingPoolInfo.earlyUnstakeCooldownPeriodDays;
+    }
+
+    /**
      * @dev Returns whether stake has matured for given stake key
      * @param stakekey The stake identifier
      * @return True if stake has matured
@@ -755,9 +836,10 @@ contract StakingServiceV2 is
         virtual
         returns (bool)
     {
+        uint256 timestamp = _stakes[stakekey].unstakeTimestamp > 0 ? _stakes[stakekey].unstakeTimestamp : block.timestamp;
+
         return
-            _stakes[stakekey].stakeMaturityTimestamp > 0 &&
-            block.timestamp >= _stakes[stakekey].stakeMaturityTimestamp;
+            _stakes[stakekey].stakeMaturityTimestamp > 0 && timestamp >= _stakes[stakekey].stakeMaturityTimestamp;
     }
 
     /**
