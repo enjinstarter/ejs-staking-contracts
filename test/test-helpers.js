@@ -236,7 +236,7 @@ async function revokeRole(
 
 function scaleDecimalsToWei(decimalsAmount, decimals) {
   const decimalsDiff = TOKEN_MAX_DECIMALS - decimals;
-  return decimalsAmount.mul(
+  return hre.ethers.BigNumber.from(decimalsAmount).mul(
     hre.ethers.BigNumber.from("10").pow(
       hre.ethers.BigNumber.from(decimalsDiff),
     ),
@@ -245,7 +245,7 @@ function scaleDecimalsToWei(decimalsAmount, decimals) {
 
 function scaleWeiToDecimals(weiAmount, decimals) {
   const decimalsDiff = TOKEN_MAX_DECIMALS - decimals;
-  return weiAmount.div(
+  return hre.ethers.BigNumber.from(weiAmount).div(
     hre.ethers.BigNumber.from("10").pow(
       hre.ethers.BigNumber.from(decimalsDiff),
     ),
