@@ -40,6 +40,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalUnstakedBeforeMatureWei; // total unstaked before maturity from pool in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount collected for pool in Wei
         uint256 totalUnstakePenaltyRemovedWei; // total unstake penalty removed from pool in wei
+        uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned from pool in wei
     }
 
     struct StakingPoolStatsDto {
@@ -58,6 +59,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalUnstakedBeforeMatureWei; // total unstaked before maturity from pool in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount collected for pool in Wei
         uint256 totalUnstakePenaltyRemovedWei; // total unstake penalty removed from pool in wei
+        uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned from pool in wei
     }
 
     struct StakingUserStats {
@@ -68,6 +70,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalUnstakedAfterMatureWei; // total unstaked amount after maturity for user in Wei
         uint256 totalUnstakedBeforeMatureWei; // total unstaked amount before maturity for user in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount paid by user in Wei
+        uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned by user in wei
     }
 
     /**

@@ -241,6 +241,8 @@ contract StakingServiceV2 is
             || block.timestamp >= _stakes[stakekey].unstakeCooldownExpiryTimestamp, "SSvcs2: cooldown");
 
         _stakes[stakekey].withdrawUnstakeTimestamp = block.timestamp;
+        _stakingUserStats[msg.sender].totalWithdrawnUnstakeWei += _stakes[stakekey].unstakeAmountWei;
+        _stakingPoolStats[poolId].totalWithdrawnUnstakeWei += _stakes[stakekey].unstakeAmountWei;
 
         IERC20(stakingPoolInfo.stakeTokenAddress).transferTokensFromContractToAccount(
             stakingPoolInfo.stakeTokenDecimals,
@@ -628,7 +630,8 @@ contract StakingServiceV2 is
             totalUnstakedAfterMatureWei: _stakingPoolStats[poolId].totalUnstakedAfterMatureWei,
             totalUnstakedBeforeMatureWei: _stakingPoolStats[poolId].totalUnstakedBeforeMatureWei,
             totalUnstakePenaltyAmountWei: _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei,
-            totalUnstakePenaltyRemovedWei: _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei
+            totalUnstakePenaltyRemovedWei: _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei,
+            totalWithdrawnUnstakeWei: _stakingPoolStats[poolId].totalWithdrawnUnstakeWei
         });
     }
 
