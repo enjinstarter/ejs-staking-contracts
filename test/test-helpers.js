@@ -601,6 +601,7 @@ async function testGrantRevokeRoles(
 async function testPauseUnpauseContract(
   contractInstance,
   signers,
+  requiredRole,
   expectAbleToPauseUnpause,
 ) {
   const expectPausedBeforePause = false;
@@ -645,7 +646,7 @@ async function testPauseUnpauseContract(
       await expect(
         contractInstance.connect(signers[i]).pauseContract(),
       ).to.be.revertedWith(
-        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`,
+        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${requiredRole}`,
       );
 
       const pausedAfterPauseFail = await contractInstance.paused();
@@ -654,7 +655,7 @@ async function testPauseUnpauseContract(
       await expect(
         contractInstance.connect(signers[i]).unpauseContract(),
       ).to.be.revertedWith(
-        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${GOVERNANCE_ROLE}`,
+        `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${requiredRole}`,
       );
 
       const pausedAfterUnpauseFail = await contractInstance.paused();

@@ -9,6 +9,7 @@ import {AdminPrivileges} from "./AdminPrivileges.sol";
 import {AdminWallet} from "./AdminWallet.sol";
 import {IStakingPoolV2} from "./interfaces/IStakingPoolV2.sol";
 import {IStakingServiceV2} from "./interfaces/IStakingServiceV2.sol";
+// import {console} from "hardhat/console.sol"; // solhint-disable-line no-console
 
 /**
  * @title StakingServiceV2
@@ -188,6 +189,9 @@ contract StakingServiceV2 is
             unstakeCooldownPeriodDays,
             block.timestamp
         );
+
+        // console.log("unstakeCooldownExpiryTimestamp=%o, blockTimestamp=%o", unstakeCooldownExpiryTimestamp, block.timestamp);  // solhint-disable-line no-console
+
         require(
             unstakeCooldownExpiryTimestamp >= block.timestamp,
             "SSvcs2: cooldown timestamp"
@@ -458,26 +462,27 @@ contract StakingServiceV2 is
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
         require(_stakes[stakekey].revokeTimestamp == 0, "Ssvcs2: revoked");
 
-        uint256 stakeAmountWei = _stakes[stakekey].stakeAmountWei;
-        uint256 rewardAmountWei = _stakes[stakekey]
+        uint256 withdrawnAmountWei = _stakes[stakekey].withdrawUnstakeTimestamp > 0 ? _stakes[stakekey].unstakeAmountWei : 0;
+        uint256 revokedStakeAmountWei = _stakes[stakekey].stakeAmountWei - withdrawnAmountWei;
+        uint256 revokedRewardAmountWei = _stakes[stakekey]
             .estimatedRewardAtMaturityWei - _stakes[stakekey].rewardClaimedWei;
 
         _stakes[stakekey].revokeTimestamp = block.timestamp;
 
-        _stakingUserStats[account].totalRevokedStakeWei += stakeAmountWei;
-        _stakingUserStats[account].totalRevokedRewardWei += rewardAmountWei;
+        _stakingUserStats[account].totalRevokedStakeWei += revokedStakeAmountWei;
+        _stakingUserStats[account].totalRevokedRewardWei += revokedRewardAmountWei;
 
-        _stakingPoolStats[poolId].totalRevokedStakeWei += stakeAmountWei;
-        _stakingPoolStats[poolId].totalRevokedRewardWei += rewardAmountWei;
+        _stakingPoolStats[poolId].totalRevokedStakeWei += revokedStakeAmountWei;
+        _stakingPoolStats[poolId].totalRevokedRewardWei += revokedRewardAmountWei;
 
         emit StakeRevoked(
             poolId,
             account,
             stakeId,
             stakingPoolInfo.stakeTokenAddress,
-            stakeAmountWei,
+            revokedStakeAmountWei,
             stakingPoolInfo.rewardTokenAddress,
-            rewardAmountWei,
+            revokedRewardAmountWei,
             msg.sender
         );
     }
@@ -708,7 +713,7 @@ contract StakingServiceV2 is
     ) internal view virtual returns (uint256 calculatedCooldownExpiryTimestamp) {
         calculatedCooldownExpiryTimestamp =
             unstakeTimestamp +
-            cooldownPeriodDays > 0 ? cooldownPeriodDays * SECONDS_IN_DAY : 0;
+            (cooldownPeriodDays > 0 ? cooldownPeriodDays * SECONDS_IN_DAY : 0);
     }
 
     /**
@@ -821,9 +826,9 @@ contract StakingServiceV2 is
         isStakeMature = _isStakeMaturedByStakekey(stakekey);
         unstakePenaltyAmountWei = isStakeMature
             ? 0
-            : stakingPoolInfo.earlyUnstakePenaltyPercentWei > 0
+            : (stakingPoolInfo.earlyUnstakePenaltyPercentWei > 0
                 ? _stakes[stakekey].stakeAmountWei * stakingPoolInfo.earlyUnstakePenaltyPercentWei / PERCENT_100_WEI
-                : 0;
+                : 0);
         unstakeAmountWei =  _stakes[stakekey].stakeAmountWei - unstakePenaltyAmountWei;
         unstakeCooldownPeriodDays = stakingPoolInfo.earlyUnstakeCooldownPeriodDays;
     }

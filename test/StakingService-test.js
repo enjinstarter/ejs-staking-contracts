@@ -261,16 +261,19 @@ describe("StakingService", function () {
     await testHelpers.testPauseUnpauseContract(
       stakingServiceInstance,
       governanceRoleAccounts,
+      testHelpers.GOVERNANCE_ROLE,
       true,
     );
     await testHelpers.testPauseUnpauseContract(
       stakingServiceInstance,
       contractAdminRoleAccounts,
+      testHelpers.GOVERNANCE_ROLE,
       false,
     );
     await testHelpers.testPauseUnpauseContract(
       stakingServiceInstance,
       enduserAccounts,
+      testHelpers.GOVERNANCE_ROLE,
       false,
     );
   });

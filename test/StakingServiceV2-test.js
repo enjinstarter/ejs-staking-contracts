@@ -255,20 +255,29 @@ describe("StakingServiceV2", function () {
     );
   });
 
-  it("Should only allow governance role to pause and unpause contract", async () => {
+  it("Should only allow contract admin role to pause and unpause contract", async () => {
     await testHelpers.testPauseUnpauseContract(
       stakingServiceInstance,
-      governanceRoleAccounts,
+      governanceRoleAccounts.slice(0, 1),
+      testHelpers.CONTRACT_ADMIN_ROLE,
       true,
     );
     await testHelpers.testPauseUnpauseContract(
       stakingServiceInstance,
-      contractAdminRoleAccounts,
+      governanceRoleAccounts.slice(1),
+      testHelpers.CONTRACT_ADMIN_ROLE,
       false,
     );
     await testHelpers.testPauseUnpauseContract(
       stakingServiceInstance,
+      contractAdminRoleAccounts,
+      testHelpers.CONTRACT_ADMIN_ROLE,
+      true,
+    );
+    await testHelpers.testPauseUnpauseContract(
+      stakingServiceInstance,
       enduserAccounts,
+      testHelpers.CONTRACT_ADMIN_ROLE,
       false,
     );
   });
