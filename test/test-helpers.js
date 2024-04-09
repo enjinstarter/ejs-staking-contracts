@@ -734,6 +734,9 @@ async function transferAndApproveWithVerify(
   const tokenDecimals = await tokenContractInstance.decimals();
   const amountDecimals = scaleWeiToDecimals(amountWei, tokenDecimals);
 
+  const balanceOfBeforeTransfer =
+    await tokenContractInstance.balanceOf(fromAddress);
+
   await expect(
     tokenContractInstance
       .connect(bankSigner)
@@ -742,8 +745,11 @@ async function transferAndApproveWithVerify(
     .to.emit(tokenContractInstance, "Transfer")
     .withArgs(bankAddress, fromAddress, amountDecimals);
 
-  const balanceOf = await tokenContractInstance.balanceOf(fromAddress);
-  expect(balanceOf).to.equal(amountDecimals);
+  const balanceOfAfterTransfer =
+    await tokenContractInstance.balanceOf(fromAddress);
+  expect(balanceOfAfterTransfer).to.equal(
+    balanceOfBeforeTransfer.add(amountDecimals),
+  );
 
   await approveTransferWithVerify(
     tokenContractInstance,

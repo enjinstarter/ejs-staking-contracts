@@ -110,20 +110,22 @@ contract StakingServiceV2 is
         uint256 truncatedStakeAmountWei = stakeAmountWei.truncateWeiToDecimals(stakingPoolInfo.stakeTokenDecimals);
         require(truncatedStakeAmountWei > 0, "SSvcs2: truncated stake amount");
 
+        bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
+        require(!_stakes[stakekey].isInitialized, "SSvcs2: exists");
+
         uint256 estimatedRewardAtMaturityWei = _estimateRewardAtMaturityWei(
             stakingPoolInfo.stakeDurationDays,
             stakingPoolInfo.poolAprWei,
             truncatedStakeAmountWei
         ).truncateWeiToDecimals(stakingPoolInfo.rewardTokenDecimals);
-        require(estimatedRewardAtMaturityWei > 0, "SSvcs2: zero reward");
+
+        // console.log("estimatedRewardAtMaturityWei=%o, calculatePoolRemainingRewardWei=%o", estimatedRewardAtMaturityWei, _calculatePoolRemainingRewardWei(poolId));  // solhint-disable-line no-console
+
         require(
             estimatedRewardAtMaturityWei <=
                 _calculatePoolRemainingRewardWei(poolId),
             "SSvcs2: insufficient"
         );
-
-        bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
-        require(!_stakes[stakekey].isInitialized, "SSvcs2: exists");
 
         _stakes[stakekey] = StakeInfo({
             estimatedRewardAtMaturityWei: estimatedRewardAtMaturityWei,
@@ -247,6 +249,15 @@ contract StakingServiceV2 is
         _stakes[stakekey].withdrawUnstakeTimestamp = block.timestamp;
         _stakingUserStats[msg.sender].totalWithdrawnUnstakeWei += _stakes[stakekey].unstakeAmountWei;
         _stakingPoolStats[poolId].totalWithdrawnUnstakeWei += _stakes[stakekey].unstakeAmountWei;
+
+        emit UnstakeWithdrawn(
+            poolId,
+            msg.sender,
+            stakeId,
+            stakingPoolInfo.stakeTokenAddress,
+            _stakes[stakekey].unstakeAmountWei,
+            block.timestamp
+        );
 
         IERC20(stakingPoolInfo.stakeTokenAddress).transferTokensFromContractToAccount(
             stakingPoolInfo.stakeTokenDecimals,

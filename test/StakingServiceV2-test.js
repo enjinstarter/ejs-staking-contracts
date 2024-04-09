@@ -740,7 +740,7 @@ describe("StakingServiceV2", function () {
         signer: enduserAccounts[0],
         signerAddress: await enduserAccounts[0].getAddress(),
         stakeAmountWei: hre.ethers.utils.parseEther("63157.920515015815280309"),
-        stakeExceedPoolReward: false,
+        stakeExceedPoolReward: true,
         stakeUuid: "4defd107-efe9-414a-8354-0f37d113b24a",
         stakeId: hre.ethers.utils.id("4defd107-efe9-414a-8354-0f37d113b24a"),
       },
@@ -1621,14 +1621,14 @@ describe("StakingServiceV2", function () {
     stakeInfoAfterEvent010.stakeSecondsAfterStartblockTimestamp =
       stakeEvents[10].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent010.isActive = true;
-    stakeInfoAfterEvent010.isInitialized = true;
+    stakeInfoAfterEvent010.isInitialized = false;
     stakeInfos011.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`,
       stakeInfoAfterEvent010,
     );
     stakeInfos.push(stakeInfos011);
     console.log(
-      `stakeInfoAfterEvent010 after: ${JSON.stringify(stakeInfos[11].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`))}`,
+      `stakeInfoAfterEvent010 after (${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId}, ${stakeEvents[10].signerAddress}, ${stakeEvents[10].stakeId}): ${JSON.stringify(stakeInfos[11].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`))}`,
     );
 
     const stakeInfos012 = structuredClone(stakeInfos011);
@@ -1718,11 +1718,11 @@ describe("StakingServiceV2", function () {
     stakeInfoAfterEvent012.isInitialized = true;
     stakeInfos013.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`,
-      stakeInfoAfterEvent010,
+      stakeInfoAfterEvent012,
     );
     stakeInfos.push(stakeInfos013);
     console.log(
-      `stakeInfoAfterEvent012 after: ${JSON.stringify(stakeInfos[13].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
+      `stakeInfoAfterEvent012 after (${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}, ${stakeEvents[12].signerAddress}, ${stakeEvents[12].stakeId}): ${JSON.stringify(stakeInfos[13].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
     );
 
     const stakeInfos014 = structuredClone(stakeInfos013);
@@ -2065,28 +2065,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent000.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[0].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[0].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[0].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[0].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[0].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent000.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent000.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[0].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[0].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[0].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent000.poolSizeWei = stakeServiceHelpers
@@ -2121,28 +2127,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent001.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[1].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[1].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[1].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[1].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[1].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent001.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent001.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[1].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[1].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[1].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent001.poolSizeWei = stakeServiceHelpers
@@ -2177,28 +2189,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent002.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[2].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[2].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[2].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[2].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[2].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent002.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent002.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[2].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[2].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[2].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent002.poolSizeWei = stakeServiceHelpers
@@ -2233,28 +2251,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent003.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[3].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[3].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[3].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[3].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[3].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent003.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent003.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[3].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[3].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[3].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent003.poolSizeWei = stakeServiceHelpers
@@ -2289,28 +2313,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent004.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[4].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[4].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[4].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[4].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[4].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent004.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent004.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[4].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[4].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[4].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent004.poolSizeWei = stakeServiceHelpers
@@ -2397,7 +2427,7 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent006.totalWithdrawnUnstakeWei,
       )
         .add(
-          stakeServiceHelpers.calculateUnstakePenaltyWei(
+          stakeServiceHelpers.calculateUnstakeAmountWei(
             stakeEvents[2].stakeAmountWei,
             stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
               .earlyUnstakePenaltyPercentWei,
@@ -2406,7 +2436,7 @@ describe("StakingServiceV2", function () {
                 .stakeDurationDays,
               stakeEvents[2].eventSecondsAfterStartblockTimestamp,
             ),
-            stakeEvents[5].eventSecondsAfterStartblockTimestamp,
+            stakeEvents[6].eventSecondsAfterStartblockTimestamp,
             stakeEvents[5].eventSecondsAfterStartblockTimestamp,
           ),
         )
@@ -2432,28 +2462,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent007.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[7].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[7].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[7].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[7].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[7].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent007.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent007.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[7].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[7].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[7].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent007.poolSizeWei = stakeServiceHelpers
@@ -2488,28 +2524,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent008.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[8].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[8].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[8].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[8].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[8].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent008.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent008.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[8].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[8].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[8].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent008.poolSizeWei = stakeServiceHelpers
@@ -2544,28 +2586,34 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent009.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[9].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[9].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[9].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[9].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[9].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent009.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent009.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[9].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[9].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[9].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent009.poolSizeWei = stakeServiceHelpers
@@ -2600,28 +2648,35 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent010.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[10].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[10].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[10].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[10].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[10].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[10].poolIndex
+                ].rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent010.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent010.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[10].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[10].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[10].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent010.poolSizeWei = stakeServiceHelpers
@@ -2708,28 +2763,35 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent012.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[12].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[12].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[12].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[12].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[12].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[12].poolIndex
+                ].rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent012.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent012.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[12].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[12].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[12].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent012.poolSizeWei = stakeServiceHelpers
@@ -2810,28 +2872,35 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent014.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[14].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[14].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[14].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[14].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[14].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[14].poolIndex
+                ].rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent014.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent014.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[14].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[14].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[14].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent014.poolSizeWei = stakeServiceHelpers
@@ -2866,7 +2935,7 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent015.totalWithdrawnUnstakeWei,
       )
         .add(
-          stakeServiceHelpers.calculateUnstakePenaltyWei(
+          stakeServiceHelpers.calculateUnstakeAmountWei(
             stakeEvents[1].stakeAmountWei,
             stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
               .earlyUnstakePenaltyPercentWei,
@@ -2876,7 +2945,7 @@ describe("StakingServiceV2", function () {
               stakeEvents[1].eventSecondsAfterStartblockTimestamp,
             ),
             stakeEvents[15].eventSecondsAfterStartblockTimestamp,
-            stakeEvents[15].eventSecondsAfterStartblockTimestamp,
+            stakeEvents[11].eventSecondsAfterStartblockTimestamp,
           ),
         )
         .toString();
@@ -2947,28 +3016,35 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent017.rewardToBeDistributedWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[17].stakeAmountWei,
-            ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-              .rewardTokenDecimals,
-          ),
+          stakeEvents[17].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[17].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[17].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[17].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[17].poolIndex
+                ].rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent017.totalStakedWei = hre.ethers.BigNumber.from(
       stakingPoolStatsAfterEvent017.totalStakedWei,
     )
       .add(
-        stakeServiceHelpers.computeTruncatedAmountWei(
-          stakeEvents[17].stakeAmountWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-            .stakeTokenDecimals,
-        ),
+        stakeEvents[17].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[17].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
+                .stakeTokenDecimals,
+            ),
       )
       .toString();
     stakingPoolStatsAfterEvent017.poolSizeWei = stakeServiceHelpers
@@ -3141,12 +3217,41 @@ describe("StakingServiceV2", function () {
       `stakingPoolStatsAfterEvent020 after: ${JSON.stringify(stakingPoolStats[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
     );
 
+    const totalStakeAmountsWei = new Map();
+    for (let i = 0; i < stakeEvents.length; i++) {
+      if (stakeEvents[i].eventType !== "Stake") {
+        continue;
+      }
+
+      const stakePoolId =
+        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[i].poolIndex].poolId;
+      const totalStakeAmountWei = hre.ethers.BigNumber.from(
+        totalStakeAmountsWei.has(stakePoolId)
+          ? totalStakeAmountsWei.get(stakePoolId)
+          : hre.ethers.constants.Zero,
+      ).add(stakeEvents[i].stakeAmountWei);
+
+      totalStakeAmountsWei.set(stakePoolId, totalStakeAmountWei.toString());
+    }
+
     const stakePoolStatsIterator =
       stakingPoolStats[stakingPoolStats.length - 1].entries();
     for (const [poolId, expectStakingPoolStats] of stakePoolStatsIterator) {
       const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs.find(
         (stakingPoolConfig) => stakingPoolConfig.poolId === poolId,
       );
+      const totalStakeAmountWei = hre.ethers.BigNumber.from(
+        totalStakeAmountsWei.get(poolId),
+      );
+      const totalRewardToBeDistributedWei =
+        stakeServiceHelpers.computeTruncatedAmountWei(
+          stakeServiceHelpers.estimateRewardAtMaturityWei(
+            stakingPoolConfig.poolAprWei,
+            stakingPoolConfig.stakeDurationDays,
+            totalStakeAmountWei,
+          ),
+          stakingPoolConfig.rewardTokenDecimals,
+        );
 
       stakingPoolsRewardBalanceOf[
         stakingPoolConfig.rewardTokenInstance.address
@@ -3162,25 +3267,23 @@ describe("StakingServiceV2", function () {
           stakingPoolConfig.rewardTokenInstance.address
         ],
         {},
-        hre.ethers.BigNumber.from(
-          expectStakingPoolStats.rewardToBeDistributedWei,
-        ).sub(totalStakeRewardLessByWei),
+        totalRewardToBeDistributedWei.sub(totalStakeRewardLessByWei),
         true,
       );
 
       for (let j = 0; j < stakingPoolStats.length; j++) {
         const poolIdStakingStats = stakingPoolStats[j].get(`${poolId}`);
-        poolIdStakingStats.totalRewardAddedWei = hre.ethers.BigNumber.from(
-          expectStakingPoolStats.rewardToBeDistributedWei,
-        )
+        poolIdStakingStats.totalRewardAddedWei = totalRewardToBeDistributedWei
           .sub(totalStakeRewardLessByWei)
           .toString();
+
         poolIdStakingStats.poolSizeWei = stakeServiceHelpers.computePoolSizeWei(
           stakingPoolConfig.stakeDurationDays,
           stakingPoolConfig.poolAprWei,
           poolIdStakingStats.totalRewardAddedWei,
           stakingPoolConfig.stakeTokenDecimals,
         );
+
         stakingPoolStats[j].set(`${poolId}`, poolIdStakingStats);
       }
     }

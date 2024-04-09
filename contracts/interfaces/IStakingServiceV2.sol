@@ -220,9 +220,9 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     );
 
     /**
-     * @notice Emitted when stake with reward has been withdrawn by user
+     * @notice Emitted when stake with reward has been unstaked by user
      * @param poolId The staking pool identifier
-     * @param account The address of the user wallet that unstaked and received the funds
+     * @param account The address of the user wallet that unstaked
      * @param stakeId The stake identifier
      * @param stakeToken The address of the ERC20 stake token
      * @param stakeAmountWei The amount of tokens staked in Wei
@@ -257,6 +257,24 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         address indexed adminWallet,
         address stakeToken,
         uint256 unstakePenaltyRemovedWei
+    );
+
+    /**
+     * @notice Emitted when unstake has been withdrawn by user
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that received the funds
+     * @param stakeId The stake identifier
+     * @param stakeToken The address of the ERC20 stake token
+     * @param withdrawnAmountWei The amount of tokens withdrawn in Wei
+     * @param withdrawTimestamp The timestamp as seconds since unix epoch when the unstake was withdrawn
+     */
+    event UnstakeWithdrawn(
+        bytes32 indexed poolId,
+        address indexed account,
+        bytes32 indexed stakeId,
+        address stakeToken,
+        uint256 withdrawnAmountWei,
+        uint256 withdrawTimestamp
     );
 
     /**
