@@ -13,6 +13,8 @@ import {IAdminWallet} from "./IAdminWallet.sol";
 interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     struct StakeInfo {
         uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in Wei
+        uint256 revokedRewardAmountWei; // revoked reward amount in Wei
+        uint256 revokedStakeAmountWei; // revoked stake amount in Wei
         uint256 revokeTimestamp; // timestamp when stake is revoked
         uint256 rewardClaimedWei; // reward claimed in Wei
         uint256 stakeAmountWei; // stake amount in Wei
@@ -38,6 +40,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalStakedWei; // total staked inside pool in Wei
         uint256 totalUnstakedAfterMatureWei; // total unstaked after maturity from pool in Wei
         uint256 totalUnstakedBeforeMatureWei; // total unstaked before maturity from pool in Wei
+        uint256 totalUnstakedRewardBeforeMatureWei; // total unstaked reward before mature in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount collected for pool in Wei
         uint256 totalUnstakePenaltyRemovedWei; // total unstake penalty removed from pool in wei
         uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned from pool in wei
@@ -46,6 +49,8 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     struct StakingPoolStatsDto {
         bool isOpen; // true if staking pool allows staking
         bool isActive; // true if staking pool allows claim rewards and unstake
+        uint256 poolRemainingRewardWei; // remaining pool reward in wei
+        uint256 poolRewardAmountWei; // pool reward amount in Wei
         uint256 poolSizeWei; // pool size in Wei
         uint256 rewardToBeDistributedWei; // allocated pool reward to be distributed in Wei
         uint256 totalRevokedRewardWei; // total revoked reward from pool in Wei
@@ -57,6 +62,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalStakedWei; // total staked inside pool in Wei
         uint256 totalUnstakedAfterMatureWei; // total unstaked after maturity from pool in Wei
         uint256 totalUnstakedBeforeMatureWei; // total unstaked before maturity from pool in Wei
+        uint256 totalUnstakedRewardBeforeMatureWei; // total unstaked reward before mature in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount collected for pool in Wei
         uint256 totalUnstakePenaltyRemovedWei; // total unstake penalty removed from pool in wei
         uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned from pool in wei
@@ -69,6 +75,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalStakedWei; // total staked inside pools for user in Wei
         uint256 totalUnstakedAfterMatureWei; // total unstaked amount after maturity for user in Wei
         uint256 totalUnstakedBeforeMatureWei; // total unstaked amount before maturity for user in Wei
+        uint256 totalUnstakedRewardBeforeMatureWei; // total unstaked reward before mature for user in Wei
         uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount paid by user in Wei
         uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned by user in wei
     }

@@ -625,7 +625,7 @@ describe("StakingServiceV2", function () {
     );
   });
 
-  it.only("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
+  it("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
     const stakeEvents = [
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(10),
@@ -740,7 +740,7 @@ describe("StakingServiceV2", function () {
         signer: enduserAccounts[0],
         signerAddress: await enduserAccounts[0].getAddress(),
         stakeAmountWei: hre.ethers.utils.parseEther("63157.920515015815280309"),
-        stakeExceedPoolReward: true,
+        stakeExceedPoolReward: false,
         stakeUuid: "4defd107-efe9-414a-8354-0f37d113b24a",
         stakeId: hre.ethers.utils.id("4defd107-efe9-414a-8354-0f37d113b24a"),
       },
@@ -809,7 +809,7 @@ describe("StakingServiceV2", function () {
         signer: enduserAccounts[0],
         signerAddress: await enduserAccounts[0].getAddress(),
         stakeAmountWei: hre.ethers.utils.parseEther("31925.519305154605484789"),
-        stakeExceedPoolReward: false,
+        stakeExceedPoolReward: true,
         stakeUuid: "76c91dc7-eae0-4aba-9605-54c309c9c898",
         stakeId: hre.ethers.utils.id("76c91dc7-eae0-4aba-9605-54c309c9c898"),
       },
@@ -840,6 +840,17 @@ describe("StakingServiceV2", function () {
         stakeUuid: "76643db8-1d4f-4983-bcd2-d262b24b0336",
         stakeId: hre.ethers.utils.id("76643db8-1d4f-4983-bcd2-d262b24b0336"),
       },
+      {
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2843),
+        eventType: "Stake",
+        poolIndex: 1,
+        signer: enduserAccounts[2],
+        signerAddress: await enduserAccounts[2].getAddress(),
+        stakeAmountWei: hre.ethers.utils.parseEther("1389.203351175896125017"),
+        stakeExceedPoolReward: false,
+        stakeUuid: "7b4b92e3-fb72-4557-af1b-0ab99d06e59d",
+        stakeId: hre.ethers.utils.id("7b4b92e3-fb72-4557-af1b-0ab99d06e59d"),
+      },
     ];
 
     const stakeInfos = [];
@@ -849,6 +860,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -873,6 +886,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -897,6 +912,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -921,6 +938,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -945,6 +964,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -969,6 +990,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -993,6 +1016,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -1017,6 +1042,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -1041,6 +1068,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -1065,6 +1094,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -1089,6 +1120,8 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -1113,6 +1146,34 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId},${stakeEvents[17].signerAddress},${stakeEvents[17].stakeId}`,
       {
         estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
+        revokeSecondsAfterStartblockTimestamp:
+          hre.ethers.constants.Zero.toString(),
+        rewardClaimedWei: hre.ethers.constants.Zero.toString(),
+        stakeAmountWei: hre.ethers.constants.Zero.toString(),
+        stakeMaturitySecondsAfterStartblockTimestamp:
+          hre.ethers.constants.Zero.toString(),
+        stakeSecondsAfterStartblockTimestamp:
+          hre.ethers.constants.Zero.toString(),
+        unstakeAmountWei: hre.ethers.constants.Zero.toString(),
+        unstakeCooldownExpirySecondsAfterStartblockTimestamp:
+          hre.ethers.constants.Zero.toString(),
+        unstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
+        unstakeSecondsAfterStartblockTimestamp:
+          hre.ethers.constants.Zero.toString(),
+        withdrawUnstakeSecondsAfterStartblockTimestamp:
+          hre.ethers.constants.Zero.toString(),
+        isActive: false,
+        isInitialized: false,
+      },
+    );
+    stakeInfos000.set(
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId},${stakeEvents[21].signerAddress},${stakeEvents[21].stakeId}`,
+      {
+        estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+        revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+        revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
         revokeSecondsAfterStartblockTimestamp:
           hre.ethers.constants.Zero.toString(),
         rewardClaimedWei: hre.ethers.constants.Zero.toString(),
@@ -1140,40 +1201,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent000 before: ${JSON.stringify(stakeInfoAfterEvent000)}`,
+      `\nstakeInfoAfterEvent000 before: ${JSON.stringify(stakeInfoAfterEvent000)}`,
     );
-    stakeInfoAfterEvent000.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[0].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent000.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[0].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent000.estimatedRewardAtMaturityWei = stakeEvents[0]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[0].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent000.stakeAmountWei = stakeEvents[0].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[0].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent000.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[0].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent000.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[0].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[0].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[0].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent000.stakeSecondsAfterStartblockTimestamp = stakeEvents[0]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[0].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent000.isActive = true;
-    stakeInfoAfterEvent000.isInitialized = true;
+    stakeInfoAfterEvent000.isInitialized = stakeEvents[0].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos001.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`,
       stakeInfoAfterEvent000,
@@ -1188,40 +1260,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent001 before: ${JSON.stringify(stakeInfoAfterEvent001)}`,
+      `\nstakeInfoAfterEvent001 before: ${JSON.stringify(stakeInfoAfterEvent001)}`,
     );
-    stakeInfoAfterEvent001.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[1].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent001.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[1].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent001.estimatedRewardAtMaturityWei = stakeEvents[1]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[1].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent001.stakeAmountWei = stakeEvents[1].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[1].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent001.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[1].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent001.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[1].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[1].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[1].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent001.stakeSecondsAfterStartblockTimestamp = stakeEvents[1]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[1].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent001.isActive = true;
-    stakeInfoAfterEvent001.isInitialized = true;
+    stakeInfoAfterEvent001.isInitialized = stakeEvents[1].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos002.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
       stakeInfoAfterEvent001,
@@ -1236,40 +1319,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent002 before: ${JSON.stringify(stakeInfoAfterEvent002)}`,
+      `\nstakeInfoAfterEvent002 before: ${JSON.stringify(stakeInfoAfterEvent002)}`,
     );
-    stakeInfoAfterEvent002.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[2].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent002.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[2].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent002.estimatedRewardAtMaturityWei = stakeEvents[2]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[2].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent002.stakeAmountWei = stakeEvents[2].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[2].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent002.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[2].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent002.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[2].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[2].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[2].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent002.stakeSecondsAfterStartblockTimestamp = stakeEvents[2]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[2].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent002.isActive = true;
-    stakeInfoAfterEvent002.isInitialized = true;
+    stakeInfoAfterEvent002.isInitialized = stakeEvents[2].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos003.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
       stakeInfoAfterEvent002,
@@ -1284,40 +1378,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent003 before: ${JSON.stringify(stakeInfoAfterEvent003)}`,
+      `\nstakeInfoAfterEvent003 before: ${JSON.stringify(stakeInfoAfterEvent003)}`,
     );
-    stakeInfoAfterEvent003.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[3].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent003.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[3].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent003.estimatedRewardAtMaturityWei = stakeEvents[3]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[3].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent003.stakeAmountWei = stakeEvents[3].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[3].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent003.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[3].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent003.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[3].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[3].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[3].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent003.stakeSecondsAfterStartblockTimestamp = stakeEvents[3]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[3].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent003.isActive = true;
-    stakeInfoAfterEvent003.isInitialized = true;
+    stakeInfoAfterEvent003.isInitialized = stakeEvents[3].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos004.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`,
       stakeInfoAfterEvent003,
@@ -1332,40 +1437,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent004 before: ${JSON.stringify(stakeInfoAfterEvent004)}`,
+      `\nstakeInfoAfterEvent004 before: ${JSON.stringify(stakeInfoAfterEvent004)}`,
     );
-    stakeInfoAfterEvent004.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[4].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent004.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[4].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent004.estimatedRewardAtMaturityWei = stakeEvents[4]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[4].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent004.stakeAmountWei = stakeEvents[4].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[4].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent004.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[4].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent004.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[4].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[4].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[4].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent004.stakeSecondsAfterStartblockTimestamp = stakeEvents[4]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[4].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent004.isActive = true;
-    stakeInfoAfterEvent004.isInitialized = true;
+    stakeInfoAfterEvent004.isInitialized = stakeEvents[4].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos005.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`,
       stakeInfoAfterEvent004,
@@ -1380,7 +1496,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent005 before: ${JSON.stringify(stakeInfoAfterEvent005)}`,
+      `\nstakeInfoAfterEvent005 before: ${JSON.stringify(stakeInfoAfterEvent005)}`,
     );
     stakeInfoAfterEvent005.unstakeAmountWei = stakeServiceHelpers
       .calculateUnstakeAmountWei(
@@ -1426,7 +1542,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent006 before: ${JSON.stringify(stakeInfoAfterEvent006)}`,
+      `\nstakeInfoAfterEvent006 before: ${JSON.stringify(stakeInfoAfterEvent006)}`,
     );
     stakeInfoAfterEvent006.withdrawUnstakeSecondsAfterStartblockTimestamp =
       stakeEvents[6].eventSecondsAfterStartblockTimestamp.toString();
@@ -1444,40 +1560,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent007 before: ${JSON.stringify(stakeInfoAfterEvent007)}`,
+      `\nstakeInfoAfterEvent007 before: ${JSON.stringify(stakeInfoAfterEvent007)}`,
     );
-    stakeInfoAfterEvent007.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[7].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent007.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[7].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent007.estimatedRewardAtMaturityWei = stakeEvents[7]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[7].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent007.stakeAmountWei = stakeEvents[7].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[7].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent007.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[7].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent007.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[7].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[7].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[7].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent007.stakeSecondsAfterStartblockTimestamp = stakeEvents[7]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[7].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent007.isActive = true;
-    stakeInfoAfterEvent007.isInitialized = true;
+    stakeInfoAfterEvent007.isInitialized = stakeEvents[7].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos008.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
       stakeInfoAfterEvent007,
@@ -1492,40 +1619,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent008 before: ${JSON.stringify(stakeInfoAfterEvent008)}`,
+      `\nstakeInfoAfterEvent008 before: ${JSON.stringify(stakeInfoAfterEvent008)}`,
     );
-    stakeInfoAfterEvent008.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[8].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent008.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[8].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent008.estimatedRewardAtMaturityWei = stakeEvents[8]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[8].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent008.stakeAmountWei = stakeEvents[8].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[8].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent008.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[8].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent008.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[8].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[8].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[8].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent008.stakeSecondsAfterStartblockTimestamp = stakeEvents[8]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[8].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent008.isActive = true;
-    stakeInfoAfterEvent008.isInitialized = true;
+    stakeInfoAfterEvent008.isInitialized = stakeEvents[8].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos009.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`,
       stakeInfoAfterEvent008,
@@ -1540,40 +1678,51 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent009 before: ${JSON.stringify(stakeInfoAfterEvent009)}`,
+      `\nstakeInfoAfterEvent009 before: ${JSON.stringify(stakeInfoAfterEvent009)}`,
     );
-    stakeInfoAfterEvent009.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[9].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent009.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[9].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent009.estimatedRewardAtMaturityWei = stakeEvents[9]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[9].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent009.stakeAmountWei = stakeEvents[9].stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[9].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent009.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[9].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent009.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[9].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[9].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[9].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent009.stakeSecondsAfterStartblockTimestamp = stakeEvents[9]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeEvents[9].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent009.isActive = true;
-    stakeInfoAfterEvent009.isInitialized = true;
+    stakeInfoAfterEvent009.isInitialized = stakeEvents[9].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos010.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`,
       stakeInfoAfterEvent009,
@@ -1588,40 +1737,52 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent010 before: ${JSON.stringify(stakeInfoAfterEvent010)}`,
+      `\nstakeInfoAfterEvent010 before: ${JSON.stringify(stakeInfoAfterEvent010)}`,
     );
-    stakeInfoAfterEvent010.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[10].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent010.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[10].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent010.estimatedRewardAtMaturityWei = stakeEvents[10]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[10].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent010.stakeAmountWei = stakeEvents[10]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[10].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent010.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[10].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
+      stakeEvents[10].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[10].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
     stakeInfoAfterEvent010.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[10].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[10].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeEvents[10].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent010.isActive = true;
-    stakeInfoAfterEvent010.isInitialized = false;
+    stakeInfoAfterEvent010.isInitialized = stakeEvents[10].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos011.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`,
       stakeInfoAfterEvent010,
@@ -1636,7 +1797,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent011 before: ${JSON.stringify(stakeInfoAfterEvent011)}`,
+      `\nstakeInfoAfterEvent011 before: ${JSON.stringify(stakeInfoAfterEvent011)}`,
     );
     stakeInfoAfterEvent011.unstakeAmountWei = stakeServiceHelpers
       .calculateUnstakeAmountWei(
@@ -1682,40 +1843,52 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent012 before: ${JSON.stringify(stakeInfoAfterEvent012)}`,
+      `\nstakeInfoAfterEvent012 before: ${JSON.stringify(stakeInfoAfterEvent012)}`,
     );
-    stakeInfoAfterEvent012.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[12].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent012.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[12].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent012.estimatedRewardAtMaturityWei = stakeEvents[12]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[12].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent012.stakeAmountWei = stakeEvents[12]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[12].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent012.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[12].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
+      stakeEvents[12].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[12].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
     stakeInfoAfterEvent012.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[12].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[12].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeEvents[12].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent012.isActive = true;
-    stakeInfoAfterEvent012.isInitialized = true;
+    stakeInfoAfterEvent012.isInitialized = stakeEvents[12].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos013.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`,
       stakeInfoAfterEvent012,
@@ -1730,8 +1903,20 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent013 before: ${JSON.stringify(stakeInfoAfterEvent013)}`,
+      `\nstakeInfoAfterEvent013 before: ${JSON.stringify(stakeInfoAfterEvent013)}`,
     );
+    stakeInfoAfterEvent013.revokedRewardAmountWei = stakeServiceHelpers
+      .calculateRevokedRewardAmountWei(
+        stakeInfoAfterEvent013.estimatedRewardAtMaturityWei,
+        stakeInfoAfterEvent013.rewardClaimedWei,
+      )
+      .toString();
+    stakeInfoAfterEvent013.revokedStakeAmountWei = stakeServiceHelpers
+      .calculateRevokedStakeAmountWei(
+        stakeEvents[7].stakeAmountWei,
+        hre.ethers.constants.Zero,
+      )
+      .toString();
     stakeInfoAfterEvent013.revokeSecondsAfterStartblockTimestamp =
       stakeEvents[13].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfos014.set(
@@ -1748,40 +1933,52 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent014 before: ${JSON.stringify(stakeInfoAfterEvent014)}`,
+      `\nstakeInfoAfterEvent014 before: ${JSON.stringify(stakeInfoAfterEvent014)}`,
     );
-    stakeInfoAfterEvent014.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[14].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent014.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[14].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent014.estimatedRewardAtMaturityWei = stakeEvents[14]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[14].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent014.stakeAmountWei = stakeEvents[14]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[14].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent014.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[14].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
+      stakeEvents[14].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[14].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
     stakeInfoAfterEvent014.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[14].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[14].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeEvents[14].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent014.isActive = true;
-    stakeInfoAfterEvent014.isInitialized = true;
+    stakeInfoAfterEvent014.isInitialized = stakeEvents[14].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos015.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`,
       stakeInfoAfterEvent014,
@@ -1796,13 +1993,13 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent015 before: ${JSON.stringify(stakeInfoAfterEvent015)}`,
+      `\nstakeInfoAfterEvent015 before: ${JSON.stringify(stakeInfoAfterEvent015)}`,
     );
     stakeInfoAfterEvent015.withdrawUnstakeSecondsAfterStartblockTimestamp =
       stakeEvents[15].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfos016.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
-      stakeInfoAfterEvent006,
+      stakeInfoAfterEvent015,
     );
     stakeInfos.push(stakeInfos016);
     console.log(
@@ -1814,8 +2011,20 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent016 before: ${JSON.stringify(stakeInfoAfterEvent016)}`,
+      `\nstakeInfoAfterEvent016 before: ${JSON.stringify(stakeInfoAfterEvent016)}`,
     );
+    stakeInfoAfterEvent016.revokedRewardAmountWei = stakeServiceHelpers
+      .calculateRevokedRewardAmountWei(
+        stakeInfoAfterEvent016.estimatedRewardAtMaturityWei,
+        stakeInfoAfterEvent016.rewardClaimedWei,
+      )
+      .toString();
+    stakeInfoAfterEvent016.revokedStakeAmountWei = stakeServiceHelpers
+      .calculateRevokedStakeAmountWei(
+        stakeEvents[4].stakeAmountWei,
+        hre.ethers.constants.Zero,
+      )
+      .toString();
     stakeInfoAfterEvent016.revokeSecondsAfterStartblockTimestamp =
       stakeEvents[16].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfos017.set(
@@ -1832,40 +2041,52 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId},${stakeEvents[17].signerAddress},${stakeEvents[17].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent017 before: ${JSON.stringify(stakeInfoAfterEvent017)}`,
+      `\nstakeInfoAfterEvent017 before: ${JSON.stringify(stakeInfoAfterEvent017)}`,
     );
-    stakeInfoAfterEvent017.estimatedRewardAtMaturityWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeServiceHelpers.estimateRewardAtMaturityWei(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-            .poolAprWei,
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[17].stakeAmountWei,
-        ),
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-          .rewardTokenDecimals,
-      )
-      .toString();
-    stakeInfoAfterEvent017.stakeAmountWei = stakeServiceHelpers
-      .computeTruncatedAmountWei(
-        stakeEvents[17].stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
+    stakeInfoAfterEvent017.estimatedRewardAtMaturityWei = stakeEvents[17]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[17].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent017.stakeAmountWei = stakeEvents[17]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[17].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
     stakeInfoAfterEvent017.stakeMaturitySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateStateMaturityTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-            .stakeDurationDays,
-          stakeEvents[17].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
+      stakeEvents[17].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[17].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
     stakeInfoAfterEvent017.stakeSecondsAfterStartblockTimestamp =
-      stakeEvents[17].eventSecondsAfterStartblockTimestamp.toString();
+      stakeEvents[17].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeEvents[17].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfoAfterEvent017.isActive = true;
-    stakeInfoAfterEvent017.isInitialized = true;
+    stakeInfoAfterEvent017.isInitialized = stakeEvents[17].stakeExceedPoolReward
+      ? false
+      : true;
     stakeInfos018.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId},${stakeEvents[17].signerAddress},${stakeEvents[17].stakeId}`,
       stakeInfoAfterEvent017,
@@ -1880,7 +2101,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent018 before: ${JSON.stringify(stakeInfoAfterEvent018)}`,
+      `\nstakeInfoAfterEvent018 before: ${JSON.stringify(stakeInfoAfterEvent018)}`,
     );
     stakeInfoAfterEvent018.unstakeAmountWei = stakeServiceHelpers
       .calculateUnstakeAmountWei(
@@ -1926,7 +2147,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent019 before: ${JSON.stringify(stakeInfoAfterEvent019)}`,
+      `\nstakeInfoAfterEvent019 before: ${JSON.stringify(stakeInfoAfterEvent019)}`,
     );
     stakeInfoAfterEvent019.unstakeAmountWei = stakeServiceHelpers
       .calculateUnstakeAmountWei(
@@ -1972,8 +2193,20 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`,
     );
     console.log(
-      `stakeInfoAfterEvent020 before: ${JSON.stringify(stakeInfoAfterEvent020)}`,
+      `\nstakeInfoAfterEvent020 before: ${JSON.stringify(stakeInfoAfterEvent020)}`,
     );
+    stakeInfoAfterEvent020.revokedRewardAmountWei = stakeServiceHelpers
+      .calculateRevokedRewardAmountWei(
+        stakeInfoAfterEvent020.estimatedRewardAtMaturityWei,
+        stakeInfoAfterEvent020.rewardClaimedWei,
+      )
+      .toString();
+    stakeInfoAfterEvent020.revokedStakeAmountWei = stakeServiceHelpers
+      .calculateRevokedStakeAmountWei(
+        stakeEvents[14].stakeAmountWei,
+        stakeInfoAfterEvent020.unstakeAmountWei,
+      )
+      .toString();
     stakeInfoAfterEvent020.revokeSecondsAfterStartblockTimestamp =
       stakeEvents[20].eventSecondsAfterStartblockTimestamp.toString();
     stakeInfos021.set(
@@ -1985,6 +2218,66 @@ describe("StakingServiceV2", function () {
       `stakeInfoAfterEvent020 after: ${JSON.stringify(stakeInfos[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
     );
 
+    const stakeInfos022 = structuredClone(stakeInfos021);
+    const stakeInfoAfterEvent021 = stakeInfos022.get(
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId},${stakeEvents[21].signerAddress},${stakeEvents[21].stakeId}`,
+    );
+    console.log(
+      `\nstakeInfoAfterEvent021 before: ${JSON.stringify(stakeInfoAfterEvent021)}`,
+    );
+    stakeInfoAfterEvent021.estimatedRewardAtMaturityWei = stakeEvents[21]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex]
+                .poolAprWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[21].stakeAmountWei,
+            ),
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex]
+              .rewardTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent021.stakeAmountWei = stakeEvents[21]
+      .stakeExceedPoolReward
+      ? hre.ethers.constants.Zero.toString()
+      : stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeEvents[21].stakeAmountWei,
+            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex]
+              .stakeTokenDecimals,
+          )
+          .toString();
+    stakeInfoAfterEvent021.stakeMaturitySecondsAfterStartblockTimestamp =
+      stakeEvents[21].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeServiceHelpers
+            .calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[21].eventSecondsAfterStartblockTimestamp,
+            )
+            .toString();
+    stakeInfoAfterEvent021.stakeSecondsAfterStartblockTimestamp =
+      stakeEvents[21].stakeExceedPoolReward
+        ? hre.ethers.constants.Zero.toString()
+        : stakeEvents[21].eventSecondsAfterStartblockTimestamp.toString();
+    stakeInfoAfterEvent021.isActive = true;
+    stakeInfoAfterEvent021.isInitialized = stakeEvents[21].stakeExceedPoolReward
+      ? false
+      : true;
+    stakeInfos022.set(
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId},${stakeEvents[21].signerAddress},${stakeEvents[21].stakeId}`,
+      stakeInfoAfterEvent021,
+    );
+    stakeInfos.push(stakeInfos022);
+    console.log(
+      `stakeInfoAfterEvent021 after: ${JSON.stringify(stakeInfos[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId},${stakeEvents[21].signerAddress},${stakeEvents[21].stakeId}`))}`,
+    );
+
     const stakingPoolStats = [];
 
     const stakingPoolStats000 = new Map();
@@ -1993,6 +2286,8 @@ describe("StakingServiceV2", function () {
       {
         isOpen: true,
         isActive: true,
+        poolRemainingRewardWei: hre.ethers.constants.Zero.toString(),
+        poolRewardAmountWei: hre.ethers.constants.Zero.toString(),
         poolSizeWei: hre.ethers.constants.Zero.toString(),
         rewardToBeDistributedWei: hre.ethers.constants.Zero.toString(),
         totalRevokedRewardWei: hre.ethers.constants.Zero.toString(),
@@ -2004,6 +2299,8 @@ describe("StakingServiceV2", function () {
         totalStakedWei: hre.ethers.constants.Zero.toString(),
         totalUnstakedAfterMatureWei: hre.ethers.constants.Zero.toString(),
         totalUnstakedBeforeMatureWei: hre.ethers.constants.Zero.toString(),
+        totalUnstakedRewardBeforeMatureWei:
+          hre.ethers.constants.Zero.toString(),
         totalUnstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
         totalUnstakePenaltyRemovedWei: hre.ethers.constants.Zero.toString(),
         totalWithdrawnUnstakeWei: hre.ethers.constants.Zero.toString(),
@@ -2014,6 +2311,8 @@ describe("StakingServiceV2", function () {
       {
         isOpen: true,
         isActive: true,
+        poolRemainingRewardWei: hre.ethers.constants.Zero.toString(),
+        poolRewardAmountWei: hre.ethers.constants.Zero.toString(),
         poolSizeWei: hre.ethers.constants.Zero.toString(),
         rewardToBeDistributedWei: hre.ethers.constants.Zero.toString(),
         totalRevokedRewardWei: hre.ethers.constants.Zero.toString(),
@@ -2025,6 +2324,8 @@ describe("StakingServiceV2", function () {
         totalStakedWei: hre.ethers.constants.Zero.toString(),
         totalUnstakedAfterMatureWei: hre.ethers.constants.Zero.toString(),
         totalUnstakedBeforeMatureWei: hre.ethers.constants.Zero.toString(),
+        totalUnstakedRewardBeforeMatureWei:
+          hre.ethers.constants.Zero.toString(),
         totalUnstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
         totalUnstakePenaltyRemovedWei: hre.ethers.constants.Zero.toString(),
         totalWithdrawnUnstakeWei: hre.ethers.constants.Zero.toString(),
@@ -2035,6 +2336,8 @@ describe("StakingServiceV2", function () {
       {
         isOpen: true,
         isActive: true,
+        poolRemainingRewardWei: hre.ethers.constants.Zero.toString(),
+        poolRewardAmountWei: hre.ethers.constants.Zero.toString(),
         poolSizeWei: hre.ethers.constants.Zero.toString(),
         rewardToBeDistributedWei: hre.ethers.constants.Zero.toString(),
         totalRevokedRewardWei: hre.ethers.constants.Zero.toString(),
@@ -2046,6 +2349,8 @@ describe("StakingServiceV2", function () {
         totalStakedWei: hre.ethers.constants.Zero.toString(),
         totalUnstakedAfterMatureWei: hre.ethers.constants.Zero.toString(),
         totalUnstakedBeforeMatureWei: hre.ethers.constants.Zero.toString(),
+        totalUnstakedRewardBeforeMatureWei:
+          hre.ethers.constants.Zero.toString(),
         totalUnstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
         totalUnstakePenaltyRemovedWei: hre.ethers.constants.Zero.toString(),
         totalWithdrawnUnstakeWei: hre.ethers.constants.Zero.toString(),
@@ -2058,7 +2363,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent000 before: ${JSON.stringify(stakingPoolStatsAfterEvent000)}`,
+      `\nstakingPoolStatsAfterEvent000 before: ${JSON.stringify(stakingPoolStatsAfterEvent000)}`,
     );
     stakingPoolStatsAfterEvent000.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2095,17 +2400,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent000.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent000.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats001.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent000,
@@ -2120,7 +2414,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent001 before: ${JSON.stringify(stakingPoolStatsAfterEvent001)}`,
+      `\nstakingPoolStatsAfterEvent001 before: ${JSON.stringify(stakingPoolStatsAfterEvent001)}`,
     );
     stakingPoolStatsAfterEvent001.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2157,17 +2451,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent001.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent001.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats002.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent001,
@@ -2182,7 +2465,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent002 before: ${JSON.stringify(stakingPoolStatsAfterEvent002)}`,
+      `\nstakingPoolStatsAfterEvent002 before: ${JSON.stringify(stakingPoolStatsAfterEvent002)}`,
     );
     stakingPoolStatsAfterEvent002.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2219,17 +2502,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent002.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent002.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats003.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent002,
@@ -2244,7 +2516,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent003 before: ${JSON.stringify(stakingPoolStatsAfterEvent003)}`,
+      `\nstakingPoolStatsAfterEvent003 before: ${JSON.stringify(stakingPoolStatsAfterEvent003)}`,
     );
     stakingPoolStatsAfterEvent003.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2281,17 +2553,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent003.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent003.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats004.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent003,
@@ -2306,7 +2567,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent004 before: ${JSON.stringify(stakingPoolStatsAfterEvent004)}`,
+      `\nstakingPoolStatsAfterEvent004 before: ${JSON.stringify(stakingPoolStatsAfterEvent004)}`,
     );
     stakingPoolStatsAfterEvent004.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2343,17 +2604,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent004.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent004.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats005.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent004,
@@ -2368,7 +2618,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent005 before: ${JSON.stringify(stakingPoolStatsAfterEvent005)}`,
+      `\nstakingPoolStatsAfterEvent005 before: ${JSON.stringify(stakingPoolStatsAfterEvent005)}`,
     );
     const stakeMaturitySecondsAfterStartblockTimestamp005 =
       stakeServiceHelpers.calculateStateMaturityTimestamp(
@@ -2389,6 +2639,28 @@ describe("StakingServiceV2", function () {
             stakeEvents[5].eventSecondsAfterStartblockTimestamp,
             stakeEvents[5].eventSecondsAfterStartblockTimestamp,
           ),
+        )
+        .toString();
+    stakingPoolStatsAfterEvent005.totalUnstakedRewardBeforeMatureWei =
+      hre.ethers.BigNumber.from(
+        stakingPoolStatsAfterEvent005.totalUnstakedRewardBeforeMatureWei,
+      )
+        .add(
+          stakeEvents[2].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[2].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[2].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[2].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent005.totalUnstakePenaltyAmountWei =
@@ -2420,7 +2692,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent006 before: ${JSON.stringify(stakingPoolStatsAfterEvent006)}`,
+      `\nstakingPoolStatsAfterEvent006 before: ${JSON.stringify(stakingPoolStatsAfterEvent006)}`,
     );
     stakingPoolStatsAfterEvent006.totalWithdrawnUnstakeWei =
       hre.ethers.BigNumber.from(
@@ -2455,7 +2727,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent007 before: ${JSON.stringify(stakingPoolStatsAfterEvent007)}`,
+      `\nstakingPoolStatsAfterEvent007 before: ${JSON.stringify(stakingPoolStatsAfterEvent007)}`,
     );
     stakingPoolStatsAfterEvent007.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2492,17 +2764,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent007.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent007.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats008.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent007,
@@ -2517,7 +2778,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent008 before: ${JSON.stringify(stakingPoolStatsAfterEvent008)}`,
+      `\nstakingPoolStatsAfterEvent008 before: ${JSON.stringify(stakingPoolStatsAfterEvent008)}`,
     );
     stakingPoolStatsAfterEvent008.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2554,17 +2815,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent008.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent008.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats009.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent008,
@@ -2579,7 +2829,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent009 before: ${JSON.stringify(stakingPoolStatsAfterEvent009)}`,
+      `\nstakingPoolStatsAfterEvent009 before: ${JSON.stringify(stakingPoolStatsAfterEvent009)}`,
     );
     stakingPoolStatsAfterEvent009.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2616,17 +2866,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent009.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent009.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats010.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent009,
@@ -2641,7 +2880,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent010 before: ${JSON.stringify(stakingPoolStatsAfterEvent010)}`,
+      `\nstakingPoolStatsAfterEvent010 before: ${JSON.stringify(stakingPoolStatsAfterEvent010)}`,
     );
     stakingPoolStatsAfterEvent010.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2679,17 +2918,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent010.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent010.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats011.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent010,
@@ -2704,7 +2932,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent011 before: ${JSON.stringify(stakingPoolStatsAfterEvent011)}`,
+      `\nstakingPoolStatsAfterEvent011 before: ${JSON.stringify(stakingPoolStatsAfterEvent011)}`,
     );
     const stakeMaturitySecondsAfterStartblockTimestamp011 =
       stakeServiceHelpers.calculateStateMaturityTimestamp(
@@ -2725,6 +2953,28 @@ describe("StakingServiceV2", function () {
             stakeEvents[11].eventSecondsAfterStartblockTimestamp,
             stakeEvents[11].eventSecondsAfterStartblockTimestamp,
           ),
+        )
+        .toString();
+    stakingPoolStatsAfterEvent011.totalUnstakedRewardBeforeMatureWei =
+      hre.ethers.BigNumber.from(
+        stakingPoolStatsAfterEvent011.totalUnstakedRewardBeforeMatureWei,
+      )
+        .add(
+          stakeEvents[1].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[1].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[1].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[1].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
+                  .rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent011.totalUnstakePenaltyAmountWei =
@@ -2756,7 +3006,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent012 before: ${JSON.stringify(stakingPoolStatsAfterEvent012)}`,
+      `\nstakingPoolStatsAfterEvent012 before: ${JSON.stringify(stakingPoolStatsAfterEvent012)}`,
     );
     stakingPoolStatsAfterEvent012.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2794,17 +3044,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent012.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent012.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats013.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent012,
@@ -2819,7 +3058,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent013 before: ${JSON.stringify(stakingPoolStatsAfterEvent013)}`,
+      `\nstakingPoolStatsAfterEvent013 before: ${JSON.stringify(stakingPoolStatsAfterEvent013)}`,
     );
     stakingPoolStatsAfterEvent013.totalRevokedRewardWei =
       hre.ethers.BigNumber.from(
@@ -2865,7 +3104,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent014 before: ${JSON.stringify(stakingPoolStatsAfterEvent014)}`,
+      `\nstakingPoolStatsAfterEvent014 before: ${JSON.stringify(stakingPoolStatsAfterEvent014)}`,
     );
     stakingPoolStatsAfterEvent014.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -2903,17 +3142,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent014.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent014.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats015.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent014,
@@ -2928,7 +3156,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent015 before: ${JSON.stringify(stakingPoolStatsAfterEvent015)}`,
+      `\nstakingPoolStatsAfterEvent015 before: ${JSON.stringify(stakingPoolStatsAfterEvent015)}`,
     );
     stakingPoolStatsAfterEvent015.totalWithdrawnUnstakeWei =
       hre.ethers.BigNumber.from(
@@ -2963,7 +3191,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent016 before: ${JSON.stringify(stakingPoolStatsAfterEvent016)}`,
+      `\nstakingPoolStatsAfterEvent016 before: ${JSON.stringify(stakingPoolStatsAfterEvent016)}`,
     );
     stakingPoolStatsAfterEvent016.totalRevokedRewardWei =
       hre.ethers.BigNumber.from(
@@ -3009,7 +3237,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent017 before: ${JSON.stringify(stakingPoolStatsAfterEvent017)}`,
+      `\nstakingPoolStatsAfterEvent017 before: ${JSON.stringify(stakingPoolStatsAfterEvent017)}`,
     );
     stakingPoolStatsAfterEvent017.rewardToBeDistributedWei =
       hre.ethers.BigNumber.from(
@@ -3047,17 +3275,6 @@ describe("StakingServiceV2", function () {
             ),
       )
       .toString();
-    stakingPoolStatsAfterEvent017.poolSizeWei = stakeServiceHelpers
-      .computePoolSizeWei(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-          .stakeDurationDays,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-          .poolAprWei,
-        stakingPoolStatsAfterEvent017.rewardToBeDistributedWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-          .stakeTokenDecimals,
-      )
-      .toString();
     stakingPoolStats018.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId}`,
       stakingPoolStatsAfterEvent017,
@@ -3072,7 +3289,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent018 before: ${JSON.stringify(stakingPoolStatsAfterEvent018)}`,
+      `\nstakingPoolStatsAfterEvent018 before: ${JSON.stringify(stakingPoolStatsAfterEvent018)}`,
     );
     const stakeMaturitySecondsAfterStartblockTimestamp018 =
       stakeServiceHelpers.calculateStateMaturityTimestamp(
@@ -3093,6 +3310,29 @@ describe("StakingServiceV2", function () {
             stakeEvents[18].eventSecondsAfterStartblockTimestamp,
             stakeEvents[18].eventSecondsAfterStartblockTimestamp,
           ),
+        )
+        .toString();
+    stakingPoolStatsAfterEvent018.totalUnstakedRewardBeforeMatureWei =
+      hre.ethers.BigNumber.from(
+        stakingPoolStatsAfterEvent018.totalUnstakedRewardBeforeMatureWei,
+      )
+        .add(
+          stakeEvents[12].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[12].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[12].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[12].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[12].poolIndex
+                ].rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent018.totalUnstakePenaltyAmountWei =
@@ -3124,7 +3364,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent019 before: ${JSON.stringify(stakingPoolStatsAfterEvent019)}`,
+      `\nstakingPoolStatsAfterEvent019 before: ${JSON.stringify(stakingPoolStatsAfterEvent019)}`,
     );
     const stakeMaturitySecondsAfterStartblockTimestamp019 =
       stakeServiceHelpers.calculateStateMaturityTimestamp(
@@ -3145,6 +3385,29 @@ describe("StakingServiceV2", function () {
             stakeEvents[19].eventSecondsAfterStartblockTimestamp,
             stakeEvents[19].eventSecondsAfterStartblockTimestamp,
           ),
+        )
+        .toString();
+    stakingPoolStatsAfterEvent019.totalUnstakedRewardBeforeMatureWei =
+      hre.ethers.BigNumber.from(
+        stakingPoolStatsAfterEvent019.totalUnstakedRewardBeforeMatureWei,
+      )
+        .add(
+          stakeEvents[14].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[14].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[14].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[14].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[14].poolIndex
+                ].rewardTokenDecimals,
+              ),
         )
         .toString();
     stakingPoolStatsAfterEvent019.totalUnstakePenaltyAmountWei =
@@ -3176,7 +3439,7 @@ describe("StakingServiceV2", function () {
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
     );
     console.log(
-      `stakingPoolStatsAfterEvent020 before: ${JSON.stringify(stakingPoolStatsAfterEvent020)}`,
+      `\nstakingPoolStatsAfterEvent020 before: ${JSON.stringify(stakingPoolStatsAfterEvent020)}`,
     );
     stakingPoolStatsAfterEvent020.totalRevokedRewardWei =
       hre.ethers.BigNumber.from(
@@ -3215,6 +3478,58 @@ describe("StakingServiceV2", function () {
     stakingPoolStats.push(stakingPoolStats021);
     console.log(
       `stakingPoolStatsAfterEvent020 after: ${JSON.stringify(stakingPoolStats[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
+    );
+
+    const stakingPoolStats022 = structuredClone(stakingPoolStats021);
+    const stakingPoolStatsAfterEvent021 = stakingPoolStats022.get(
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId}`,
+    );
+    console.log(
+      `\nstakingPoolStatsAfterEvent021 before: ${JSON.stringify(stakingPoolStatsAfterEvent021)}`,
+    );
+    stakingPoolStatsAfterEvent021.rewardToBeDistributedWei =
+      hre.ethers.BigNumber.from(
+        stakingPoolStatsAfterEvent021.rewardToBeDistributedWei,
+      )
+        .add(
+          stakeEvents[21].stakeExceedPoolReward
+            ? hre.ethers.constants.Zero
+            : stakeServiceHelpers.computeTruncatedAmountWei(
+                stakeServiceHelpers.estimateRewardAtMaturityWei(
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[21].poolIndex
+                  ].poolAprWei,
+                  stakingPoolStakeRewardTokenSameConfigs[
+                    stakeEvents[21].poolIndex
+                  ].stakeDurationDays,
+                  stakeEvents[21].stakeAmountWei,
+                ),
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[21].poolIndex
+                ].rewardTokenDecimals,
+              ),
+        )
+        .toString();
+    stakingPoolStatsAfterEvent021.totalStakedWei = hre.ethers.BigNumber.from(
+      stakingPoolStatsAfterEvent021.totalStakedWei,
+    )
+      .add(
+        stakeEvents[21].stakeExceedPoolReward
+          ? hre.ethers.constants.Zero
+          : stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeEvents[21].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex]
+                .stakeTokenDecimals,
+            ),
+      )
+      .toString();
+    stakingPoolStats022.set(
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId}`,
+      stakingPoolStatsAfterEvent021,
+    );
+    stakingPoolStats.push(stakingPoolStats022);
+    console.log(
+      `stakingPoolStatsAfterEvent021 after: ${JSON.stringify(stakingPoolStats[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId}`))}`,
     );
 
     const totalStakeAmountsWei = new Map();
@@ -3277,12 +3592,30 @@ describe("StakingServiceV2", function () {
           .sub(totalStakeRewardLessByWei)
           .toString();
 
-        poolIdStakingStats.poolSizeWei = stakeServiceHelpers.computePoolSizeWei(
-          stakingPoolConfig.stakeDurationDays,
-          stakingPoolConfig.poolAprWei,
-          poolIdStakingStats.totalRewardAddedWei,
-          stakingPoolConfig.stakeTokenDecimals,
-        );
+        poolIdStakingStats.poolRewardAmountWei = stakeServiceHelpers
+          .computePoolRewardWei(
+            poolIdStakingStats.totalRewardAddedWei,
+            poolIdStakingStats.totalRevokedRewardWei,
+            poolIdStakingStats.totalUnstakedRewardBeforeMatureWei,
+            poolIdStakingStats.totalRewardRemovedWei,
+          )
+          .toString();
+
+        poolIdStakingStats.poolRemainingRewardWei = stakeServiceHelpers
+          .computePoolRemainingRewardWei(
+            poolIdStakingStats.poolRewardAmountWei,
+            poolIdStakingStats.rewardToBeDistributedWei,
+          )
+          .toString();
+
+        poolIdStakingStats.poolSizeWei = stakeServiceHelpers
+          .computePoolSizeWei(
+            stakingPoolConfig.stakeDurationDays,
+            stakingPoolConfig.poolAprWei,
+            poolIdStakingStats.poolRewardAmountWei,
+            stakingPoolConfig.stakeTokenDecimals,
+          )
+          .toString();
 
         stakingPoolStats[j].set(`${poolId}`, poolIdStakingStats);
       }
@@ -3292,6 +3625,7 @@ describe("StakingServiceV2", function () {
       stakingServiceInstance,
       stakingPoolStakeRewardTokenSameConfigs,
       governanceRoleAccounts[0],
+      contractAdminRoleAccounts[1],
       stakeEvents,
       stakeInfos,
       stakingPoolStats,
