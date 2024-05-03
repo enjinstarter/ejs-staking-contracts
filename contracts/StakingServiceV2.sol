@@ -58,11 +58,11 @@ contract StakingServiceV2 is
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
-        require(_stakes[stakekey].revokeTimestamp == 0, "SSvcs2: revoked");
+        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
-        require(_isStakeMaturedByStakekey(stakekey), "SSvcs2: not mature");
+        require(_isStakeMaturedFor(stakekey), "SSvcs2: not mature");
 
-        uint256 rewardAmountWei = _getClaimableRewardWeiByStakekey(stakekey);
+        uint256 rewardAmountWei = _getClaimableRewardWeiFor(stakekey);
         require(rewardAmountWei > 0, "SSvcs2: zero reward");
 
         _stakes[stakekey].rewardClaimedWei += rewardAmountWei;
@@ -174,9 +174,9 @@ contract StakingServiceV2 is
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
-        require(_stakes[stakekey].revokeTimestamp == 0, "SSvcs2: revoked");
+        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
-        require(_stakes[stakekey].unstakeTimestamp == 0, "SSvcs2: unstaked");
+        require(!_isStakeUnstakedFor(stakekey), "SSvcs2: unstaked");
 
         uint256 stakeAmountWei = _stakes[stakekey].stakeAmountWei;
         require(stakeAmountWei > 0, "SSvcs2: zero stake");
@@ -242,10 +242,10 @@ contract StakingServiceV2 is
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
-        require(_stakes[stakekey].revokeTimestamp == 0, "SSvcs2: revoked");
+        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
-        require(_stakes[stakekey].unstakeTimestamp > 0, "SSvcs2: not unstake");
-        require(_stakes[stakekey].withdrawUnstakeTimestamp == 0, "SSvcs2: withdrawn");
+        require(_isStakeUnstakedFor(stakekey), "SSvcs2: not unstake");
+        require(!_isUnstakeWithdrawnFor(stakekey), "SSvcs2: withdrawn");
         require(_stakes[stakekey].unstakeAmountWei > 0, "SSvcs2: nothing");
         require(block.timestamp >= _stakes[stakekey].unstakeCooldownExpiryTimestamp, "SSvcs2: cooldown");
 
@@ -281,11 +281,16 @@ contract StakingServiceV2 is
 
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
-        require(_stakes[stakekey].revokeTimestamp == 0, "SSvcs2: revoked");
-        require(_stakes[stakekey].unstakeTimestamp == 0, "SSvcs2: unstaked");
+        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
+        require(!_isStakeUnstakedFor(stakekey), "SSvcs2: unstaked");
 
-        _stakes[stakekey].stakeMaturityTimestamp +=
-            stakingPoolInfo.revshareStakeDurationExtensionDays * SECONDS_IN_DAY;
+        _stakes[stakekey].stakeMaturityTimestamp =
+            (
+                block.timestamp >= _stakes[stakekey].stakeMaturityTimestamp
+                    ? block.timestamp
+                    : _stakes[stakekey].stakeMaturityTimestamp
+            )
+            + stakingPoolInfo.revshareStakeDurationExtensionDays * SECONDS_IN_DAY;
         isExtended = true;
     }
 
@@ -422,10 +427,6 @@ contract StakingServiceV2 is
         uint256 totalRemovableUnstakePenaltyWei =
             _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei - _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei;
         _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei += totalRemovableUnstakePenaltyWei;
-        require(
-            _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei == _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei,
-            "SSvcs2: unequal"
-        );
 
         emit UnstakePenaltyRemoved(
             poolId,
@@ -474,11 +475,9 @@ contract StakingServiceV2 is
 
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
-        require(_stakes[stakekey].revokeTimestamp == 0, "Ssvcs2: revoked");
+        require(!_isStakeRevokedFor(stakekey), "Ssvcs2: revoked");
 
-        uint256 revokedStakeAmountWei = _stakes[stakekey].stakeAmountWei - _stakes[stakekey].unstakeAmountWei;
-        uint256 revokedRewardAmountWei = _stakes[stakekey]
-            .estimatedRewardAtMaturityWei - _stakes[stakekey].rewardClaimedWei;
+        (uint256 revokedStakeAmountWei, uint256 revokedRewardAmountWei) = _calculateRevokedAmountFor(stakekey);
 
         _stakes[stakekey].revokeTimestamp = block.timestamp;
         _stakes[stakekey].revokedStakeAmountWei = revokedStakeAmountWei;
@@ -576,16 +575,10 @@ contract StakingServiceV2 is
         override
         returns (uint256)
     {
-        IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
-
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
 
-        if (!stakingPoolInfo.isActive) {
-            return 0;
-        }
-
-        return _getClaimableRewardWeiByStakekey(stakekey);
+        return _getClaimableRewardWeiFor(stakekey);
     }
 
     /**
@@ -709,6 +702,29 @@ contract StakingServiceV2 is
     }
 
     /**
+     * @dev Returns the amount of stake and reward revoked for the given stake identifier in Wei
+     * @param stakekey The stake identifier
+     * @return revokedStakeAmountWei The amount of stake revoked in Wei
+     * @return revokedRewardAmountWei The amount of reward revoked in Wei
+     */
+    function _calculateRevokedAmountFor(bytes memory stakekey)
+        internal
+        view
+        virtual
+        returns (uint256 revokedStakeAmountWei, uint256 revokedRewardAmountWei)
+    {
+        revokedStakeAmountWei =
+            _isUnstakeWithdrawnFor(stakekey)
+                ? 0
+                : (
+                    _isStakeUnstakedFor(stakekey)
+                        ? _stakes[stakekey].unstakeAmountWei
+                        : _stakes[stakekey].stakeAmountWei
+                );
+        revokedRewardAmountWei = _getClaimableRewardWeiFor(stakekey);
+    }
+
+    /**
      * @dev Returns the calculated timestamp when the stake matures given the stake duration and timestamp
      * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
      * @param stakeTimestamp The timestamp as seconds since unix epoch when the stake was placed
@@ -758,21 +774,17 @@ contract StakingServiceV2 is
      * @param stakekey The stake identifier
      * @return claimableRewardWei The claimable reward in Wei
      */
-    function _getClaimableRewardWeiByStakekey(bytes memory stakekey)
+    function _getClaimableRewardWeiFor(bytes memory stakekey)
         internal
         view
         virtual
         returns (uint256 claimableRewardWei)
     {
-        if (_stakes[stakekey].revokeTimestamp > 0) {
+        if (_isStakeRevokedFor(stakekey)) {
             return 0;
         }
 
-        if (!_stakes[stakekey].isActive) {
-            return 0;
-        }
-
-        if (!_isStakeMaturedByStakekey(stakekey)) {
+        if (!_isStakeMaturedFor(stakekey)) {
             return 0;
         }
 
@@ -843,7 +855,7 @@ contract StakingServiceV2 is
         virtual
         returns (uint256 unstakeAmountWei, uint256 unstakePenaltyAmountWei, uint256 unstakeCooldownPeriodDays, bool isStakeMature)
     {
-        isStakeMature = _isStakeMaturedByStakekey(stakekey);
+        isStakeMature = _isStakeMaturedFor(stakekey);
         unstakePenaltyAmountWei = isStakeMature
             ? 0
             : (stakingPoolInfo.earlyUnstakePenaltyPercentWei > 0
@@ -858,7 +870,7 @@ contract StakingServiceV2 is
      * @param stakekey The stake identifier
      * @return True if stake has matured
      */
-    function _isStakeMaturedByStakekey(bytes memory stakekey)
+    function _isStakeMaturedFor(bytes memory stakekey)
         internal
         view
         virtual
@@ -868,6 +880,48 @@ contract StakingServiceV2 is
 
         return
             _stakes[stakekey].stakeMaturityTimestamp > 0 && timestamp >= _stakes[stakekey].stakeMaturityTimestamp;
+    }
+
+    /**
+     * @dev Returns whether stake has been revoked for given stake key
+     * @param stakekey The stake identifier
+     * @return True if stake has been revoked
+     */
+    function _isStakeRevokedFor(bytes memory stakekey)
+        internal
+        view
+        virtual
+        returns (bool)
+    {
+        return _stakes[stakekey].revokeTimestamp > 0;
+    }
+
+    /**
+     * @dev Returns whether stake has been unstaked for given stake key
+     * @param stakekey The stake identifier
+     * @return True if stake has been unstaked
+     */
+    function _isStakeUnstakedFor(bytes memory stakekey)
+        internal
+        view
+        virtual
+        returns (bool)
+    {
+        return _stakes[stakekey].unstakeTimestamp > 0;
+    }
+
+    /**
+     * @dev Returns whether unstake has been withdrawn for given stake key
+     * @param stakekey The stake identifier
+     * @return True if unstake has been withdrawn
+     */
+    function _isUnstakeWithdrawnFor(bytes memory stakekey)
+        internal
+        view
+        virtual
+        returns (bool)
+    {
+        return _stakes[stakekey].withdrawUnstakeTimestamp > 0;
     }
 
     /**

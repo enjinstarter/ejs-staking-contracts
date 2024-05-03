@@ -237,14 +237,30 @@ function calculateCooldownExpiryTimestamp(
 function calculateRevokedRewardAmountWei(
   estimatedRewardAtMaturityWei,
   rewardClaimedWei,
+  stakeMaturityTimestamp,
+  currentTimestamp,
+  unstakeTimestamp,
 ) {
-  return hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei).sub(
+  return calculateClaimableRewardWei(
+    estimatedRewardAtMaturityWei,
     rewardClaimedWei,
+    stakeMaturityTimestamp,
+    currentTimestamp,
+    unstakeTimestamp,
   );
 }
 
-function calculateRevokedStakeAmountWei(stakeAmountWei, unstakeAmountWei) {
-  return hre.ethers.BigNumber.from(stakeAmountWei).sub(unstakeAmountWei);
+function calculateRevokedStakeAmountWei(
+  stakeAmountWei,
+  unstakeAmountWei,
+  isUnstakeWithdrawn,
+  isStakeUnstaked,
+) {
+  return isUnstakeWithdrawn
+    ? hre.ethers.constants.Zero
+    : isStakeUnstaked
+      ? hre.ethers.BigNumber.from(unstakeAmountWei)
+      : hre.ethers.BigNumber.from(stakeAmountWei);
 }
 
 function calculateStateMaturityTimestamp(stakeDurationDays, stakeTimestamp) {
@@ -457,11 +473,23 @@ async function revokeWithVerify(
   const expectRevokedStakeAmountWei = calculateRevokedStakeAmountWei(
     expectStakeInfoBeforeRevoke.stakeAmountWei,
     expectStakeInfoBeforeRevoke.unstakeAmountWei,
+    hre.ethers.BigNumber.from(
+      expectStakeInfoBeforeRevoke.withdrawUnstakeSecondsAfterStartblockTimestamp,
+    ).gt(hre.ethers.constants.Zero),
+    hre.ethers.BigNumber.from(expectStakeInfoBeforeRevoke.unstakeAmountWei).gt(
+      hre.ethers.constants.Zero,
+    ) ||
+      hre.ethers.BigNumber.from(
+        expectStakeInfoBeforeRevoke.unstakePenaltyAmountWei,
+      ).gt(hre.ethers.constants.Zero),
   );
 
   const expectRevokedRewardAmountWei = calculateRevokedRewardAmountWei(
     expectStakeInfoBeforeRevoke.estimatedRewardAtMaturityWei,
     expectStakeInfoBeforeRevoke.rewardClaimedWei,
+    expectStakeInfoBeforeRevoke.stakeMaturitySecondsAfterStartblockTimestamp,
+    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    expectStakeInfoBeforeRevoke.unstakeSecondsAfterStartblockTimestamp,
   );
 
   const contractBalanceOfBeforeRevoke = await stakingPoolConfigs[
@@ -486,9 +514,9 @@ async function revokeWithVerify(
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
       stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenInstance.address,
-      expectStakeInfoBeforeRevoke.stakeAmountWei,
+      expectRevokedStakeAmountWei,
       stakingPoolConfigs[stakeEvent.poolIndex].rewardTokenInstance.address,
-      expectStakeInfoBeforeRevoke.estimatedRewardAtMaturityWei,
+      expectRevokedRewardAmountWei,
       revokerAddress,
     );
 

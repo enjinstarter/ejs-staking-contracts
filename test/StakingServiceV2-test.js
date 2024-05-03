@@ -224,7 +224,7 @@ describe("StakingServiceV2", function () {
         enduserAccountAddress,
         stakeId,
       ),
-    ).to.be.revertedWith("SPool2: uninitialized");
+    ).to.be.revertedWith("SSvcs2: uninitialized");
 
     await expect(
       stakingServiceInstance.getStakeInfo(
@@ -754,7 +754,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("51039073-96ad-4c2f-9938-3c56eba19b6f"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1523),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1553),
         eventType: "Stake",
         poolIndex: 2,
         signer: enduserAccounts[0],
@@ -1909,12 +1909,21 @@ describe("StakingServiceV2", function () {
       .calculateRevokedRewardAmountWei(
         stakeInfoAfterEvent013.estimatedRewardAtMaturityWei,
         stakeInfoAfterEvent013.rewardClaimedWei,
+        stakeInfoAfterEvent013.stakeMaturitySecondsAfterStartblockTimestamp,
+        stakeEvents[13].eventSecondsAfterStartblockTimestamp,
+        stakeInfoAfterEvent013.unstakeSecondsAfterStartblockTimestamp,
       )
       .toString();
     stakeInfoAfterEvent013.revokedStakeAmountWei = stakeServiceHelpers
       .calculateRevokedStakeAmountWei(
         stakeEvents[7].stakeAmountWei,
         hre.ethers.constants.Zero,
+        hre.ethers.BigNumber.from(
+          stakeInfoAfterEvent013.withdrawUnstakeSecondsAfterStartblockTimestamp,
+        ).gt(hre.ethers.constants.Zero),
+        hre.ethers.BigNumber.from(
+          stakeInfoAfterEvent013.unstakeSecondsAfterStartblockTimestamp,
+        ).gt(hre.ethers.constants.Zero),
       )
       .toString();
     stakeInfoAfterEvent013.revokeSecondsAfterStartblockTimestamp =
@@ -2017,12 +2026,21 @@ describe("StakingServiceV2", function () {
       .calculateRevokedRewardAmountWei(
         stakeInfoAfterEvent016.estimatedRewardAtMaturityWei,
         stakeInfoAfterEvent016.rewardClaimedWei,
+        stakeInfoAfterEvent016.stakeMaturitySecondsAfterStartblockTimestamp,
+        stakeEvents[16].eventSecondsAfterStartblockTimestamp,
+        stakeInfoAfterEvent016.unstakeSecondsAfterStartblockTimestamp,
       )
       .toString();
     stakeInfoAfterEvent016.revokedStakeAmountWei = stakeServiceHelpers
       .calculateRevokedStakeAmountWei(
         stakeEvents[4].stakeAmountWei,
         hre.ethers.constants.Zero,
+        hre.ethers.BigNumber.from(
+          stakeInfoAfterEvent016.withdrawUnstakeSecondsAfterStartblockTimestamp,
+        ).gt(hre.ethers.constants.Zero),
+        hre.ethers.BigNumber.from(
+          stakeInfoAfterEvent016.unstakeSecondsAfterStartblockTimestamp,
+        ).gt(hre.ethers.constants.Zero),
       )
       .toString();
     stakeInfoAfterEvent016.revokeSecondsAfterStartblockTimestamp =
@@ -2199,12 +2217,21 @@ describe("StakingServiceV2", function () {
       .calculateRevokedRewardAmountWei(
         stakeInfoAfterEvent020.estimatedRewardAtMaturityWei,
         stakeInfoAfterEvent020.rewardClaimedWei,
+        stakeInfoAfterEvent020.stakeMaturitySecondsAfterStartblockTimestamp,
+        stakeEvents[20].eventSecondsAfterStartblockTimestamp,
+        stakeInfoAfterEvent020.unstakeSecondsAfterStartblockTimestamp,
       )
       .toString();
     stakeInfoAfterEvent020.revokedStakeAmountWei = stakeServiceHelpers
       .calculateRevokedStakeAmountWei(
         stakeEvents[14].stakeAmountWei,
         stakeInfoAfterEvent020.unstakeAmountWei,
+        hre.ethers.BigNumber.from(
+          stakeInfoAfterEvent020.withdrawUnstakeSecondsAfterStartblockTimestamp,
+        ).gt(hre.ethers.constants.Zero),
+        hre.ethers.BigNumber.from(
+          stakeInfoAfterEvent020.unstakeSecondsAfterStartblockTimestamp,
+        ).gt(hre.ethers.constants.Zero),
       )
       .toString();
     stakeInfoAfterEvent020.revokeSecondsAfterStartblockTimestamp =
@@ -3065,7 +3092,7 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent013.totalRevokedRewardWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
+          stakeServiceHelpers.calculateRevokedRewardAmountWei(
             stakeServiceHelpers.estimateRewardAtMaturityWei(
               stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
                 .poolAprWei,
@@ -3073,8 +3100,14 @@ describe("StakingServiceV2", function () {
                 .stakeDurationDays,
               stakeEvents[7].stakeAmountWei,
             ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-              .rewardTokenDecimals,
+            hre.ethers.constants.Zero,
+            stakeServiceHelpers.calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[7].eventSecondsAfterStartblockTimestamp,
+            ),
+            stakeEvents[13].eventSecondsAfterStartblockTimestamp,
+            hre.ethers.constants.Zero,
           ),
         )
         .toString();
@@ -3083,10 +3116,11 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent013.totalRevokedStakeWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
+          stakeServiceHelpers.calculateRevokedStakeAmountWei(
             stakeEvents[7].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex]
-              .stakeTokenDecimals,
+            hre.ethers.constants.Zero,
+            false,
+            false,
           ),
         )
         .toString();
@@ -3198,7 +3232,7 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent016.totalRevokedRewardWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
+          stakeServiceHelpers.calculateRevokedRewardAmountWei(
             stakeServiceHelpers.estimateRewardAtMaturityWei(
               stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
                 .poolAprWei,
@@ -3206,8 +3240,14 @@ describe("StakingServiceV2", function () {
                 .stakeDurationDays,
               stakeEvents[4].stakeAmountWei,
             ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-              .rewardTokenDecimals,
+            hre.ethers.constants.Zero,
+            stakeServiceHelpers.calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[4].eventSecondsAfterStartblockTimestamp,
+            ),
+            stakeEvents[16].eventSecondsAfterStartblockTimestamp,
+            hre.ethers.constants.Zero,
           ),
         )
         .toString();
@@ -3216,10 +3256,11 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent016.totalRevokedStakeWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
+          stakeServiceHelpers.calculateRevokedStakeAmountWei(
             stakeEvents[4].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-              .stakeTokenDecimals,
+            hre.ethers.constants.Zero,
+            false,
+            false,
           ),
         )
         .toString();
@@ -3446,7 +3487,7 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent020.totalRevokedRewardWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
+          stakeServiceHelpers.calculateRevokedRewardAmountWei(
             stakeServiceHelpers.estimateRewardAtMaturityWei(
               stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
                 .poolAprWei,
@@ -3454,8 +3495,14 @@ describe("StakingServiceV2", function () {
                 .stakeDurationDays,
               stakeEvents[14].stakeAmountWei,
             ),
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-              .rewardTokenDecimals,
+            hre.ethers.constants.Zero,
+            stakeServiceHelpers.calculateStateMaturityTimestamp(
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+                .stakeDurationDays,
+              stakeEvents[14].eventSecondsAfterStartblockTimestamp,
+            ),
+            stakeEvents[20].eventSecondsAfterStartblockTimestamp,
+            stakeEvents[19].eventSecondsAfterStartblockTimestamp,
           ),
         )
         .toString();
@@ -3464,10 +3511,23 @@ describe("StakingServiceV2", function () {
         stakingPoolStatsAfterEvent020.totalRevokedStakeWei,
       )
         .add(
-          stakeServiceHelpers.computeTruncatedAmountWei(
+          stakeServiceHelpers.calculateRevokedStakeAmountWei(
             stakeEvents[14].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-              .stakeTokenDecimals,
+            stakeServiceHelpers.calculateUnstakeAmountWei(
+              stakeEvents[14].stakeAmountWei,
+              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
+                .earlyUnstakePenaltyPercentWei,
+              stakeServiceHelpers.calculateStateMaturityTimestamp(
+                stakingPoolStakeRewardTokenSameConfigs[
+                  stakeEvents[14].poolIndex
+                ].stakeDurationDays,
+                stakeEvents[14].eventSecondsAfterStartblockTimestamp,
+              ),
+              stakeEvents[19].eventSecondsAfterStartblockTimestamp,
+              stakeEvents[19].eventSecondsAfterStartblockTimestamp,
+            ),
+            false,
+            true,
           ),
         )
         .toString();

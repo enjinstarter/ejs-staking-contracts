@@ -154,9 +154,9 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @param account The address of the user wallet whose stake has been revoked
      * @param stakeId The stake identifier
      * @param stakeToken The address of the ERC20 stake token
-     * @param stakeAmountWei The amount of tokens staked in Wei
+     * @param revokedStakeAmountWei The revoked amount of stake in Wei
      * @param rewardToken The address of the ERC20 reward token
-     * @param rewardWei The expected reward in Wei
+     * @param revokedRewardAmountWei The revoked amount of reward in Wei
      * @param sender The address that revoked the user stake
      */
     event StakeRevoked(
@@ -164,9 +164,9 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         address indexed account,
         bytes32 indexed stakeId,
         address stakeToken,
-        uint256 stakeAmountWei,
+        uint256 revokedStakeAmountWei,
         address rewardToken,
-        uint256 rewardWei,
+        uint256 revokedRewardAmountWei,
         address sender
     );
 
