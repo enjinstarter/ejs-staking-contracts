@@ -1048,46 +1048,15 @@ describe("StakingServiceV2", function () {
       `stakeInfoAfterEvent004 after: ${JSON.stringify(stakeInfos[5].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
     );
 
-    const stakeInfos006 = structuredClone(stakeInfos005);
-    const stakeInfoAfterEvent005 = stakeInfos006.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
-    );
-    console.log(
-      `\nstakeInfoAfterEvent005 before: ${JSON.stringify(stakeInfoAfterEvent005)}`,
-    );
-    stakeInfoAfterEvent005.unstakeAmountWei = stakeServiceHelpers
-      .calculateUnstakeAmountWei(
-        stakeInfoAfterEvent005.stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-          .earlyUnstakePenaltyPercentWei,
-        stakeInfoAfterEvent005.stakeMaturitySecondsAfterStartblockTimestamp,
-        stakeEvents[5].eventSecondsAfterStartblockTimestamp,
-        stakeEvents[5].eventSecondsAfterStartblockTimestamp,
-      )
-      .toString();
-    stakeInfoAfterEvent005.unstakeCooldownExpirySecondsAfterStartblockTimestamp =
-      stakeServiceHelpers
-        .calculateCooldownExpiryTimestamp(
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-            .earlyUnstakeCooldownPeriodDays,
-          stakeEvents[5].eventSecondsAfterStartblockTimestamp,
-        )
-        .toString();
-    stakeInfoAfterEvent005.unstakePenaltyAmountWei = stakeServiceHelpers
-      .calculateUnstakePenaltyWei(
-        stakeInfoAfterEvent005.stakeAmountWei,
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex]
-          .earlyUnstakePenaltyPercentWei,
-        stakeInfoAfterEvent005.stakeMaturitySecondsAfterStartblockTimestamp,
-        stakeEvents[5].eventSecondsAfterStartblockTimestamp,
-        stakeEvents[5].eventSecondsAfterStartblockTimestamp,
-      )
-      .toString();
-    stakeInfoAfterEvent005.unstakeSecondsAfterStartblockTimestamp =
-      stakeEvents[5].eventSecondsAfterStartblockTimestamp.toString();
-    stakeInfos006.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
-      stakeInfoAfterEvent005,
+    const {
+      nextExpectStakeInfos: stakeInfos006,
+      nextExpectStakingPoolStats: _stakingPoolStats006,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[5],
+      stakeEvents[2],
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos005,
+      _stakingPoolStats005,
     );
     stakeInfos.push(stakeInfos006);
     console.log(

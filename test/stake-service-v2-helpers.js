@@ -407,6 +407,12 @@ function getNextExpectStakeInfoStakingPoolStats(
       break;
     case "Unstake":
       console.log(`\nUnstake`);
+      updateExpectStakeInfoAfterUnstake(
+        triggerStakeEvent,
+        updateStakeEvent,
+        stakingPoolConfigs,
+        expectStakeInfoAfterTriggerStakeEvent,
+      );
       break;
     case "Withdraw":
       console.log(`\nWithdraw`);
@@ -1566,7 +1572,7 @@ function updateExpectStakeInfoAfterStake(
   stakingPoolConfigs,
   expectStakeInfoAfterTriggerStakeEvent,
 ) {
-  const truncatedStakeRewardWei = computeTruncatedAmountWei(
+  const truncatedStakeAmountWei = computeTruncatedAmountWei(
     triggerStakeEvent.stakeAmountWei,
     stakingPoolConfigs[triggerStakeEvent.poolIndex].stakeTokenDecimals,
   );
@@ -1577,13 +1583,13 @@ function updateExpectStakeInfoAfterStake(
       : estimateRewardAtMaturityWei(
           stakingPoolConfigs[triggerStakeEvent.poolIndex].poolAprWei,
           stakingPoolConfigs[triggerStakeEvent.poolIndex].stakeDurationDays,
-          truncatedStakeRewardWei,
+          truncatedStakeAmountWei,
         )
   ).toString();
   expectStakeInfoAfterTriggerStakeEvent.stakeAmountWei = (
     triggerStakeEvent.stakeExceedPoolReward
       ? hre.ethers.constants.Zero
-      : truncatedStakeRewardWei
+      : truncatedStakeAmountWei
   ).toString();
   expectStakeInfoAfterTriggerStakeEvent.stakeMaturitySecondsAfterStartblockTimestamp =
     (
@@ -1603,6 +1609,50 @@ function updateExpectStakeInfoAfterStake(
     triggerStakeEvent.stakeExceedPoolReward ? false : true;
   expectStakeInfoAfterTriggerStakeEvent.isInitialized =
     triggerStakeEvent.stakeExceedPoolReward ? false : true;
+}
+
+function updateExpectStakeInfoAfterUnstake(
+  triggerStakeEvent,
+  updateStakeEvent,
+  stakingPoolConfigs,
+  expectStakeInfoAfterTriggerStakeEvent,
+) {
+  const truncatedStakeAmountWei = computeTruncatedAmountWei(
+    updateStakeEvent.stakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex].stakeTokenDecimals,
+  );
+  const stakeMaturitySecondsAfterStartblockTimestamp =
+    calculateStateMaturityTimestamp(
+      stakingPoolConfigs[updateStakeEvent.poolIndex].stakeDurationDays,
+      updateStakeEvent.eventSecondsAfterStartblockTimestamp,
+    );
+
+  expectStakeInfoAfterTriggerStakeEvent.unstakeAmountWei =
+    calculateUnstakeAmountWei(
+      truncatedStakeAmountWei,
+      stakingPoolConfigs[updateStakeEvent.poolIndex]
+        .earlyUnstakePenaltyPercentWei,
+      stakeMaturitySecondsAfterStartblockTimestamp,
+      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    ).toString();
+  expectStakeInfoAfterTriggerStakeEvent.unstakeCooldownExpirySecondsAfterStartblockTimestamp =
+    calculateCooldownExpiryTimestamp(
+      stakingPoolConfigs[updateStakeEvent.poolIndex]
+        .earlyUnstakeCooldownPeriodDays,
+      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    ).toString();
+  expectStakeInfoAfterTriggerStakeEvent.unstakePenaltyAmountWei =
+    calculateUnstakePenaltyWei(
+      truncatedStakeAmountWei,
+      stakingPoolConfigs[updateStakeEvent.poolIndex]
+        .earlyUnstakePenaltyPercentWei,
+      stakeMaturitySecondsAfterStartblockTimestamp,
+      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    ).toString();
+  expectStakeInfoAfterTriggerStakeEvent.unstakeSecondsAfterStartblockTimestamp =
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString();
 }
 
 function verifyActualWithTruncatedValueWei(
@@ -2207,6 +2257,7 @@ module.exports = {
   testStakeClaimRevokeUnstakeWithdraw,
   unstakeWithVerify,
   updateExpectStakeInfoAfterStake,
+  updateExpectStakeInfoAfterUnstake,
   verifyActualWithTruncatedValueWei,
   verifyMultipleStakeInfos,
   verifyMultipleStakingPoolStats,
