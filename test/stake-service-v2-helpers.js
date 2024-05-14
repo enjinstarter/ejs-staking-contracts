@@ -409,6 +409,11 @@ function getNextExpectStakeInfoStakingPoolStats(
         stakingPoolConfigs,
         expectStakeInfoAfterTriggerStakeEvent,
       );
+      updateExpectStakingPoolStatsAfterStake(
+        triggerStakeEvent,
+        stakingPoolConfigs,
+        expectStakingPoolStatsAfterTriggerStakeEvent,
+      );
       break;
     case "Unstake":
       console.log(`\nUnstake: ${JSON.stringify(triggerStakeEvent)}`);
@@ -436,6 +441,11 @@ function getNextExpectStakeInfoStakingPoolStats(
   nextExpectStakeInfos.set(
     `${stakingPoolConfigs[updateStakeEvent.poolIndex].poolId},${updateStakeEvent.signerAddress},${updateStakeEvent.stakeId}`,
     expectStakeInfoAfterTriggerStakeEvent,
+  );
+
+  nextExpectStakingPoolStats.set(
+    `${stakingPoolConfigs[updateStakeEvent.poolIndex].poolId}`,
+    expectStakingPoolStatsAfterTriggerStakeEvent,
   );
 
   return {
@@ -1700,6 +1710,39 @@ function updateExpectStakeInfoAfterWithdraw(
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString();
 }
 
+function updateExpectStakingPoolStatsAfterStake(
+  triggerStakeEvent,
+  stakingPoolConfigs,
+  expectStakingPoolStatsAfterTriggerStakeEvent,
+) {
+  if (triggerStakeEvent.stakeExceedPoolReward) {
+    return;
+  }
+
+  const truncatedStakeAmountWei = computeTruncatedAmountWei(
+    triggerStakeEvent.stakeAmountWei,
+    stakingPoolConfigs[triggerStakeEvent.poolIndex].stakeTokenDecimals,
+  );
+  const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
+    stakingPoolConfigs[triggerStakeEvent.poolIndex].poolAprWei,
+    stakingPoolConfigs[triggerStakeEvent.poolIndex].stakeDurationDays,
+    truncatedStakeAmountWei,
+  );
+
+  expectStakingPoolStatsAfterTriggerStakeEvent.rewardToBeDistributedWei =
+    hre.ethers.BigNumber.from(
+      expectStakingPoolStatsAfterTriggerStakeEvent.rewardToBeDistributedWei,
+    )
+      .add(estimatedRewardAtMaturityWei)
+      .toString();
+  expectStakingPoolStatsAfterTriggerStakeEvent.totalStakedWei =
+    hre.ethers.BigNumber.from(
+      expectStakingPoolStatsAfterTriggerStakeEvent.totalStakedWei,
+    )
+      .add(truncatedStakeAmountWei)
+      .toString();
+}
+
 function verifyActualWithTruncatedValueWei(
   lastDigitDecimalsDelta,
   tokenDecimals,
@@ -2305,6 +2348,7 @@ module.exports = {
   updateExpectStakeInfoAfterStake,
   updateExpectStakeInfoAfterUnstake,
   updateExpectStakeInfoAfterWithdraw,
+  updateExpectStakingPoolStatsAfterStake,
   verifyActualWithTruncatedValueWei,
   verifyMultipleStakeInfos,
   verifyMultipleStakingPoolStats,
