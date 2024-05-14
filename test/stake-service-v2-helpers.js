@@ -416,6 +416,10 @@ function getNextExpectStakeInfoStakingPoolStats(
       break;
     case "Withdraw":
       console.log(`\nWithdraw`);
+      updateExpectStakeInfoAfterWithdraw(
+        triggerStakeEvent,
+        expectStakeInfoAfterTriggerStakeEvent,
+      );
       break;
     default:
       console.log(
@@ -1655,6 +1659,14 @@ function updateExpectStakeInfoAfterUnstake(
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString();
 }
 
+function updateExpectStakeInfoAfterWithdraw(
+  triggerStakeEvent,
+  expectStakeInfoAfterTriggerStakeEvent,
+) {
+  expectStakeInfoAfterTriggerStakeEvent.withdrawUnstakeSecondsAfterStartblockTimestamp =
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString();
+}
+
 function verifyActualWithTruncatedValueWei(
   lastDigitDecimalsDelta,
   tokenDecimals,
@@ -2258,6 +2270,7 @@ module.exports = {
   unstakeWithVerify,
   updateExpectStakeInfoAfterStake,
   updateExpectStakeInfoAfterUnstake,
+  updateExpectStakeInfoAfterWithdraw,
   verifyActualWithTruncatedValueWei,
   verifyMultipleStakeInfos,
   verifyMultipleStakingPoolStats,
