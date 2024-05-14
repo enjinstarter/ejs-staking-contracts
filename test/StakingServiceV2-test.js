@@ -1168,39 +1168,15 @@ describe("StakingServiceV2", function () {
       `stakeInfoAfterEvent012 after: ${JSON.stringify(stakeInfos[13].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
     );
 
-    const stakeInfos014 = structuredClone(stakeInfos013);
-    const stakeInfoAfterEvent013 = stakeInfos014.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
-    );
-    console.log(
-      `\nstakeInfoAfterEvent013 before: ${JSON.stringify(stakeInfoAfterEvent013)}`,
-    );
-    stakeInfoAfterEvent013.revokedRewardAmountWei = stakeServiceHelpers
-      .calculateRevokedRewardAmountWei(
-        stakeInfoAfterEvent013.estimatedRewardAtMaturityWei,
-        stakeInfoAfterEvent013.rewardClaimedWei,
-        stakeInfoAfterEvent013.stakeMaturitySecondsAfterStartblockTimestamp,
-        stakeEvents[13].eventSecondsAfterStartblockTimestamp,
-        stakeInfoAfterEvent013.unstakeSecondsAfterStartblockTimestamp,
-      )
-      .toString();
-    stakeInfoAfterEvent013.revokedStakeAmountWei = stakeServiceHelpers
-      .calculateRevokedStakeAmountWei(
-        stakeEvents[7].stakeAmountWei,
-        hre.ethers.constants.Zero,
-        hre.ethers.BigNumber.from(
-          stakeInfoAfterEvent013.withdrawUnstakeSecondsAfterStartblockTimestamp,
-        ).gt(hre.ethers.constants.Zero),
-        hre.ethers.BigNumber.from(
-          stakeInfoAfterEvent013.unstakeSecondsAfterStartblockTimestamp,
-        ).gt(hre.ethers.constants.Zero),
-      )
-      .toString();
-    stakeInfoAfterEvent013.revokeSecondsAfterStartblockTimestamp =
-      stakeEvents[13].eventSecondsAfterStartblockTimestamp.toString();
-    stakeInfos014.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
-      stakeInfoAfterEvent013,
+    const {
+      nextExpectStakeInfos: stakeInfos014,
+      nextExpectStakingPoolStats: _stakingPoolStats014,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[13],
+      stakeEvents[7],
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos013,
+      _stakingPoolStats013,
     );
     stakeInfos.push(stakeInfos014);
     console.log(

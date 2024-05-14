@@ -396,6 +396,11 @@ function getNextExpectStakeInfoStakingPoolStats(
       break;
     case "Revoke":
       console.log(`\nRevoke`);
+      updateExpectStakeInfoAfterRevoke(
+        triggerStakeEvent,
+        updateStakeEvent,
+        expectStakeInfoAfterTriggerStakeEvent,
+      );
       break;
     case "Stake":
       console.log(`\nStake`);
@@ -1571,6 +1576,34 @@ async function unstakeWithVerify(
   );
 }
 
+function updateExpectStakeInfoAfterRevoke(
+  triggerStakeEvent,
+  updateStakeEvent,
+  expectStakeInfoAfterTriggerStakeEvent,
+) {
+  expectStakeInfoAfterTriggerStakeEvent.revokedRewardAmountWei =
+    calculateRevokedRewardAmountWei(
+      expectStakeInfoAfterTriggerStakeEvent.estimatedRewardAtMaturityWei,
+      expectStakeInfoAfterTriggerStakeEvent.rewardClaimedWei,
+      expectStakeInfoAfterTriggerStakeEvent.stakeMaturitySecondsAfterStartblockTimestamp,
+      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+      expectStakeInfoAfterTriggerStakeEvent.unstakeSecondsAfterStartblockTimestamp,
+    ).toString();
+  expectStakeInfoAfterTriggerStakeEvent.revokedStakeAmountWei =
+    calculateRevokedStakeAmountWei(
+      updateStakeEvent.stakeAmountWei,
+      expectStakeInfoAfterTriggerStakeEvent.unstakeAmountWei,
+      hre.ethers.BigNumber.from(
+        expectStakeInfoAfterTriggerStakeEvent.withdrawUnstakeSecondsAfterStartblockTimestamp,
+      ).gt(hre.ethers.constants.Zero),
+      hre.ethers.BigNumber.from(
+        expectStakeInfoAfterTriggerStakeEvent.unstakeSecondsAfterStartblockTimestamp,
+      ).gt(hre.ethers.constants.Zero),
+    ).toString();
+  expectStakeInfoAfterTriggerStakeEvent.revokeSecondsAfterStartblockTimestamp =
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString();
+}
+
 function updateExpectStakeInfoAfterStake(
   triggerStakeEvent,
   stakingPoolConfigs,
@@ -2268,6 +2301,7 @@ module.exports = {
   testSetStakingPoolContract,
   testStakeClaimRevokeUnstakeWithdraw,
   unstakeWithVerify,
+  updateExpectStakeInfoAfterRevoke,
   updateExpectStakeInfoAfterStake,
   updateExpectStakeInfoAfterUnstake,
   updateExpectStakeInfoAfterWithdraw,
