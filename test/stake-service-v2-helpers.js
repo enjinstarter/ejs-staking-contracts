@@ -387,15 +387,15 @@ function getNextExpectStakeInfoStakingPoolStats(
       `${stakingPoolConfigs[updateStakeEvent.poolIndex].poolId}`,
     );
   console.log(
-    `\stakingPoolStatsAfterTriggerStakeEvent before: ${JSON.stringify(expectStakingPoolStatsAfterTriggerStakeEvent)}`,
+    `\nstakingPoolStatsAfterTriggerStakeEvent before: ${JSON.stringify(expectStakingPoolStatsAfterTriggerStakeEvent)}`,
   );
 
   switch (triggerStakeEvent.eventType) {
     case "Claim":
-      console.log(`\Claim`);
+      console.log(`\Claim: ${JSON.stringify(triggerStakeEvent)}`);
       break;
     case "Revoke":
-      console.log(`\nRevoke`);
+      console.log(`\nRevoke: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakeInfoAfterRevoke(
         triggerStakeEvent,
         updateStakeEvent,
@@ -403,7 +403,7 @@ function getNextExpectStakeInfoStakingPoolStats(
       );
       break;
     case "Stake":
-      console.log(`\nStake`);
+      console.log(`\nStake: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakeInfoAfterStake(
         triggerStakeEvent,
         stakingPoolConfigs,
@@ -411,7 +411,7 @@ function getNextExpectStakeInfoStakingPoolStats(
       );
       break;
     case "Unstake":
-      console.log(`\nUnstake`);
+      console.log(`\nUnstake: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakeInfoAfterUnstake(
         triggerStakeEvent,
         updateStakeEvent,
@@ -420,7 +420,7 @@ function getNextExpectStakeInfoStakingPoolStats(
       );
       break;
     case "Withdraw":
-      console.log(`\nWithdraw`);
+      console.log(`\nWithdraw: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakeInfoAfterWithdraw(
         triggerStakeEvent,
         expectStakeInfoAfterTriggerStakeEvent,
@@ -428,7 +428,7 @@ function getNextExpectStakeInfoStakingPoolStats(
       break;
     default:
       console.log(
-        `\nUnknown Trigger Event Type: ${triggerStakeEvent.eventType}`,
+        `\nUnknown Trigger Event Type ${triggerStakeEvent.eventType}: ${JSON.stringify(triggerStakeEvent)}`,
       );
       break;
   }
