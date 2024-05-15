@@ -1255,7 +1255,7 @@ describe("StakingServiceV2", function () {
 
     const {
       nextExpectStakeInfos: stakeInfos015,
-      nextExpectStakingPoolStats: _stakingPoolStats015,
+      nextExpectStakingPoolStats: stakingPoolStats015,
     } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
       stakeEvents[14],
       stakeEvents[14],
@@ -1268,576 +1268,149 @@ describe("StakingServiceV2", function () {
     console.log(
       `\nstakeInfoAfterEvent014 after: ${JSON.stringify(stakeInfos[15].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
     );
+    stakingPoolStats.push(stakingPoolStats015);
+    console.log(
+      `stakingPoolStatsAfterEvent014 after: ${JSON.stringify(stakingPoolStats[15].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
+    );
 
     const {
       nextExpectStakeInfos: stakeInfos016,
-      nextExpectStakingPoolStats: _stakingPoolStats016,
+      nextExpectStakingPoolStats: stakingPoolStats016,
     } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
       stakeEvents[15],
       stakeEvents[1],
       stakeEvents[11],
       stakingPoolStakeRewardTokenSameConfigs,
       stakeInfos015,
-      _stakingPoolStats015,
+      stakingPoolStats015,
     );
     stakeInfos.push(stakeInfos016);
     console.log(
       `\nstakeInfoAfterEvent015 after: ${JSON.stringify(stakeInfos[16].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`))}`,
-    );
-
-    const {
-      nextExpectStakeInfos: stakeInfos017,
-      nextExpectStakingPoolStats: _stakingPoolStats017,
-    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
-      stakeEvents[16],
-      stakeEvents[4],
-      null,
-      stakingPoolStakeRewardTokenSameConfigs,
-      stakeInfos016,
-      _stakingPoolStats016,
-    );
-    stakeInfos.push(stakeInfos017);
-    console.log(
-      `\nstakeInfoAfterEvent016 after: ${JSON.stringify(stakeInfos[17].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
-    );
-
-    const {
-      nextExpectStakeInfos: stakeInfos018,
-      nextExpectStakingPoolStats: _stakingPoolStats018,
-    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
-      stakeEvents[17],
-      stakeEvents[17],
-      null,
-      stakingPoolStakeRewardTokenSameConfigs,
-      stakeInfos017,
-      _stakingPoolStats017,
-    );
-    stakeInfos.push(stakeInfos018);
-    console.log(
-      `\nstakeInfoAfterEvent017 after: ${JSON.stringify(stakeInfos[18].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId},${stakeEvents[17].signerAddress},${stakeEvents[17].stakeId}`))}`,
-    );
-
-    const {
-      nextExpectStakeInfos: stakeInfos019,
-      nextExpectStakingPoolStats: _stakingPoolStats019,
-    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
-      stakeEvents[18],
-      stakeEvents[12],
-      null,
-      stakingPoolStakeRewardTokenSameConfigs,
-      stakeInfos018,
-      _stakingPoolStats018,
-    );
-    stakeInfos.push(stakeInfos019);
-    console.log(
-      `\nstakeInfoAfterEvent018 after: ${JSON.stringify(stakeInfos[19].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
-    );
-
-    const {
-      nextExpectStakeInfos: stakeInfos020,
-      nextExpectStakingPoolStats: _stakingPoolStats020,
-    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
-      stakeEvents[19],
-      stakeEvents[14],
-      null,
-      stakingPoolStakeRewardTokenSameConfigs,
-      stakeInfos019,
-      _stakingPoolStats019,
-    );
-    stakeInfos.push(stakeInfos020);
-    console.log(
-      `\nstakeInfoAfterEvent019 after: ${JSON.stringify(stakeInfos[20].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
-    );
-
-    const {
-      nextExpectStakeInfos: stakeInfos021,
-      nextExpectStakingPoolStats: _stakingPoolStats021,
-    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
-      stakeEvents[20],
-      stakeEvents[14],
-      null,
-      stakingPoolStakeRewardTokenSameConfigs,
-      stakeInfos020,
-      _stakingPoolStats020,
-    );
-    stakeInfos.push(stakeInfos021);
-    console.log(
-      `\nstakeInfoAfterEvent020 after: ${JSON.stringify(stakeInfos[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
-    );
-
-    const {
-      nextExpectStakeInfos: stakeInfos022,
-      nextExpectStakingPoolStats: _stakingPoolStats022,
-    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
-      stakeEvents[21],
-      stakeEvents[21],
-      null,
-      stakingPoolStakeRewardTokenSameConfigs,
-      stakeInfos021,
-      _stakingPoolStats021,
-    );
-    stakeInfos.push(stakeInfos022);
-    console.log(
-      `\nstakeInfoAfterEvent021 after: ${JSON.stringify(stakeInfos[22].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId},${stakeEvents[21].signerAddress},${stakeEvents[21].stakeId}`))}`,
-    );
-
-    const stakingPoolStats015 = structuredClone(stakingPoolStats014);
-    const stakingPoolStatsAfterEvent014 = stakingPoolStats015.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
-    );
-    console.log(
-      `\nstakingPoolStatsAfterEvent014 before: ${JSON.stringify(stakingPoolStatsAfterEvent014)}`,
-    );
-    stakingPoolStatsAfterEvent014.rewardToBeDistributedWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent014.rewardToBeDistributedWei,
-      )
-        .add(
-          stakeEvents[14].stakeExceedPoolReward
-            ? hre.ethers.constants.Zero
-            : stakeServiceHelpers.computeTruncatedAmountWei(
-                stakeServiceHelpers.estimateRewardAtMaturityWei(
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[14].poolIndex
-                  ].poolAprWei,
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[14].poolIndex
-                  ].stakeDurationDays,
-                  stakeEvents[14].stakeAmountWei,
-                ),
-                stakingPoolStakeRewardTokenSameConfigs[
-                  stakeEvents[14].poolIndex
-                ].rewardTokenDecimals,
-              ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent014.totalStakedWei = hre.ethers.BigNumber.from(
-      stakingPoolStatsAfterEvent014.totalStakedWei,
-    )
-      .add(
-        stakeEvents[14].stakeExceedPoolReward
-          ? hre.ethers.constants.Zero
-          : stakeServiceHelpers.computeTruncatedAmountWei(
-              stakeEvents[14].stakeAmountWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-                .stakeTokenDecimals,
-            ),
-      )
-      .toString();
-    stakingPoolStats015.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent014,
-    );
-    stakingPoolStats.push(stakingPoolStats015);
-    console.log(
-      `stakingPoolStatsAfterEvent014 after: ${JSON.stringify(stakingPoolStats[15].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
-    );
-
-    const stakingPoolStats016 = structuredClone(stakingPoolStats015);
-    const stakingPoolStatsAfterEvent015 = stakingPoolStats016.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
-    );
-    console.log(
-      `\nstakingPoolStatsAfterEvent015 before: ${JSON.stringify(stakingPoolStatsAfterEvent015)}`,
-    );
-    stakingPoolStatsAfterEvent015.totalWithdrawnUnstakeWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent015.totalWithdrawnUnstakeWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateUnstakeAmountWei(
-            stakeEvents[1].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-              .earlyUnstakePenaltyPercentWei,
-            stakeServiceHelpers.calculateStateMaturityTimestamp(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[1].eventSecondsAfterStartblockTimestamp,
-            ),
-            stakeEvents[15].eventSecondsAfterStartblockTimestamp,
-            stakeEvents[11].eventSecondsAfterStartblockTimestamp,
-          ),
-        )
-        .toString();
-    stakingPoolStats016.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent015,
     );
     stakingPoolStats.push(stakingPoolStats016);
     console.log(
       `stakingPoolStatsAfterEvent015 after: ${JSON.stringify(stakingPoolStats[16].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`))}`,
     );
 
-    const stakingPoolStats017 = structuredClone(stakingPoolStats016);
-    const stakingPoolStatsAfterEvent016 = stakingPoolStats017.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`,
+    const {
+      nextExpectStakeInfos: stakeInfos017,
+      nextExpectStakingPoolStats: stakingPoolStats017,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[16],
+      stakeEvents[4],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos016,
+      stakingPoolStats016,
     );
+    stakeInfos.push(stakeInfos017);
     console.log(
-      `\nstakingPoolStatsAfterEvent016 before: ${JSON.stringify(stakingPoolStatsAfterEvent016)}`,
-    );
-    stakingPoolStatsAfterEvent016.totalRevokedRewardWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent016.totalRevokedRewardWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateRevokedRewardAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[4].stakeAmountWei,
-            ),
-            hre.ethers.constants.Zero,
-            stakeServiceHelpers.calculateStateMaturityTimestamp(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[4].eventSecondsAfterStartblockTimestamp,
-            ),
-            stakeEvents[16].eventSecondsAfterStartblockTimestamp,
-            hre.ethers.constants.Zero,
-          ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent016.totalRevokedStakeWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent016.totalRevokedStakeWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateRevokedStakeAmountWei(
-            stakeEvents[4].stakeAmountWei,
-            hre.ethers.constants.Zero,
-            false,
-            false,
-          ),
-        )
-        .toString();
-    stakingPoolStats017.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent016,
+      `\nstakeInfoAfterEvent016 after: ${JSON.stringify(stakeInfos[17].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
     );
     stakingPoolStats.push(stakingPoolStats017);
     console.log(
       `stakingPoolStatsAfterEvent016 after: ${JSON.stringify(stakingPoolStats[17].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`))}`,
     );
 
-    const stakingPoolStats018 = structuredClone(stakingPoolStats017);
-    const stakingPoolStatsAfterEvent017 = stakingPoolStats018.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId}`,
+    const {
+      nextExpectStakeInfos: stakeInfos018,
+      nextExpectStakingPoolStats: stakingPoolStats018,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[17],
+      stakeEvents[17],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos017,
+      stakingPoolStats017,
     );
+    stakeInfos.push(stakeInfos018);
     console.log(
-      `\nstakingPoolStatsAfterEvent017 before: ${JSON.stringify(stakingPoolStatsAfterEvent017)}`,
-    );
-    stakingPoolStatsAfterEvent017.rewardToBeDistributedWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent017.rewardToBeDistributedWei,
-      )
-        .add(
-          stakeEvents[17].stakeExceedPoolReward
-            ? hre.ethers.constants.Zero
-            : stakeServiceHelpers.computeTruncatedAmountWei(
-                stakeServiceHelpers.estimateRewardAtMaturityWei(
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[17].poolIndex
-                  ].poolAprWei,
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[17].poolIndex
-                  ].stakeDurationDays,
-                  stakeEvents[17].stakeAmountWei,
-                ),
-                stakingPoolStakeRewardTokenSameConfigs[
-                  stakeEvents[17].poolIndex
-                ].rewardTokenDecimals,
-              ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent017.totalStakedWei = hre.ethers.BigNumber.from(
-      stakingPoolStatsAfterEvent017.totalStakedWei,
-    )
-      .add(
-        stakeEvents[17].stakeExceedPoolReward
-          ? hre.ethers.constants.Zero
-          : stakeServiceHelpers.computeTruncatedAmountWei(
-              stakeEvents[17].stakeAmountWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex]
-                .stakeTokenDecimals,
-            ),
-      )
-      .toString();
-    stakingPoolStats018.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent017,
+      `\nstakeInfoAfterEvent017 after: ${JSON.stringify(stakeInfos[18].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId},${stakeEvents[17].signerAddress},${stakeEvents[17].stakeId}`))}`,
     );
     stakingPoolStats.push(stakingPoolStats018);
     console.log(
       `stakingPoolStatsAfterEvent017 after: ${JSON.stringify(stakingPoolStats[18].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[17].poolIndex].poolId}`))}`,
     );
 
-    const stakingPoolStats019 = structuredClone(stakingPoolStats018);
-    const stakingPoolStatsAfterEvent018 = stakingPoolStats019.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`,
+    const {
+      nextExpectStakeInfos: stakeInfos019,
+      nextExpectStakingPoolStats: stakingPoolStats019,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[18],
+      stakeEvents[12],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos018,
+      stakingPoolStats018,
     );
+    stakeInfos.push(stakeInfos019);
     console.log(
-      `\nstakingPoolStatsAfterEvent018 before: ${JSON.stringify(stakingPoolStatsAfterEvent018)}`,
-    );
-    const stakeMaturitySecondsAfterStartblockTimestamp018 =
-      stakeServiceHelpers.calculateStateMaturityTimestamp(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-          .stakeDurationDays,
-        stakeEvents[12].eventSecondsAfterStartblockTimestamp,
-      );
-    stakingPoolStatsAfterEvent018.totalUnstakedBeforeMatureWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent018.totalUnstakedBeforeMatureWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateUnstakeAmountWei(
-            stakeEvents[12].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-              .earlyUnstakePenaltyPercentWei,
-            stakeMaturitySecondsAfterStartblockTimestamp018,
-            stakeEvents[18].eventSecondsAfterStartblockTimestamp,
-            stakeEvents[18].eventSecondsAfterStartblockTimestamp,
-          ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent018.totalUnstakedRewardBeforeMatureWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent018.totalUnstakedRewardBeforeMatureWei,
-      )
-        .add(
-          stakeEvents[12].stakeExceedPoolReward
-            ? hre.ethers.constants.Zero
-            : stakeServiceHelpers.computeTruncatedAmountWei(
-                stakeServiceHelpers.estimateRewardAtMaturityWei(
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[12].poolIndex
-                  ].poolAprWei,
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[12].poolIndex
-                  ].stakeDurationDays,
-                  stakeEvents[12].stakeAmountWei,
-                ),
-                stakingPoolStakeRewardTokenSameConfigs[
-                  stakeEvents[12].poolIndex
-                ].rewardTokenDecimals,
-              ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent018.totalUnstakePenaltyAmountWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent018.totalUnstakePenaltyAmountWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateUnstakePenaltyWei(
-            stakeEvents[12].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex]
-              .earlyUnstakePenaltyPercentWei,
-            stakeMaturitySecondsAfterStartblockTimestamp018,
-            stakeEvents[18].eventSecondsAfterStartblockTimestamp,
-            stakeEvents[18].eventSecondsAfterStartblockTimestamp,
-          ),
-        )
-        .toString();
-    stakingPoolStats019.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent018,
+      `\nstakeInfoAfterEvent018 after: ${JSON.stringify(stakeInfos[19].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
     );
     stakingPoolStats.push(stakingPoolStats019);
     console.log(
       `stakingPoolStatsAfterEvent018 after: ${JSON.stringify(stakingPoolStats[19].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`))}`,
     );
 
-    const stakingPoolStats020 = structuredClone(stakingPoolStats019);
-    const stakingPoolStatsAfterEvent019 = stakingPoolStats020.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
+    const {
+      nextExpectStakeInfos: stakeInfos020,
+      nextExpectStakingPoolStats: stakingPoolStats020,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[19],
+      stakeEvents[14],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos019,
+      stakingPoolStats019,
     );
+    stakeInfos.push(stakeInfos020);
     console.log(
-      `\nstakingPoolStatsAfterEvent019 before: ${JSON.stringify(stakingPoolStatsAfterEvent019)}`,
-    );
-    const stakeMaturitySecondsAfterStartblockTimestamp019 =
-      stakeServiceHelpers.calculateStateMaturityTimestamp(
-        stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-          .stakeDurationDays,
-        stakeEvents[14].eventSecondsAfterStartblockTimestamp,
-      );
-    stakingPoolStatsAfterEvent019.totalUnstakedBeforeMatureWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent019.totalUnstakedBeforeMatureWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateUnstakeAmountWei(
-            stakeEvents[14].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-              .earlyUnstakePenaltyPercentWei,
-            stakeMaturitySecondsAfterStartblockTimestamp019,
-            stakeEvents[19].eventSecondsAfterStartblockTimestamp,
-            stakeEvents[19].eventSecondsAfterStartblockTimestamp,
-          ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent019.totalUnstakedRewardBeforeMatureWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent019.totalUnstakedRewardBeforeMatureWei,
-      )
-        .add(
-          stakeEvents[14].stakeExceedPoolReward
-            ? hre.ethers.constants.Zero
-            : stakeServiceHelpers.computeTruncatedAmountWei(
-                stakeServiceHelpers.estimateRewardAtMaturityWei(
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[14].poolIndex
-                  ].poolAprWei,
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[14].poolIndex
-                  ].stakeDurationDays,
-                  stakeEvents[14].stakeAmountWei,
-                ),
-                stakingPoolStakeRewardTokenSameConfigs[
-                  stakeEvents[14].poolIndex
-                ].rewardTokenDecimals,
-              ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent019.totalUnstakePenaltyAmountWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent019.totalUnstakePenaltyAmountWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateUnstakePenaltyWei(
-            stakeEvents[14].stakeAmountWei,
-            stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-              .earlyUnstakePenaltyPercentWei,
-            stakeMaturitySecondsAfterStartblockTimestamp019,
-            stakeEvents[19].eventSecondsAfterStartblockTimestamp,
-            stakeEvents[19].eventSecondsAfterStartblockTimestamp,
-          ),
-        )
-        .toString();
-    stakingPoolStats020.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent019,
+      `\nstakeInfoAfterEvent019 after: ${JSON.stringify(stakeInfos[20].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
     );
     stakingPoolStats.push(stakingPoolStats020);
     console.log(
       `stakingPoolStatsAfterEvent019 after: ${JSON.stringify(stakingPoolStats[20].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
     );
 
-    const stakingPoolStats021 = structuredClone(stakingPoolStats020);
-    const stakingPoolStatsAfterEvent020 = stakingPoolStats021.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
+    const {
+      nextExpectStakeInfos: stakeInfos021,
+      nextExpectStakingPoolStats: stakingPoolStats021,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[20],
+      stakeEvents[14],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos020,
+      stakingPoolStats020,
     );
+    stakeInfos.push(stakeInfos021);
     console.log(
-      `\nstakingPoolStatsAfterEvent020 before: ${JSON.stringify(stakingPoolStatsAfterEvent020)}`,
-    );
-    stakingPoolStatsAfterEvent020.totalRevokedRewardWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent020.totalRevokedRewardWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateRevokedRewardAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-                .poolAprWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[14].stakeAmountWei,
-            ),
-            hre.ethers.constants.Zero,
-            stakeServiceHelpers.calculateStateMaturityTimestamp(
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-                .stakeDurationDays,
-              stakeEvents[14].eventSecondsAfterStartblockTimestamp,
-            ),
-            stakeEvents[20].eventSecondsAfterStartblockTimestamp,
-            stakeEvents[19].eventSecondsAfterStartblockTimestamp,
-          ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent020.totalRevokedStakeWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent020.totalRevokedStakeWei,
-      )
-        .add(
-          stakeServiceHelpers.calculateRevokedStakeAmountWei(
-            stakeEvents[14].stakeAmountWei,
-            stakeServiceHelpers.calculateUnstakeAmountWei(
-              stakeEvents[14].stakeAmountWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex]
-                .earlyUnstakePenaltyPercentWei,
-              stakeServiceHelpers.calculateStateMaturityTimestamp(
-                stakingPoolStakeRewardTokenSameConfigs[
-                  stakeEvents[14].poolIndex
-                ].stakeDurationDays,
-                stakeEvents[14].eventSecondsAfterStartblockTimestamp,
-              ),
-              stakeEvents[19].eventSecondsAfterStartblockTimestamp,
-              stakeEvents[19].eventSecondsAfterStartblockTimestamp,
-            ),
-            false,
-            true,
-          ),
-        )
-        .toString();
-    stakingPoolStats021.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent020,
+      `\nstakeInfoAfterEvent020 after: ${JSON.stringify(stakeInfos[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
     );
     stakingPoolStats.push(stakingPoolStats021);
     console.log(
       `stakingPoolStatsAfterEvent020 after: ${JSON.stringify(stakingPoolStats[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
     );
 
-    const stakingPoolStats022 = structuredClone(stakingPoolStats021);
-    const stakingPoolStatsAfterEvent021 = stakingPoolStats022.get(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId}`,
+    const {
+      nextExpectStakeInfos: stakeInfos022,
+      nextExpectStakingPoolStats: stakingPoolStats022,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[21],
+      stakeEvents[21],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos021,
+      stakingPoolStats021,
     );
+    stakeInfos.push(stakeInfos022);
     console.log(
-      `\nstakingPoolStatsAfterEvent021 before: ${JSON.stringify(stakingPoolStatsAfterEvent021)}`,
-    );
-    stakingPoolStatsAfterEvent021.rewardToBeDistributedWei =
-      hre.ethers.BigNumber.from(
-        stakingPoolStatsAfterEvent021.rewardToBeDistributedWei,
-      )
-        .add(
-          stakeEvents[21].stakeExceedPoolReward
-            ? hre.ethers.constants.Zero
-            : stakeServiceHelpers.computeTruncatedAmountWei(
-                stakeServiceHelpers.estimateRewardAtMaturityWei(
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[21].poolIndex
-                  ].poolAprWei,
-                  stakingPoolStakeRewardTokenSameConfigs[
-                    stakeEvents[21].poolIndex
-                  ].stakeDurationDays,
-                  stakeEvents[21].stakeAmountWei,
-                ),
-                stakingPoolStakeRewardTokenSameConfigs[
-                  stakeEvents[21].poolIndex
-                ].rewardTokenDecimals,
-              ),
-        )
-        .toString();
-    stakingPoolStatsAfterEvent021.totalStakedWei = hre.ethers.BigNumber.from(
-      stakingPoolStatsAfterEvent021.totalStakedWei,
-    )
-      .add(
-        stakeEvents[21].stakeExceedPoolReward
-          ? hre.ethers.constants.Zero
-          : stakeServiceHelpers.computeTruncatedAmountWei(
-              stakeEvents[21].stakeAmountWei,
-              stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex]
-                .stakeTokenDecimals,
-            ),
-      )
-      .toString();
-    stakingPoolStats022.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId}`,
-      stakingPoolStatsAfterEvent021,
+      `\nstakeInfoAfterEvent021 after: ${JSON.stringify(stakeInfos[22].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId},${stakeEvents[21].signerAddress},${stakeEvents[21].stakeId}`))}`,
     );
     stakingPoolStats.push(stakingPoolStats022);
     console.log(
-      `stakingPoolStatsAfterEvent021 after: ${JSON.stringify(stakingPoolStats[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId}`))}`,
+      `stakingPoolStatsAfterEvent021 after: ${JSON.stringify(stakingPoolStats[22].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[21].poolIndex].poolId}`))}`,
     );
 
     const totalStakeAmountsWei = new Map();
