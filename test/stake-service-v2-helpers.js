@@ -367,6 +367,7 @@ function estimateRewardAtMaturityWei(
 function getNextExpectStakeInfoStakingPoolStats(
   triggerStakeEvent,
   updateStakeEvent,
+  unstakeStakeEvent,
   stakingPoolConfigs,
   previousExpectStakeInfos,
   previousExpectStakingPoolStats,
@@ -423,12 +424,25 @@ function getNextExpectStakeInfoStakingPoolStats(
         stakingPoolConfigs,
         expectStakeInfoAfterTriggerStakeEvent,
       );
+      updateExpectStakingPoolStatsAfterUnstake(
+        triggerStakeEvent,
+        updateStakeEvent,
+        stakingPoolConfigs,
+        expectStakingPoolStatsAfterTriggerStakeEvent,
+      );
       break;
     case "Withdraw":
       console.log(`\nWithdraw: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakeInfoAfterWithdraw(
         triggerStakeEvent,
         expectStakeInfoAfterTriggerStakeEvent,
+      );
+      updateExpectStakingPoolStatsAfterWithdraw(
+        triggerStakeEvent,
+        updateStakeEvent,
+        unstakeStakeEvent,
+        stakingPoolConfigs,
+        expectStakingPoolStatsAfterTriggerStakeEvent,
       );
       break;
     default:
@@ -1743,6 +1757,114 @@ function updateExpectStakingPoolStatsAfterStake(
       .toString();
 }
 
+function updateExpectStakingPoolStatsAfterUnstake(
+  triggerStakeEvent,
+  updateStakeEvent,
+  stakingPoolConfigs,
+  expectStakingPoolStatsAfterTriggerStakeEvent,
+) {
+  if (updateStakeEvent.stakeExceedPoolReward) {
+    return;
+  }
+
+  const truncatedStakeAmountWei = computeTruncatedAmountWei(
+    updateStakeEvent.stakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex].stakeTokenDecimals,
+  );
+  const stakeMaturitySecondsAfterStartblockTimestamp =
+    calculateStateMaturityTimestamp(
+      stakingPoolConfigs[updateStakeEvent.poolIndex].stakeDurationDays,
+      updateStakeEvent.eventSecondsAfterStartblockTimestamp,
+    );
+  const estimatedRewardAtMaturityWei = estimateRewardAtMaturityWei(
+    stakingPoolConfigs[updateStakeEvent.poolIndex].poolAprWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex].stakeDurationDays,
+    truncatedStakeAmountWei,
+  );
+  const isMatured = isStakeMatured(
+    stakeMaturitySecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+  );
+  const unstakeAmountWei = calculateUnstakeAmountWei(
+    truncatedStakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyPercentWei,
+    stakeMaturitySecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+  );
+  const unstakePenaltyWei = calculateUnstakePenaltyWei(
+    truncatedStakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyPercentWei,
+    stakeMaturitySecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+  );
+
+  if (isMatured) {
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakedAfterMatureWei =
+      hre.ethers.BigNumber.from(
+        expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakedAfterMatureWei,
+      )
+        .add(unstakeAmountWei)
+        .toString();
+  } else {
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakedBeforeMatureWei =
+      hre.ethers.BigNumber.from(
+        expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakedBeforeMatureWei,
+      )
+        .add(unstakeAmountWei)
+        .toString();
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakedRewardBeforeMatureWei =
+      hre.ethers.BigNumber.from(
+        expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakedRewardBeforeMatureWei,
+      )
+        .add(estimatedRewardAtMaturityWei)
+        .toString();
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakePenaltyAmountWei =
+      hre.ethers.BigNumber.from(
+        expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakePenaltyAmountWei,
+      )
+        .add(unstakePenaltyWei)
+        .toString();
+  }
+}
+
+function updateExpectStakingPoolStatsAfterWithdraw(
+  triggerStakeEvent,
+  updateStakeEvent,
+  unstakeStakeEvent,
+  stakingPoolConfigs,
+  expectStakingPoolStatsAfterTriggerStakeEvent,
+) {
+  const truncatedStakeAmountWei = computeTruncatedAmountWei(
+    updateStakeEvent.stakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex].stakeTokenDecimals,
+  );
+  const stakeMaturitySecondsAfterStartblockTimestamp =
+    calculateStateMaturityTimestamp(
+      stakingPoolConfigs[updateStakeEvent.poolIndex].stakeDurationDays,
+      updateStakeEvent.eventSecondsAfterStartblockTimestamp,
+    );
+  const unstakeAmountWei = calculateUnstakeAmountWei(
+    truncatedStakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyPercentWei,
+    stakeMaturitySecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    unstakeStakeEvent.eventSecondsAfterStartblockTimestamp,
+  );
+
+  expectStakingPoolStatsAfterTriggerStakeEvent.totalWithdrawnUnstakeWei =
+    hre.ethers.BigNumber.from(
+      expectStakingPoolStatsAfterTriggerStakeEvent.totalWithdrawnUnstakeWei,
+    )
+      .add(unstakeAmountWei)
+      .toString();
+}
+
 function verifyActualWithTruncatedValueWei(
   lastDigitDecimalsDelta,
   tokenDecimals,
@@ -2349,6 +2471,8 @@ module.exports = {
   updateExpectStakeInfoAfterUnstake,
   updateExpectStakeInfoAfterWithdraw,
   updateExpectStakingPoolStatsAfterStake,
+  updateExpectStakingPoolStatsAfterUnstake,
+  updateExpectStakingPoolStatsAfterWithdraw,
   verifyActualWithTruncatedValueWei,
   verifyMultipleStakeInfos,
   verifyMultipleStakingPoolStats,
