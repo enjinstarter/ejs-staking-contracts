@@ -443,6 +443,9 @@ function getNextExpectStakeInfoStakingPoolStats(
       console.log(`\nWithdraw: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakeInfoAfterWithdraw(
         triggerStakeEvent,
+        updateStakeEvent,
+        unstakeStakeEvent,
+        stakingPoolConfigs,
         expectStakeInfoAfterTriggerStakeEvent,
       );
       updateExpectStakingPoolStatsAfterWithdraw(
@@ -1726,10 +1729,33 @@ function updateExpectStakeInfoAfterUnstake(
 
 function updateExpectStakeInfoAfterWithdraw(
   triggerStakeEvent,
+  updateStakeEvent,
+  unstakeStakeEvent,
+  stakingPoolConfigs,
   expectStakeInfoAfterTriggerStakeEvent,
 ) {
+  const truncatedStakeAmountWei = computeTruncatedAmountWei(
+    updateStakeEvent.stakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex].stakeTokenDecimals,
+  );
+  const stakeMaturitySecondsAfterStartblockTimestamp =
+    calculateStateMaturityTimestamp(
+      stakingPoolConfigs[updateStakeEvent.poolIndex].stakeDurationDays,
+      updateStakeEvent.eventSecondsAfterStartblockTimestamp,
+    );
+  const unstakeAmountWei = calculateUnstakeAmountWei(
+    truncatedStakeAmountWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyPercentWei,
+    stakeMaturitySecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    unstakeStakeEvent.eventSecondsAfterStartblockTimestamp,
+  );
+
   expectStakeInfoAfterTriggerStakeEvent.withdrawUnstakeSecondsAfterStartblockTimestamp =
-    triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString();
+    unstakeAmountWei.gt(hre.ethers.constants.Zero)
+      ? triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString()
+      : hre.ethers.constants.Zero.toString();
 }
 
 function updateExpectStakingPoolStatsAfterRevoke(
@@ -2336,23 +2362,34 @@ async function withdrawWithVerify(
     stakeEvent.poolIndex
   ].stakeTokenInstance.balanceOf(stakeEvent.signerAddress);
 
-  await expect(
-    stakingServiceContractInstance
-      .connect(stakeEvent.signer)
-      .withdrawUnstake(
+  if (expectUnstakeAmountWei.gt(hre.ethers.constants.Zero)) {
+    await expect(
+      stakingServiceContractInstance
+        .connect(stakeEvent.signer)
+        .withdrawUnstake(
+          stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+          stakeEvent.stakeId,
+        ),
+    )
+      .to.emit(stakingServiceContractInstance, "UnstakeWithdrawn")
+      .withArgs(
         stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
         stakeEvent.stakeId,
-      ),
-  )
-    .to.emit(stakingServiceContractInstance, "UnstakeWithdrawn")
-    .withArgs(
-      stakingPoolConfigs[stakeEvent.poolIndex].poolId,
-      stakeEvent.signerAddress,
-      stakeEvent.stakeId,
-      stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenInstance.address,
-      expectUnstakeAmountWei,
-      expectWithdrawTimestamp,
-    );
+        stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenInstance.address,
+        expectUnstakeAmountWei,
+        expectWithdrawTimestamp,
+      );
+  } else {
+    await expect(
+      stakingServiceContractInstance
+        .connect(stakeEvent.signer)
+        .withdrawUnstake(
+          stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+          stakeEvent.stakeId,
+        ),
+    ).to.be.revertedWith("SSvcs2: nothing");
+  }
 
   const expectContractBalanceOfAfterWithdraw =
     contractBalanceOfBeforeWithdraw.sub(expectUnstakeAmountWei);
@@ -2420,8 +2457,11 @@ async function withdrawWithVerify(
       unstakePenaltyAmountWei: expectUnstakePenaltyAmountWei,
       unstakeSecondsAfterStartblockTimestamp:
         expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
-      withdrawUnstakeSecondsAfterStartblockTimestamp:
-        stakeEvent.eventSecondsAfterStartblockTimestamp,
+      withdrawUnstakeSecondsAfterStartblockTimestamp: expectUnstakeAmountWei.gt(
+        hre.ethers.constants.Zero,
+      )
+        ? stakeEvent.eventSecondsAfterStartblockTimestamp
+        : hre.ethers.constants.Zero,
       isActive: true,
       isInitialized: true,
     },
@@ -2506,7 +2546,11 @@ async function withdrawWithVerify(
         stakingPoolConfigs[stakeEvent.poolIndex].poolId,
         stakeEvent.stakeId,
       ),
-  ).to.be.revertedWith("SSvcs2: withdrawn");
+  ).to.be.revertedWith(
+    expectUnstakeAmountWei.gt(hre.ethers.constants.Zero)
+      ? "SSvcs2: withdrawn"
+      : "SSvcs2: nothing",
+  );
 
   console.log(
     `withdrawWithVerify: expectTotalWithdrawnUnstakeWei=${expectTotalWithdrawnUnstakeWei}`,
