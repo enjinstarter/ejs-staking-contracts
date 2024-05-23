@@ -745,7 +745,8 @@ function isStakeMatured(
   unstakeTimestamp,
 ) {
   const timestamp =
-    unstakeTimestamp && unstakeTimestamp > 0
+    unstakeTimestamp &&
+    hre.ethers.BigNumber.from(unstakeTimestamp).gt(hre.ethers.constants.Zero)
       ? hre.ethers.BigNumber.from(unstakeTimestamp)
       : hre.ethers.BigNumber.from(currentTimestamp);
 
@@ -1598,8 +1599,8 @@ async function unstakeWithVerify(
     expectStakeInfoBeforeUnstake.estimatedRewardAtMaturityWei,
     expectStakeInfoBeforeUnstake.rewardClaimedWei,
     expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    hre.ethers.BigNumber.from(currentBlockTimestamp).sub(startblockTimestamp),
+    null,
   );
 
   const getClaimableRewardWeiBeforeUnstake =
@@ -1667,14 +1668,15 @@ async function unstakeWithVerify(
     stakeEvent.eventSecondsAfterStartblockTimestamp,
   );
 
-  const expectUnstakeCooldownExpiryTimestamp = hre.ethers.BigNumber.from(
-    startblockTimestamp,
-  ).add(
-    calculateCooldownExpiryTimestamp(
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakeCooldownPeriodDays,
-      stakeEvent.eventSecondsAfterStartblockTimestamp,
-    ),
-  );
+  const expectUnstakeCooldownExpiryTimestamp = isStakeMaturedAtUnstake
+    ? expectUnstakeTimestamp
+    : hre.ethers.BigNumber.from(startblockTimestamp).add(
+        calculateCooldownExpiryTimestamp(
+          stakingPoolConfigs[stakeEvent.poolIndex]
+            .earlyUnstakeCooldownPeriodDays,
+          stakeEvent.eventSecondsAfterStartblockTimestamp,
+        ),
+      );
 
   const contractBalanceOfBeforeUnstake = await stakingPoolConfigs[
     stakeEvent.poolIndex
@@ -1700,7 +1702,10 @@ async function unstakeWithVerify(
       expectStakeInfoBeforeUnstake.stakeAmountWei,
       expectUnstakeAmountWei,
       expectUnstakePenaltyAmountWei,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakeCooldownPeriodDays,
+      isStakeMaturedAtUnstake
+        ? hre.ethers.constants.Zero
+        : stakingPoolConfigs[stakeEvent.poolIndex]
+            .earlyUnstakeCooldownPeriodDays,
       expectUnstakeCooldownExpiryTimestamp,
     );
 
@@ -1999,6 +2004,11 @@ function updateExpectStakeInfoAfterUnstake(
       stakingPoolConfigs[updateStakeEvent.poolIndex].stakeDurationDays,
       updateStakeEvent.eventSecondsAfterStartblockTimestamp,
     );
+  const isMatured = isStakeMatured(
+    stakeMaturitySecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+  );
 
   expectStakeInfoAfterTriggerStakeEvent.unstakeAmountWei =
     calculateUnstakeAmountWei(
@@ -2010,11 +2020,13 @@ function updateExpectStakeInfoAfterUnstake(
       triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
     ).toString();
   expectStakeInfoAfterTriggerStakeEvent.unstakeCooldownExpirySecondsAfterStartblockTimestamp =
-    calculateCooldownExpiryTimestamp(
-      stakingPoolConfigs[updateStakeEvent.poolIndex]
-        .earlyUnstakeCooldownPeriodDays,
-      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
-    ).toString();
+    isMatured
+      ? triggerStakeEvent.eventSecondsAfterStartblockTimestamp
+      : calculateCooldownExpiryTimestamp(
+          stakingPoolConfigs[updateStakeEvent.poolIndex]
+            .earlyUnstakeCooldownPeriodDays,
+          triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+        ).toString();
   expectStakeInfoAfterTriggerStakeEvent.unstakePenaltyAmountWei =
     calculateUnstakePenaltyWei(
       truncatedStakeAmountWei,
@@ -2690,14 +2702,21 @@ async function withdrawWithVerify(
     expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
   );
 
-  const expectUnstakeCooldownExpiryTimestamp = hre.ethers.BigNumber.from(
-    startblockTimestamp,
-  ).add(
-    calculateCooldownExpiryTimestamp(
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakeCooldownPeriodDays,
-      expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
-    ),
+  const isStakeMaturedAtUnstake = isStakeMatured(
+    expectStakeInfoBeforeWithdraw.stakeMaturitySecondsAfterStartblockTimestamp,
+    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    stakeEvent.eventSecondsAfterStartblockTimestamp,
   );
+
+  const expectUnstakeCooldownExpiryTimestamp = isStakeMaturedAtUnstake
+    ? expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp
+    : hre.ethers.BigNumber.from(startblockTimestamp).add(
+        calculateCooldownExpiryTimestamp(
+          stakingPoolConfigs[stakeEvent.poolIndex]
+            .earlyUnstakeCooldownPeriodDays,
+          expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
+        ),
+      );
 
   const contractBalanceOfBeforeWithdraw = await stakingPoolConfigs[
     stakeEvent.poolIndex
