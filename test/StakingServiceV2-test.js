@@ -1216,6 +1216,26 @@ describe("StakingServiceV2", function () {
         stakeUuid: "b50b5418-c81d-42d1-9f0f-f5e1752391a2",
         stakeId: hre.ethers.utils.id("b50b5418-c81d-42d1-9f0f-f5e1752391a2"),
       },
+      {
+        eventSecondsAfterStartblockTimestamp:
+          hre.ethers.BigNumber.from(316972984),
+        eventType: "Unstake",
+        poolIndex: 2,
+        signer: enduserAccounts[1],
+        signerAddress: await enduserAccounts[1].getAddress(),
+        stakeUuid: "616c63bc-9a57-43ad-84e4-4696a3006280",
+        stakeId: hre.ethers.utils.id("616c63bc-9a57-43ad-84e4-4696a3006280"),
+      },
+      {
+        eventSecondsAfterStartblockTimestamp:
+          hre.ethers.BigNumber.from(317298410),
+        eventType: "Claim",
+        poolIndex: 2,
+        signer: enduserAccounts[1],
+        signerAddress: await enduserAccounts[1].getAddress(),
+        stakeUuid: "0a8d5d75-5c1f-442e-9899-a7343ec5117d",
+        stakeId: hre.ethers.utils.id("0a8d5d75-5c1f-442e-9899-a7343ec5117d"),
+      },
     ];
 
     const initialStakeInfo = {
@@ -2560,6 +2580,46 @@ describe("StakingServiceV2", function () {
     stakingPoolStats.push(stakingPoolStats058);
     console.log(
       `stakingPoolStatsAfterEvent057 after: ${JSON.stringify(stakingPoolStats[58].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId}`))}`,
+    );
+
+    const {
+      nextExpectStakeInfos: stakeInfos059,
+      nextExpectStakingPoolStats: stakingPoolStats059,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[58],
+      stakeEvents[44],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos058,
+      stakingPoolStats058,
+    );
+    stakeInfos.push(stakeInfos059);
+    console.log(
+      `\nstakeInfoAfterEvent058 after: ${JSON.stringify(stakeInfos[59].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`))}`,
+    );
+    stakingPoolStats.push(stakingPoolStats059);
+    console.log(
+      `stakingPoolStatsAfterEvent058 after: ${JSON.stringify(stakingPoolStats[59].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId}`))}`,
+    );
+
+    const {
+      nextExpectStakeInfos: stakeInfos060,
+      nextExpectStakingPoolStats: stakingPoolStats060,
+    } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+      stakeEvents[59],
+      stakeEvents[48],
+      null,
+      stakingPoolStakeRewardTokenSameConfigs,
+      stakeInfos059,
+      stakingPoolStats059,
+    );
+    stakeInfos.push(stakeInfos060);
+    console.log(
+      `\nstakeInfoAfterEvent059 after: ${JSON.stringify(stakeInfos[60].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`))}`,
+    );
+    stakingPoolStats.push(stakingPoolStats060);
+    console.log(
+      `stakingPoolStatsAfterEvent059 after: ${JSON.stringify(stakingPoolStats[60].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId}`))}`,
     );
 
     const totalStakeAmountsWei = new Map();

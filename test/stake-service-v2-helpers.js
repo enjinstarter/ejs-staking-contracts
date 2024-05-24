@@ -335,8 +335,8 @@ async function claimWithVerify(
     expectStakeInfoBeforeClaim.estimatedRewardAtMaturityWei,
     expectStakeInfoBeforeClaim.rewardClaimedWei,
     expectStakeInfoBeforeClaim.stakeMaturitySecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    hre.ethers.BigNumber.from(currentBlockTimestamp).sub(startblockTimestamp),
+    expectStakeInfoBeforeClaim.unstakeTimestamp,
   );
 
   const getClaimableRewardWeiBeforeClaim =
@@ -345,7 +345,9 @@ async function claimWithVerify(
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
     );
-  expect(getClaimableRewardWeiBeforeClaim).to.equal(hre.ethers.constants.Zero);
+  expect(getClaimableRewardWeiBeforeClaim).to.equal(
+    expectClaimableRewardWeiBeforeClaim,
+  );
 
   const stakeInfoBeforeClaim = await verifyStakeInfo(
     stakingServiceContractInstance,
@@ -380,6 +382,14 @@ async function claimWithVerify(
   ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
   await testHelpers.setTimeNextBlock(expectClaimTimestamp.toNumber());
 
+  const expectClaimableRewardWeiAtClaim = calculateClaimableRewardWei(
+    expectStakeInfoBeforeClaim.estimatedRewardAtMaturityWei,
+    expectStakeInfoBeforeClaim.rewardClaimedWei,
+    expectStakeInfoBeforeClaim.stakeMaturitySecondsAfterStartblockTimestamp,
+    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    expectStakeInfoBeforeClaim.unstakeTimestamp,
+  );
+
   const contractBalanceOfBeforeClaim = await stakingPoolConfigs[
     stakeEvent.poolIndex
   ].stakeTokenInstance.balanceOf(stakingServiceContractInstance.address);
@@ -401,7 +411,7 @@ async function claimWithVerify(
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
       stakingPoolConfigs[stakeEvent.poolIndex].rewardTokenInstance.address,
-      expectClaimableRewardWeiBeforeClaim,
+      expectClaimableRewardWeiAtClaim,
     );
 
   const signerBalanceOfAfterClaim = await stakingPoolConfigs[
@@ -412,10 +422,10 @@ async function claimWithVerify(
   ].stakeTokenInstance.balanceOf(stakingServiceContractInstance.address);
 
   expect(contractBalanceOfAfterClaim).to.equal(
-    contractBalanceOfBeforeClaim.sub(expectClaimableRewardWeiBeforeClaim),
+    contractBalanceOfBeforeClaim.sub(expectClaimableRewardWeiAtClaim),
   );
   expect(signerBalanceOfAfterClaim).to.equal(
-    signerBalanceOfBeforeClaim.add(expectClaimableRewardWeiBeforeClaim),
+    signerBalanceOfBeforeClaim.add(expectClaimableRewardWeiAtClaim),
   );
 
   const expectClaimableRewardWeiAfterClaim = hre.ethers.constants.Zero;
@@ -442,7 +452,7 @@ async function claimWithVerify(
       revokedRewardAmountWei: hre.ethers.constants.Zero,
       revokedStakeAmountWei: hre.ethers.constants.Zero,
       revokeSecondsAfterStartblockTimestamp: hre.ethers.constants.Zero,
-      rewardClaimedWei: expectClaimableRewardWeiBeforeClaim,
+      rewardClaimedWei: expectClaimableRewardWeiAtClaim,
       stakeAmountWei: expectStakeInfoBeforeClaim.stakeAmountWei,
       stakeMaturitySecondsAfterStartblockTimestamp:
         expectStakeInfoBeforeClaim.stakeMaturitySecondsAfterStartblockTimestamp,
@@ -487,7 +497,7 @@ async function claimWithVerify(
 
   const expectTotalRewardClaimedWei =
     stakingPoolStatsBeforeClaim.totalRewardClaimedWei.add(
-      expectClaimableRewardWeiBeforeClaim,
+      expectClaimableRewardWeiAtClaim,
     );
 
   const stakingPoolStatsAfterClaim = await verifyStakingPoolStats(
@@ -549,7 +559,7 @@ async function claimWithVerify(
   ).to.be.revertedWith("SSvcs2: zero reward");
 
   console.log(
-    `claimWithVerify: expectClaimableRewardWeiBeforeClaim=${expectClaimableRewardWeiBeforeClaim}, expectTotalRewardClaimedWei=${expectTotalRewardClaimedWei}`,
+    `claimWithVerify: expectClaimableRewardWeiAtClaim=${expectClaimableRewardWeiAtClaim}, expectTotalRewardClaimedWei=${expectTotalRewardClaimedWei}`,
   );
 }
 
@@ -799,8 +809,8 @@ async function revokeWithVerify(
     expectStakeInfoBeforeRevoke.estimatedRewardAtMaturityWei,
     expectStakeInfoBeforeRevoke.rewardClaimedWei,
     expectStakeInfoBeforeRevoke.stakeMaturitySecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    hre.ethers.BigNumber.from(currentBlockTimestamp).sub(startblockTimestamp),
+    expectStakeInfoBeforeRevoke.unstakeTimestamp,
   );
 
   const getClaimableRewardWeiBeforeRevoke =
@@ -2639,7 +2649,7 @@ async function withdrawWithVerify(
     expectStakeInfoBeforeWithdraw.estimatedRewardAtMaturityWei,
     expectStakeInfoBeforeWithdraw.rewardClaimedWei,
     expectStakeInfoBeforeWithdraw.stakeMaturitySecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    hre.ethers.BigNumber.from(currentBlockTimestamp).sub(startblockTimestamp),
     expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
   );
 
