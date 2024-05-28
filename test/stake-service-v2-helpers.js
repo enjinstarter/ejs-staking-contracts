@@ -2719,7 +2719,9 @@ async function withdrawWithVerify(
   );
 
   const expectUnstakeCooldownExpiryTimestamp = isStakeMaturedAtUnstake
-    ? expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp
+    ? hre.ethers.BigNumber.from(startblockTimestamp).add(
+        expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
+      )
     : hre.ethers.BigNumber.from(startblockTimestamp).add(
         calculateCooldownExpiryTimestamp(
           stakingPoolConfigs[stakeEvent.poolIndex]
@@ -2822,7 +2824,9 @@ async function withdrawWithVerify(
         expectStakeInfoBeforeWithdraw.stakeSecondsAfterStartblockTimestamp,
       unstakeAmountWei: expectUnstakeAmountWei,
       unstakeCooldownExpirySecondsAfterStartblockTimestamp:
-        expectUnstakeCooldownExpiryTimestamp.sub(startblockTimestamp),
+        hre.ethers.BigNumber.from(expectUnstakeCooldownExpiryTimestamp).sub(
+          startblockTimestamp,
+        ),
       unstakePenaltyAmountWei: expectUnstakePenaltyAmountWei,
       unstakeSecondsAfterStartblockTimestamp:
         expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
