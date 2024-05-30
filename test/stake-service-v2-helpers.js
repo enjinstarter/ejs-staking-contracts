@@ -2363,9 +2363,11 @@ async function verifyMultipleStakeInfos(
   for (const [key, expectStakeInfo] of stakeInfosIterator) {
     const [poolId, signerAddress, stakeId] = key.split(",");
 
+    /*
     console.log(
       `\nverifyMultipleStakeInfos: poolId=${poolId}, signerAddress=${signerAddress}, stakeId=${stakeId}, expectStakeInfo=${JSON.stringify(expectStakeInfo)}`,
     );
+    */
 
     await verifyStakeInfo(
       stakingServiceContractInstance,
@@ -2460,9 +2462,11 @@ async function verifyStakeInfo(
   expectStakeInfo,
 ) {
   if (expectStakeInfo.isInitialized) {
+    /*
     console.log(
       `verifyStakeInfo: poolId=${poolId}, signerAddress=${signerAddress}, stakeId=${stakeId}, expectStakeInfo=${JSON.stringify(expectStakeInfo)}`,
     );
+    */
 
     const stakeInfo = await stakingServiceContractInstance.getStakeInfo(
       poolId,
