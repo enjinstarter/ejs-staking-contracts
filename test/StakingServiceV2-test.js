@@ -674,7 +674,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(548),
         eventType: "Stake",
-        poolIndex: 0,
+        poolIndex: 2,
         signer: enduserAccounts[1],
         signerAddress: await enduserAccounts[1].getAddress(),
         stakeAmountWei: hre.ethers.utils.parseEther("58894.582172763617423307"),
@@ -796,7 +796,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2107),
         eventType: "Revoke",
-        poolIndex: 0,
+        poolIndex: 2,
         signer: enduserAccounts[1],
         signerAddress: await enduserAccounts[1].getAddress(),
         stakeUuid: "f3159f39-bb26-47fc-8b0f-44d6959b20e1",
@@ -2645,7 +2645,7 @@ describe("StakingServiceV2", function () {
       structuredClone(initialStakingPoolStat),
     );
     stakingPoolStats000.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`,
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`,
       structuredClone(initialStakingPoolStat),
     );
     stakingPoolStats.push(stakingPoolStats000);
