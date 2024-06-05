@@ -630,7 +630,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(10),
         eventType: "Stake",
-        poolIndex: 0,
+        poolIndex: 1,
         signer: enduserAccounts[0],
         signerAddress: await enduserAccounts[0].getAddress(),
         stakeAmountWei: hre.ethers.utils.parseEther("56289.771597347214289913"),
@@ -725,7 +725,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1189),
         eventType: "Stake",
-        poolIndex: 2,
+        poolIndex: 1,
         signer: enduserAccounts[1],
         signerAddress: await enduserAccounts[1].getAddress(),
         stakeAmountWei: hre.ethers.utils.parseEther("38694.164531031409115445"),
@@ -894,7 +894,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(3755),
         eventType: "Unstake",
-        poolIndex: 0,
+        poolIndex: 1,
         signer: enduserAccounts[0],
         signerAddress: await enduserAccounts[0].getAddress(),
         stakeUuid: "32e1466a-1fc6-4679-a753-b55b77c4537d",
@@ -912,7 +912,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(89154),
         eventType: "Unstake",
-        poolIndex: 2,
+        poolIndex: 1,
         signer: enduserAccounts[1],
         signerAddress: await enduserAccounts[1].getAddress(),
         stakeUuid: "7938b802-f7ae-4356-b217-c29d35545d8a",
@@ -977,16 +977,16 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("da8dd4f1-76a2-4138-b227-acc61e60edc1"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(175554),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(261954),
         eventType: "Withdraw",
-        poolIndex: 2,
+        poolIndex: 1,
         signer: enduserAccounts[1],
         signerAddress: await enduserAccounts[1].getAddress(),
         stakeUuid: "7938b802-f7ae-4356-b217-c29d35545d8a",
         stakeId: hre.ethers.utils.id("7938b802-f7ae-4356-b217-c29d35545d8a"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(184010),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(263010),
         eventType: "Stake",
         poolIndex: 0,
         signer: enduserAccounts[1],
@@ -997,7 +997,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("10725343-f9f0-4619-b942-7288efb6dcde"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(225165),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(264165),
         eventType: "Unstake",
         poolIndex: 1,
         signer: enduserAccounts[2],
@@ -1006,7 +1006,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("40ffd49d-a897-4ef4-b52e-d7897074382d"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(243927),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(273927),
         eventType: "Stake",
         poolIndex: 2,
         signer: enduserAccounts[2],
@@ -1026,7 +1026,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("da8dd4f1-76a2-4138-b227-acc61e60edc1"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(322173),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(436965),
         eventType: "Withdraw",
         poolIndex: 1,
         signer: enduserAccounts[2],
@@ -1035,16 +1035,16 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("40ffd49d-a897-4ef4-b52e-d7897074382d"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(331202),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(438202),
         eventType: "Revoke",
-        poolIndex: 2,
+        poolIndex: 1,
         signer: enduserAccounts[1],
         signerAddress: await enduserAccounts[1].getAddress(),
         stakeUuid: "7938b802-f7ae-4356-b217-c29d35545d8a",
         stakeId: hre.ethers.utils.id("7938b802-f7ae-4356-b217-c29d35545d8a"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(362937),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(439937),
         eventType: "Revoke",
         poolIndex: 0,
         signer: enduserAccounts[0],
@@ -1053,7 +1053,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("da8dd4f1-76a2-4138-b227-acc61e60edc1"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(366322),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(441322),
         eventType: "Stake",
         poolIndex: 1,
         signer: enduserAccounts[0],
@@ -1064,7 +1064,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("8a55dd59-621b-4f05-a3f3-fbb8e39bb355"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(376213),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(442213),
         eventType: "Stake",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1075,7 +1075,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("616c63bc-9a57-43ad-84e4-4696a3006280"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(383262),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(443262),
         eventType: "Unstake",
         poolIndex: 2,
         signer: enduserAccounts[2],
@@ -1084,7 +1084,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("2c527a7a-8e01-4a03-8829-acaeed5c00ad"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(392179),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(444179),
         eventType: "Revoke",
         poolIndex: 1,
         signer: enduserAccounts[1],
@@ -1093,7 +1093,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("91e47baa-30f2-4aa1-8687-b726166a78ca"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(401597),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(445597),
         eventType: "Revoke",
         poolIndex: 2,
         signer: enduserAccounts[2],
@@ -1102,7 +1102,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("2c527a7a-8e01-4a03-8829-acaeed5c00ad"),
       },
       {
-        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(418917),
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(446917),
         eventType: "Stake",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1238,7 +1238,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(31902322),
+          hre.ethers.BigNumber.from(31977322),
         eventType: "Claim",
         poolIndex: 1,
         signer: enduserAccounts[0],
@@ -1248,7 +1248,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(31910835),
+          hre.ethers.BigNumber.from(31978835),
         eventType: "Unstake",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1258,7 +1258,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(31922933),
+          hre.ethers.BigNumber.from(31979933),
         eventType: "Stake",
         poolIndex: 1,
         signer: enduserAccounts[2],
@@ -1270,7 +1270,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(31939968),
+          hre.ethers.BigNumber.from(31980968),
         eventType: "Stake",
         poolIndex: 2,
         signer: enduserAccounts[0],
@@ -1468,7 +1468,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63458933),
+          hre.ethers.BigNumber.from(63515933),
         eventType: "Claim",
         poolIndex: 1,
         signer: enduserAccounts[2],
@@ -1478,7 +1478,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63459011),
+          hre.ethers.BigNumber.from(63559011),
         eventType: "Withdraw",
         poolIndex: 1,
         signer: enduserAccounts[0],
@@ -1488,7 +1488,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63461156),
+          hre.ethers.BigNumber.from(63561156),
         eventType: "Claim",
         poolIndex: 1,
         signer: enduserAccounts[2],
@@ -1498,7 +1498,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63462237),
+          hre.ethers.BigNumber.from(63562237),
         eventType: "Withdraw",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1508,7 +1508,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63463753),
+          hre.ethers.BigNumber.from(63563753),
         eventType: "Unstake",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1518,7 +1518,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63468710),
+          hre.ethers.BigNumber.from(63568710),
         eventType: "Withdraw",
         poolIndex: 1,
         signer: enduserAccounts[1],
@@ -1528,7 +1528,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63469189),
+          hre.ethers.BigNumber.from(63569189),
         eventType: "Claim",
         poolIndex: 1,
         signer: enduserAccounts[0],
@@ -1538,7 +1538,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63471029),
+          hre.ethers.BigNumber.from(63571029),
         eventType: "Withdraw",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1548,7 +1548,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63472087),
+          hre.ethers.BigNumber.from(63572087),
         eventType: "Revoke",
         poolIndex: 1,
         signer: enduserAccounts[0],
@@ -1558,7 +1558,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63473020),
+          hre.ethers.BigNumber.from(63573020),
         eventType: "Unstake",
         poolIndex: 1,
         signer: enduserAccounts[0],
@@ -1568,7 +1568,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63474302),
+          hre.ethers.BigNumber.from(63574302),
         eventType: "Revoke",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1578,7 +1578,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63475374),
+          hre.ethers.BigNumber.from(63575374),
         eventType: "Unstake",
         poolIndex: 2,
         signer: enduserAccounts[0],
@@ -1588,7 +1588,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63476727),
+          hre.ethers.BigNumber.from(63576727),
         eventType: "Unstake",
         poolIndex: 1,
         signer: enduserAccounts[2],
@@ -1598,7 +1598,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63477270),
+          hre.ethers.BigNumber.from(63577270),
         eventType: "Claim",
         poolIndex: 2,
         signer: enduserAccounts[1],
@@ -1608,7 +1608,7 @@ describe("StakingServiceV2", function () {
       },
       {
         eventSecondsAfterStartblockTimestamp:
-          hre.ethers.BigNumber.from(63478590),
+          hre.ethers.BigNumber.from(63578590),
         eventType: "Withdraw",
         poolIndex: 1,
         signer: enduserAccounts[0],
@@ -2637,15 +2637,15 @@ describe("StakingServiceV2", function () {
 
     const stakingPoolStats000 = new Map();
     stakingPoolStats000.set(
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
+      structuredClone(initialStakingPoolStat),
+    );
+    stakingPoolStats000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`,
       structuredClone(initialStakingPoolStat),
     );
     stakingPoolStats000.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`,
-      structuredClone(initialStakingPoolStat),
-    );
-    stakingPoolStats000.set(
-      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId}`,
+      `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`,
       structuredClone(initialStakingPoolStat),
     );
     stakingPoolStats.push(stakingPoolStats000);

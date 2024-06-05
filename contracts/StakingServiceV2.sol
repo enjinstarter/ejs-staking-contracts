@@ -246,8 +246,8 @@ contract StakingServiceV2 is
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
         require(_isStakeUnstakedFor(stakekey), "SSvcs2: not unstake");
         require(!_isUnstakeWithdrawnFor(stakekey), "SSvcs2: withdrawn");
-        require(_stakes[stakekey].unstakeAmountWei > 0, "SSvcs2: nothing");
         require(block.timestamp >= _stakes[stakekey].unstakeCooldownExpiryTimestamp, "SSvcs2: cooldown");
+        require(_stakes[stakekey].unstakeAmountWei > 0, "SSvcs2: nothing");
 
         _stakes[stakekey].withdrawUnstakeTimestamp = block.timestamp;
         _stakingUserStats[msg.sender].totalWithdrawnUnstakeWei += _stakes[stakekey].unstakeAmountWei;
