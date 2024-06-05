@@ -843,7 +843,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2843),
         eventType: "Stake",
-        poolIndex: 1,
+        poolIndex: 0,
         signer: enduserAccounts[2],
         signerAddress: await enduserAccounts[2].getAddress(),
         stakeAmountWei: hre.ethers.utils.parseEther("1389.203351175896125017"),
@@ -863,7 +863,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(3126),
         eventType: "Unstake",
-        poolIndex: 1,
+        poolIndex: 0,
         signer: enduserAccounts[2],
         signerAddress: await enduserAccounts[2].getAddress(),
         stakeUuid: "7b4b92e3-fb72-4557-af1b-0ab99d06e59d",
@@ -921,7 +921,7 @@ describe("StakingServiceV2", function () {
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(89340),
         eventType: "Revoke",
-        poolIndex: 1,
+        poolIndex: 0,
         signer: enduserAccounts[2],
         signerAddress: await enduserAccounts[2].getAddress(),
         stakeUuid: "7b4b92e3-fb72-4557-af1b-0ab99d06e59d",
