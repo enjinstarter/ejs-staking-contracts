@@ -1709,6 +1709,7 @@ async function unstakeWithVerify(
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
       stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenInstance.address,
+      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyPercentWei,
       expectStakeInfoBeforeUnstake.stakeAmountWei,
       expectUnstakeAmountWei,
       expectUnstakePenaltyAmountWei,

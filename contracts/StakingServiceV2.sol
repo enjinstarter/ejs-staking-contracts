@@ -225,6 +225,7 @@ contract StakingServiceV2 is
             msg.sender,
             stakeId,
             stakingPoolInfo.stakeTokenAddress,
+            stakingPoolInfo.earlyUnstakePenaltyPercentWei,
             stakeAmountWei,
             unstakeAmountWei,
             unstakePenaltyAmountWei,
@@ -284,14 +285,25 @@ contract StakingServiceV2 is
         require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(!_isStakeUnstakedFor(stakekey), "SSvcs2: unstaked");
 
+        uint256 oldStakeMaturityTimestamp = _stakes[stakekey].stakeMaturityTimestamp;
         _stakes[stakekey].stakeMaturityTimestamp =
             (
-                block.timestamp >= _stakes[stakekey].stakeMaturityTimestamp
+                block.timestamp >= oldStakeMaturityTimestamp
                     ? block.timestamp
-                    : _stakes[stakekey].stakeMaturityTimestamp
+                    : oldStakeMaturityTimestamp
             )
             + stakingPoolInfo.revshareStakeDurationExtensionDays * SECONDS_IN_DAY;
         isExtended = true;
+
+        emit RevshareStakeDurationExtended(
+            poolId,
+            account,
+            stakeId,
+            stakingPoolInfo.revshareStakeDurationExtensionDays,
+            oldStakeMaturityTimestamp,
+            _stakes[stakekey].stakeMaturityTimestamp,
+            msg.sender
+        );
     }
 
     /**

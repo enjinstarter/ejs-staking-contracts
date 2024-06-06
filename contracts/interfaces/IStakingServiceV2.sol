@@ -97,6 +97,26 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     );
 
     /**
+     * @notice Emitted when stake duration has been changed due to revshare claim
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that placed the stake
+     * @param stakeId The stake identifier
+     * @param revshareStakeDurationExtensionDays The stake duration extension in days for claim revshare
+     * @param oldStakeMaturityTimestamp The timestamp when stake matures before the stake duration was changed
+     * @param newStakeMaturityTimestamp The timestamp when stake matures after the stake duration was changed
+     * @param sender The address that changed the stake duration
+     */
+    event RevshareStakeDurationExtended(
+        bytes32 indexed poolId,
+        address indexed account,
+        bytes32 indexed stakeId,
+        uint256 revshareStakeDurationExtensionDays,
+        uint256 oldStakeMaturityTimestamp,
+        uint256 newStakeMaturityTimestamp,
+        address sender
+    );
+
+    /**
      * @notice Emitted when reward has been claimed by user
      * @param poolId The staking pool identifier
      * @param account The address of the user wallet receiving funds
@@ -232,6 +252,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @param account The address of the user wallet that unstaked
      * @param stakeId The stake identifier
      * @param stakeToken The address of the ERC20 stake token
+     * @param earlyUnstakePenaltyPercentWei The early unstake penalty percentage in wei
      * @param stakeAmountWei The amount of tokens staked in Wei
      * @param unstakeAmountWei The amount of stake tokens unstaked in Wei
      * @param unstakePenaltyAmountWei The unstake penalty amount in wei
@@ -243,6 +264,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         address indexed account,
         bytes32 indexed stakeId,
         address stakeToken,
+        uint256 earlyUnstakePenaltyPercentWei,
         uint256 stakeAmountWei,
         uint256 unstakeAmountWei,
         uint256 unstakePenaltyAmountWei,
