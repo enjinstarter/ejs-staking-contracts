@@ -10,7 +10,7 @@
     "args": {
       "VARIANT": "20-bullseye",
       "SOLC_VERSION": "0.8.19",
-      "SLITHER_VERSION": "0.10.1"
+      "SLITHER_VERSION": "0.10.3"
     }
   },
 

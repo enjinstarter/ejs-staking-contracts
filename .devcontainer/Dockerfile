@@ -5,7 +5,7 @@ ARG VARIANT="20-bullseye"
 FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:1-${VARIANT}
 
 ARG SOLC_VERSION=0.8.19
-ARG SLITHER_VERSION=0.10.1
+ARG SLITHER_VERSION=0.10.3
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
