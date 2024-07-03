@@ -1,3 +1,4 @@
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require("chai");
 const hre = require("hardhat");
 
@@ -98,9 +99,7 @@ async function grantRole(
 }
 
 async function mineBlockAtTime(blockTimestamp) {
-  await hre.run("setTime", {
-    time: blockTimestamp,
-  });
+  await time.increaseTo(blockTimestamp);
 }
 
 async function newLibrary(libname) {
@@ -253,9 +252,7 @@ function scaleWeiToDecimals(weiAmount, decimals) {
 }
 
 async function setTimeNextBlock(nextBlockTimestamp) {
-  await hre.run("setTimeNextBlock", {
-    time: nextBlockTimestamp,
-  });
+  await time.setNextBlockTimestamp(nextBlockTimestamp);
 }
 
 async function testGrantRevokeRoles(

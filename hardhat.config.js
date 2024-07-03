@@ -3,7 +3,6 @@ const dotenvExpand = require("dotenv-expand");
 
 dotenvExpand.expand(dotenv.config());
 
-require("@atixlabs/hardhat-time-n-mine");
 require("@enjinstarter/hardhat-oklink-verify");
 require("@nomicfoundation/hardhat-chai-matchers");
 require("@nomicfoundation/hardhat-verify");
