@@ -121,6 +121,8 @@ contract StakingServiceV2 is
 
         // console.log("estimatedRewardAtMaturityWei=%o, calculatePoolRemainingRewardWei=%o", estimatedRewardAtMaturityWei, _calculatePoolRemainingRewardWei(poolId));  // solhint-disable-line no-console
 
+        require(stakingPoolInfo.poolAprWei == 0 || estimatedRewardAtMaturityWei > 0, "SSvcs2: zero reward");
+
         require(
             estimatedRewardAtMaturityWei <=
                 _calculatePoolRemainingRewardWei(poolId),

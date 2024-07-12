@@ -214,28 +214,32 @@ describe("StakingServiceV2", function () {
       false,
     );
 
-    const poolId = hre.ethers.utils.id("da61b654-4973-4879-9166-723c0017dd6d");
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
     const enduserAccountAddress = await enduserAccounts[0].getAddress();
-    const stakeId = hre.ethers.utils.id("bac9778d-5d13-4749-8823-52ef4feb4848");
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "bac9778d-5d13-4749-8823-52ef4feb4848",
+    );
 
     await expect(
       stakingServiceInstance.getClaimableRewardWei(
-        poolId,
+        uninitializedPoolId,
         enduserAccountAddress,
-        stakeId,
+        uninitializedStakeId,
       ),
     ).to.be.revertedWith("SSvcs2: uninitialized");
 
     await expect(
       stakingServiceInstance.getStakeInfo(
-        poolId,
+        uninitializedPoolId,
         enduserAccountAddress,
-        stakeId,
+        uninitializedStakeId,
       ),
     ).to.be.revertedWith("SSvcs2: uninitialized");
 
     await expect(
-      stakingServiceInstance.getStakingPoolStats(poolId),
+      stakingServiceInstance.getStakingPoolStats(uninitializedPoolId),
     ).to.be.revertedWith("SPool2: uninitialized");
   });
 
@@ -625,7 +629,550 @@ describe("StakingServiceV2", function () {
     );
   });
 
-  it.only("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
+  it("Should not allow set admin wallet as zero address", async () => {
+    await expect(
+      stakingServiceInstance.setAdminWallet(hre.ethers.constants.AddressZero),
+    ).to.be.revertedWith("AdminWallet: new wallet");
+  });
+
+  it("Should not allow set staking pool contract as zero address", async () => {
+    await expect(
+      stakingServiceInstance.setStakingPoolContract(
+        hre.ethers.constants.AddressZero,
+      ),
+    ).to.be.revertedWith("SSvcs2: new staking pool");
+  });
+
+  it("Should not allow add zero staking pool reward", async () => {
+    await expect(
+      stakingServiceInstance.addStakingPoolReward(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        hre.ethers.constants.Zero,
+      ),
+    ).to.be.revertedWith("SSvcs2: reward amount");
+  });
+
+  it("Should not allow add staking pool reward for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const rewardAmountWei = hre.ethers.utils.parseEther("6917.15942393");
+
+    await expect(
+      stakingServiceInstance.addStakingPoolReward(
+        uninitializedPoolId,
+        rewardAmountWei,
+      ),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("Should not allow remove revoked stakes for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+
+    await expect(
+      stakingServiceInstance.removeRevokedStakes(uninitializedPoolId),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("Should not allow remove revoked stakes when no revoked stakes", async () => {
+    await expect(
+      stakingServiceInstance.removeRevokedStakes(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+      ),
+    ).to.be.revertedWith("SSvcs2: no revoked");
+  });
+
+  it("Should not allow remove unallocated staking pool reward for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+
+    await expect(
+      stakingServiceInstance.removeUnallocatedStakingPoolReward(
+        uninitializedPoolId,
+      ),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("Should not allow remove unallocated staking pool reward when no unallocated reward", async () => {
+    await expect(
+      stakingServiceInstance.removeUnallocatedStakingPoolReward(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+      ),
+    ).to.be.revertedWith("SSvcs2: no unallocated");
+  });
+
+  it("Should not allow resume stake for zero address", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "380272d9-b1fa-4ce4-b567-a4671fa30f65",
+    );
+
+    await expect(
+      stakingServiceInstance.resumeStake(
+        uninitializedPoolId,
+        hre.ethers.constants.AddressZero,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: account");
+  });
+
+  it("Should not allow resume stake for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "25d34c60-cb45-4ae6-a520-b0a07dacb6dc",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.resumeStake(
+        uninitializedPoolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("Should not allow resume stake for uninitialized stake", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "25d34c60-cb45-4ae6-a520-b0a07dacb6dc",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.resumeStake(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("Should not allow suspend stake for zero address", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "91ed8ed6-f8de-4918-a9cc-ef951e877ab3",
+    );
+
+    await expect(
+      stakingServiceInstance.suspendStake(
+        uninitializedPoolId,
+        hre.ethers.constants.AddressZero,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: account");
+  });
+
+  it("Should not allow suspend stake for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "60618239-f879-46a1-9a1e-b048976053ab",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.suspendStake(
+        uninitializedPoolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("Should not allow suspend stake for uninitialized stake", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "60618239-f879-46a1-9a1e-b048976053ab",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.suspendStake(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("should not allow get claimable reward for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "b32c48d5-b014-4076-bf2a-500278bc955b",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.getClaimableRewardWei(
+        uninitializedPoolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("should not allow get claimable reward for uninitialized stake", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "b32c48d5-b014-4076-bf2a-500278bc955b",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.getClaimableRewardWei(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("should not allow get claimable reward for zero address", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "dd2f9801-23f8-48e3-866e-44340434278f",
+    );
+
+    await expect(
+      stakingServiceInstance.getClaimableRewardWei(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        hre.ethers.constants.AddressZero,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: account");
+  });
+
+  it("should not allow get stake info for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "b7c7ba28-8367-4499-a04c-8242dfd2295d",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.getStakeInfo(
+        uninitializedPoolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("should not allow get stake info for uninitialized stake", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "b7c7ba28-8367-4499-a04c-8242dfd2295d",
+    );
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+    await expect(
+      stakingServiceInstance.getStakeInfo(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        enduserAccountAddress,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("should not allow get stake info for zero address", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "5c54d4ca-6a15-48ba-b15c-9143b5781648",
+    );
+
+    await expect(
+      stakingServiceInstance.getStakeInfo(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        hre.ethers.constants.AddressZero,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: account");
+  });
+
+  it("should not allow get staking pool stats for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+
+    await expect(
+      stakingServiceInstance.getStakingPoolStats(uninitializedPoolId),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("should not allow stake of zero amount", async () => {
+    const stakeId = hre.ethers.utils.id("63db1896-cf75-42b0-a3f4-739d18698bc7");
+
+    await expect(
+      stakingServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        stakeId,
+        hre.ethers.constants.Zero,
+      ),
+    ).to.be.revertedWith("SSvcs2: stake amount");
+  });
+
+  it("should not allow stake of zero amount after truncation", async () => {
+    const STAKING_POOL_CONFIGS_STAKE_TOKEN_6_DECIMALS_INDEX = 6;
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000999999999999");
+    const stakeId = hre.ethers.utils.id("cb8c69be-0a32-46a4-9750-3ede278e1294");
+
+    await expect(
+      stakingServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[
+          STAKING_POOL_CONFIGS_STAKE_TOKEN_6_DECIMALS_INDEX
+        ].poolId,
+        stakeId,
+        stakeAmountWei,
+      ),
+    ).to.be.revertedWith("SSvcs2: truncated stake amount");
+  });
+
+  it("should not allow stake with zero reward at maturity", async () => {
+    const STAKING_POOL_CONFIGS_REWARD_TOKEN_6_DECIMALS_INDEX = 14;
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000000000000001");
+    const stakeId = hre.ethers.utils.id("cd854171-167c-4523-bdd0-a1ac0e85c3c9");
+
+    await expect(
+      stakingServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[
+          STAKING_POOL_CONFIGS_REWARD_TOKEN_6_DECIMALS_INDEX
+        ].poolId,
+        stakeId,
+        stakeAmountWei,
+      ),
+    ).to.be.revertedWith("SSvcs2: zero reward");
+  });
+
+  it("should not allow stake for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const stakeId = hre.ethers.utils.id("c40bf84c-66eb-40cc-9337-d94bd657ee61");
+    const stakeAmountWei = hre.ethers.utils.parseEther("6917.15942393");
+
+    await expect(
+      stakingServiceInstance.stake(
+        uninitializedPoolId,
+        stakeId,
+        stakeAmountWei,
+      ),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("should not allow claim reward for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "e5f2454d-031c-4954-a11a-03933c7b7a3c",
+    );
+
+    await expect(
+      stakingServiceInstance.claimReward(
+        uninitializedPoolId,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("should not allow claim reward for uninitialized stake", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "e5f2454d-031c-4954-a11a-03933c7b7a3c",
+    );
+
+    await expect(
+      stakingServiceInstance.claimReward(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  it("should not allow unstake for uninitialized staking pool", async () => {
+    const uninitializedPoolId = hre.ethers.utils.id(
+      "da61b654-4973-4879-9166-723c0017dd6d",
+    );
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "548e3d12-a611-43e1-978a-b3eef871af2c",
+    );
+
+    await expect(
+      stakingServiceInstance.unstake(uninitializedPoolId, uninitializedStakeId),
+    ).to.be.revertedWith("SPool2: uninitialized");
+  });
+
+  it("should not allow unstake for uninitialized stake", async () => {
+    const uninitializedStakeId = hre.ethers.utils.id(
+      "548e3d12-a611-43e1-978a-b3eef871af2c",
+    );
+
+    await expect(
+      stakingServiceInstance.unstake(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        uninitializedStakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized");
+  });
+
+  /*
+  it("should not allow invalid staking pool info", async () => {
+    const testPoolInstance = await stakeHelpers.newMockStakingPool();
+    const testServiceInstance = await stakeHelpers.newStakingService(
+      testPoolInstance.address,
+    );
+
+    const poolIdStakeDurationZero =
+      await testPoolInstance.POOL_ID_STAKE_DURATION_ZERO();
+    const poolIdStakeTokenAddressZero =
+      await testPoolInstance.POOL_ID_STAKE_TOKEN_ADDRESS_ZERO();
+    const poolIdStakeTokenDecimalsNineteen =
+      await testPoolInstance.POOL_ID_STAKE_TOKEN_DECIMALS_NINETEEN();
+    const poolIdRewardTokenAddressZero =
+      await testPoolInstance.POOL_ID_REWARD_TOKEN_ADDRESS_ZERO();
+    const poolIdRewardTokenDecimalsNineteen =
+      await testPoolInstance.POOL_ID_REWARD_TOKEN_DECIMALS_NINETEEN();
+    const poolIdPoolAprZero = await testPoolInstance.POOL_ID_POOL_APR_ZERO();
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeDurationZero),
+    ).to.be.revertedWith("SSvcs2: stake duration");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeTokenAddressZero),
+    ).to.be.revertedWith("SSvcs2: stake token");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdStakeTokenDecimalsNineteen),
+    ).to.be.revertedWith("SSvcs2: stake decimals");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdRewardTokenAddressZero),
+    ).to.be.revertedWith("SSvcs2: reward token");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(
+        poolIdRewardTokenDecimalsNineteen,
+      ),
+    ).to.be.revertedWith("SSvcs2: reward decimals");
+
+    await expect(
+      testServiceInstance.getStakingPoolStats(poolIdPoolAprZero),
+    ).to.be.revertedWith("SSvcs2: pool APR");
+  });
+
+  it("should not allow invalid transfer of tokens from contract to account and vice versa", async () => {
+    const enduserAccountAddress = await enduserAccounts[0].getAddress();
+    const tokenInstance = stakeToken18DecimalsInstances[0];
+    const tokenAddress = tokenInstance.address;
+    const tokenDecimals = await tokenInstance.decimals();
+    const transferAmountWei = hre.ethers.utils.parseEther(
+      "0.000000000000000001",
+    );
+
+    const testPoolInstance = await stakeHelpers.newMockStakingPool();
+    const testServiceInstance = await stakeHelpers.newMockStakingService(
+      testPoolInstance.address,
+    );
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        hre.ethers.constants.AddressZero,
+        tokenDecimals,
+        transferAmountWei,
+        enduserAccountAddress,
+      ),
+    ).to.be.revertedWith("SSvcs: token address");
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        tokenAddress,
+        19,
+        transferAmountWei,
+        enduserAccountAddress,
+      ),
+    ).to.be.revertedWith("SSvcs: token decimals");
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        tokenAddress,
+        tokenDecimals,
+        hre.ethers.constants.Zero,
+        enduserAccountAddress,
+      ),
+    ).to.be.revertedWith("SSvcs: amount");
+
+    await expect(
+      testServiceInstance.transferTokensToAccount(
+        tokenAddress,
+        tokenDecimals,
+        transferAmountWei,
+        hre.ethers.constants.AddressZero,
+      ),
+    ).to.be.revertedWith("SSvcs: account");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        hre.ethers.constants.AddressZero,
+        tokenDecimals,
+        transferAmountWei,
+        enduserAccountAddress,
+      ),
+    ).to.be.revertedWith("SSvcs: token address");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        tokenAddress,
+        19,
+        transferAmountWei,
+        enduserAccountAddress,
+      ),
+    ).to.be.revertedWith("SSvcs: token decimals");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        tokenAddress,
+        tokenDecimals,
+        hre.ethers.constants.Zero,
+        enduserAccountAddress,
+      ),
+    ).to.be.revertedWith("SSvcs: amount");
+
+    await expect(
+      testServiceInstance.transferTokensToContract(
+        tokenAddress,
+        tokenDecimals,
+        transferAmountWei,
+        hre.ethers.constants.AddressZero,
+      ),
+    ).to.be.revertedWith("SSvcs: account");
+  });
+
+  it("should not allow invalid stake maturity timestamp", async () => {
+    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000000000000001");
+
+    const testServiceInstance = await stakeHelpers.newMockStakingService(
+      stakingPoolInstance.address,
+    );
+
+    await expect(
+      testServiceInstance.stake(
+        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+        stakeAmountWei,
+      ),
+    ).to.be.revertedWith("SSvcs: maturity timestamp");
+  });
+  */
+
+  it("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
     const stakeEvents = [
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(10),
