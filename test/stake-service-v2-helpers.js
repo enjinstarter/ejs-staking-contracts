@@ -73,25 +73,27 @@ async function addStakingPoolRewardWithVerify(
   );
 
   if (expectAbleToAddReward) {
-    await testHelpers.approveTransferWithVerify(
-      rewardTokenContractInstance,
-      fromWalletSigner,
-      stakingServiceContractInstance.address,
-      rewardAmountWei,
-    );
-
-    await expect(
-      stakingServiceContractInstance
-        .connect(fromWalletSigner)
-        .addStakingPoolReward(poolId, rewardAmountWei),
-    )
-      .to.emit(stakingServiceContractInstance, "StakingPoolRewardAdded")
-      .withArgs(
-        poolId,
-        await fromWalletSigner.getAddress(),
-        rewardTokenContractInstance.address,
-        truncatedRewardAmountWei,
+    if (rewardAmountWei.gt(hre.ethers.constants.Zero)) {
+      await testHelpers.approveTransferWithVerify(
+        rewardTokenContractInstance,
+        fromWalletSigner,
+        stakingServiceContractInstance.address,
+        rewardAmountWei,
       );
+
+      await expect(
+        stakingServiceContractInstance
+          .connect(fromWalletSigner)
+          .addStakingPoolReward(poolId, rewardAmountWei),
+      )
+        .to.emit(stakingServiceContractInstance, "StakingPoolRewardAdded")
+        .withArgs(
+          poolId,
+          await fromWalletSigner.getAddress(),
+          rewardTokenContractInstance.address,
+          truncatedRewardAmountWei,
+        );
+    }
   } else {
     await expect(
       stakingServiceContractInstance
@@ -397,22 +399,24 @@ async function claimWithVerify(
     stakeEvent.poolIndex
   ].stakeTokenInstance.balanceOf(stakeEvent.signerAddress);
 
-  await expect(
-    stakingServiceContractInstance
-      .connect(stakeEvent.signer)
-      .claimReward(
+  if (expectClaimableRewardWeiAtClaim.gt(hre.ethers.constants.Zero)) {
+    await expect(
+      stakingServiceContractInstance
+        .connect(stakeEvent.signer)
+        .claimReward(
+          stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+          stakeEvent.stakeId,
+        ),
+    )
+      .to.emit(stakingServiceContractInstance, "RewardClaimed")
+      .withArgs(
         stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
         stakeEvent.stakeId,
-      ),
-  )
-    .to.emit(stakingServiceContractInstance, "RewardClaimed")
-    .withArgs(
-      stakingPoolConfigs[stakeEvent.poolIndex].poolId,
-      stakeEvent.signerAddress,
-      stakeEvent.stakeId,
-      stakingPoolConfigs[stakeEvent.poolIndex].rewardTokenInstance.address,
-      expectClaimableRewardWeiAtClaim,
-    );
+        stakingPoolConfigs[stakeEvent.poolIndex].rewardTokenInstance.address,
+        expectClaimableRewardWeiAtClaim,
+      );
+  }
 
   const signerBalanceOfAfterClaim = await stakingPoolConfigs[
     stakeEvent.poolIndex

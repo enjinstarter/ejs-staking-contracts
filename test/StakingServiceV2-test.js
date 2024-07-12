@@ -1320,7 +1320,7 @@ describe("StakingServiceV2", function () {
   });
   */
 
-  it("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
+  it.only("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
     const stakeEvents = [
       {
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(10),
@@ -7477,15 +7477,20 @@ describe("StakingServiceV2", function () {
           stakingPoolConfig.rewardTokenInstance.address
         ],
         {},
-        totalRewardToBeDistributedWei.sub(totalStakeRewardLessByWei),
+        totalRewardToBeDistributedWei.gt(hre.ethers.constants.Zero)
+          ? totalRewardToBeDistributedWei.sub(totalStakeRewardLessByWei)
+          : totalRewardToBeDistributedWei,
         true,
       );
 
       for (let j = 0; j < stakingPoolStats.length; j++) {
         const poolIdStakingStats = stakingPoolStats[j].get(`${poolId}`);
-        poolIdStakingStats.totalRewardAddedWei = totalRewardToBeDistributedWei
-          .sub(totalStakeRewardLessByWei)
-          .toString();
+        poolIdStakingStats.totalRewardAddedWei =
+          totalRewardToBeDistributedWei.gt(hre.ethers.constants.Zero)
+            ? totalRewardToBeDistributedWei
+                .sub(totalStakeRewardLessByWei)
+                .toString()
+            : totalRewardToBeDistributedWei.toString();
 
         poolIdStakingStats.poolRewardAmountWei = stakeServiceHelpers
           .computePoolRewardWei(

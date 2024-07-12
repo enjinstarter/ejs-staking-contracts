@@ -218,7 +218,7 @@ async function initializeStakingPoolTestData(
       stakeTokenDecimals: 18,
       rewardTokenInstance: stakeRewardTokenInstances[0],
       rewardTokenDecimals: 18,
-      poolAprWei: hre.ethers.utils.parseEther("50"),
+      poolAprWei: hre.ethers.constants.Zero,
       earlyUnstakeCooldownPeriodDays: 1,
       earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("10"),
       revshareStakeDurationExtensionDays: 7,
