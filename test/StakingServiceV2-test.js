@@ -945,6 +945,31 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Stake", function () {
+      it("should not allow stake when paused", async () => {
+        const stakeId = hre.ethers.utils.id(
+          "2b7a54ee-60e2-4eb4-ae93-58da3d783424",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "0.000000999999999999",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance.connect(contractAdminAccount).pauseContract(),
+        )
+          .to.emit(stakingServiceInstance, "Paused")
+          .withArgs(contractAdminAddress);
+
+        await expect(
+          stakingServiceInstance.stake(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+            stakeId,
+            stakeAmountWei,
+          ),
+        ).to.be.revertedWith("Pausable: paused");
+      });
+
       it("should not allow stake of zero amount", async () => {
         const stakeId = hre.ethers.utils.id(
           "63db1896-cf75-42b0-a3f4-739d18698bc7",
@@ -1019,6 +1044,27 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Claim Reward", function () {
+      it("should not allow claim reward when paused", async () => {
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "e6fd90ea-7545-4a35-b86d-64fd3bff8e7d",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance.connect(contractAdminAccount).pauseContract(),
+        )
+          .to.emit(stakingServiceInstance, "Paused")
+          .withArgs(contractAdminAddress);
+
+        await expect(
+          stakingServiceInstance.claimReward(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+            uninitializedStakeId,
+          ),
+        ).to.be.revertedWith("Pausable: paused");
+      });
+
       it("should not allow claim reward for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
@@ -1050,6 +1096,27 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Unstake", function () {
+      it("should not allow unstake when paused", async () => {
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "e6fd90ea-7545-4a35-b86d-64fd3bff8e7d",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance.connect(contractAdminAccount).pauseContract(),
+        )
+          .to.emit(stakingServiceInstance, "Paused")
+          .withArgs(contractAdminAddress);
+
+        await expect(
+          stakingServiceInstance.unstake(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+            uninitializedStakeId,
+          ),
+        ).to.be.revertedWith("Pausable: paused");
+      });
+
       it("should not allow unstake for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
@@ -1077,6 +1144,29 @@ describe("StakingServiceV2", function () {
             uninitializedStakeId,
           ),
         ).to.be.revertedWith("SSvcs2: uninitialized");
+      });
+    });
+
+    describe("Withdraw Unstake", function () {
+      it("should not allow withdraw unstake when paused", async () => {
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "e6fd90ea-7545-4a35-b86d-64fd3bff8e7d",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance.connect(contractAdminAccount).pauseContract(),
+        )
+          .to.emit(stakingServiceInstance, "Paused")
+          .withArgs(contractAdminAddress);
+
+        await expect(
+          stakingServiceInstance.withdrawUnstake(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+            uninitializedStakeId,
+          ),
+        ).to.be.revertedWith("Pausable: paused");
       });
     });
   });
