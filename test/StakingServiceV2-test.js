@@ -1082,6 +1082,91 @@ describe("StakingServiceV2", function () {
           ),
         ).to.be.revertedWith("SPool2: uninitialized");
       });
+
+      it("should not allow stake for closed pool", async () => {
+        const poolId = stakingPoolStakeRewardTokenSameConfigs[0].poolId;
+        const stakeId = hre.ethers.utils.id(
+          "05cbf8a5-556e-43c6-b0c4-f3b83dd7b29e",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "4808.724966120105184185",
+        );
+
+        await expect(
+          stakingPoolInstance
+            .connect(contractAdminAccount)
+            .closeStakingPool(poolId),
+        )
+          .to.emit(stakingPoolInstance, "StakingPoolClosed")
+          .withArgs(poolId, contractAdminAddress);
+
+        await expect(
+          stakingServiceInstance.stake(poolId, stakeId, stakeAmountWei),
+        ).to.be.revertedWith("SSvcs2: pool closed");
+      });
+
+      it("should not allow stake if insufficient reward", async () => {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+        const poolId = stakingPoolConfig.poolId;
+        const stakeId = hre.ethers.utils.id(
+          "8dad50f1-9d6c-41db-bbce-0d7276511173",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "6385.838568119519524842",
+        );
+        const enduserAccount = enduserAccounts[1];
+        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const fromWalletAddress = await fromWalletAccount.getAddress();
+        const rewardTokenInstance = stakingPoolConfig.rewardTokenInstance;
+        const stakeTokenInstance = stakingPoolConfig.stakeTokenInstance;
+
+        const expectRewardAtMaturityWei = stakeServiceHelpers
+          .computeTruncatedAmountWei(
+            stakeServiceHelpers.estimateRewardAtMaturityWei(
+              stakingPoolConfig.poolAprWei,
+              stakingPoolConfig.stakeDurationDays,
+              stakeAmountWei,
+            ),
+            stakingPoolConfig.rewardTokenDecimals,
+          )
+          .sub(hre.ethers.constants.One);
+
+        await testHelpers.approveTransferWithVerify(
+          rewardTokenInstance,
+          fromWalletAccount,
+          stakingServiceInstance.address,
+          expectRewardAtMaturityWei,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(fromWalletAccount)
+            .addStakingPoolReward(poolId, expectRewardAtMaturityWei),
+        )
+          .to.emit(stakingServiceInstance, "StakingPoolRewardAdded")
+          .withArgs(
+            poolId,
+            fromWalletAddress,
+            rewardTokenInstance.address,
+            expectRewardAtMaturityWei,
+          );
+
+        await testHelpers.transferAndApproveWithVerify(
+          stakeTokenInstance,
+          fromWalletAccount,
+          enduserAccount,
+          stakingServiceInstance.address,
+          stakeAmountWei,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .stake(poolId, stakeId, stakeAmountWei),
+        ).to.be.revertedWith("SSvcs2: insufficient");
+      });
     });
 
     describe("Claim Reward", function () {
@@ -1135,7 +1220,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: uninitialized stake");
       });
 
-      it.only("should not allow claim reward for suspended pool", async () => {
+      it("should not allow claim reward for suspended pool", async () => {
         const poolId = stakingPoolStakeRewardTokenSameConfigs[0].poolId;
         const uninitializedStakeId = hre.ethers.utils.id(
           "e5f2454d-031c-4954-a11a-03933c7b7a3c",
@@ -1156,7 +1241,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: pool suspended");
       });
 
-      it.only("should not allow claim reward for suspended stake", async () => {
+      it("should not allow claim reward for suspended stake", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
         const poolId = stakingPoolConfig.poolId;
         const stakeId = hre.ethers.utils.id(
