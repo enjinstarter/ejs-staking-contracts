@@ -551,7 +551,7 @@ async function claimWithVerify(
         stakeEvent.stakeId,
         hre.ethers.utils.parseEther("1.0"),
       ),
-  ).to.be.revertedWith("SSvcs2: exists");
+  ).to.be.revertedWith("SSvcs2: stake exists");
 
   await expect(
     stakingServiceContractInstance
@@ -1046,7 +1046,7 @@ async function revokeWithVerify(
         stakeEvent.stakeId,
         hre.ethers.utils.parseEther("1.0"),
       ),
-  ).to.be.revertedWith("SSvcs2: exists");
+  ).to.be.revertedWith("SSvcs2: stake exists");
 
   await expect(
     stakingServiceContractInstance
@@ -1117,7 +1117,7 @@ async function stakeWithVerify(
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
     ),
-  ).to.be.revertedWith("SSvcs2: uninitialized");
+  ).to.be.revertedWith("SSvcs2: uninitialized stake");
 
   await expect(
     stakingServiceContractInstance.getStakeInfo(
@@ -1125,7 +1125,7 @@ async function stakeWithVerify(
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
     ),
-  ).to.be.revertedWith("SSvcs2: uninitialized");
+  ).to.be.revertedWith("SSvcs2: uninitialized stake");
 
   await verifyMultipleStakeInfos(
     stakingServiceContractInstance,
@@ -1341,7 +1341,7 @@ async function stakeWithVerify(
           stakingPoolConfigs[stakeEvent.poolIndex].poolId,
           stakeEvent.stakeId,
         ),
-    ).to.be.revertedWith("SSvcs2: uninitialized");
+    ).to.be.revertedWith("SSvcs2: uninitialized stake");
 
     await expect(
       stakingServiceContractInstance
@@ -1350,7 +1350,7 @@ async function stakeWithVerify(
           stakingPoolConfigs[stakeEvent.poolIndex].poolId,
           stakeEvent.stakeId,
         ),
-    ).to.be.revertedWith("SSvcs2: uninitialized");
+    ).to.be.revertedWith("SSvcs2: uninitialized stake");
 
     await expect(
       stakingServiceContractInstance
@@ -1359,7 +1359,7 @@ async function stakeWithVerify(
           stakingPoolConfigs[stakeEvent.poolIndex].poolId,
           stakeEvent.stakeId,
         ),
-    ).to.be.revertedWith("SSvcs2: uninitialized");
+    ).to.be.revertedWith("SSvcs2: uninitialized stake");
   } else {
     await expect(
       stakingServiceContractInstance
@@ -1378,7 +1378,7 @@ async function stakeWithVerify(
           stakeEvent.stakeId,
           actualStakeAmountWei,
         ),
-    ).to.be.revertedWith("SSvcs2: exists");
+    ).to.be.revertedWith("SSvcs2: stake exists");
 
     await expect(
       stakingServiceContractInstance
@@ -1882,7 +1882,7 @@ async function unstakeWithVerify(
         stakeEvent.stakeId,
         hre.ethers.utils.parseEther("1.0"),
       ),
-  ).to.be.revertedWith("SSvcs2: exists");
+  ).to.be.revertedWith("SSvcs2: stake exists");
 
   await expect(
     stakingServiceContractInstance
@@ -2560,7 +2560,7 @@ async function verifyStakeInfo(
 
   await expect(
     stakingServiceContractInstance.getStakeInfo(poolId, signerAddress, stakeId),
-  ).to.be.revertedWith("SSvcs2: uninitialized");
+  ).to.be.revertedWith("SSvcs2: uninitialized stake");
 
   return null;
 }
@@ -2910,7 +2910,7 @@ async function withdrawWithVerify(
         stakeEvent.stakeId,
         hre.ethers.utils.parseEther("1.0"),
       ),
-  ).to.be.revertedWith("SSvcs2: exists");
+  ).to.be.revertedWith("SSvcs2: stake exists");
 
   await expect(
     stakingServiceContractInstance

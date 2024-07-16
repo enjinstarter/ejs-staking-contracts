@@ -57,7 +57,7 @@ contract StakingServiceV2 is
         require(stakingPoolInfo.isActive, "SSvcs2: pool suspended");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
         require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
         require(_isStakeMaturedFor(stakekey), "SSvcs2: not mature");
@@ -111,7 +111,7 @@ contract StakingServiceV2 is
         require(truncatedStakeAmountWei > 0, "SSvcs2: truncated stake amount");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
-        require(!_stakes[stakekey].isInitialized, "SSvcs2: exists");
+        require(!_stakes[stakekey].isInitialized, "SSvcs2: stake exists");
 
         uint256 estimatedRewardAtMaturityWei = _estimateRewardAtMaturityWei(
             stakingPoolInfo.stakeDurationDays,
@@ -175,7 +175,7 @@ contract StakingServiceV2 is
         require(stakingPoolInfo.isActive, "SSvcs2: pool suspended");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
         require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
         require(!_isStakeUnstakedFor(stakekey), "SSvcs2: unstaked");
@@ -244,7 +244,7 @@ contract StakingServiceV2 is
         require(stakingPoolInfo.isActive, "SSvcs2: pool suspended");
 
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
         require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
         require(_isStakeUnstakedFor(stakekey), "SSvcs2: not unstake");
@@ -283,7 +283,7 @@ contract StakingServiceV2 is
         IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
 
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
         require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(!_isStakeUnstakedFor(stakekey), "SSvcs2: unstaked");
 
@@ -467,7 +467,7 @@ contract StakingServiceV2 is
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
 
         require(!_stakes[stakekey].isActive, "SSvcs2: stake active");
 
@@ -488,7 +488,7 @@ contract StakingServiceV2 is
         IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
 
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
         require(!_isStakeRevokedFor(stakekey), "Ssvcs2: revoked");
 
         (uint256 revokedStakeAmountWei, uint256 revokedRewardAmountWei) = _calculateRevokedAmountFor(stakekey);
@@ -525,7 +525,7 @@ contract StakingServiceV2 is
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
 
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
 
@@ -590,7 +590,7 @@ contract StakingServiceV2 is
         returns (uint256)
     {
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
 
         return _getClaimableRewardWeiFor(stakekey);
     }
@@ -606,7 +606,7 @@ contract StakingServiceV2 is
         returns (StakeInfo memory stakeInfo)
     {
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
-        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized");
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
 
         stakeInfo = StakeInfo({
             estimatedRewardAtMaturityWei: _stakes[stakekey].estimatedRewardAtMaturityWei,
@@ -839,7 +839,7 @@ contract StakingServiceV2 is
         returns (IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo)
     {
         stakingPoolInfo = IStakingPoolV2(stakingPoolContract).getStakingPoolInfo(poolId);
-        require(stakingPoolInfo.isInitialized, "SSvcs2: uninitialized");
+        require(stakingPoolInfo.isInitialized, "SSvcs2: uninitialized pool");
         require(stakingPoolInfo.stakeDurationDays > 0, "SSvcs2: stake duration");
         require(stakingPoolInfo.stakeTokenAddress != address(0), "SSvcs2: stake token");
         require(
