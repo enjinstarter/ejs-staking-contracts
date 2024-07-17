@@ -1071,6 +1071,204 @@ async function revokeWithVerify(
   );
 }
 
+async function setupStakeEnvironment(
+  stakingServiceInstance,
+  stakingPoolConfig,
+  stakeId,
+  stakeAmountWei,
+  expectStakeTimestamp,
+  enduserAccount,
+  fromWalletAccount,
+) {
+  const poolId = stakingPoolConfig.poolId;
+  const enduserAddress = await enduserAccount.getAddress();
+  const fromWalletAddress = await fromWalletAccount.getAddress();
+  const rewardTokenInstance = stakingPoolConfig.rewardTokenInstance;
+  const stakeTokenInstance = stakingPoolConfig.stakeTokenInstance;
+
+  const expectRewardAtMaturityWei = computeTruncatedAmountWei(
+    estimateRewardAtMaturityWei(
+      stakingPoolConfig.poolAprWei,
+      stakingPoolConfig.stakeDurationDays,
+      stakeAmountWei,
+    ),
+    stakingPoolConfig.rewardTokenDecimals,
+  );
+
+  await testHelpers.approveTransferWithVerify(
+    rewardTokenInstance,
+    fromWalletAccount,
+    stakingServiceInstance.address,
+    expectRewardAtMaturityWei,
+  );
+
+  await expect(
+    stakingServiceInstance
+      .connect(fromWalletAccount)
+      .addStakingPoolReward(poolId, expectRewardAtMaturityWei),
+  )
+    .to.emit(stakingServiceInstance, "StakingPoolRewardAdded")
+    .withArgs(
+      poolId,
+      fromWalletAddress,
+      rewardTokenInstance.address,
+      expectRewardAtMaturityWei,
+    );
+
+  await testHelpers.transferAndApproveWithVerify(
+    stakeTokenInstance,
+    fromWalletAccount,
+    enduserAccount,
+    stakingServiceInstance.address,
+    stakeAmountWei,
+  );
+
+  const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
+    stakingPoolConfig.stakeDurationDays,
+    expectStakeTimestamp,
+  );
+
+  await testHelpers.setTimeNextBlock(expectStakeTimestamp);
+
+  await expect(
+    stakingServiceInstance
+      .connect(enduserAccount)
+      .stake(poolId, stakeId, stakeAmountWei),
+  )
+    .to.emit(stakingServiceInstance, "Staked")
+    .withArgs(
+      poolId,
+      enduserAddress,
+      stakeId,
+      stakeTokenInstance.address,
+      stakeAmountWei,
+      expectStakeTimestamp,
+      expectStakeMaturityTimestamp,
+      expectRewardAtMaturityWei,
+    );
+}
+
+async function setupSuspendStakeEnvironment(
+  stakingServiceInstance,
+  stakingPoolConfig,
+  stakeId,
+  stakeAmountWei,
+  expectStakeSecondsAfterCurrentBlockTimestamp,
+  contractAdminAccount,
+  enduserAccount,
+  fromWalletAccount,
+) {
+  const poolId = stakingPoolConfig.poolId;
+  const contractAdminAddress = await contractAdminAccount.getAddress();
+  const enduserAddress = await enduserAccount.getAddress();
+
+  const currentBlockTimestamp = await testHelpers.getCurrentBlockTimestamp();
+  const expectStakeTimestamp =
+    currentBlockTimestamp + expectStakeSecondsAfterCurrentBlockTimestamp;
+
+  await setupStakeEnvironment(
+    stakingServiceInstance,
+    stakingPoolConfig,
+    stakeId,
+    stakeAmountWei,
+    expectStakeTimestamp,
+    enduserAccount,
+    fromWalletAccount,
+  );
+
+  await expect(
+    stakingServiceInstance
+      .connect(contractAdminAccount)
+      .suspendStake(poolId, enduserAddress, stakeId),
+  )
+    .to.emit(stakingServiceInstance, "StakeSuspended")
+    .withArgs(poolId, enduserAddress, stakeId, contractAdminAddress);
+}
+
+async function setupUnstakeEnvironment(
+  stakingServiceInstance,
+  stakingPoolConfig,
+  stakeId,
+  stakeAmountWei,
+  expectStakeSecondsAfterCurrentBlockTimestamp,
+  expectUnstakeSecondsAfterCurrentBlockTimestamp,
+  enduserAccount,
+  fromWalletAccount,
+) {
+  const poolId = stakingPoolConfig.poolId;
+  const enduserAddress = await enduserAccount.getAddress();
+  const stakeTokenInstance = stakingPoolConfig.stakeTokenInstance;
+
+  const currentBlockTimestamp = await testHelpers.getCurrentBlockTimestamp();
+  const expectStakeTimestamp =
+    currentBlockTimestamp + expectStakeSecondsAfterCurrentBlockTimestamp;
+  const expectUnstakeTimestamp =
+    currentBlockTimestamp + expectUnstakeSecondsAfterCurrentBlockTimestamp;
+
+  const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
+    stakingPoolConfig.stakeDurationDays,
+    expectStakeTimestamp,
+  );
+
+  const isStakeMaturedAtUnstake = isStakeMatured(
+    expectStakeMaturityTimestamp,
+    expectUnstakeTimestamp,
+    expectUnstakeTimestamp,
+  );
+
+  const expectUnstakePenaltyAmountWei = calculateUnstakePenaltyWei(
+    stakeAmountWei,
+    stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+    expectStakeMaturityTimestamp,
+    expectUnstakeTimestamp,
+    expectUnstakeTimestamp,
+  );
+
+  const expectUnstakeAmountWei = calculateUnstakeAmountWei(
+    stakeAmountWei,
+    stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+    expectStakeMaturityTimestamp,
+    expectUnstakeTimestamp,
+    expectUnstakeTimestamp,
+  );
+
+  const expectUnstakeCooldownExpiryTimestamp = isStakeMaturedAtUnstake
+    ? expectUnstakeTimestamp
+    : calculateCooldownExpiryTimestamp(
+        stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
+        expectUnstakeTimestamp,
+      );
+
+  await setupStakeEnvironment(
+    stakingServiceInstance,
+    stakingPoolConfig,
+    stakeId,
+    stakeAmountWei,
+    expectStakeTimestamp,
+    enduserAccount,
+    fromWalletAccount,
+  );
+
+  await testHelpers.setTimeNextBlock(expectUnstakeTimestamp);
+
+  await expect(
+    stakingServiceInstance.connect(enduserAccount).unstake(poolId, stakeId),
+  )
+    .to.emit(stakingServiceInstance, "Unstaked")
+    .withArgs(
+      poolId,
+      enduserAddress,
+      stakeId,
+      stakeTokenInstance.address,
+      stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+      stakeAmountWei,
+      expectUnstakeAmountWei,
+      expectUnstakePenaltyAmountWei,
+      stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
+      expectUnstakeCooldownExpiryTimestamp,
+    );
+}
+
 async function stakeWithVerify(
   stakingServiceContractInstance,
   stakingPoolConfigs,
@@ -2959,6 +3157,9 @@ module.exports = {
   isStakeMatured,
   newStakingService,
   revokeWithVerify,
+  setupStakeEnvironment,
+  setupSuspendStakeEnvironment,
+  setupUnstakeEnvironment,
   stakeWithVerify,
   testAddStakingPoolReward,
   testSetStakingPoolContract,

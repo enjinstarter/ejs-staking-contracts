@@ -1243,7 +1243,6 @@ describe("StakingServiceV2", function () {
 
       it("should not allow claim reward for suspended stake", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const poolId = stakingPoolConfig.poolId;
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
         );
@@ -1251,92 +1250,24 @@ describe("StakingServiceV2", function () {
           "9599.378692908225033340",
         );
         const contractAdminAccount = contractAdminRoleAccounts[1];
-        const contractAdminAddress = await contractAdminAccount.getAddress();
         const enduserAccount = enduserAccounts[1];
-        const enduserAddress = await enduserAccount.getAddress();
         const fromWalletAccount = contractAdminRoleAccounts[0];
-        const fromWalletAddress = await fromWalletAccount.getAddress();
-        const rewardTokenInstance = stakingPoolConfig.rewardTokenInstance;
-        const stakeTokenInstance = stakingPoolConfig.stakeTokenInstance;
 
-        const expectRewardAtMaturityWei =
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolConfig.poolAprWei,
-              stakingPoolConfig.stakeDurationDays,
-              stakeAmountWei,
-            ),
-            stakingPoolConfig.rewardTokenDecimals,
-          );
-
-        await testHelpers.approveTransferWithVerify(
-          rewardTokenInstance,
-          fromWalletAccount,
-          stakingServiceInstance.address,
-          expectRewardAtMaturityWei,
-        );
-
-        await expect(
-          stakingServiceInstance
-            .connect(fromWalletAccount)
-            .addStakingPoolReward(poolId, expectRewardAtMaturityWei),
-        )
-          .to.emit(stakingServiceInstance, "StakingPoolRewardAdded")
-          .withArgs(
-            poolId,
-            fromWalletAddress,
-            rewardTokenInstance.address,
-            expectRewardAtMaturityWei,
-          );
-
-        await testHelpers.transferAndApproveWithVerify(
-          stakeTokenInstance,
-          fromWalletAccount,
-          enduserAccount,
-          stakingServiceInstance.address,
+        await stakeServiceHelpers.setupSuspendStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
           stakeAmountWei,
+          300,
+          contractAdminAccount,
+          enduserAccount,
+          fromWalletAccount,
         );
 
-        const currentBlockTimestamp =
-          await testHelpers.getCurrentBlockTimestamp();
-        const expectStakeTimestamp = currentBlockTimestamp + 300; // 5 mins later
-        const expectStakeMaturityTimestamp =
-          stakeServiceHelpers.calculateStateMaturityTimestamp(
-            stakingPoolConfig.stakeDurationDays,
-            expectStakeTimestamp,
-          );
-
-        await testHelpers.setTimeNextBlock(expectStakeTimestamp);
-
         await expect(
           stakingServiceInstance
             .connect(enduserAccount)
-            .stake(poolId, stakeId, stakeAmountWei),
-        )
-          .to.emit(stakingServiceInstance, "Staked")
-          .withArgs(
-            poolId,
-            enduserAddress,
-            stakeId,
-            stakeTokenInstance.address,
-            stakeAmountWei,
-            expectStakeTimestamp,
-            expectStakeMaturityTimestamp,
-            expectRewardAtMaturityWei,
-          );
-
-        await expect(
-          stakingServiceInstance
-            .connect(contractAdminAccount)
-            .suspendStake(poolId, enduserAddress, stakeId),
-        )
-          .to.emit(stakingServiceInstance, "StakeSuspended")
-          .withArgs(poolId, enduserAddress, stakeId, contractAdminAddress);
-
-        await expect(
-          stakingServiceInstance
-            .connect(enduserAccount)
-            .claimReward(poolId, stakeId),
+            .claimReward(stakingPoolConfig.poolId, stakeId),
         ).to.be.revertedWith("SSvcs2: stake suspended");
       });
     });
@@ -1415,7 +1346,6 @@ describe("StakingServiceV2", function () {
 
       it("should not allow unstake for suspended stake", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const poolId = stakingPoolConfig.poolId;
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
         );
@@ -1423,92 +1353,24 @@ describe("StakingServiceV2", function () {
           "9599.378692908225033340",
         );
         const contractAdminAccount = contractAdminRoleAccounts[1];
-        const contractAdminAddress = await contractAdminAccount.getAddress();
         const enduserAccount = enduserAccounts[1];
-        const enduserAddress = await enduserAccount.getAddress();
         const fromWalletAccount = contractAdminRoleAccounts[0];
-        const fromWalletAddress = await fromWalletAccount.getAddress();
-        const rewardTokenInstance = stakingPoolConfig.rewardTokenInstance;
-        const stakeTokenInstance = stakingPoolConfig.stakeTokenInstance;
 
-        const expectRewardAtMaturityWei =
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolConfig.poolAprWei,
-              stakingPoolConfig.stakeDurationDays,
-              stakeAmountWei,
-            ),
-            stakingPoolConfig.rewardTokenDecimals,
-          );
-
-        await testHelpers.approveTransferWithVerify(
-          rewardTokenInstance,
-          fromWalletAccount,
-          stakingServiceInstance.address,
-          expectRewardAtMaturityWei,
-        );
-
-        await expect(
-          stakingServiceInstance
-            .connect(fromWalletAccount)
-            .addStakingPoolReward(poolId, expectRewardAtMaturityWei),
-        )
-          .to.emit(stakingServiceInstance, "StakingPoolRewardAdded")
-          .withArgs(
-            poolId,
-            fromWalletAddress,
-            rewardTokenInstance.address,
-            expectRewardAtMaturityWei,
-          );
-
-        await testHelpers.transferAndApproveWithVerify(
-          stakeTokenInstance,
-          fromWalletAccount,
-          enduserAccount,
-          stakingServiceInstance.address,
+        await stakeServiceHelpers.setupSuspendStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
           stakeAmountWei,
+          300,
+          contractAdminAccount,
+          enduserAccount,
+          fromWalletAccount,
         );
 
-        const currentBlockTimestamp =
-          await testHelpers.getCurrentBlockTimestamp();
-        const expectStakeTimestamp = currentBlockTimestamp + 300; // 5 mins later
-        const expectStakeMaturityTimestamp =
-          stakeServiceHelpers.calculateStateMaturityTimestamp(
-            stakingPoolConfig.stakeDurationDays,
-            expectStakeTimestamp,
-          );
-
-        await testHelpers.setTimeNextBlock(expectStakeTimestamp);
-
         await expect(
           stakingServiceInstance
             .connect(enduserAccount)
-            .stake(poolId, stakeId, stakeAmountWei),
-        )
-          .to.emit(stakingServiceInstance, "Staked")
-          .withArgs(
-            poolId,
-            enduserAddress,
-            stakeId,
-            stakeTokenInstance.address,
-            stakeAmountWei,
-            expectStakeTimestamp,
-            expectStakeMaturityTimestamp,
-            expectRewardAtMaturityWei,
-          );
-
-        await expect(
-          stakingServiceInstance
-            .connect(contractAdminAccount)
-            .suspendStake(poolId, enduserAddress, stakeId),
-        )
-          .to.emit(stakingServiceInstance, "StakeSuspended")
-          .withArgs(poolId, enduserAddress, stakeId, contractAdminAddress);
-
-        await expect(
-          stakingServiceInstance
-            .connect(enduserAccount)
-            .unstake(poolId, stakeId),
+            .unstake(stakingPoolConfig.poolId, stakeId),
         ).to.be.revertedWith("SSvcs2: stake suspended");
       });
     });
@@ -1583,94 +1445,17 @@ describe("StakingServiceV2", function () {
         const enduserAccount = enduserAccounts[1];
         const enduserAddress = await enduserAccount.getAddress();
         const fromWalletAccount = contractAdminRoleAccounts[0];
-        const fromWalletAddress = await fromWalletAccount.getAddress();
-        const rewardTokenInstance = stakingPoolConfig.rewardTokenInstance;
-        const stakeTokenInstance = stakingPoolConfig.stakeTokenInstance;
 
-        const expectRewardAtMaturityWei =
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolConfig.poolAprWei,
-              stakingPoolConfig.stakeDurationDays,
-              stakeAmountWei,
-            ),
-            stakingPoolConfig.rewardTokenDecimals,
-          );
-
-        await testHelpers.approveTransferWithVerify(
-          rewardTokenInstance,
-          fromWalletAccount,
-          stakingServiceInstance.address,
-          expectRewardAtMaturityWei,
-        );
-
-        await expect(
-          stakingServiceInstance
-            .connect(fromWalletAccount)
-            .addStakingPoolReward(poolId, expectRewardAtMaturityWei),
-        )
-          .to.emit(stakingServiceInstance, "StakingPoolRewardAdded")
-          .withArgs(
-            poolId,
-            fromWalletAddress,
-            rewardTokenInstance.address,
-            expectRewardAtMaturityWei,
-          );
-
-        await testHelpers.transferAndApproveWithVerify(
-          stakeTokenInstance,
-          fromWalletAccount,
-          enduserAccount,
-          stakingServiceInstance.address,
+        await stakeServiceHelpers.setupUnstakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
           stakeAmountWei,
+          300,
+          600,
+          enduserAccount,
+          fromWalletAccount,
         );
-
-        const currentBlockTimestamp =
-          await testHelpers.getCurrentBlockTimestamp();
-        const expectStakeTimestamp = currentBlockTimestamp + 300; // 5 mins later
-        const expectStakeMaturityTimestamp =
-          stakeServiceHelpers.calculateStateMaturityTimestamp(
-            stakingPoolConfig.stakeDurationDays,
-            expectStakeTimestamp,
-          );
-
-        await testHelpers.setTimeNextBlock(expectStakeTimestamp);
-
-        await expect(
-          stakingServiceInstance
-            .connect(enduserAccount)
-            .stake(poolId, stakeId, stakeAmountWei),
-        )
-          .to.emit(stakingServiceInstance, "Staked")
-          .withArgs(
-            poolId,
-            enduserAddress,
-            stakeId,
-            stakeTokenInstance.address,
-            stakeAmountWei,
-            expectStakeTimestamp,
-            expectStakeMaturityTimestamp,
-            expectRewardAtMaturityWei,
-          );
-
-        await expect(
-          stakingServiceInstance
-            .connect(enduserAccount)
-            .unstake(poolId, stakeId),
-        )
-          .to.emit(stakingServiceInstance, "Unstaked")
-          .withArgs(
-            poolId,
-            enduserAddress,
-            stakeId,
-            stakeTokenInstance.address,
-            stakingPoolConfig.earlyUnstakePenaltyPercentWei,
-            stakeAmountWei,
-            expectUnstakeAmountWei,
-            expectUnstakePenaltyAmountWei,
-            expectUnstakeCooldownPeriodDays,
-            expectUnstakeCooldownExpiryTimestamp,
-          );
 
         await expect(
           stakingServiceInstance
@@ -1683,7 +1468,7 @@ describe("StakingServiceV2", function () {
         await expect(
           stakingServiceInstance
             .connect(enduserAccount)
-            .unstake(poolId, stakeId),
+            .withdrawUnstake(poolId, stakeId),
         ).to.be.revertedWith("SSvcs2: stake suspended");
       });
     });
