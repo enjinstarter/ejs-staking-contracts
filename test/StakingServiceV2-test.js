@@ -753,6 +753,40 @@ describe("StakingServiceV2", function () {
           ),
         ).to.be.revertedWith("SSvcs2: account");
       });
+
+      it.only("should not allow revoke stake for revoked stake", async () => {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+        const stakeId = hre.ethers.utils.id(
+          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const fromWalletAccount = contractAdminRoleAccounts[0];
+
+        await stakeServiceHelpers.setupRevokeStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
+          stakeAmountWei,
+          hre.ethers.constants.Zero,
+          300,
+          0,
+          600,
+          contractAdminAccount,
+          enduserAccount,
+          fromWalletAccount,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .revokeStake(stakingPoolConfig.poolId, enduserAddress, stakeId),
+        ).to.be.revertedWith("SSvcs2: revoked");
+      });
     });
 
     describe("Remove Revoked Stake", function () {
@@ -821,6 +855,37 @@ describe("StakingServiceV2", function () {
             uninitializedStakeId,
           ),
         ).to.be.revertedWith("SSvcs2: account");
+      });
+
+      it.only("should not allow suspend stake for suspended stake", async () => {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+        const stakeId = hre.ethers.utils.id(
+          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const fromWalletAccount = contractAdminRoleAccounts[0];
+
+        await stakeServiceHelpers.setupSuspendStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
+          stakeAmountWei,
+          300,
+          contractAdminAccount,
+          enduserAccount,
+          fromWalletAccount,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .suspendStake(stakingPoolConfig.poolId, enduserAddress, stakeId),
+        ).to.be.revertedWith("SSvcs2: stake suspended");
       });
     });
 

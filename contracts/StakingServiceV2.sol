@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2022 Enjinstarter
+// Copyright 2024 Enjinstarter
 pragma solidity ^0.8.0;
 
 import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
@@ -489,7 +489,7 @@ contract StakingServiceV2 is
 
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
-        require(!_isStakeRevokedFor(stakekey), "Ssvcs2: revoked");
+        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
 
         (uint256 revokedStakeAmountWei, uint256 revokedRewardAmountWei) = _calculateRevokedAmountFor(stakekey);
 

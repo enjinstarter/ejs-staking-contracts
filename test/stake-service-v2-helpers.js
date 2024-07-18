@@ -1071,6 +1071,85 @@ async function revokeWithVerify(
   );
 }
 
+async function setupRevokeStakeEnvironment(
+  stakingServiceInstance,
+  stakingPoolConfig,
+  stakeId,
+  stakeAmountWei,
+  rewardClaimedWei,
+  expectStakeSecondsAfterCurrentBlockTimestamp,
+  expectUnstakeSecondsAfterCurrentBlockTimestamp,
+  expectRevokeStakeSecondsAfterCurrentBlockTimestamp,
+  contractAdminAccount,
+  enduserAccount,
+  fromWalletAccount,
+) {
+  const poolId = stakingPoolConfig.poolId;
+  const contractAdminAddress = await contractAdminAccount.getAddress();
+  const enduserAddress = await enduserAccount.getAddress();
+
+  const currentBlockTimestamp = await testHelpers.getCurrentBlockTimestamp();
+  const expectStakeTimestamp =
+    currentBlockTimestamp + expectStakeSecondsAfterCurrentBlockTimestamp;
+  const expectUnstakeTimestamp =
+    expectUnstakeSecondsAfterCurrentBlockTimestamp > 0
+      ? currentBlockTimestamp + expectUnstakeSecondsAfterCurrentBlockTimestamp
+      : hre.ethers.constants.Zero;
+  const expectRevokeTimestamp =
+    currentBlockTimestamp + expectRevokeStakeSecondsAfterCurrentBlockTimestamp;
+
+  const expectStakeMaturityTimestamp = calculateStateMaturityTimestamp(
+    stakingPoolConfig.stakeDurationDays,
+    expectStakeTimestamp,
+  );
+
+  const expectRewardAtMaturityWei = computeTruncatedAmountWei(
+    estimateRewardAtMaturityWei(
+      stakingPoolConfig.poolAprWei,
+      stakingPoolConfig.stakeDurationDays,
+      stakeAmountWei,
+    ),
+    stakingPoolConfig.rewardTokenDecimals,
+  );
+
+  const expectRevokedRewardAmountWei = calculateRevokedRewardAmountWei(
+    expectRewardAtMaturityWei,
+    rewardClaimedWei,
+    expectStakeMaturityTimestamp,
+    expectRevokeTimestamp,
+    expectUnstakeTimestamp,
+  );
+
+  await setupStakeEnvironment(
+    stakingServiceInstance,
+    stakingPoolConfig,
+    stakeId,
+    stakeAmountWei,
+    expectStakeTimestamp,
+    enduserAccount,
+    fromWalletAccount,
+  );
+
+  await testHelpers.setTimeNextBlock(expectRevokeTimestamp);
+
+  await expect(
+    stakingServiceInstance
+      .connect(contractAdminAccount)
+      .revokeStake(poolId, enduserAddress, stakeId),
+  )
+    .to.emit(stakingServiceInstance, "StakeRevoked")
+    .withArgs(
+      poolId,
+      enduserAddress,
+      stakeId,
+      stakingPoolConfig.stakeTokenInstance.address,
+      stakeAmountWei,
+      stakingPoolConfig.rewardTokenInstance.address,
+      expectRevokedRewardAmountWei,
+      contractAdminAddress,
+    );
+}
+
 async function setupStakeEnvironment(
   stakingServiceInstance,
   stakingPoolConfig,
@@ -3157,6 +3236,7 @@ module.exports = {
   isStakeMatured,
   newStakingService,
   revokeWithVerify,
+  setupRevokeStakeEnvironment,
   setupStakeEnvironment,
   setupSuspendStakeEnvironment,
   setupUnstakeEnvironment,
