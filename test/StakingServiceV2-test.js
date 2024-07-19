@@ -686,7 +686,7 @@ describe("StakingServiceV2", function () {
       });
     });
 
-    describe("Remove Staking Pool Reward", function () {
+    describe("Remove Unallocated Staking Pool Reward", function () {
       it("Should not allow remove unallocated staking pool reward for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
@@ -704,6 +704,39 @@ describe("StakingServiceV2", function () {
           stakingServiceInstance.removeUnallocatedStakingPoolReward(
             stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           ),
+        ).to.be.revertedWith("SSvcs2: no unallocated");
+      });
+
+      it("should not allow remove unallocated staking pool reward when reward has been fully allocated", async () => {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+        const stakeId = hre.ethers.utils.id(
+          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const fromWalletAccount = contractAdminRoleAccounts[0];
+
+        const currentBlockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+        const expectStakeTimestamp = currentBlockTimestamp + 300;
+
+        await stakeServiceHelpers.setupStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
+          stakeAmountWei,
+          expectStakeTimestamp,
+          enduserAccount,
+          fromWalletAccount,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .removeUnallocatedStakingPoolReward(stakingPoolConfig.poolId),
         ).to.be.revertedWith("SSvcs2: no unallocated");
       });
     });
@@ -808,7 +841,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: no revoked");
       });
 
-      it.only("should not allow remove revoked stakes for zero stakes revoked", async () => {
+      it("should not allow remove revoked stakes for zero stakes revoked", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
@@ -841,7 +874,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: no revoked");
       });
 
-      it.only("should not allow remove revoked stakes immediately after remove revoked stakes", async () => {
+      it("should not allow remove revoked stakes immediately after remove revoked stakes", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
         const poolId = stakingPoolConfig.poolId;
         const stakeId = hre.ethers.utils.id(
@@ -1621,7 +1654,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: stake suspended");
       });
 
-      it.only("should not allow withdraw unstake for revoked stake", async () => {
+      it("should not allow withdraw unstake for revoked stake", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
@@ -1654,7 +1687,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: revoked");
       });
 
-      it.only("should not allow withdraw unstake for during early unstake cooldown", async () => {
+      it("should not allow withdraw unstake for during early unstake cooldown", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[1];
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
