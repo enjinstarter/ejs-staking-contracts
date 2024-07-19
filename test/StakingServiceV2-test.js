@@ -840,6 +840,57 @@ describe("StakingServiceV2", function () {
             .removeRevokedStakes(stakingPoolConfig.poolId),
         ).to.be.revertedWith("SSvcs2: no revoked");
       });
+
+      it.only("should not allow remove revoked stakes immediately after remove revoked stakes", async () => {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+        const poolId = stakingPoolConfig.poolId;
+        const stakeId = hre.ethers.utils.id(
+          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const adminWalletAccount = governanceRoleAccounts[0];
+        const adminWalletAddress = await adminWalletAccount.getAddress();
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+        const enduserAccount = enduserAccounts[1];
+        const fromWalletAccount = contractAdminRoleAccounts[0];
+
+        await stakeServiceHelpers.setupRevokeStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
+          stakeAmountWei,
+          hre.ethers.constants.Zero,
+          300,
+          0,
+          600,
+          contractAdminAccount,
+          enduserAccount,
+          fromWalletAccount,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .removeRevokedStakes(poolId),
+        )
+          .to.emit(stakingServiceInstance, "RevokedStakesRemoved")
+          .withArgs(
+            poolId,
+            contractAdminAddress,
+            adminWalletAddress,
+            stakingPoolConfig.stakeTokenInstance.address,
+            stakeAmountWei,
+          );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .removeRevokedStakes(poolId),
+        ).to.be.revertedWith("SSvcs2: no revoked");
+      });
     });
 
     describe("Suspend Stake", function () {
