@@ -6,7 +6,7 @@ async function addStakingPoolRewardWithVerify(
   stakingServiceContractInstance,
   stakeTokenContractInstance,
   rewardTokenContractInstance,
-  fromWalletSigner,
+  contractAdminSigner,
   poolId,
   stakeDurationDays,
   poolAprWei,
@@ -17,7 +17,7 @@ async function addStakingPoolRewardWithVerify(
 ) {
   const stakeTokenDecimals = await stakeTokenContractInstance.decimals();
   const rewardTokenDecimals = await rewardTokenContractInstance.decimals();
-  const signerAddress = await fromWalletSigner.getAddress();
+  const contractAdminAddress = await contractAdminSigner.getAddress();
 
   if (!(poolId in stakingPoolRewardStats)) {
     stakingPoolRewardStats[poolId] = {
@@ -76,31 +76,37 @@ async function addStakingPoolRewardWithVerify(
     if (rewardAmountWei.gt(hre.ethers.constants.Zero)) {
       await testHelpers.approveTransferWithVerify(
         rewardTokenContractInstance,
-        fromWalletSigner,
+        contractAdminSigner,
         stakingServiceContractInstance.address,
         rewardAmountWei,
       );
 
       await expect(
         stakingServiceContractInstance
-          .connect(fromWalletSigner)
+          .connect(contractAdminSigner)
           .addStakingPoolReward(poolId, rewardAmountWei),
       )
         .to.emit(stakingServiceContractInstance, "StakingPoolRewardAdded")
         .withArgs(
           poolId,
-          await fromWalletSigner.getAddress(),
+          contractAdminAddress,
           rewardTokenContractInstance.address,
           truncatedRewardAmountWei,
         );
+    } else {
+      await expect(
+        stakingServiceContractInstance
+          .connect(contractAdminSigner)
+          .addStakingPoolReward(poolId, rewardAmountWei),
+      ).to.be.revertedWith("SSvcs2: reward amount");
     }
   } else {
     await expect(
       stakingServiceContractInstance
-        .connect(fromWalletSigner)
+        .connect(contractAdminSigner)
         .addStakingPoolReward(poolId, rewardAmountWei),
     ).to.be.revertedWith(
-      `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
+      `AccessControl: account ${contractAdminAddress.toLowerCase()} is missing role ${
         testHelpers.CONTRACT_ADMIN_ROLE
       }`,
     );
@@ -781,6 +787,174 @@ async function newStakingService(stakingPoolAddress) {
   await stakingServiceContractInstance.deployed();
 
   return stakingServiceContractInstance;
+}
+
+async function removeUnallocatedStakingPoolRewardWithVerify(
+  stakingServiceContractInstance,
+  stakeTokenContractInstance,
+  rewardTokenContractInstance,
+  contractAdminSigner,
+  adminWalletAddress,
+  poolId,
+  stakeDurationDays,
+  poolAprWei,
+  stakingPoolRewardBalanceOf,
+  stakingPoolRewardStats,
+  hasPermissionToRemoveReward,
+) {
+  const stakeTokenDecimals = await stakeTokenContractInstance.decimals();
+  const rewardTokenDecimals = await rewardTokenContractInstance.decimals();
+  const contractAdminAddress = await contractAdminSigner.getAddress();
+
+  const expectBalanceOfBeforeRemove = stakingPoolRewardBalanceOf;
+
+  const balanceOfBeforeRemove = await rewardTokenContractInstance.balanceOf(
+    stakingServiceContractInstance.address,
+  );
+
+  expect(balanceOfBeforeRemove).to.equal(
+    testHelpers.scaleWeiToDecimals(
+      expectBalanceOfBeforeRemove,
+      rewardTokenDecimals,
+    ),
+  );
+
+  const stakingPoolStatsBeforeRemove = await verifyStakingPoolStats(
+    stakingServiceContractInstance,
+    poolId,
+    stakingPoolRewardStats[poolId],
+  );
+
+  const expectedPoolRewardWeiBeforeRemove = computePoolRewardWei(
+    stakingPoolRewardStats[poolId].totalRewardAddedWei,
+    stakingPoolRewardStats[poolId].totalRevokedRewardWei,
+    stakingPoolRewardStats[poolId].totalUnstakedRewardBeforeMatureWei,
+    stakingPoolRewardStats[poolId].totalRewardRemovedWei,
+  );
+  const expectedPoolRemainingRewardWeiBeforeRemove =
+    computePoolRemainingRewardWei(
+      expectedPoolRewardWeiBeforeRemove,
+      stakingPoolRewardStats[poolId].rewardToBeDistributedWei,
+    );
+
+  if (hasPermissionToRemoveReward) {
+    if (
+      expectedPoolRemainingRewardWeiBeforeRemove.gt(hre.ethers.constants.Zero)
+    ) {
+      await expect(
+        stakingServiceContractInstance
+          .connect(contractAdminSigner)
+          .removeUnallocatedStakingPoolReward(poolId),
+      )
+        .to.emit(stakingServiceContractInstance, "StakingPoolRewardRemoved")
+        .withArgs(
+          poolId,
+          contractAdminAddress,
+          adminWalletAddress,
+          rewardTokenContractInstance.address,
+          expectedPoolRemainingRewardWeiBeforeRemove,
+        );
+    } else {
+      await expect(
+        stakingServiceContractInstance
+          .connect(contractAdminSigner)
+          .removeUnallocatedStakingPoolReward(poolId),
+      ).to.be.revertedWith("SSvcs2: no unallocated");
+    }
+  } else {
+    await expect(
+      stakingServiceContractInstance
+        .connect(contractAdminSigner)
+        .removeUnallocatedStakingPoolReward(poolId),
+    ).to.be.revertedWith(
+      `AccessControl: account ${contractAdminAddress.toLowerCase()} is missing role ${
+        testHelpers.CONTRACT_ADMIN_ROLE
+      }`,
+    );
+  }
+
+  const expectBalanceOfAfterRemove = hasPermissionToRemoveReward
+    ? stakingPoolRewardBalanceOf.sub(expectedPoolRemainingRewardWeiBeforeRemove)
+    : stakingPoolRewardBalanceOf;
+
+  if (hasPermissionToRemoveReward) {
+    stakingPoolRewardStats[poolId].totalRewardRemovedWei =
+      stakingPoolRewardStats[poolId].totalRewardRemovedWei.add(
+        expectedPoolRemainingRewardWeiBeforeRemove,
+      );
+
+    const expectedPoolRewardWeiAfterRemove = computePoolRewardWei(
+      stakingPoolRewardStats[poolId].totalRewardAddedWei,
+      stakingPoolRewardStats[poolId].totalRevokedRewardWei,
+      stakingPoolRewardStats[poolId].totalUnstakedRewardBeforeMatureWei,
+      stakingPoolRewardStats[poolId].totalRewardRemovedWei,
+    );
+    const expectedPoolRemainingRewardWeiAfterRemove =
+      computePoolRemainingRewardWei(
+        expectedPoolRewardWeiAfterRemove,
+        stakingPoolRewardStats[poolId].rewardToBeDistributedWei,
+      );
+    const expectedPoolSizeWeiAfterRemove = computePoolSizeWei(
+      stakeDurationDays,
+      poolAprWei,
+      expectedPoolRewardWeiAfterRemove,
+      stakeTokenDecimals,
+    );
+
+    stakingPoolRewardStats[poolId].poolRemainingRewardWei =
+      expectedPoolRemainingRewardWeiAfterRemove;
+    stakingPoolRewardStats[poolId].poolRewardAmountWei =
+      expectedPoolRewardWeiAfterRemove;
+    stakingPoolRewardStats[poolId].poolSizeWei = expectedPoolSizeWeiAfterRemove;
+  }
+
+  const balanceOfAfterRemove = await rewardTokenContractInstance.balanceOf(
+    stakingServiceContractInstance.address,
+  );
+  expect(balanceOfAfterRemove).to.equal(
+    testHelpers.scaleWeiToDecimals(
+      expectBalanceOfAfterRemove,
+      rewardTokenDecimals,
+    ),
+  );
+
+  const stakingPoolStatsAfterRemove = await verifyStakingPoolStats(
+    stakingServiceContractInstance,
+    poolId,
+    {
+      isOpen: stakingPoolStatsBeforeRemove.isOpen,
+      isActive: stakingPoolStatsBeforeRemove.isActive,
+      poolRemainingRewardWei:
+        stakingPoolRewardStats[poolId].poolRemainingRewardWei,
+      poolRewardAmountWei: stakingPoolRewardStats[poolId].poolRewardAmountWei,
+      poolSizeWei: stakingPoolRewardStats[poolId].poolSizeWei,
+      rewardToBeDistributedWei:
+        stakingPoolStatsBeforeRemove.rewardToBeDistributedWei,
+      totalRevokedRewardWei: stakingPoolStatsBeforeRemove.totalRevokedRewardWei,
+      totalRevokedStakeWei: stakingPoolStatsBeforeRemove.totalRevokedStakeWei,
+      totalRevokedStakeRemovedWei:
+        stakingPoolStatsBeforeRemove.totalRevokedStakeRemovedWei,
+      totalRewardAddedWei: stakingPoolStatsBeforeRemove.totalRewardAddedWei,
+      totalRewardClaimedWei: stakingPoolStatsBeforeRemove.totalRewardClaimedWei,
+      totalRewardRemovedWei:
+        stakingPoolRewardStats[poolId].totalRewardRemovedWei,
+      totalStakedWei: stakingPoolStatsBeforeRemove.totalStakedWei,
+      totalUnstakedAfterMatureWei:
+        stakingPoolStatsBeforeRemove.totalUnstakedAfterMatureWei,
+      totalUnstakedBeforeMatureWei:
+        stakingPoolStatsBeforeRemove.totalUnstakedBeforeMatureWei,
+      totalUnstakedRewardBeforeMatureWei:
+        stakingPoolStatsBeforeRemove.totalUnstakedRewardBeforeMatureWei,
+      totalUnstakePenaltyAmountWei:
+        stakingPoolStatsBeforeRemove.totalUnstakePenaltyAmountWei,
+      totalUnstakePenaltyRemovedWei:
+        stakingPoolStatsBeforeRemove.totalUnstakePenaltyRemovedWei,
+      totalWithdrawnUnstakeWei:
+        stakingPoolStatsBeforeRemove.totalWithdrawnUnstakeWei,
+    },
+  );
+
+  return expectBalanceOfAfterRemove;
 }
 
 async function revokeWithVerify(
@@ -1699,6 +1873,38 @@ async function testAddStakingPoolReward(
       stakingPoolRewardStats,
       stakingPoolRewardConfigs[i].rewardAmountWei,
       expectAbleToAddReward,
+    );
+  }
+}
+
+async function testRemoveStakingPoolReward(
+  stakingServiceContractInstance,
+  stakingPoolRewardConfigs,
+  signers,
+  adminWalletAddress,
+  balanceOfStakingPoolRewards,
+  stakingPoolRewardStats,
+  hasPermissionToRemoveReward,
+) {
+  for (let i = 0; i < stakingPoolRewardConfigs.length; i++) {
+    const signerIndex = i % signers.length;
+
+    balanceOfStakingPoolRewards[
+      stakingPoolRewardConfigs[i].rewardTokenInstance.address
+    ] = await removeUnallocatedStakingPoolRewardWithVerify(
+      stakingServiceContractInstance,
+      stakingPoolRewardConfigs[i].stakeTokenInstance,
+      stakingPoolRewardConfigs[i].rewardTokenInstance,
+      signers[signerIndex],
+      adminWalletAddress,
+      stakingPoolRewardConfigs[i].poolId,
+      stakingPoolRewardConfigs[i].stakeDurationDays,
+      stakingPoolRewardConfigs[i].poolAprWei,
+      balanceOfStakingPoolRewards[
+        stakingPoolRewardConfigs[i].rewardTokenInstance.address
+      ],
+      stakingPoolRewardStats,
+      hasPermissionToRemoveReward,
     );
   }
 }
@@ -3235,6 +3441,7 @@ module.exports = {
   getNextExpectStakeInfoStakingPoolStats,
   isStakeMatured,
   newStakingService,
+  removeUnallocatedStakingPoolRewardWithVerify,
   revokeWithVerify,
   setupRevokeStakeEnvironment,
   setupStakeEnvironment,
@@ -3242,6 +3449,7 @@ module.exports = {
   setupUnstakeEnvironment,
   stakeWithVerify,
   testAddStakingPoolReward,
+  testRemoveStakingPoolReward,
   testSetStakingPoolContract,
   testStakeClaimRevokeUnstakeWithdraw,
   unstakeWithVerify,

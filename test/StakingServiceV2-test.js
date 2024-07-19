@@ -372,8 +372,8 @@ describe("StakingServiceV2", function () {
       });
     });
 
-    describe("Add Staking Pool Reward", function () {
-      it("Should only allow contract admin role to add staking pool reward", async () => {
+    describe("Add/Remove Staking Pool Reward", function () {
+      it.only("Should only allow contract admin role to add/remove staking pool reward", async () => {
         const stakingPoolRewardConfigs = [
           {
             poolId: stakingPoolStakeRewardTokenSameConfigs[0].poolId,
@@ -623,6 +623,7 @@ describe("StakingServiceV2", function () {
           },
         ];
 
+        const adminWalletAddress = await governanceRoleAccounts[0].getAddress();
         const stakingPoolRewardStats = {};
 
         await stakeServiceHelpers.testAddStakingPoolReward(
@@ -660,9 +661,49 @@ describe("StakingServiceV2", function () {
           stakingPoolRewardStats,
           false,
         );
+
+        await stakeServiceHelpers.testRemoveStakingPoolReward(
+          stakingServiceInstance,
+          stakingPoolRewardConfigs,
+          governanceRoleAccounts.slice(0, 1),
+          adminWalletAddress,
+          stakingPoolsRewardBalanceOf,
+          stakingPoolRewardStats,
+          true,
+        );
+
+        await stakeServiceHelpers.testRemoveStakingPoolReward(
+          stakingServiceInstance,
+          stakingPoolRewardConfigs,
+          governanceRoleAccounts.slice(1),
+          adminWalletAddress,
+          stakingPoolsRewardBalanceOf,
+          stakingPoolRewardStats,
+          false,
+        );
+
+        await stakeServiceHelpers.testRemoveStakingPoolReward(
+          stakingServiceInstance,
+          stakingPoolRewardConfigs,
+          contractAdminRoleAccounts,
+          adminWalletAddress,
+          stakingPoolsRewardBalanceOf,
+          stakingPoolRewardStats,
+          true,
+        );
+
+        await stakeServiceHelpers.testRemoveStakingPoolReward(
+          stakingServiceInstance,
+          stakingPoolRewardConfigs,
+          enduserAccounts,
+          adminWalletAddress,
+          stakingPoolsRewardBalanceOf,
+          stakingPoolRewardStats,
+          false,
+        );
       });
 
-      it("Should not allow add zero staking pool reward", async () => {
+      it.only("Should not allow add zero staking pool reward", async () => {
         await expect(
           stakingServiceInstance.addStakingPoolReward(
             stakingPoolStakeRewardTokenSameConfigs[0].poolId,
@@ -671,7 +712,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: reward amount");
       });
 
-      it("Should not allow add staking pool reward for uninitialized staking pool", async () => {
+      it.only("Should not allow add staking pool reward for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
         );
@@ -684,10 +725,8 @@ describe("StakingServiceV2", function () {
           ),
         ).to.be.revertedWith("SPool2: uninitialized");
       });
-    });
 
-    describe("Remove Unallocated Staking Pool Reward", function () {
-      it("Should not allow remove unallocated staking pool reward for uninitialized staking pool", async () => {
+      it.only("Should not allow remove unallocated staking pool reward for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
         );
@@ -699,7 +738,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SPool2: uninitialized");
       });
 
-      it("Should not allow remove unallocated staking pool reward when no unallocated reward", async () => {
+      it.only("Should not allow remove unallocated staking pool reward when no unallocated reward", async () => {
         await expect(
           stakingServiceInstance.removeUnallocatedStakingPoolReward(
             stakingPoolStakeRewardTokenSameConfigs[0].poolId,
@@ -707,7 +746,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: no unallocated");
       });
 
-      it("should not allow remove unallocated staking pool reward when reward has been fully allocated", async () => {
+      it.only("should not allow remove unallocated staking pool reward when reward has been fully allocated", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
