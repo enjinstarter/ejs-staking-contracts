@@ -68,18 +68,6 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned from pool in wei
     }
 
-    struct StakingUserStats {
-        uint256 totalRevokedRewardWei; // total revoked reward for user in Wei
-        uint256 totalRevokedStakeWei; // total revoked stake for user in Wei
-        uint256 totalRewardClaimedWei; // total reward claimed for user in Wei
-        uint256 totalStakedWei; // total staked inside pools for user in Wei
-        uint256 totalUnstakedAfterMatureWei; // total unstaked amount after maturity for user in Wei
-        uint256 totalUnstakedBeforeMatureWei; // total unstaked amount before maturity for user in Wei
-        uint256 totalUnstakedRewardBeforeMatureWei; // total unstaked reward before mature for user in Wei
-        uint256 totalUnstakePenaltyAmountWei; // total unstake penalty amount paid by user in Wei
-        uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned by user in wei
-    }
-
     /**
      * @notice Emitted when revoked stakes have been removed from pool
      * @param poolId The staking pool identifier
@@ -469,16 +457,6 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         external
         view
         returns (StakingPoolStatsDto memory stakingPoolStatsDto);
-
-    /**
-     * @notice Returns the staking user statistics for given account address
-     * @param account The account address
-     * @return stakingUserStats The staking user statistics for given account address
-     */
-    function getStakingUserStats(address account)
-        external
-        view
-        returns (StakingUserStats memory stakingUserStats);
 
     /**
      * @notice Returns the staking pool contract address

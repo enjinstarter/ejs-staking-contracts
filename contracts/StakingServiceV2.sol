@@ -36,7 +36,6 @@ contract StakingServiceV2 is
 
     mapping(bytes => StakeInfo) private _stakes;
     mapping(bytes32 => StakingPoolStats) private _stakingPoolStats;
-    mapping(address => StakingUserStats) private _stakingUserStats;
 
     constructor(address stakingPoolContract_) {
         require(stakingPoolContract_ != address(0), "SSvcs2: staking pool");
@@ -66,7 +65,6 @@ contract StakingServiceV2 is
         require(rewardAmountWei > 0, "SSvcs2: zero reward");
 
         _stakes[stakekey].rewardClaimedWei += rewardAmountWei;
-        _stakingUserStats[msg.sender].totalRewardClaimedWei += rewardAmountWei;
         _stakingPoolStats[poolId].totalRewardClaimedWei += rewardAmountWei;
 
         emit RewardClaimed(
@@ -147,8 +145,6 @@ contract StakingServiceV2 is
             isInitialized: true
         });
 
-        _stakingUserStats[msg.sender].totalStakedWei += truncatedStakeAmountWei;
-
         _stakingPoolStats[poolId].totalStakedWei += truncatedStakeAmountWei;
         _stakingPoolStats[poolId]
             .rewardToBeDistributedWei += estimatedRewardAtMaturityWei;
@@ -209,14 +205,8 @@ contract StakingServiceV2 is
         _stakes[stakekey].unstakeTimestamp = block.timestamp;
 
         if (isStakeMature) {
-            _stakingUserStats[msg.sender].totalUnstakedAfterMatureWei += unstakeAmountWei;
-
             _stakingPoolStats[poolId].totalUnstakedAfterMatureWei += unstakeAmountWei;
         } else {
-            _stakingUserStats[msg.sender].totalUnstakedBeforeMatureWei += unstakeAmountWei;
-            _stakingUserStats[msg.sender].totalUnstakePenaltyAmountWei += unstakePenaltyAmountWei;
-            _stakingUserStats[msg.sender].totalUnstakedRewardBeforeMatureWei += _stakes[stakekey].estimatedRewardAtMaturityWei;
-
             _stakingPoolStats[poolId].totalUnstakedBeforeMatureWei += unstakeAmountWei;
             _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei += unstakePenaltyAmountWei;
             _stakingPoolStats[poolId].totalUnstakedRewardBeforeMatureWei += _stakes[stakekey].estimatedRewardAtMaturityWei;
@@ -253,7 +243,6 @@ contract StakingServiceV2 is
         require(_stakes[stakekey].unstakeAmountWei > 0, "SSvcs2: nothing");
 
         _stakes[stakekey].withdrawUnstakeTimestamp = block.timestamp;
-        _stakingUserStats[msg.sender].totalWithdrawnUnstakeWei += _stakes[stakekey].unstakeAmountWei;
         _stakingPoolStats[poolId].totalWithdrawnUnstakeWei += _stakes[stakekey].unstakeAmountWei;
 
         emit UnstakeWithdrawn(
@@ -497,9 +486,6 @@ contract StakingServiceV2 is
         _stakes[stakekey].revokedStakeAmountWei = revokedStakeAmountWei;
         _stakes[stakekey].revokedRewardAmountWei = revokedRewardAmountWei;
 
-        _stakingUserStats[account].totalRevokedStakeWei += revokedStakeAmountWei;
-        _stakingUserStats[account].totalRevokedRewardWei += revokedRewardAmountWei;
-
         _stakingPoolStats[poolId].totalRevokedStakeWei += revokedStakeAmountWei;
         _stakingPoolStats[poolId].totalRevokedRewardWei += revokedRewardAmountWei;
 
@@ -665,21 +651,6 @@ contract StakingServiceV2 is
             totalUnstakePenaltyRemovedWei: _stakingPoolStats[poolId].totalUnstakePenaltyRemovedWei,
             totalWithdrawnUnstakeWei: _stakingPoolStats[poolId].totalWithdrawnUnstakeWei
         });
-    }
-
-    /**
-     * @inheritdoc IStakingServiceV2
-     */
-    function getStakingUserStats(address account)
-        external
-        view
-        virtual
-        override
-        returns (StakingUserStats memory stakingUserStats)
-    {
-        require(account != address(0), "SSvcs2: account");
-
-        stakingUserStats = _stakingUserStats[account];
     }
 
     /**
