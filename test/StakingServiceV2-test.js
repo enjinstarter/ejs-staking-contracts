@@ -754,7 +754,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: account");
       });
 
-      it.only("should not allow revoke stake for revoked stake", async () => {
+      it("should not allow revoke stake for revoked stake", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
@@ -857,7 +857,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: account");
       });
 
-      it.only("should not allow suspend stake for suspended stake", async () => {
+      it("should not allow suspend stake for suspended stake", async () => {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
         const stakeId = hre.ethers.utils.id(
           "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
@@ -1535,6 +1535,39 @@ describe("StakingServiceV2", function () {
             .connect(enduserAccount)
             .withdrawUnstake(poolId, stakeId),
         ).to.be.revertedWith("SSvcs2: stake suspended");
+      });
+
+      it.only("should not allow withdraw unstake for revoked stake", async () => {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+        const stakeId = hre.ethers.utils.id(
+          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const fromWalletAccount = contractAdminRoleAccounts[0];
+
+        await stakeServiceHelpers.setupRevokeStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
+          stakeAmountWei,
+          hre.ethers.constants.Zero,
+          300,
+          0,
+          600,
+          contractAdminAccount,
+          enduserAccount,
+          fromWalletAccount,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .withdrawUnstake(stakingPoolConfig.poolId, stakeId),
+        ).to.be.revertedWith("SSvcs2: revoked");
       });
     });
   });
