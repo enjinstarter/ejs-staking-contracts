@@ -1569,6 +1569,35 @@ describe("StakingServiceV2", function () {
             .withdrawUnstake(stakingPoolConfig.poolId, stakeId),
         ).to.be.revertedWith("SSvcs2: revoked");
       });
+
+      it.only("should not allow withdraw unstake for during early unstake cooldown", async () => {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[1];
+        const stakeId = hre.ethers.utils.id(
+          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const enduserAccount = enduserAccounts[1];
+        const fromWalletAccount = contractAdminRoleAccounts[0];
+
+        await stakeServiceHelpers.setupUnstakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolConfig,
+          stakeId,
+          stakeAmountWei,
+          300,
+          600,
+          enduserAccount,
+          fromWalletAccount,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .withdrawUnstake(stakingPoolConfig.poolId, stakeId),
+        ).to.be.revertedWith("SSvcs2: cooldown");
+      });
     });
   });
 
