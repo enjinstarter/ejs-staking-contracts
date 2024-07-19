@@ -1054,6 +1054,40 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: account");
       });
     });
+
+    it("should not allow resume stake for active stake (i.e. stake has not been suspended)", async () => {
+      const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+      const stakeId = hre.ethers.utils.id(
+        "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
+      );
+      const stakeAmountWei = hre.ethers.utils.parseEther(
+        "9599.378692908225033340",
+      );
+      const contractAdminAccount = contractAdminRoleAccounts[1];
+      const enduserAccount = enduserAccounts[1];
+      const enduserAddress = await enduserAccount.getAddress();
+      const fromWalletAccount = contractAdminRoleAccounts[0];
+
+      const currentBlockTimestamp =
+        await testHelpers.getCurrentBlockTimestamp();
+      const expectStakeTimestamp = currentBlockTimestamp + 300;
+
+      await stakeServiceHelpers.setupStakeEnvironment(
+        stakingServiceInstance,
+        stakingPoolConfig,
+        stakeId,
+        stakeAmountWei,
+        expectStakeTimestamp,
+        enduserAccount,
+        fromWalletAccount,
+      );
+
+      await expect(
+        stakingServiceInstance
+          .connect(contractAdminAccount)
+          .resumeStake(stakingPoolConfig.poolId, enduserAddress, stakeId),
+      ).to.be.revertedWith("SSvcs2: stake active");
+    });
   });
 
   describe("Public", function () {
