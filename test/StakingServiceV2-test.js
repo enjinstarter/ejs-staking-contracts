@@ -781,6 +781,48 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Revoke Stake", function () {
+      it("Should not allow revoke stake for unauthorized users", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "3597c16d-42b2-4546-9a81-dff4a06ef534",
+        );
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "801bd9f6-c323-4c64-8145-b02a9201aeed",
+        );
+
+        const governanceAccount = governanceRoleAccounts[1];
+        const governanceAddress = await governanceAccount.getAddress();
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(governanceAccount)
+            .revokeStake(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${governanceAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .revokeStake(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${enduserAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+      });
+
       it("Should not allow revoke stake for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "3597c16d-42b2-4546-9a81-dff4a06ef534",
@@ -862,6 +904,37 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Remove Revoked Stake", function () {
+      it("Should not allow remove revoked stakes for unauthorized users", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "da61b654-4973-4879-9166-723c0017dd6d",
+        );
+
+        const governanceAccount = governanceRoleAccounts[1];
+        const governanceAddress = await governanceAccount.getAddress();
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(governanceAccount)
+            .removeRevokedStakes(uninitializedPoolId),
+        ).to.be.revertedWith(
+          `AccessControl: account ${governanceAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .removeRevokedStakes(uninitializedPoolId),
+        ).to.be.revertedWith(
+          `AccessControl: account ${enduserAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+      });
+
       it("Should not allow remove revoked stakes for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
@@ -966,6 +1039,48 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Suspend Stake", function () {
+      it("Should not allow suspend stake for unauthorized users", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "da61b654-4973-4879-9166-723c0017dd6d",
+        );
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "60618239-f879-46a1-9a1e-b048976053ab",
+        );
+
+        const governanceAccount = governanceRoleAccounts[1];
+        const governanceAddress = await governanceAccount.getAddress();
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(governanceAccount)
+            .suspendStake(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${governanceAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .suspendStake(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${enduserAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+      });
+
       it("Should not allow suspend stake for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
@@ -1046,6 +1161,48 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Resume Stake", function () {
+      it("Should not allow resume stake for unauthorized users", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "da61b654-4973-4879-9166-723c0017dd6d",
+        );
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "25d34c60-cb45-4ae6-a520-b0a07dacb6dc",
+        );
+
+        const governanceAccount = governanceRoleAccounts[1];
+        const governanceAddress = await governanceAccount.getAddress();
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(governanceAccount)
+            .resumeStake(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${governanceAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .resumeStake(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${enduserAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+      });
+
       it("Should not allow resume stake for uninitialized staking pool", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
