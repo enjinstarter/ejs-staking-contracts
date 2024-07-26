@@ -4,67 +4,54 @@ const testHelpers = require("./test-helpers.js");
 
 async function addStakingPoolRewardWithVerify(
   stakingServiceContractInstance,
-  stakeTokenContractInstance,
-  rewardTokenContractInstance,
-  contractAdminSigner,
-  poolId,
-  stakeDurationDays,
-  poolAprWei,
-  stakingPoolRewardBalanceOf,
-  stakingPoolRewardStats,
-  rewardAmountWei,
-  expectAbleToAddReward,
+  stakingPoolConfigs,
+  startblockTimestamp,
+  stakeEvent,
+  expectStakeInfosBeforeAdd,
+  expectStakeInfosAfterAdd,
+  expectStakingPoolStatsBeforeAdd,
+  expectStakingPoolStatsAfterAdd,
 ) {
-  const stakeTokenDecimals = await stakeTokenContractInstance.decimals();
-  const rewardTokenDecimals = await rewardTokenContractInstance.decimals();
-  const contractAdminAddress = await contractAdminSigner.getAddress();
+  const poolId = stakingPoolConfigs[stakeEvent.poolIndex].poolId;
+  const stakeTokenDecimals =
+    stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenDecimals;
+  const rewardTokenContractInstance =
+    stakingPoolConfigs[stakeEvent.poolIndex].rewardTokenInstance;
+  const rewardTokenDecimals =
+    stakingPoolConfigs[stakeEvent.poolIndex].rewardTokenDecimals;
+  const stakeDurationDays =
+    stakingPoolConfigs[stakeEvent.poolIndex].stakeDurationDays;
+  const poolAprWei = stakingPoolConfigs[stakeEvent.poolIndex].poolAprWei;
+  const signerAccount = stakeEvent.signer;
+  const signerAddress = stakeEvent.signerAddress;
+  const rewardAmountWei = stakeEvent.rewardAmountWei;
 
-  if (!(poolId in stakingPoolRewardStats)) {
-    stakingPoolRewardStats[poolId] = {
-      isOpen: true,
-      isActive: true,
-      poolRemainingRewardWei: hre.ethers.constants.Zero,
-      poolRewardAmountWei: hre.ethers.constants.Zero,
-      poolSizeWei: poolAprWei.gt(hre.ethers.constants.Zero)
-        ? hre.ethers.constants.Zero
-        : computeTruncatedAmountWei(
-            hre.ethers.constants.MaxUint256,
-            stakeTokenDecimals,
-          ),
-      rewardToBeDistributedWei: hre.ethers.constants.Zero,
-      totalRevokedRewardWei: hre.ethers.constants.Zero,
-      totalRevokedStakeWei: hre.ethers.constants.Zero,
-      totalRevokedStakeRemovedWei: hre.ethers.constants.Zero,
-      totalRewardAddedWei: hre.ethers.constants.Zero,
-      totalRewardClaimedWei: hre.ethers.constants.Zero,
-      totalRewardRemovedWei: hre.ethers.constants.Zero,
-      totalStakedWei: hre.ethers.constants.Zero,
-      totalUnstakedAfterMatureWei: hre.ethers.constants.Zero,
-      totalUnstakedBeforeMatureWei: hre.ethers.constants.Zero,
-      totalUnstakedRewardBeforeMatureWei: hre.ethers.constants.Zero,
-      totalUnstakePenaltyAmountWei: hre.ethers.constants.Zero,
-      totalUnstakePenaltyRemovedWei: hre.ethers.constants.Zero,
-      totalWithdrawnUnstakeWei: hre.ethers.constants.Zero,
-    };
-  }
-
-  const expectBalanceOfBeforeAdd = stakingPoolRewardBalanceOf;
-
-  const balanceOfBeforeAdd = await rewardTokenContractInstance.balanceOf(
-    stakingServiceContractInstance.address,
+  const contractWeiBalanceOfRewardBeforeAdd = testHelpers.scaleDecimalsToWei(
+    await rewardTokenContractInstance.balanceOf(
+      stakingServiceContractInstance.address,
+    ),
+    rewardTokenDecimals,
+  );
+  const signerWeiBalanceOfRewardBeforeAdd = testHelpers.scaleDecimalsToWei(
+    await rewardTokenContractInstance.balanceOf(signerAddress),
+    rewardTokenDecimals,
   );
 
-  expect(balanceOfBeforeAdd).to.equal(
-    testHelpers.scaleWeiToDecimals(
-      expectBalanceOfBeforeAdd,
-      rewardTokenDecimals,
-    ),
+  await verifyMultipleStakeInfos(
+    stakingServiceContractInstance,
+    startblockTimestamp,
+    expectStakeInfosBeforeAdd,
   );
 
   const stakingPoolStatsBeforeAdd = await verifyStakingPoolStats(
     stakingServiceContractInstance,
     poolId,
-    stakingPoolRewardStats[poolId],
+    expectStakingPoolStatsBeforeAdd.get(poolId),
+  );
+
+  await verifyMultipleStakingPoolStats(
+    stakingServiceContractInstance,
+    expectStakingPoolStatsBeforeAdd,
   );
 
   const truncatedRewardAmountWei = computeTruncatedAmountWei(
@@ -72,99 +59,143 @@ async function addStakingPoolRewardWithVerify(
     rewardTokenDecimals,
   );
 
-  if (expectAbleToAddReward) {
-    if (rewardAmountWei.gt(hre.ethers.constants.Zero)) {
-      await testHelpers.approveTransferWithVerify(
-        rewardTokenContractInstance,
-        contractAdminSigner,
-        stakingServiceContractInstance.address,
-        rewardAmountWei,
-      );
+  if (
+    stakeEvent.hasPermissionToAddReward &&
+    rewardAmountWei.gt(hre.ethers.constants.Zero)
+  ) {
+    await testHelpers.approveTransferWithVerify(
+      rewardTokenContractInstance,
+      signerAccount,
+      stakingServiceContractInstance.address,
+      rewardAmountWei,
+    );
+  }
 
+  const expectAddRewardTimestamp = hre.ethers.BigNumber.from(
+    startblockTimestamp,
+  ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
+  await testHelpers.setTimeNextBlock(expectAddRewardTimestamp.toNumber());
+
+  if (stakeEvent.hasPermissionToAddReward) {
+    if (rewardAmountWei.gt(hre.ethers.constants.Zero)) {
       await expect(
         stakingServiceContractInstance
-          .connect(contractAdminSigner)
+          .connect(signerAccount)
           .addStakingPoolReward(poolId, rewardAmountWei),
       )
         .to.emit(stakingServiceContractInstance, "StakingPoolRewardAdded")
         .withArgs(
           poolId,
-          contractAdminAddress,
+          signerAddress,
           rewardTokenContractInstance.address,
           truncatedRewardAmountWei,
         );
     } else {
       await expect(
         stakingServiceContractInstance
-          .connect(contractAdminSigner)
+          .connect(signerAccount)
           .addStakingPoolReward(poolId, rewardAmountWei),
       ).to.be.revertedWith("SSvcs2: reward amount");
     }
   } else {
     await expect(
       stakingServiceContractInstance
-        .connect(contractAdminSigner)
+        .connect(signerAccount)
         .addStakingPoolReward(poolId, rewardAmountWei),
     ).to.be.revertedWith(
-      `AccessControl: account ${contractAdminAddress.toLowerCase()} is missing role ${
+      `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
         testHelpers.CONTRACT_ADMIN_ROLE
       }`,
     );
   }
 
-  const expectedBalanceOfAfterAdd = expectAbleToAddReward
-    ? stakingPoolRewardBalanceOf.add(rewardAmountWei)
-    : stakingPoolRewardBalanceOf;
-  const expectBalanceOfAfterAdd = expectAbleToAddReward
-    ? stakingPoolRewardBalanceOf.add(truncatedRewardAmountWei)
-    : stakingPoolRewardBalanceOf;
+  const expectedContractWeiBalanceOfRewardAfterAdd =
+    stakeEvent.hasPermissionToAddReward
+      ? contractWeiBalanceOfRewardBeforeAdd.add(rewardAmountWei)
+      : contractWeiBalanceOfRewardBeforeAdd;
+  const expectContractWeiBalanceOfRewardAfterAdd =
+    stakeEvent.hasPermissionToAddReward
+      ? contractWeiBalanceOfRewardBeforeAdd.add(truncatedRewardAmountWei)
+      : contractWeiBalanceOfRewardBeforeAdd;
 
-  const expectedTotalRewardAddedWeiAfterAdd = expectAbleToAddReward
-    ? stakingPoolRewardStats[poolId].totalRewardAddedWei.add(rewardAmountWei)
-    : stakingPoolRewardStats[poolId].totalRewardAddedWei;
+  const expectedSignerWeiBalanceOfRewardAfterAdd =
+    stakeEvent.hasPermissionToAddReward
+      ? signerWeiBalanceOfRewardBeforeAdd.sub(rewardAmountWei)
+      : signerWeiBalanceOfRewardBeforeAdd;
+  const expectSignerWeiBalanceOfRewardAfterAdd =
+    stakeEvent.hasPermissionToAddReward
+      ? signerWeiBalanceOfRewardBeforeAdd.sub(truncatedRewardAmountWei)
+      : signerWeiBalanceOfRewardBeforeAdd;
 
-  if (expectAbleToAddReward) {
-    stakingPoolRewardStats[poolId].totalRewardAddedWei = stakingPoolRewardStats[
-      poolId
-    ].totalRewardAddedWei.add(truncatedRewardAmountWei);
+  const expectedTotalRewardAddedWeiAfterAdd =
+    stakeEvent.hasPermissionToAddReward
+      ? stakingPoolStatsBeforeAdd.totalRewardAddedWei.add(rewardAmountWei)
+      : stakingPoolStatsBeforeAdd.totalRewardAddedWei;
+  const expectTotalRewardAddedWeiAfterAdd = stakeEvent.hasPermissionToAddReward
+    ? stakingPoolStatsBeforeAdd.totalRewardAddedWei.add(
+        truncatedRewardAmountWei,
+      )
+    : stakingPoolStatsBeforeAdd.totalRewardAddedWei;
 
-    const expectedPoolRewardWei = computePoolRewardWei(
-      stakingPoolRewardStats[poolId].totalRewardAddedWei,
-      stakingPoolRewardStats[poolId].totalRevokedRewardWei,
-      stakingPoolRewardStats[poolId].totalUnstakedRewardBeforeMatureWei,
-      stakingPoolRewardStats[poolId].totalRewardRemovedWei,
-    );
-    const expectedPoolRemainingRewardWei = computePoolRemainingRewardWei(
-      expectedPoolRewardWei,
-      stakingPoolRewardStats[poolId].rewardToBeDistributedWei,
-    );
-    const expectedPoolSizeWei = computePoolSizeWei(
-      stakeDurationDays,
-      poolAprWei,
-      expectedPoolRewardWei,
-      stakeTokenDecimals,
-    );
-
-    stakingPoolRewardStats[poolId].poolRemainingRewardWei =
-      expectedPoolRemainingRewardWei;
-    stakingPoolRewardStats[poolId].poolRewardAmountWei = expectedPoolRewardWei;
-    stakingPoolRewardStats[poolId].poolSizeWei = expectedPoolSizeWei;
-  }
-
-  const balanceOfAfterAdd = await rewardTokenContractInstance.balanceOf(
-    stakingServiceContractInstance.address,
+  const expectPoolRewardWeiAfterAdd = computePoolRewardWei(
+    expectTotalRewardAddedWeiAfterAdd,
+    stakingPoolStatsBeforeAdd.totalRevokedRewardWei,
+    stakingPoolStatsBeforeAdd.totalUnstakedRewardBeforeMatureWei,
+    stakingPoolStatsBeforeAdd.totalRewardRemovedWei,
   );
-  expect(balanceOfAfterAdd).to.equal(
+
+  const expectPoolRemainingRewardWeiAfterAdd = computePoolRemainingRewardWei(
+    expectPoolRewardWeiAfterAdd,
+    stakingPoolStatsBeforeAdd.rewardToBeDistributedWei,
+  );
+
+  const expectPoolSizeWeiAfterAdd = computePoolSizeWei(
+    stakeDurationDays,
+    poolAprWei,
+    expectPoolRewardWeiAfterAdd,
+    stakeTokenDecimals,
+  );
+
+  const contractDecimalsBalanceOfRewardAfterAdd =
+    await rewardTokenContractInstance.balanceOf(
+      stakingServiceContractInstance.address,
+    );
+  expect(contractDecimalsBalanceOfRewardAfterAdd).to.equal(
     testHelpers.scaleWeiToDecimals(
-      expectedBalanceOfAfterAdd,
+      expectContractWeiBalanceOfRewardAfterAdd,
       rewardTokenDecimals,
     ),
   );
-  expect(balanceOfAfterAdd).to.equal(
+
+  verifyActualWithTruncatedValueWei(
+    10,
+    rewardTokenDecimals,
+    expectContractWeiBalanceOfRewardAfterAdd,
+    expectedContractWeiBalanceOfRewardAfterAdd,
+    hre.ethers.constants.Zero,
+  );
+
+  const signerDecimalsBalanceOfRewardAfterAdd =
+    await rewardTokenContractInstance.balanceOf(signerAddress);
+  expect(signerDecimalsBalanceOfRewardAfterAdd).to.equal(
     testHelpers.scaleWeiToDecimals(
-      expectBalanceOfAfterAdd,
+      expectSignerWeiBalanceOfRewardAfterAdd,
       rewardTokenDecimals,
     ),
+  );
+
+  verifyActualWithTruncatedValueWei(
+    10,
+    rewardTokenDecimals,
+    expectSignerWeiBalanceOfRewardAfterAdd,
+    expectedSignerWeiBalanceOfRewardAfterAdd,
+    hre.ethers.constants.Zero,
+  );
+
+  await verifyMultipleStakeInfos(
+    stakingServiceContractInstance,
+    startblockTimestamp,
+    expectStakeInfosAfterAdd,
   );
 
   const stakingPoolStatsAfterAdd = await verifyStakingPoolStats(
@@ -173,17 +204,16 @@ async function addStakingPoolRewardWithVerify(
     {
       isOpen: stakingPoolStatsBeforeAdd.isOpen,
       isActive: stakingPoolStatsBeforeAdd.isActive,
-      poolRemainingRewardWei:
-        stakingPoolRewardStats[poolId].poolRemainingRewardWei,
-      poolRewardAmountWei: stakingPoolRewardStats[poolId].poolRewardAmountWei,
-      poolSizeWei: stakingPoolRewardStats[poolId].poolSizeWei,
+      poolRemainingRewardWei: expectPoolRemainingRewardWeiAfterAdd,
+      poolRewardAmountWei: expectPoolRewardWeiAfterAdd,
+      poolSizeWei: expectPoolSizeWeiAfterAdd,
       rewardToBeDistributedWei:
         stakingPoolStatsBeforeAdd.rewardToBeDistributedWei,
       totalRevokedRewardWei: stakingPoolStatsBeforeAdd.totalRevokedRewardWei,
       totalRevokedStakeWei: stakingPoolStatsBeforeAdd.totalRevokedStakeWei,
       totalRevokedStakeRemovedWei:
         stakingPoolStatsBeforeAdd.totalRevokedStakeRemovedWei,
-      totalRewardAddedWei: stakingPoolRewardStats[poolId].totalRewardAddedWei,
+      totalRewardAddedWei: expectTotalRewardAddedWeiAfterAdd,
       totalRewardClaimedWei: stakingPoolStatsBeforeAdd.totalRewardClaimedWei,
       totalRewardRemovedWei: stakingPoolStatsBeforeAdd.totalRewardRemovedWei,
       totalStakedWei: stakingPoolStatsBeforeAdd.totalStakedWei,
@@ -202,6 +232,11 @@ async function addStakingPoolRewardWithVerify(
     },
   );
 
+  await verifyMultipleStakingPoolStats(
+    stakingServiceContractInstance,
+    expectStakingPoolStatsAfterAdd,
+  );
+
   verifyActualWithTruncatedValueWei(
     10,
     rewardTokenDecimals,
@@ -210,7 +245,7 @@ async function addStakingPoolRewardWithVerify(
     hre.ethers.constants.Zero,
   );
 
-  return expectBalanceOfAfterAdd;
+  return expectContractWeiBalanceOfRewardAfterAdd;
 }
 
 function calculateClaimableRewardWei(
@@ -639,9 +674,11 @@ function getNextExpectStakeInfoStakingPoolStats(
   previousExpectStakingPoolStats,
 ) {
   const nextExpectStakeInfos = structuredClone(previousExpectStakeInfos);
-  const expectStakeInfoAfterTriggerStakeEvent = nextExpectStakeInfos.get(
-    `${stakingPoolConfigs[updateStakeEvent.poolIndex].poolId},${updateStakeEvent.signerAddress},${updateStakeEvent.stakeId}`,
-  );
+  const expectStakeInfoAfterTriggerStakeEvent = updateStakeEvent.stakeId
+    ? nextExpectStakeInfos.get(
+        `${stakingPoolConfigs[updateStakeEvent.poolIndex].poolId},${updateStakeEvent.signerAddress},${updateStakeEvent.stakeId}`,
+      )
+    : null;
   console.log(
     `\nstakeInfoAfterTriggerStakeEvent before: ${JSON.stringify(expectStakeInfoAfterTriggerStakeEvent)}`,
   );
@@ -658,6 +695,14 @@ function getNextExpectStakeInfoStakingPoolStats(
   );
 
   switch (triggerStakeEvent.eventType) {
+    case "AddReward":
+      console.log(`\nAddReward: ${JSON.stringify(triggerStakeEvent)}`);
+      updateExpectStakingPoolStatsAfterAddReward(
+        triggerStakeEvent,
+        stakingPoolConfigs,
+        expectStakingPoolStatsAfterTriggerStakeEvent,
+      );
+      break;
     case "Claim":
       console.log(`\nClaim: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakeInfoAfterClaim(
@@ -743,9 +788,15 @@ function getNextExpectStakeInfoStakingPoolStats(
       break;
   }
 
-  nextExpectStakeInfos.set(
-    `${stakingPoolConfigs[updateStakeEvent.poolIndex].poolId},${updateStakeEvent.signerAddress},${updateStakeEvent.stakeId}`,
-    expectStakeInfoAfterTriggerStakeEvent,
+  if (updateStakeEvent.stakeId) {
+    nextExpectStakeInfos.set(
+      `${stakingPoolConfigs[updateStakeEvent.poolIndex].poolId},${updateStakeEvent.signerAddress},${updateStakeEvent.stakeId}`,
+      expectStakeInfoAfterTriggerStakeEvent,
+    );
+  }
+
+  console.log(
+    `\nstakingPoolStatsAfterTriggerStakeEvent after: ${JSON.stringify(expectStakingPoolStatsAfterTriggerStakeEvent)}`,
   );
 
   nextExpectStakingPoolStats.set(
@@ -1848,33 +1899,62 @@ async function stakeWithVerify(
 
 async function testAddStakingPoolReward(
   stakingServiceContractInstance,
-  stakingPoolRewardConfigs,
-  signers,
+  stakingPoolConfigs,
+  stakeEvents,
+  previousExpectStakeInfos,
+  previousExpectStakingPoolStats,
   balanceOfStakingPoolRewards,
-  stakingPoolRewardStats,
-  expectAbleToAddReward,
 ) {
-  for (let i = 0; i < stakingPoolRewardConfigs.length; i++) {
-    const signerIndex = i % signers.length;
+  const stakeInfos = [];
+  stakeInfos.push(previousExpectStakeInfos);
+
+  const stakingPoolStats = [];
+  stakingPoolStats.push(previousExpectStakingPoolStats);
+
+  let prevExpectStakeInfos = previousExpectStakeInfos;
+  let prevExpectStakingPoolStats = previousExpectStakingPoolStats;
+
+  for (let i = 0; i < stakeEvents.length; i++) {
+    const { nextExpectStakeInfos, nextExpectStakingPoolStats } =
+      getNextExpectStakeInfoStakingPoolStats(
+        stakeEvents[i],
+        stakeEvents[i],
+        null,
+        stakingPoolConfigs,
+        prevExpectStakeInfos,
+        prevExpectStakingPoolStats,
+      );
+
+    stakeInfos.push(nextExpectStakeInfos);
+    stakingPoolStats.push(nextExpectStakingPoolStats);
+
+    prevExpectStakeInfos = nextExpectStakeInfos;
+    prevExpectStakingPoolStats = nextExpectStakingPoolStats;
+  }
+
+  const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
+
+  for (let i = 0; i < stakeEvents.length; i++) {
+    const poolIndex = i % stakingPoolConfigs.length;
 
     balanceOfStakingPoolRewards[
-      stakingPoolRewardConfigs[i].rewardTokenInstance.address
+      stakingPoolConfigs[poolIndex].rewardTokenInstance.address
     ] = await addStakingPoolRewardWithVerify(
       stakingServiceContractInstance,
-      stakingPoolRewardConfigs[i].stakeTokenInstance,
-      stakingPoolRewardConfigs[i].rewardTokenInstance,
-      signers[signerIndex],
-      stakingPoolRewardConfigs[i].poolId,
-      stakingPoolRewardConfigs[i].stakeDurationDays,
-      stakingPoolRewardConfigs[i].poolAprWei,
-      balanceOfStakingPoolRewards[
-        stakingPoolRewardConfigs[i].rewardTokenInstance.address
-      ],
-      stakingPoolRewardStats,
-      stakingPoolRewardConfigs[i].rewardAmountWei,
-      expectAbleToAddReward,
+      stakingPoolConfigs,
+      startblockTimestamp,
+      stakeEvents[i],
+      stakeInfos[i],
+      stakeInfos[i + 1],
+      stakingPoolStats[i],
+      stakingPoolStats[i + 1],
     );
   }
+
+  return {
+    nextExpectStakeInfos: stakeInfos[stakeInfos.length - 1],
+    nextExpectStakingPoolStats: stakingPoolStats[stakingPoolStats.length - 1],
+  };
 }
 
 async function testRemoveStakingPoolReward(
@@ -1994,6 +2074,19 @@ async function testStakeClaimRevokeUnstakeWithdraw(
 
   for (let i = 0; i < stakeEvents.length; i++) {
     switch (stakeEvents[i].eventType) {
+      case "AddReward":
+        console.log(`\n${i}: AddReward`);
+        await addStakingPoolRewardWithVerify(
+          stakingServiceContractInstance,
+          stakingPoolConfigs,
+          startblockTimestamp,
+          stakeEvents[i],
+          stakeInfos[i],
+          stakeInfos[i + 1],
+          stakingPoolStats[i],
+          stakingPoolStats[i + 1],
+        );
+        break;
       case "Claim":
         console.log(`\n${i}: Claim`);
         await claimWithVerify(
@@ -2567,6 +2660,53 @@ function updateExpectStakeInfoAfterWithdraw(
     unstakeAmountWei.gt(hre.ethers.constants.Zero)
       ? triggerStakeEvent.eventSecondsAfterStartblockTimestamp.toString()
       : hre.ethers.constants.Zero.toString();
+}
+
+function updateExpectStakingPoolStatsAfterAddReward(
+  triggerStakeEvent,
+  stakingPoolConfigs,
+  expectStakingPoolStatsAfterTriggerStakeEvent,
+) {
+  if (!triggerStakeEvent.hasPermissionToAddReward) {
+    return;
+  }
+
+  const truncatedRewardAmountWei = computeTruncatedAmountWei(
+    triggerStakeEvent.rewardAmountWei,
+    stakingPoolConfigs[triggerStakeEvent.poolIndex].rewardTokenDecimals,
+  );
+
+  const expectTotalRewardAddedWei = hre.ethers.BigNumber.from(
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalRewardAddedWei,
+  ).add(truncatedRewardAmountWei);
+
+  const expectPoolRewardWei = computePoolRewardWei(
+    expectTotalRewardAddedWei,
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalRevokedRewardWei,
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakedRewardBeforeMatureWei,
+    expectStakingPoolStatsAfterTriggerStakeEvent.totalRewardRemovedWei,
+  );
+
+  const expectPoolRemainingRewardWei = computePoolRemainingRewardWei(
+    expectPoolRewardWei,
+    expectStakingPoolStatsAfterTriggerStakeEvent.rewardToBeDistributedWei,
+  );
+
+  const expectPoolSizeWei = computePoolSizeWei(
+    stakingPoolConfigs[triggerStakeEvent.poolIndex].stakeDurationDays,
+    stakingPoolConfigs[triggerStakeEvent.poolIndex].poolAprWei,
+    expectPoolRewardWei,
+    stakingPoolConfigs[triggerStakeEvent.poolIndex].stakeTokenDecimals,
+  );
+
+  expectStakingPoolStatsAfterTriggerStakeEvent.totalRewardAddedWei =
+    expectTotalRewardAddedWei.toString();
+  expectStakingPoolStatsAfterTriggerStakeEvent.poolRemainingRewardWei =
+    expectPoolRemainingRewardWei.toString();
+  expectStakingPoolStatsAfterTriggerStakeEvent.poolRewardAmountWei =
+    expectPoolRewardWei.toString();
+  expectStakingPoolStatsAfterTriggerStakeEvent.poolSizeWei =
+    expectPoolSizeWei.toString();
 }
 
 function updateExpectStakingPoolStatsAfterClaim(

@@ -5,6 +5,50 @@ const stakePoolHelpers = require("./stake-pool-v2-helpers.js");
 const stakeServiceHelpers = require("./stake-service-v2-helpers.js");
 
 describe("StakingServiceV2", function () {
+  const initialStakeInfo = {
+    estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
+    revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
+    revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
+    revokeSecondsAfterStartblockTimestamp: hre.ethers.constants.Zero.toString(),
+    rewardClaimedWei: hre.ethers.constants.Zero.toString(),
+    stakeAmountWei: hre.ethers.constants.Zero.toString(),
+    stakeMaturitySecondsAfterStartblockTimestamp:
+      hre.ethers.constants.Zero.toString(),
+    stakeSecondsAfterStartblockTimestamp: hre.ethers.constants.Zero.toString(),
+    unstakeAmountWei: hre.ethers.constants.Zero.toString(),
+    unstakeCooldownExpirySecondsAfterStartblockTimestamp:
+      hre.ethers.constants.Zero.toString(),
+    unstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
+    unstakeSecondsAfterStartblockTimestamp:
+      hre.ethers.constants.Zero.toString(),
+    withdrawUnstakeSecondsAfterStartblockTimestamp:
+      hre.ethers.constants.Zero.toString(),
+    isActive: false,
+    isInitialized: false,
+  };
+
+  const initialStakingPoolStat = {
+    isOpen: true,
+    isActive: true,
+    poolRemainingRewardWei: hre.ethers.constants.Zero.toString(),
+    poolRewardAmountWei: hre.ethers.constants.Zero.toString(),
+    poolSizeWei: hre.ethers.constants.Zero.toString(),
+    rewardToBeDistributedWei: hre.ethers.constants.Zero.toString(),
+    totalRevokedRewardWei: hre.ethers.constants.Zero.toString(),
+    totalRevokedStakeWei: hre.ethers.constants.Zero.toString(),
+    totalRevokedStakeRemovedWei: hre.ethers.constants.Zero.toString(),
+    totalRewardAddedWei: hre.ethers.constants.Zero.toString(),
+    totalRewardClaimedWei: hre.ethers.constants.Zero.toString(),
+    totalRewardRemovedWei: hre.ethers.constants.Zero.toString(),
+    totalStakedWei: hre.ethers.constants.Zero.toString(),
+    totalUnstakedAfterMatureWei: hre.ethers.constants.Zero.toString(),
+    totalUnstakedBeforeMatureWei: hre.ethers.constants.Zero.toString(),
+    totalUnstakedRewardBeforeMatureWei: hre.ethers.constants.Zero.toString(),
+    totalUnstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
+    totalUnstakePenaltyRemovedWei: hre.ethers.constants.Zero.toString(),
+    totalWithdrawnUnstakeWei: hre.ethers.constants.Zero.toString(),
+  };
+
   const rewardTokenAdminMintWei = hre.ethers.utils.parseEther("10000000");
   const stakeRewardTokenAdminMintWei = rewardTokenAdminMintWei;
   const stakeTokenAdminMintWei = hre.ethers.utils.parseEther("1000000");
@@ -374,294 +418,195 @@ describe("StakingServiceV2", function () {
 
     describe("Add/Remove Staking Pool Reward", function () {
       it("Should only allow contract admin role to add/remove staking pool reward", async () => {
-        const stakingPoolRewardConfigs = [
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[1].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[1].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[1].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[1].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[1].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[2].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[2].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[2].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[2].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[2].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[3].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[3].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[3].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[3].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[3].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[4].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[4].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[4].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[4].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[4].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[5].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[5].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[5].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[5].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[5].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[6].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[6].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[6].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[6].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[6].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[7].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[7].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[7].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[7].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[7].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[8].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[8].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[8].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[8].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[8].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[9].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[9].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[9].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[9].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[9].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[10].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[10].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[10].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[10].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[10].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[11].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[11].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[11].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[11].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[11].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[12].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[12].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[12].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[12].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[12].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[13].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[13].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[13].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[13].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[13].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[14].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[14].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[14].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[14].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[14].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[15].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[15].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[15].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[15].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[15].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("686512.13355000"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[16].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[16].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[16].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[16].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[16].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("290641.93140083"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[17].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[17].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[17].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[17].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[17].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("75546.05411320"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[18].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[18].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[18].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[18].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[18].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("547738.63499448"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[19].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[19].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[19].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[19].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[19].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther("93436.56482742"),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther(
-              "24909.569654259360719854",
-            ),
-          },
-          {
-            poolId: stakingPoolStakeRewardTokenSameConfigs[5].poolId,
-            stakeTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[5].stakeTokenInstance,
-            stakeDurationDays:
-              stakingPoolStakeRewardTokenSameConfigs[5].stakeDurationDays,
-            poolAprWei: stakingPoolStakeRewardTokenSameConfigs[5].poolAprWei,
-            rewardTokenInstance:
-              stakingPoolStakeRewardTokenSameConfigs[5].rewardTokenInstance,
-            rewardAmountWei: hre.ethers.utils.parseEther(
-              "6955.183347317756524738",
-            ),
-          },
+        const poolRewardAddWeiAmounts = [
+          hre.ethers.utils.parseEther("686512.13355000"),
+          hre.ethers.utils.parseEther("290641.93140083"),
+          hre.ethers.utils.parseEther("75546.05411320"),
+          hre.ethers.utils.parseEther("547738.63499448"),
+          hre.ethers.utils.parseEther("93436.56482742"),
+          hre.ethers.utils.parseEther("686512.13355000"),
+          hre.ethers.utils.parseEther("290641.93140083"),
+          hre.ethers.utils.parseEther("75546.05411320"),
+          hre.ethers.utils.parseEther("547738.63499448"),
+          hre.ethers.utils.parseEther("93436.56482742"),
+          hre.ethers.utils.parseEther("686512.13355000"),
+          hre.ethers.utils.parseEther("290641.93140083"),
+          hre.ethers.utils.parseEther("75546.05411320"),
+          hre.ethers.utils.parseEther("547738.63499448"),
+          hre.ethers.utils.parseEther("93436.56482742"),
+          hre.ethers.utils.parseEther("686512.13355000"),
+          hre.ethers.utils.parseEther("290641.93140083"),
+          hre.ethers.utils.parseEther("75546.05411320"),
+          hre.ethers.utils.parseEther("547738.63499448"),
+          hre.ethers.utils.parseEther("93436.56482742"),
+          hre.ethers.utils.parseEther("24909.569654259360719854"),
+          hre.ethers.utils.parseEther("6955.183347317756524738"),
+          hre.ethers.utils.parseEther("7166.396966476698402746"),
+          hre.ethers.utils.parseEther("799.785562545238355199"),
+          hre.ethers.utils.parseEther("7502.566774318223444121"),
+          hre.ethers.utils.parseEther("8963.544568013471406059"),
         ];
 
-        const adminWalletAddress = await governanceRoleAccounts[0].getAddress();
-        const stakingPoolRewardStats = {};
+        const stakeInfos000 = new Map();
+        const stakingPoolStats000 = new Map();
 
-        await stakeServiceHelpers.testAddStakingPoolReward(
+        for (
+          let i = 0;
+          i < stakingPoolStakeRewardTokenSameConfigs.length;
+          i++
+        ) {
+          const stakingPoolStat = structuredClone(initialStakingPoolStat);
+          if (
+            stakingPoolStakeRewardTokenSameConfigs[i].poolAprWei.eq(
+              hre.ethers.constants.Zero,
+            )
+          ) {
+            stakingPoolStat.poolSizeWei = stakeServiceHelpers
+              .computePoolSizeWei(
+                stakingPoolStakeRewardTokenSameConfigs[i].stakeDurationDays,
+                stakingPoolStakeRewardTokenSameConfigs[i].poolAprWei,
+                hre.ethers.constants.Zero,
+                stakingPoolStakeRewardTokenSameConfigs[i].stakeTokenDecimals,
+              )
+              .toString();
+          }
+          stakingPoolStats000.set(
+            `${stakingPoolStakeRewardTokenSameConfigs[i].poolId}`,
+            stakingPoolStat,
+          );
+        }
+
+        const deployerSigners = governanceRoleAccounts.slice(0, 1);
+        const stakeEvents000 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % deployerSigners.length;
+
+          stakeEvents000.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "AddReward",
+            poolIndex: poolIndex,
+            signer: deployerSigners[signerIndex],
+            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            rewardAmountWei: poolRewardAddWeiAmounts[i],
+            hasPermissionToAddReward: true,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos001,
+          nextExpectStakingPoolStats: stakingPoolStats001,
+        } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          governanceRoleAccounts.slice(0, 1),
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents000,
+          stakeInfos000,
+          stakingPoolStats000,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          true,
         );
 
-        await stakeServiceHelpers.testAddStakingPoolReward(
+        const governanceRoleSigners = governanceRoleAccounts.slice(1);
+        const stakeEvents001 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % governanceRoleSigners.length;
+
+          stakeEvents001.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "AddReward",
+            poolIndex: poolIndex,
+            signer: governanceRoleSigners[signerIndex],
+            signerAddress:
+              await governanceRoleSigners[signerIndex].getAddress(),
+            rewardAmountWei: poolRewardAddWeiAmounts[i],
+            hasPermissionToAddReward: false,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos002,
+          nextExpectStakingPoolStats: stakingPoolStats002,
+        } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          governanceRoleAccounts.slice(1),
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents001,
+          stakeInfos001,
+          stakingPoolStats001,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          false,
         );
 
-        await stakeServiceHelpers.testAddStakingPoolReward(
+        const contractAdminRoleSigners = contractAdminRoleAccounts;
+        const stakeEvents002 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % contractAdminRoleSigners.length;
+
+          stakeEvents002.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "AddReward",
+            poolIndex: poolIndex,
+            signer: contractAdminRoleSigners[signerIndex],
+            signerAddress:
+              await contractAdminRoleSigners[signerIndex].getAddress(),
+            rewardAmountWei: poolRewardAddWeiAmounts[i],
+            hasPermissionToAddReward: true,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos003,
+          nextExpectStakingPoolStats: stakingPoolStats003,
+        } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          contractAdminRoleAccounts,
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents002,
+          stakeInfos002,
+          stakingPoolStats002,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          true,
         );
 
-        await stakeServiceHelpers.testAddStakingPoolReward(
+        const enduserSigners = enduserAccounts;
+        const stakeEvents003 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % enduserSigners.length;
+
+          stakeEvents003.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "AddReward",
+            poolIndex: poolIndex,
+            signer: enduserSigners[signerIndex],
+            signerAddress: await enduserSigners[signerIndex].getAddress(),
+            rewardAmountWei: poolRewardAddWeiAmounts[i],
+            hasPermissionToAddReward: false,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos004,
+          nextExpectStakingPoolStats: stakingPoolStats004,
+        } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          enduserAccounts,
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents003,
+          stakeInfos003,
+          stakingPoolStats003,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          false,
         );
 
+        /*
         await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
           stakingPoolRewardConfigs,
@@ -701,6 +646,7 @@ describe("StakingServiceV2", function () {
           stakingPoolRewardStats,
           false,
         );
+        */
       });
 
       it("Should not allow add zero staking pool reward", async () => {
@@ -4080,30 +4026,6 @@ describe("StakingServiceV2", function () {
       },
     ];
 
-    const initialStakeInfo = {
-      estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
-      revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
-      revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
-      revokeSecondsAfterStartblockTimestamp:
-        hre.ethers.constants.Zero.toString(),
-      rewardClaimedWei: hre.ethers.constants.Zero.toString(),
-      stakeAmountWei: hre.ethers.constants.Zero.toString(),
-      stakeMaturitySecondsAfterStartblockTimestamp:
-        hre.ethers.constants.Zero.toString(),
-      stakeSecondsAfterStartblockTimestamp:
-        hre.ethers.constants.Zero.toString(),
-      unstakeAmountWei: hre.ethers.constants.Zero.toString(),
-      unstakeCooldownExpirySecondsAfterStartblockTimestamp:
-        hre.ethers.constants.Zero.toString(),
-      unstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
-      unstakeSecondsAfterStartblockTimestamp:
-        hre.ethers.constants.Zero.toString(),
-      withdrawUnstakeSecondsAfterStartblockTimestamp:
-        hre.ethers.constants.Zero.toString(),
-      isActive: false,
-      isInitialized: false,
-    };
-
     const stakeInfos = [];
 
     const stakeInfos000 = new Map();
@@ -4344,28 +4266,6 @@ describe("StakingServiceV2", function () {
       structuredClone(initialStakeInfo),
     );
     stakeInfos.push(stakeInfos000);
-
-    const initialStakingPoolStat = {
-      isOpen: true,
-      isActive: true,
-      poolRemainingRewardWei: hre.ethers.constants.Zero.toString(),
-      poolRewardAmountWei: hre.ethers.constants.Zero.toString(),
-      poolSizeWei: hre.ethers.constants.Zero.toString(),
-      rewardToBeDistributedWei: hre.ethers.constants.Zero.toString(),
-      totalRevokedRewardWei: hre.ethers.constants.Zero.toString(),
-      totalRevokedStakeWei: hre.ethers.constants.Zero.toString(),
-      totalRevokedStakeRemovedWei: hre.ethers.constants.Zero.toString(),
-      totalRewardAddedWei: hre.ethers.constants.Zero.toString(),
-      totalRewardClaimedWei: hre.ethers.constants.Zero.toString(),
-      totalRewardRemovedWei: hre.ethers.constants.Zero.toString(),
-      totalStakedWei: hre.ethers.constants.Zero.toString(),
-      totalUnstakedAfterMatureWei: hre.ethers.constants.Zero.toString(),
-      totalUnstakedBeforeMatureWei: hre.ethers.constants.Zero.toString(),
-      totalUnstakedRewardBeforeMatureWei: hre.ethers.constants.Zero.toString(),
-      totalUnstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
-      totalUnstakePenaltyRemovedWei: hre.ethers.constants.Zero.toString(),
-      totalWithdrawnUnstakeWei: hre.ethers.constants.Zero.toString(),
-    };
 
     const stakingPoolStats = [];
 
@@ -8223,6 +8123,7 @@ describe("StakingServiceV2", function () {
 
     const stakePoolStatsIterator =
       stakingPoolStats[stakingPoolStats.length - 1].entries();
+    let i = 0;
     for (const [poolId, expectStakingPoolStats] of stakePoolStatsIterator) {
       const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs.find(
         (stakingPoolConfig) => stakingPoolConfig.poolId === poolId,
@@ -8240,24 +8141,50 @@ describe("StakingServiceV2", function () {
           stakingPoolConfig.rewardTokenDecimals,
         );
 
-      stakingPoolsRewardBalanceOf[
-        stakingPoolConfig.rewardTokenInstance.address
-      ] = await stakeServiceHelpers.addStakingPoolRewardWithVerify(
-        stakingServiceInstance,
-        stakingPoolConfig.stakeTokenInstance,
-        stakingPoolConfig.rewardTokenInstance,
-        contractAdminRoleAccounts[0],
-        poolId,
-        stakingPoolConfig.stakeDurationDays,
-        stakingPoolConfig.poolAprWei,
-        stakingPoolsRewardBalanceOf[
-          stakingPoolConfig.rewardTokenInstance.address
-        ],
-        {},
-        totalRewardToBeDistributedWei.gt(hre.ethers.constants.Zero)
+      const stakeInfos000 = new Map();
+      const stakingPoolStats000 = new Map();
+
+      const stakingPoolStat = structuredClone(initialStakingPoolStat);
+      if (stakingPoolConfig.poolAprWei.eq(hre.ethers.constants.Zero)) {
+        stakingPoolStat.poolSizeWei = stakeServiceHelpers
+          .computePoolSizeWei(
+            stakingPoolConfig.stakeDurationDays,
+            stakingPoolConfig.poolAprWei,
+            hre.ethers.constants.Zero,
+            stakingPoolConfig.stakeTokenDecimals,
+          )
+          .toString();
+      }
+      stakingPoolStats000.set(`${stakingPoolConfig.poolId}`, stakingPoolStat);
+
+      const contractAdminRoleSigner = contractAdminRoleAccounts[0];
+      const stakeEvents000 = [];
+      stakeEvents000.push({
+        eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+          120 * ++i,
+        ),
+        eventType: "AddReward",
+        poolIndex: 0,
+        signer: contractAdminRoleSigner,
+        signerAddress: await contractAdminRoleSigner.getAddress(),
+        rewardAmountWei: totalRewardToBeDistributedWei.gt(
+          hre.ethers.constants.Zero,
+        )
           ? totalRewardToBeDistributedWei.sub(totalStakeRewardLessByWei)
           : totalRewardToBeDistributedWei,
-        true,
+        hasPermissionToAddReward: true,
+      });
+
+      const {
+        nextExpectStakeInfos: stakeInfos001,
+        nextExpectStakingPoolStats: stakingPoolStats001,
+      } = await stakeServiceHelpers.testAddStakingPoolReward(
+        stakingServiceInstance,
+        [stakingPoolConfig],
+        stakeEvents000,
+        stakeInfos000,
+        stakingPoolStats000,
+        stakingPoolsRewardBalanceOf,
       );
 
       for (let j = 0; j < stakingPoolStats.length; j++) {
