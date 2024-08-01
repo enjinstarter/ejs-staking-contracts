@@ -418,6 +418,8 @@ describe("StakingServiceV2", function () {
 
     describe("Add/Remove Staking Pool Reward", function () {
       it("Should only allow contract admin role to add/remove staking pool reward", async () => {
+        const adminWalletAddress = await governanceRoleAccounts[0].getAddress();
+
         const poolRewardAddWeiAmounts = [
           hre.ethers.utils.parseEther("686512.13355000"),
           hre.ethers.utils.parseEther("290641.93140083"),
@@ -606,47 +608,145 @@ describe("StakingServiceV2", function () {
           stakingPoolsRewardBalanceOf,
         );
 
-        /*
-        await stakeServiceHelpers.testRemoveStakingPoolReward(
+        const stakeEvents004 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % deployerSigners.length;
+
+          console.log(
+            `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
+          );
+
+          stakeEvents004.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "RemoveReward",
+            poolIndex: poolIndex,
+            signer: deployerSigners[signerIndex],
+            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            adminWalletAddress: adminWalletAddress,
+            hasPermissionToRemoveReward: true,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos005,
+          nextExpectStakingPoolStats: stakingPoolStats005,
+        } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          governanceRoleAccounts.slice(0, 1),
-          adminWalletAddress,
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents004,
+          stakeInfos004,
+          stakingPoolStats004,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          true,
         );
 
-        await stakeServiceHelpers.testRemoveStakingPoolReward(
+        const stakeEvents005 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % deployerSigners.length;
+
+          console.log(
+            `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
+          );
+
+          stakeEvents005.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "RemoveReward",
+            poolIndex: poolIndex,
+            signer: deployerSigners[signerIndex],
+            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            adminWalletAddress: adminWalletAddress,
+            hasPermissionToRemoveReward: true,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos006,
+          nextExpectStakingPoolStats: stakingPoolStats006,
+        } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          governanceRoleAccounts.slice(1),
-          adminWalletAddress,
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents005,
+          stakeInfos005,
+          stakingPoolStats005,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          false,
         );
 
-        await stakeServiceHelpers.testRemoveStakingPoolReward(
+        const stakeEvents006 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % deployerSigners.length;
+
+          console.log(
+            `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
+          );
+
+          stakeEvents006.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "RemoveReward",
+            poolIndex: poolIndex,
+            signer: deployerSigners[signerIndex],
+            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            adminWalletAddress: adminWalletAddress,
+            hasPermissionToRemoveReward: true,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos007,
+          nextExpectStakingPoolStats: stakingPoolStats007,
+        } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          contractAdminRoleAccounts,
-          adminWalletAddress,
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents006,
+          stakeInfos006,
+          stakingPoolStats006,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          true,
         );
 
-        await stakeServiceHelpers.testRemoveStakingPoolReward(
+        const stakeEvents007 = [];
+
+        for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
+          const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
+          const signerIndex = i % deployerSigners.length;
+
+          console.log(
+            `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
+          );
+
+          stakeEvents007.push({
+            eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
+              120 * (i + 1),
+            ),
+            eventType: "RemoveReward",
+            poolIndex: poolIndex,
+            signer: deployerSigners[signerIndex],
+            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            adminWalletAddress: adminWalletAddress,
+            hasPermissionToRemoveReward: true,
+          });
+        }
+
+        const {
+          nextExpectStakeInfos: stakeInfos008,
+          nextExpectStakingPoolStats: stakingPoolStats008,
+        } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
-          stakingPoolRewardConfigs,
-          enduserAccounts,
-          adminWalletAddress,
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeEvents007,
+          stakeInfos007,
+          stakingPoolStats007,
           stakingPoolsRewardBalanceOf,
-          stakingPoolRewardStats,
-          false,
         );
-        */
       });
 
       it("Should not allow add zero staking pool reward", async () => {
