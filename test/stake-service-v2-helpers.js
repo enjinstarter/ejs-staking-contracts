@@ -884,10 +884,6 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
     rewardTokenDecimals,
   );
 
-  console.log(
-    `\nremoveUnallocatedStakingPoolRewardWithVerify: signerWeiBalanceOfRewardBeforeRemove=${signerWeiBalanceOfRewardBeforeRemove}`,
-  );
-
   const adminWalletWeiBalanceOfRewardBeforeRemove =
     testHelpers.scaleDecimalsToWei(
       await rewardTokenContractInstance.balanceOf(
@@ -981,10 +977,6 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
         )
       : signerWeiBalanceOfRewardBeforeRemove;
 
-  console.log(
-    `removeUnallocatedStakingPoolRewardWithVerify: expectSignerWeiBalanceOfRewardAfterRemove=${expectSignerWeiBalanceOfRewardAfterRemove}`,
-  );
-
   const expectAdminWalletWeiBalanceOfRewardAfterRemove =
     stakeEvent.hasPermissionToRemoveReward
       ? adminWalletWeiBalanceOfRewardBeforeRemove.add(
@@ -1032,10 +1024,6 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
 
   const signerDecimalsBalanceOfRewardAfterRemove =
     await rewardTokenContractInstance.balanceOf(signerAddress);
-
-  console.log(
-    `removeUnallocatedStakingPoolRewardWithVerify: signerDecimalsBalanceOfRewardAfterRemove=${signerDecimalsBalanceOfRewardAfterRemove}, expectSignerWeiBalanceOfRewardAfterRemove=${expectSignerWeiBalanceOfRewardAfterRemove}, rewardTokenDecimals=${rewardTokenDecimals}`,
-  );
 
   expect(signerDecimalsBalanceOfRewardAfterRemove).to.equal(
     testHelpers.scaleWeiToDecimals(
@@ -2089,8 +2077,6 @@ async function testRemoveStakingPoolReward(
 
   for (let i = 0; i < stakeEvents.length; i++) {
     const poolIndex = i % stakingPoolConfigs.length;
-
-    console.log(`${i} testRemoveStakingPoolReward: poolIndex=${poolIndex}`);
 
     balanceOfStakingPoolRewards[
       stakingPoolConfigs[poolIndex].rewardTokenInstance.address
