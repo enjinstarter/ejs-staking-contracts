@@ -5,50 +5,6 @@ const stakePoolHelpers = require("./stake-pool-v2-helpers.js");
 const stakeServiceHelpers = require("./stake-service-v2-helpers.js");
 
 describe("StakingServiceV2", function () {
-  const initialStakeInfo = {
-    estimatedRewardAtMaturityWei: hre.ethers.constants.Zero.toString(),
-    revokedRewardAmountWei: hre.ethers.constants.Zero.toString(),
-    revokedStakeAmountWei: hre.ethers.constants.Zero.toString(),
-    revokeSecondsAfterStartblockTimestamp: hre.ethers.constants.Zero.toString(),
-    rewardClaimedWei: hre.ethers.constants.Zero.toString(),
-    stakeAmountWei: hre.ethers.constants.Zero.toString(),
-    stakeMaturitySecondsAfterStartblockTimestamp:
-      hre.ethers.constants.Zero.toString(),
-    stakeSecondsAfterStartblockTimestamp: hre.ethers.constants.Zero.toString(),
-    unstakeAmountWei: hre.ethers.constants.Zero.toString(),
-    unstakeCooldownExpirySecondsAfterStartblockTimestamp:
-      hre.ethers.constants.Zero.toString(),
-    unstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
-    unstakeSecondsAfterStartblockTimestamp:
-      hre.ethers.constants.Zero.toString(),
-    withdrawUnstakeSecondsAfterStartblockTimestamp:
-      hre.ethers.constants.Zero.toString(),
-    isActive: false,
-    isInitialized: false,
-  };
-
-  const initialStakingPoolStat = {
-    isOpen: true,
-    isActive: true,
-    poolRemainingRewardWei: hre.ethers.constants.Zero.toString(),
-    poolRewardAmountWei: hre.ethers.constants.Zero.toString(),
-    poolSizeWei: hre.ethers.constants.Zero.toString(),
-    rewardToBeDistributedWei: hre.ethers.constants.Zero.toString(),
-    totalRevokedRewardWei: hre.ethers.constants.Zero.toString(),
-    totalRevokedStakeWei: hre.ethers.constants.Zero.toString(),
-    totalRevokedStakeRemovedWei: hre.ethers.constants.Zero.toString(),
-    totalRewardAddedWei: hre.ethers.constants.Zero.toString(),
-    totalRewardClaimedWei: hre.ethers.constants.Zero.toString(),
-    totalRewardRemovedWei: hre.ethers.constants.Zero.toString(),
-    totalStakedWei: hre.ethers.constants.Zero.toString(),
-    totalUnstakedAfterMatureWei: hre.ethers.constants.Zero.toString(),
-    totalUnstakedBeforeMatureWei: hre.ethers.constants.Zero.toString(),
-    totalUnstakedRewardBeforeMatureWei: hre.ethers.constants.Zero.toString(),
-    totalUnstakePenaltyAmountWei: hre.ethers.constants.Zero.toString(),
-    totalUnstakePenaltyRemovedWei: hre.ethers.constants.Zero.toString(),
-    totalWithdrawnUnstakeWei: hre.ethers.constants.Zero.toString(),
-  };
-
   const rewardTokenAdminMintWei = hre.ethers.utils.parseEther("10000000");
   const stakeRewardTokenAdminMintWei = rewardTokenAdminMintWei;
   const stakeTokenAdminMintWei = hre.ethers.utils.parseEther("1000000");
@@ -457,7 +413,9 @@ describe("StakingServiceV2", function () {
           i < stakingPoolStakeRewardTokenSameConfigs.length;
           i++
         ) {
-          const stakingPoolStat = structuredClone(initialStakingPoolStat);
+          const stakingPoolStat = structuredClone(
+            stakeServiceHelpers.initialStakingPoolStat,
+          );
           if (
             stakingPoolStakeRewardTokenSameConfigs[i].poolAprWei.eq(
               hre.ethers.constants.Zero,
@@ -647,7 +605,7 @@ describe("StakingServiceV2", function () {
 
         for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
           const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
-          const signerIndex = i % deployerSigners.length;
+          const signerIndex = i % governanceRoleSigners.length;
 
           console.log(
             `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
@@ -659,10 +617,11 @@ describe("StakingServiceV2", function () {
             ),
             eventType: "RemoveReward",
             poolIndex: poolIndex,
-            signer: deployerSigners[signerIndex],
-            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            signer: governanceRoleSigners[signerIndex],
+            signerAddress:
+              await governanceRoleSigners[signerIndex].getAddress(),
             adminWalletAddress: adminWalletAddress,
-            hasPermissionToRemoveReward: true,
+            hasPermissionToRemoveReward: false,
           });
         }
 
@@ -682,7 +641,7 @@ describe("StakingServiceV2", function () {
 
         for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
           const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
-          const signerIndex = i % deployerSigners.length;
+          const signerIndex = i % contractAdminRoleSigners.length;
 
           console.log(
             `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
@@ -694,8 +653,9 @@ describe("StakingServiceV2", function () {
             ),
             eventType: "RemoveReward",
             poolIndex: poolIndex,
-            signer: deployerSigners[signerIndex],
-            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            signer: contractAdminRoleSigners[signerIndex],
+            signerAddress:
+              await contractAdminRoleSigners[signerIndex].getAddress(),
             adminWalletAddress: adminWalletAddress,
             hasPermissionToRemoveReward: true,
           });
@@ -717,7 +677,7 @@ describe("StakingServiceV2", function () {
 
         for (let i = 0; i < poolRewardAddWeiAmounts.length; i++) {
           const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
-          const signerIndex = i % deployerSigners.length;
+          const signerIndex = i % enduserSigners.length;
 
           console.log(
             `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
@@ -729,10 +689,10 @@ describe("StakingServiceV2", function () {
             ),
             eventType: "RemoveReward",
             poolIndex: poolIndex,
-            signer: deployerSigners[signerIndex],
-            signerAddress: await deployerSigners[signerIndex].getAddress(),
+            signer: enduserSigners[signerIndex],
+            signerAddress: await enduserSigners[signerIndex].getAddress(),
             adminWalletAddress: adminWalletAddress,
-            hasPermissionToRemoveReward: true,
+            hasPermissionToRemoveReward: false,
           });
         }
 
@@ -793,29 +753,29 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow remove unallocated staking pool reward when reward has been fully allocated", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
-        const stakeAmountWei = hre.ethers.utils.parseEther(
-          "9599.378692908225033340",
-        );
+        const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const enduserAccount = enduserAccounts[1];
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "2508.249202273280999468",
+        );
+        const stakeUuid = "e1a6cc11-7528-49cb-ad4d-be8fde5cafd1";
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
 
-        const currentBlockTimestamp =
-          await testHelpers.getCurrentBlockTimestamp();
-        const expectStakeTimestamp = currentBlockTimestamp + 300;
-
-        await stakeServiceHelpers.setupStakeEnvironment(
+        await stakeServiceHelpers.setupTestStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          expectStakeTimestamp,
+          stakingPoolStakeRewardTokenSameConfigs,
+          contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -915,30 +875,37 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow revoke stake for revoked stake", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
-        const stakeAmountWei = hre.ethers.utils.parseEther(
-          "9599.378692908225033340",
-        );
+        const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const enduserAccount = enduserAccounts[1];
         const enduserAddress = await enduserAccount.getAddress();
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
 
-        await stakeServiceHelpers.setupRevokeStakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestRevokeStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          hre.ethers.constants.Zero,
-          300,
-          0,
-          600,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -1000,29 +967,30 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow remove revoked stakes for zero stakes revoked", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 2;
         const stakeAmountWei = hre.ethers.utils.parseEther(
           "9599.378692908225033340",
         );
-        const contractAdminAccount = contractAdminRoleAccounts[1];
-        const enduserAccount = enduserAccounts[1];
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
 
-        const currentBlockTimestamp =
-          await testHelpers.getCurrentBlockTimestamp();
-        const expectStakeTimestamp = currentBlockTimestamp + 300;
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
 
-        await stakeServiceHelpers.setupStakeEnvironment(
+        await stakeServiceHelpers.setupTestStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          expectStakeTimestamp,
+          stakingPoolStakeRewardTokenSameConfigs,
+          contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -1033,43 +1001,48 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow remove revoked stakes immediately after remove revoked stakes", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const poolId = stakingPoolConfig.poolId;
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
-        const stakeAmountWei = hre.ethers.utils.parseEther(
-          "9599.378692908225033340",
-        );
         const adminWalletAccount = governanceRoleAccounts[0];
         const adminWalletAddress = await adminWalletAccount.getAddress();
+        const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const contractAdminAddress = await contractAdminAccount.getAddress();
         const enduserAccount = enduserAccounts[1];
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
 
-        await stakeServiceHelpers.setupRevokeStakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestRevokeStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          hre.ethers.constants.Zero,
-          300,
-          0,
-          600,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
           stakingServiceInstance
             .connect(contractAdminAccount)
-            .removeRevokedStakes(poolId),
+            .removeRevokedStakes(stakingPoolConfig.poolId),
         )
           .to.emit(stakingServiceInstance, "RevokedStakesRemoved")
           .withArgs(
-            poolId,
+            stakingPoolConfig.poolId,
             contractAdminAddress,
             adminWalletAddress,
             stakingPoolConfig.stakeTokenInstance.address,
@@ -1079,7 +1052,7 @@ describe("StakingServiceV2", function () {
         await expect(
           stakingServiceInstance
             .connect(contractAdminAccount)
-            .removeRevokedStakes(poolId),
+            .removeRevokedStakes(stakingPoolConfig.poolId),
         ).to.be.revertedWith("SSvcs2: no revoked");
       });
     });
@@ -1175,27 +1148,37 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow suspend stake for suspended stake", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
-        const stakeAmountWei = hre.ethers.utils.parseEther(
-          "9599.378692908225033340",
-        );
+        const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const enduserAccount = enduserAccounts[1];
         const enduserAddress = await enduserAccount.getAddress();
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
 
-        await stakeServiceHelpers.setupSuspendStakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestSuspendStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          300,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -1207,6 +1190,55 @@ describe("StakingServiceV2", function () {
     });
 
     describe("Resume Stake", function () {
+      it("should allow contract admin role to resume stake", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "7213.096654415329718019",
+        );
+        const stakeUuid = "f6d8279c-c933-41d2-96b7-cd13aad5ea13";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestSuspendStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .resumeStake(stakingPoolConfig.poolId, enduserAddress, stakeId),
+        )
+          .to.emit(stakingServiceInstance, "StakeResumed")
+          .withArgs(
+            stakingPoolConfig.poolId,
+            enduserAddress,
+            stakeId,
+            contractAdminAddress,
+          );
+      });
+
       it("Should not allow resume stake for unauthorized users", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
           "da61b654-4973-4879-9166-723c0017dd6d",
@@ -1295,40 +1327,42 @@ describe("StakingServiceV2", function () {
           ),
         ).to.be.revertedWith("SSvcs2: account");
       });
-    });
 
-    it("should not allow resume stake for active stake (i.e. stake has not been suspended)", async () => {
-      const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-      const stakeId = hre.ethers.utils.id(
-        "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-      );
-      const stakeAmountWei = hre.ethers.utils.parseEther(
-        "9599.378692908225033340",
-      );
-      const contractAdminAccount = contractAdminRoleAccounts[1];
-      const enduserAccount = enduserAccounts[1];
-      const enduserAddress = await enduserAccount.getAddress();
-      const fromWalletAccount = contractAdminRoleAccounts[0];
+      it("should not allow resume stake for active stake (i.e. stake has not been suspended)", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "5184.856596247802866978",
+        );
+        const stakeUuid = "71c382c6-3427-4f8e-a2aa-9132dbfb7054";
 
-      const currentBlockTimestamp =
-        await testHelpers.getCurrentBlockTimestamp();
-      const expectStakeTimestamp = currentBlockTimestamp + 300;
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
 
-      await stakeServiceHelpers.setupStakeEnvironment(
-        stakingServiceInstance,
-        stakingPoolConfig,
-        stakeId,
-        stakeAmountWei,
-        expectStakeTimestamp,
-        enduserAccount,
-        fromWalletAccount,
-      );
+        await stakeServiceHelpers.setupTestStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
 
-      await expect(
-        stakingServiceInstance
-          .connect(contractAdminAccount)
-          .resumeStake(stakingPoolConfig.poolId, enduserAddress, stakeId),
-      ).to.be.revertedWith("SSvcs2: stake active");
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .resumeStake(stakingPoolConfig.poolId, enduserAddress, stakeId),
+        ).to.be.revertedWith("SSvcs2: stake active");
+      });
     });
   });
 
@@ -1700,26 +1734,36 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow claim reward for suspended stake", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 2;
         const stakeAmountWei = hre.ethers.utils.parseEther(
           "9599.378692908225033340",
         );
-        const contractAdminAccount = contractAdminRoleAccounts[1];
-        const enduserAccount = enduserAccounts[1];
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
 
-        await stakeServiceHelpers.setupSuspendStakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestSuspendStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          300,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -1803,26 +1847,36 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow unstake for suspended stake", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 2;
         const stakeAmountWei = hre.ethers.utils.parseEther(
           "9599.378692908225033340",
         );
-        const contractAdminAccount = contractAdminRoleAccounts[1];
-        const enduserAccount = enduserAccounts[1];
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
 
-        await stakeServiceHelpers.setupSuspendStakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestSuspendStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          300,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -1890,29 +1944,39 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow withdraw unstake for suspended stake", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const poolId = stakingPoolConfig.poolId;
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
-        const stakeAmountWei = hre.ethers.utils.parseEther(
-          "9599.378692908225033340",
-        );
+        const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const contractAdminAddress = await contractAdminAccount.getAddress();
         const enduserAccount = enduserAccounts[1];
         const enduserAddress = await enduserAccount.getAddress();
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
 
-        await stakeServiceHelpers.setupUnstakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+        const poolId = stakingPoolConfig.poolId;
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestUnstakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          300,
-          600,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -1931,29 +1995,36 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow withdraw unstake for revoked stake", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 2;
         const stakeAmountWei = hre.ethers.utils.parseEther(
           "9599.378692908225033340",
         );
-        const contractAdminAccount = contractAdminRoleAccounts[1];
-        const enduserAccount = enduserAccounts[1];
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
 
-        await stakeServiceHelpers.setupRevokeStakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestRevokeStakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          hre.ethers.constants.Zero,
-          300,
-          0,
-          600,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -1964,25 +2035,37 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow withdraw unstake for during early unstake cooldown", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[1];
-        const stakeId = hre.ethers.utils.id(
-          "ac0652f8-b3b6-4d67-9216-d6f5b77423af",
-        );
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 2;
         const stakeAmountWei = hre.ethers.utils.parseEther(
           "9599.378692908225033340",
         );
-        const enduserAccount = enduserAccounts[1];
-        const fromWalletAccount = contractAdminRoleAccounts[0];
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
 
-        await stakeServiceHelpers.setupUnstakeEnvironment(
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+        const poolId = stakingPoolConfig.poolId;
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestUnstakeEnvironment(
           stakingServiceInstance,
-          stakingPoolConfig,
-          stakeId,
-          stakeAmountWei,
-          300,
-          600,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
           enduserAccount,
-          fromWalletAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
         );
 
         await expect(
@@ -2146,6 +2229,7 @@ describe("StakingServiceV2", function () {
   it("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
     const stakeEvents = [
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(10),
         eventType: "Stake",
         poolIndex: 1,
@@ -2157,6 +2241,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("32e1466a-1fc6-4679-a753-b55b77c4537d"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(143),
         eventType: "Stake",
         poolIndex: 2,
@@ -2168,6 +2253,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("51039073-96ad-4c2f-9938-3c56eba19b6f"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(279),
         eventType: "Stake",
         poolIndex: 0,
@@ -2179,6 +2265,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("d5f88099-472a-4974-ad2a-c8d70af8f37f"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(415),
         eventType: "Stake",
         poolIndex: 0,
@@ -2190,6 +2277,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("5958942b-f6f7-44ba-ad74-a7af1e33e6c1"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(548),
         eventType: "Stake",
         poolIndex: 2,
@@ -2219,6 +2307,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("d5f88099-472a-4974-ad2a-c8d70af8f37f"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(946),
         eventType: "Stake",
         poolIndex: 0,
@@ -2230,6 +2319,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("383009f7-ee4e-4576-8032-8b055bb41147"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1077),
         eventType: "Stake",
         poolIndex: 1,
@@ -2241,6 +2331,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("017991f9-bbac-4fa7-8c59-79db77721943"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1189),
         eventType: "Stake",
         poolIndex: 1,
@@ -2252,6 +2343,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("7938b802-f7ae-4356-b217-c29d35545d8a"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1348),
         eventType: "Stake",
         poolIndex: 0,
@@ -2272,6 +2364,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("51039073-96ad-4c2f-9938-3c56eba19b6f"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1553),
         eventType: "Stake",
         poolIndex: 2,
@@ -2292,6 +2385,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("383009f7-ee4e-4576-8032-8b055bb41147"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1833),
         eventType: "Stake",
         poolIndex: 1,
@@ -2312,6 +2406,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("f3159f39-bb26-47fc-8b0f-44d6959b20e1"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2242),
         eventType: "Stake",
         poolIndex: 2,
@@ -2350,6 +2445,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("76643db8-1d4f-4983-bcd2-d262b24b0336"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2843),
         eventType: "Stake",
         poolIndex: 0,
@@ -2379,6 +2475,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("7b4b92e3-fb72-4557-af1b-0ab99d06e59d"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(3500),
         eventType: "Stake",
         poolIndex: 2,
@@ -2390,6 +2487,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("91d0dded-33a0-4712-af27-1a05ba1210ff"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(3678),
         eventType: "Stake",
         poolIndex: 1,
@@ -2455,6 +2553,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("f0cc2925-5733-4e6e-976d-57b093e0edff"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(90404),
         eventType: "Stake",
         poolIndex: 0,
@@ -2475,6 +2574,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("91d0dded-33a0-4712-af27-1a05ba1210ff"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(90695),
         eventType: "Stake",
         poolIndex: 1,
@@ -2504,6 +2604,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("7938b802-f7ae-4356-b217-c29d35545d8a"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(263010),
         eventType: "Stake",
         poolIndex: 0,
@@ -2524,6 +2625,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("40ffd49d-a897-4ef4-b52e-d7897074382d"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(273927),
         eventType: "Stake",
         poolIndex: 2,
@@ -2571,6 +2673,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("da8dd4f1-76a2-4138-b227-acc61e60edc1"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(441322),
         eventType: "Stake",
         poolIndex: 1,
@@ -2582,6 +2685,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("8a55dd59-621b-4f05-a3f3-fbb8e39bb355"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(442213),
         eventType: "Stake",
         poolIndex: 2,
@@ -2620,6 +2724,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("2c527a7a-8e01-4a03-8829-acaeed5c00ad"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(446917),
         eventType: "Stake",
         poolIndex: 2,
@@ -2641,6 +2746,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("76c91dc7-eae0-4aba-9605-54c309c9c898"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(15564625),
         eventType: "Stake",
@@ -2663,6 +2769,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("017991f9-bbac-4fa7-8c59-79db77721943"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31541724),
         eventType: "Stake",
@@ -2675,6 +2782,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("e2075665-d0c0-43c5-906f-085dd586feb4"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31566820),
         eventType: "Stake",
@@ -2687,6 +2795,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("0d7ae9e9-7354-40b4-854b-369b9c1e64e3"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31572954),
         eventType: "Stake",
@@ -2699,6 +2808,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("96e45742-51ff-4a8d-8749-d2c510a7d003"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31589263),
         eventType: "Stake",
@@ -2711,6 +2821,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("74354a47-9a30-4a35-b8c0-5fd9c2a08e74"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31595195),
         eventType: "Stake",
@@ -2723,6 +2834,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("2c3b7992-a766-4cf9-9272-2a6c57024cc7"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31685312),
         eventType: "Stake",
@@ -2775,6 +2887,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("76c91dc7-eae0-4aba-9605-54c309c9c898"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31979933),
         eventType: "Stake",
@@ -2787,6 +2900,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("ffb20171-8376-46a9-8d1c-5ab38ee15070"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(31980968),
         eventType: "Stake",
@@ -2819,6 +2933,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("017991f9-bbac-4fa7-8c59-79db77721943"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(47127406),
         eventType: "Stake",
@@ -2831,6 +2946,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("1fb7d744-83e8-4285-8c5e-b91728f9b600"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(47131459),
         eventType: "Stake",
@@ -2883,6 +2999,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("616c63bc-9a57-43ad-84e4-4696a3006280"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(63184342),
         eventType: "Stake",
@@ -2895,6 +3012,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("1ac89b36-4501-4f92-9005-5f66f7cfd5f2"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(63185562),
         eventType: "Stake",
@@ -2907,6 +3025,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("a54fb4bf-52f5-4a40-8725-e01240179728"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(63186260),
         eventType: "Stake",
@@ -2919,6 +3038,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("b598dc41-8507-465d-9f8d-a353dbacaaa0"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(63187851),
         eventType: "Stake",
@@ -2931,6 +3051,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("4ce0220f-cd6b-4f77-9fc5-ae21929619b4"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(63188541),
         eventType: "Stake",
@@ -2943,6 +3064,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("4f1b92ab-faa8-4c97-9fad-dd22f768df0a"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(63189018),
         eventType: "Stake",
@@ -3155,6 +3277,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("0a8d5d75-5c1f-442e-9899-a7343ec5117d"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(78665126),
         eventType: "Stake",
@@ -3177,6 +3300,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("76c91dc7-eae0-4aba-9605-54c309c9c898"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(78667112),
         eventType: "Stake",
@@ -3189,6 +3313,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("ba8ebfdf-991d-4409-a532-2fcaeff8616a1"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(78668164),
         eventType: "Stake",
@@ -3321,6 +3446,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("ba8ebfdf-991d-4409-a532-2fcaeff8616a1"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94735717),
         eventType: "Stake",
@@ -3333,6 +3459,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("e56565b1-0fb7-419a-93a6-3bf58e5d6b0d"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94737150),
         eventType: "Stake",
@@ -3345,6 +3472,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("7d01b41c-cc37-4eda-a80b-1a812ac68479"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94738208),
         eventType: "Stake",
@@ -3357,6 +3485,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("33a2d68d-4bec-4d52-8620-33cb2ef24beb"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94739779),
         eventType: "Stake",
@@ -3369,6 +3498,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("0bd53c67-6c29-4b08-a2bf-57195cf770c0"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94740257),
         eventType: "Stake",
@@ -3381,6 +3511,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("8654524f-8da3-4962-96f7-bb6b70817059"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94741988),
         eventType: "Stake",
@@ -3413,6 +3544,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("017991f9-bbac-4fa7-8c59-79db77721943"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94746541),
         eventType: "Stake",
@@ -3425,6 +3557,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("b20f3ad7-7f88-4461-ac9d-86504e244a53"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94747338),
         eventType: "Stake",
@@ -3437,6 +3570,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("6fbfe4ea-0203-475f-a385-4c09f1fa7dbe"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94748117),
         eventType: "Stake",
@@ -3449,6 +3583,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("b4705246-330e-41c6-8bd3-14f7219307e7"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94748808),
         eventType: "Stake",
@@ -3481,6 +3616,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("7f01cb71-c1eb-4429-8cdc-649c72f06c57"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94752445),
         eventType: "Stake",
@@ -3493,6 +3629,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("03aef19f-bfe6-4432-9324-e4c146e4f4dc"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94753608),
         eventType: "Stake",
@@ -3505,6 +3642,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("cd13b8f2-36c1-47f9-94af-85e97a946907"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94754692),
         eventType: "Stake",
@@ -3517,6 +3655,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("eaf8bbbb-0659-48be-98ce-26631dada22c"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94756395),
         eventType: "Stake",
@@ -3529,6 +3668,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("c7d2e899-c633-4b7a-9d47-7e88f9b09c0d"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(94757894),
         eventType: "Stake",
@@ -3881,6 +4021,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("10725343-f9f0-4619-b942-7288efb6dcde"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(126323674),
         eventType: "Stake",
@@ -3903,6 +4044,7 @@ describe("StakingServiceV2", function () {
         stakeId: hre.ethers.utils.id("e2075665-d0c0-43c5-906f-085dd586feb4"),
       },
       {
+        bankSigner: governanceRoleAccounts[0],
         eventSecondsAfterStartblockTimestamp:
           hre.ethers.BigNumber.from(126325310),
         eventType: "Stake",
@@ -4131,239 +4273,239 @@ describe("StakingServiceV2", function () {
     const stakeInfos000 = new Map();
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId},${stakeEvents[16].signerAddress},${stakeEvents[16].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId},${stakeEvents[20].signerAddress},${stakeEvents[20].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId},${stakeEvents[23].signerAddress},${stakeEvents[23].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId},${stakeEvents[24].signerAddress},${stakeEvents[24].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId},${stakeEvents[31].signerAddress},${stakeEvents[31].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId},${stakeEvents[33].signerAddress},${stakeEvents[33].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId},${stakeEvents[36].signerAddress},${stakeEvents[36].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId},${stakeEvents[38].signerAddress},${stakeEvents[38].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId},${stakeEvents[43].signerAddress},${stakeEvents[43].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId},${stakeEvents[53].signerAddress},${stakeEvents[53].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId},${stakeEvents[55].signerAddress},${stakeEvents[55].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId},${stakeEvents[56].signerAddress},${stakeEvents[56].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId},${stakeEvents[57].signerAddress},${stakeEvents[57].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId},${stakeEvents[62].signerAddress},${stakeEvents[62].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId},${stakeEvents[63].signerAddress},${stakeEvents[63].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[66].poolIndex].poolId},${stakeEvents[66].signerAddress},${stakeEvents[66].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId},${stakeEvents[67].signerAddress},${stakeEvents[67].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId},${stakeEvents[72].signerAddress},${stakeEvents[72].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[73].poolIndex].poolId},${stakeEvents[73].signerAddress},${stakeEvents[73].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId},${stakeEvents[74].signerAddress},${stakeEvents[74].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[75].poolIndex].poolId},${stakeEvents[75].signerAddress},${stakeEvents[75].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId},${stakeEvents[76].signerAddress},${stakeEvents[76].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[77].poolIndex].poolId},${stakeEvents[77].signerAddress},${stakeEvents[77].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId},${stakeEvents[98].signerAddress},${stakeEvents[98].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId},${stakeEvents[100].signerAddress},${stakeEvents[100].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId},${stakeEvents[101].signerAddress},${stakeEvents[101].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId},${stakeEvents[114].signerAddress},${stakeEvents[114].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId},${stakeEvents[115].signerAddress},${stakeEvents[115].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId},${stakeEvents[116].signerAddress},${stakeEvents[116].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId},${stakeEvents[117].signerAddress},${stakeEvents[117].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId},${stakeEvents[118].signerAddress},${stakeEvents[118].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[119].poolIndex].poolId},${stakeEvents[119].signerAddress},${stakeEvents[119].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[122].poolIndex].poolId},${stakeEvents[122].signerAddress},${stakeEvents[122].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId},${stakeEvents[123].signerAddress},${stakeEvents[123].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId},${stakeEvents[124].signerAddress},${stakeEvents[124].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId},${stakeEvents[125].signerAddress},${stakeEvents[125].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId},${stakeEvents[128].signerAddress},${stakeEvents[128].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId},${stakeEvents[129].signerAddress},${stakeEvents[129].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId},${stakeEvents[130].signerAddress},${stakeEvents[130].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId},${stakeEvents[131].signerAddress},${stakeEvents[131].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId},${stakeEvents[132].signerAddress},${stakeEvents[132].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[167].poolIndex].poolId},${stakeEvents[167].signerAddress},${stakeEvents[167].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[169].poolIndex].poolId},${stakeEvents[169].signerAddress},${stakeEvents[169].stakeId}`,
-      structuredClone(initialStakeInfo),
+      structuredClone(stakeServiceHelpers.initialStakeInfo),
     );
     stakeInfos.push(stakeInfos000);
 
@@ -4372,15 +4514,15 @@ describe("StakingServiceV2", function () {
     const stakingPoolStats000 = new Map();
     stakingPoolStats000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`,
-      structuredClone(initialStakingPoolStat),
+      structuredClone(stakeServiceHelpers.initialStakingPoolStat),
     );
     stakingPoolStats000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`,
-      structuredClone(initialStakingPoolStat),
+      structuredClone(stakeServiceHelpers.initialStakingPoolStat),
     );
     stakingPoolStats000.set(
       `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
-      structuredClone(initialStakingPoolStat),
+      structuredClone(stakeServiceHelpers.initialStakingPoolStat),
     );
     stakingPoolStats.push(stakingPoolStats000);
 
@@ -8244,7 +8386,9 @@ describe("StakingServiceV2", function () {
       const stakeInfos000 = new Map();
       const stakingPoolStats000 = new Map();
 
-      const stakingPoolStat = structuredClone(initialStakingPoolStat);
+      const stakingPoolStat = structuredClone(
+        stakeServiceHelpers.initialStakingPoolStat,
+      );
       if (stakingPoolConfig.poolAprWei.eq(hre.ethers.constants.Zero)) {
         stakingPoolStat.poolSizeWei = stakeServiceHelpers
           .computePoolSizeWei(
@@ -8328,7 +8472,6 @@ describe("StakingServiceV2", function () {
     await stakeServiceHelpers.testStakeClaimRevokeUnstakeWithdraw(
       stakingServiceInstance,
       stakingPoolStakeRewardTokenSameConfigs,
-      governanceRoleAccounts[0],
       contractAdminRoleAccounts[1],
       stakeEvents,
       stakeInfos,
