@@ -1682,6 +1682,7 @@ async function setupTestRevokeStakeEnvironment(
   } = await testAddStakingPoolReward(
     stakingServiceInstance,
     stakingPoolConfigs,
+    startblockTimestamp,
     stakeEvents000,
     stakeInfos000,
     stakingPoolStats000,
@@ -1803,6 +1804,7 @@ async function setupTestSuspendStakeEnvironment(
   } = await testAddStakingPoolReward(
     stakingServiceInstance,
     stakingPoolConfigs,
+    startblockTimestamp,
     stakeEvents000,
     stakeInfos000,
     stakingPoolStats000,
@@ -1923,6 +1925,7 @@ async function setupTestStakeEnvironment(
   } = await testAddStakingPoolReward(
     stakingServiceInstance,
     stakingPoolConfigs,
+    startblockTimestamp,
     stakeEvents000,
     stakeInfos000,
     stakingPoolStats000,
@@ -2029,6 +2032,7 @@ async function setupTestUnstakeEnvironment(
   } = await testAddStakingPoolReward(
     stakingServiceInstance,
     stakingPoolConfigs,
+    startblockTimestamp,
     stakeEvents000,
     stakeInfos000,
     stakingPoolStats000,
@@ -2725,6 +2729,7 @@ async function suspendStakeWithVerify(
 async function testAddStakingPoolReward(
   stakingServiceContractInstance,
   stakingPoolConfigs,
+  startblockTimestamp,
   stakeEvents,
   previousExpectStakeInfos,
   previousExpectStakingPoolStats,
@@ -2756,8 +2761,6 @@ async function testAddStakingPoolReward(
     prevExpectStakeInfos = nextExpectStakeInfos;
     prevExpectStakingPoolStats = nextExpectStakingPoolStats;
   }
-
-  const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
 
   for (let i = 0; i < stakeEvents.length; i++) {
     const poolIndex = i % stakingPoolConfigs.length;

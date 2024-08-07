@@ -462,6 +462,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents000,
           stakeInfos000,
           stakingPoolStats000,
@@ -495,6 +496,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents001,
           stakeInfos001,
           stakingPoolStats001,
@@ -528,6 +530,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents002,
           stakeInfos002,
           stakingPoolStats002,
@@ -560,6 +563,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testAddStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents003,
           stakeInfos003,
           stakingPoolStats003,
@@ -8374,6 +8378,8 @@ describe("StakingServiceV2", function () {
       totalStakeAmountsWei.set(stakePoolId, totalStakeAmountWei.toString());
     }
 
+    const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
+
     const stakePoolStatsIterator =
       stakingPoolStats[stakingPoolStats.length - 1].entries();
     let i = 0;
@@ -8436,6 +8442,7 @@ describe("StakingServiceV2", function () {
       } = await stakeServiceHelpers.testAddStakingPoolReward(
         stakingServiceInstance,
         [stakingPoolConfig],
+        startblockTimestamp,
         stakeEvents000,
         stakeInfos000,
         stakingPoolStats000,
