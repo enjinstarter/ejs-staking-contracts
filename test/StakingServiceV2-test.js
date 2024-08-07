@@ -452,7 +452,7 @@ describe("StakingServiceV2", function () {
             signer: deployerSigners[signerIndex],
             signerAddress: await deployerSigners[signerIndex].getAddress(),
             rewardAmountWei: poolRewardAddWeiAmounts[i],
-            hasPermissionToAddReward: true,
+            hasPermission: true,
           });
         }
 
@@ -486,7 +486,7 @@ describe("StakingServiceV2", function () {
             signerAddress:
               await governanceRoleSigners[signerIndex].getAddress(),
             rewardAmountWei: poolRewardAddWeiAmounts[i],
-            hasPermissionToAddReward: false,
+            hasPermission: false,
           });
         }
 
@@ -520,7 +520,7 @@ describe("StakingServiceV2", function () {
             signerAddress:
               await contractAdminRoleSigners[signerIndex].getAddress(),
             rewardAmountWei: poolRewardAddWeiAmounts[i],
-            hasPermissionToAddReward: true,
+            hasPermission: true,
           });
         }
 
@@ -553,7 +553,7 @@ describe("StakingServiceV2", function () {
             signer: enduserSigners[signerIndex],
             signerAddress: await enduserSigners[signerIndex].getAddress(),
             rewardAmountWei: poolRewardAddWeiAmounts[i],
-            hasPermissionToAddReward: false,
+            hasPermission: false,
           });
         }
 
@@ -589,7 +589,7 @@ describe("StakingServiceV2", function () {
             signer: deployerSigners[signerIndex],
             signerAddress: await deployerSigners[signerIndex].getAddress(),
             adminWalletAddress: adminWalletAddress,
-            hasPermissionToRemoveReward: true,
+            hasPermission: true,
           });
         }
 
@@ -626,7 +626,7 @@ describe("StakingServiceV2", function () {
             signerAddress:
               await governanceRoleSigners[signerIndex].getAddress(),
             adminWalletAddress: adminWalletAddress,
-            hasPermissionToRemoveReward: false,
+            hasPermission: false,
           });
         }
 
@@ -663,7 +663,7 @@ describe("StakingServiceV2", function () {
             signerAddress:
               await contractAdminRoleSigners[signerIndex].getAddress(),
             adminWalletAddress: adminWalletAddress,
-            hasPermissionToRemoveReward: true,
+            hasPermission: true,
           });
         }
 
@@ -699,7 +699,7 @@ describe("StakingServiceV2", function () {
             signer: enduserSigners[signerIndex],
             signerAddress: await enduserSigners[signerIndex].getAddress(),
             adminWalletAddress: adminWalletAddress,
-            hasPermissionToRemoveReward: false,
+            hasPermission: false,
           });
         }
 
@@ -8437,7 +8437,7 @@ describe("StakingServiceV2", function () {
         )
           ? totalRewardToBeDistributedWei.sub(totalStakeRewardLessByWei)
           : totalRewardToBeDistributedWei,
-        hasPermissionToAddReward: true,
+        hasPermission: true,
       });
 
       const {

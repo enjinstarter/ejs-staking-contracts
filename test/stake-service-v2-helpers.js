@@ -103,7 +103,7 @@ async function addStakingPoolRewardWithVerify(
   );
 
   if (
-    stakeEvent.hasPermissionToAddReward &&
+    stakeEvent.hasPermission &&
     rewardAmountWei.gt(hre.ethers.constants.Zero)
   ) {
     await testHelpers.approveTransferWithVerify(
@@ -119,7 +119,7 @@ async function addStakingPoolRewardWithVerify(
   ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
   await testHelpers.setTimeNextBlock(expectAddRewardTimestamp.toNumber());
 
-  if (stakeEvent.hasPermissionToAddReward) {
+  if (stakeEvent.hasPermission) {
     if (rewardAmountWei.gt(hre.ethers.constants.Zero)) {
       await expect(
         stakingServiceContractInstance
@@ -152,29 +152,24 @@ async function addStakingPoolRewardWithVerify(
     );
   }
 
-  const expectedContractWeiBalanceOfRewardAfterAdd =
-    stakeEvent.hasPermissionToAddReward
-      ? contractWeiBalanceOfRewardBeforeAdd.add(rewardAmountWei)
-      : contractWeiBalanceOfRewardBeforeAdd;
-  const expectContractWeiBalanceOfRewardAfterAdd =
-    stakeEvent.hasPermissionToAddReward
-      ? contractWeiBalanceOfRewardBeforeAdd.add(truncatedRewardAmountWei)
-      : contractWeiBalanceOfRewardBeforeAdd;
+  const expectedContractWeiBalanceOfRewardAfterAdd = stakeEvent.hasPermission
+    ? contractWeiBalanceOfRewardBeforeAdd.add(rewardAmountWei)
+    : contractWeiBalanceOfRewardBeforeAdd;
+  const expectContractWeiBalanceOfRewardAfterAdd = stakeEvent.hasPermission
+    ? contractWeiBalanceOfRewardBeforeAdd.add(truncatedRewardAmountWei)
+    : contractWeiBalanceOfRewardBeforeAdd;
 
-  const expectedSignerWeiBalanceOfRewardAfterAdd =
-    stakeEvent.hasPermissionToAddReward
-      ? signerWeiBalanceOfRewardBeforeAdd.sub(rewardAmountWei)
-      : signerWeiBalanceOfRewardBeforeAdd;
-  const expectSignerWeiBalanceOfRewardAfterAdd =
-    stakeEvent.hasPermissionToAddReward
-      ? signerWeiBalanceOfRewardBeforeAdd.sub(truncatedRewardAmountWei)
-      : signerWeiBalanceOfRewardBeforeAdd;
+  const expectedSignerWeiBalanceOfRewardAfterAdd = stakeEvent.hasPermission
+    ? signerWeiBalanceOfRewardBeforeAdd.sub(rewardAmountWei)
+    : signerWeiBalanceOfRewardBeforeAdd;
+  const expectSignerWeiBalanceOfRewardAfterAdd = stakeEvent.hasPermission
+    ? signerWeiBalanceOfRewardBeforeAdd.sub(truncatedRewardAmountWei)
+    : signerWeiBalanceOfRewardBeforeAdd;
 
-  const expectedTotalRewardAddedWeiAfterAdd =
-    stakeEvent.hasPermissionToAddReward
-      ? stakingPoolStatsBeforeAdd.totalRewardAddedWei.add(rewardAmountWei)
-      : stakingPoolStatsBeforeAdd.totalRewardAddedWei;
-  const expectTotalRewardAddedWeiAfterAdd = stakeEvent.hasPermissionToAddReward
+  const expectedTotalRewardAddedWeiAfterAdd = stakeEvent.hasPermission
+    ? stakingPoolStatsBeforeAdd.totalRewardAddedWei.add(rewardAmountWei)
+    : stakingPoolStatsBeforeAdd.totalRewardAddedWei;
+  const expectTotalRewardAddedWeiAfterAdd = stakeEvent.hasPermission
     ? stakingPoolStatsBeforeAdd.totalRewardAddedWei.add(
         truncatedRewardAmountWei,
       )
@@ -976,7 +971,7 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
   ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
   await testHelpers.setTimeNextBlock(expectRemoveRewardTimestamp.toNumber());
 
-  if (stakeEvent.hasPermissionToRemoveReward) {
+  if (stakeEvent.hasPermission) {
     if (
       expectedPoolRemainingRewardWeiBeforeRemove.gt(hre.ethers.constants.Zero)
     ) {
@@ -1012,34 +1007,31 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
     );
   }
 
-  const expectContractWeiBalanceOfRewardAfterRemove =
-    stakeEvent.hasPermissionToRemoveReward
-      ? contractWeiBalanceOfRewardBeforeRemove.sub(
-          expectedPoolRemainingRewardWeiBeforeRemove,
-        )
-      : contractWeiBalanceOfRewardBeforeRemove;
+  const expectContractWeiBalanceOfRewardAfterRemove = stakeEvent.hasPermission
+    ? contractWeiBalanceOfRewardBeforeRemove.sub(
+        expectedPoolRemainingRewardWeiBeforeRemove,
+      )
+    : contractWeiBalanceOfRewardBeforeRemove;
 
   const expectSignerWeiBalanceOfRewardAfterRemove =
-    stakeEvent.hasPermissionToRemoveReward &&
-    signerAddress === stakeEvent.adminWalletAddress
+    stakeEvent.hasPermission && signerAddress === stakeEvent.adminWalletAddress
       ? signerWeiBalanceOfRewardBeforeRemove.add(
           expectedPoolRemainingRewardWeiBeforeRemove,
         )
       : signerWeiBalanceOfRewardBeforeRemove;
 
   const expectAdminWalletWeiBalanceOfRewardAfterRemove =
-    stakeEvent.hasPermissionToRemoveReward
+    stakeEvent.hasPermission
       ? adminWalletWeiBalanceOfRewardBeforeRemove.add(
           expectedPoolRemainingRewardWeiBeforeRemove,
         )
       : adminWalletWeiBalanceOfRewardBeforeRemove;
 
-  const expectTotalRewardRemovedWeiAfterRemove =
-    stakeEvent.hasPermissionToRemoveReward
-      ? stakingPoolStatsBeforeRemove.totalRewardRemovedWei.add(
-          expectedPoolRemainingRewardWeiBeforeRemove,
-        )
-      : stakingPoolStatsBeforeRemove.totalRewardRemovedWei;
+  const expectTotalRewardRemovedWeiAfterRemove = stakeEvent.hasPermission
+    ? stakingPoolStatsBeforeRemove.totalRewardRemovedWei.add(
+        expectedPoolRemainingRewardWeiBeforeRemove,
+      )
+    : stakingPoolStatsBeforeRemove.totalRewardRemovedWei;
 
   const expectedPoolRewardWeiAfterRemove = computePoolRewardWei(
     stakingPoolStatsBeforeRemove.totalRewardAddedWei,
@@ -1656,7 +1648,7 @@ async function setupTestRevokeStakeEnvironment(
       signer: contractAdminAccount,
       signerAddress: await contractAdminAccount.getAddress(),
       rewardAmountWei: expectRewardAtMaturityWei,
-      hasPermissionToAddReward: true,
+      hasPermission: true,
     },
   ];
 
@@ -1778,7 +1770,7 @@ async function setupTestSuspendStakeEnvironment(
       signer: contractAdminAccount,
       signerAddress: await contractAdminAccount.getAddress(),
       rewardAmountWei: expectRewardAtMaturityWei,
-      hasPermissionToAddReward: true,
+      hasPermission: true,
     },
   ];
 
@@ -1899,7 +1891,7 @@ async function setupTestStakeEnvironment(
       signer: contractAdminAccount,
       signerAddress: await contractAdminAccount.getAddress(),
       rewardAmountWei: expectRewardAtMaturityWei,
-      hasPermissionToAddReward: true,
+      hasPermission: true,
     },
   ];
 
@@ -2006,7 +1998,7 @@ async function setupTestUnstakeEnvironment(
       signer: contractAdminAccount,
       signerAddress: await contractAdminAccount.getAddress(),
       rewardAmountWei: expectRewardAtMaturityWei,
-      hasPermissionToAddReward: true,
+      hasPermission: true,
     },
   ];
 
@@ -3528,7 +3520,7 @@ function updateExpectStakingPoolStatsAfterAddReward(
   stakingPoolConfigs,
   expectStakingPoolStatsAfterTriggerStakeEvent,
 ) {
-  if (!triggerStakeEvent.hasPermissionToAddReward) {
+  if (!triggerStakeEvent.hasPermission) {
     return;
   }
 
@@ -3618,7 +3610,7 @@ function updateExpectStakingPoolStatsAfterRemoveReward(
   stakingPoolConfigs,
   expectStakingPoolStatsAfterTriggerStakeEvent,
 ) {
-  if (!triggerStakeEvent.hasPermissionToRemoveReward) {
+  if (!triggerStakeEvent.hasPermission) {
     return;
   }
 
