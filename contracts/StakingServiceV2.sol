@@ -734,7 +734,7 @@ contract StakingServiceV2 is
         uint256 unstakeTimestamp
     ) internal view virtual returns (uint256 calculatedCooldownExpiryTimestamp) {
         calculatedCooldownExpiryTimestamp =
-            unstakeTimestamp + (cooldownPeriodDays > 0 ? cooldownPeriodDays * SECONDS_IN_DAY : 0);
+            unstakeTimestamp + cooldownPeriodDays * SECONDS_IN_DAY;
     }
 
     /**
