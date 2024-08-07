@@ -764,9 +764,13 @@ describe("StakingServiceV2", function () {
         const stakingPoolConfig =
           stakingPoolStakeRewardTokenSameConfigs[poolIndex];
 
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
         await stakeServiceHelpers.setupTestStakeEnvironment(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
           poolIndex,
@@ -979,9 +983,13 @@ describe("StakingServiceV2", function () {
         const stakingPoolConfig =
           stakingPoolStakeRewardTokenSameConfigs[poolIndex];
 
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
         await stakeServiceHelpers.setupTestStakeEnvironment(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
           poolIndex,
@@ -1343,9 +1351,13 @@ describe("StakingServiceV2", function () {
         const stakingPoolConfig =
           stakingPoolStakeRewardTokenSameConfigs[poolIndex];
 
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
         await stakeServiceHelpers.setupTestStakeEnvironment(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
           contractAdminAccount,
           enduserAccount,
           poolIndex,
@@ -2047,7 +2059,6 @@ describe("StakingServiceV2", function () {
 
         const stakingPoolConfig =
           stakingPoolStakeRewardTokenSameConfigs[poolIndex];
-        const poolId = stakingPoolConfig.poolId;
 
         const startblockTimestamp =
           await testHelpers.getCurrentBlockTimestamp();

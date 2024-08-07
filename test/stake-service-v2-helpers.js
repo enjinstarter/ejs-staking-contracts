@@ -1866,6 +1866,7 @@ async function setupTestSuspendStakeEnvironment(
 async function setupTestStakeEnvironment(
   stakingServiceInstance,
   stakingPoolConfigs,
+  startblockTimestamp,
   contractAdminAccount,
   enduserAccount,
   poolIndex,
@@ -1948,8 +1949,6 @@ async function setupTestStakeEnvironment(
     `${stakingPoolConfigs[stakeEvents001[0].poolIndex].poolId},${stakeEvents001[0].signerAddress},${stakeEvents001[0].stakeId}`,
     structuredClone(initialStakeInfo),
   );
-
-  const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
 
   const {
     nextExpectStakeInfos: stakeInfos002,
