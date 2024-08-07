@@ -2788,6 +2788,7 @@ async function testAddStakingPoolReward(
 async function testRemoveStakingPoolReward(
   stakingServiceContractInstance,
   stakingPoolConfigs,
+  startblockTimestamp,
   stakeEvents,
   previousExpectStakeInfos,
   previousExpectStakingPoolStats,
@@ -2819,8 +2820,6 @@ async function testRemoveStakingPoolReward(
     prevExpectStakeInfos = nextExpectStakeInfos;
     prevExpectStakingPoolStats = nextExpectStakingPoolStats;
   }
-
-  const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
 
   for (let i = 0; i < stakeEvents.length; i++) {
     const poolIndex = i % stakingPoolConfigs.length;

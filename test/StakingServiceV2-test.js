@@ -599,6 +599,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents004,
           stakeInfos004,
           stakingPoolStats004,
@@ -635,6 +636,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents005,
           stakeInfos005,
           stakingPoolStats005,
@@ -671,6 +673,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents006,
           stakeInfos006,
           stakingPoolStats006,
@@ -706,6 +709,7 @@ describe("StakingServiceV2", function () {
         } = await stakeServiceHelpers.testRemoveStakingPoolReward(
           stakingServiceInstance,
           stakingPoolStakeRewardTokenSameConfigs,
+          await testHelpers.getCurrentBlockTimestamp(),
           stakeEvents007,
           stakeInfos007,
           stakingPoolStats007,
