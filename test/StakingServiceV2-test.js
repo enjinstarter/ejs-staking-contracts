@@ -1073,6 +1073,173 @@ describe("StakingServiceV2", function () {
       });
     });
 
+    describe("Remove Unstake Penalty", function () {
+      it("Should not allow remove unstake penalty for unauthorized users", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "da61b654-4973-4879-9166-723c0017dd6d",
+        );
+
+        const governanceAccount = governanceRoleAccounts[1];
+        const governanceAddress = await governanceAccount.getAddress();
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(governanceAccount)
+            .removeUnstakePenalty(uninitializedPoolId),
+        ).to.be.revertedWith(
+          `AccessControl: account ${governanceAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .removeUnstakePenalty(uninitializedPoolId),
+        ).to.be.revertedWith(
+          `AccessControl: account ${enduserAddress.toLowerCase()} is missing role ${
+            testHelpers.CONTRACT_ADMIN_ROLE
+          }`,
+        );
+      });
+
+      it("Should not allow remove unstake penalty for uninitialized staking pool", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "da61b654-4973-4879-9166-723c0017dd6d",
+        );
+
+        await expect(
+          stakingServiceInstance.removeUnstakePenalty(uninitializedPoolId),
+        ).to.be.revertedWith("SPool2: uninitialized");
+      });
+
+      it("Should not allow remove unstake penalty when no stake", async () => {
+        await expect(
+          stakingServiceInstance.removeUnstakePenalty(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          ),
+        ).to.be.revertedWith("SSvcs2: no penalty");
+      });
+
+      it("should not allow remove unstake penalty for zero unstake penalty", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .removeUnstakePenalty(stakingPoolConfig.poolId),
+        ).to.be.revertedWith("SSvcs2: no penalty");
+      });
+
+      it("should not allow remove unstake penalty immediately after remove unstake penalty", async () => {
+        const adminWalletAccount = governanceRoleAccounts[0];
+        const adminWalletAddress = await adminWalletAccount.getAddress();
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        const {
+          nextExpectStakeInfos: stakeInfosBeforeRemove,
+          nextExpectStakingPoolStats: stakingPoolStatsBeforeRemove,
+        } = await stakeServiceHelpers.setupTestUnstakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        const removePenaltyEvent = {
+          eventSecondsAfterStartblockTimestamp: 480,
+          eventType: "RemovePenalty",
+          poolIndex: poolIndex,
+          signer: contractAdminAccount,
+          signerAddress: await contractAdminAccount.getAddress(),
+          adminWalletAccount: adminWalletAccount,
+          adminWalletAddress: adminWalletAddress,
+          hasPermission: true,
+        };
+
+        const {
+          nextExpectStakeInfos: expectStakeInfosAfterRemove,
+          nextExpectStakingPoolStats: expectStakingPoolStatsAfterRemove,
+        } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+          removePenaltyEvent,
+          removePenaltyEvent,
+          null,
+          stakingPoolStakeRewardTokenSameConfigs,
+          stakeInfosBeforeRemove,
+          stakingPoolStatsBeforeRemove,
+        );
+
+        await stakeServiceHelpers.removeUnstakePenaltyWithVerify(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          removePenaltyEvent,
+          stakeInfosBeforeRemove,
+          expectStakeInfosAfterRemove,
+          stakingPoolStatsBeforeRemove,
+          expectStakingPoolStatsAfterRemove,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .removeUnstakePenalty(stakingPoolConfig.poolId),
+        ).to.be.revertedWith("SSvcs2: no penalty");
+      });
+    });
+
     describe("Suspend Stake", function () {
       it("Should not allow suspend stake for unauthorized users", async () => {
         const uninitializedPoolId = hre.ethers.utils.id(
