@@ -64,6 +64,7 @@ describe("StakingServiceV2", function () {
   let accounts;
   let governanceRoleAccounts;
   let contractAdminRoleAccounts;
+  let contractUsageRoleAccounts;
   let enduserAccounts;
   let unusedRoleAccounts;
 
@@ -109,7 +110,15 @@ describe("StakingServiceV2", function () {
     }
     console.log();
     */
-    enduserAccounts = accounts.slice(10);
+    contractUsageRoleAccounts = accounts.slice(10, 15);
+    /*
+    console.log(`contractUsageRoleAccounts.length: ${contractUsageRoleAccounts.length}`);
+    for (let i = 0; i < contractUsageRoleAccounts.length; i++) {
+      console.log(`contractUsageRoleAccounts[${i}]: ${await contractUsageRoleAccounts[i].getAddress()}`);
+    }
+    console.log();
+    */
+    enduserAccounts = accounts.slice(15);
     /*
     console.log(`enduserAccounts.length: ${enduserAccounts.length}`);
     for (let i = 0; i < enduserAccounts.length; i++) {
@@ -152,6 +161,14 @@ describe("StakingServiceV2", function () {
       stakingServiceInstance,
       testHelpers.CONTRACT_ADMIN_ROLE,
       contractAdminRoleAccounts,
+      governanceRoleAccounts[0],
+      true,
+    );
+
+    await testHelpers.grantRole(
+      stakingServiceInstance,
+      stakeServiceHelpers.CONTRACT_USAGE_ROLE,
+      contractUsageRoleAccounts,
       governanceRoleAccounts[0],
       true,
     );
@@ -1549,6 +1566,203 @@ describe("StakingServiceV2", function () {
             .connect(contractAdminAccount)
             .resumeStake(stakingPoolConfig.poolId, enduserAddress, stakeId),
         ).to.be.revertedWith("SSvcs2: stake active");
+      });
+    });
+  });
+
+  describe("Contract Usage", function () {
+    describe("Revenue Share Extend Stake Duration", function () {
+      it("Should not allow revshare extend stake duration for unauthorized users", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "da61b654-4973-4879-9166-723c0017dd6d",
+        );
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "7638d780-eae6-4476-822e-565bceb7d0a1",
+        );
+
+        const governanceAccount = governanceRoleAccounts[1];
+        const governanceAddress = await governanceAccount.getAddress();
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractAdminAddress = await contractAdminAccount.getAddress();
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(governanceAccount)
+            .revshareExtendStakeDuration(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${governanceAddress.toLowerCase()} is missing role ${
+            stakeServiceHelpers.CONTRACT_USAGE_ROLE
+          }`,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractAdminAccount)
+            .revshareExtendStakeDuration(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${contractAdminAddress.toLowerCase()} is missing role ${
+            stakeServiceHelpers.CONTRACT_USAGE_ROLE
+          }`,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .revshareExtendStakeDuration(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith(
+          `AccessControl: account ${enduserAddress.toLowerCase()} is missing role ${
+            stakeServiceHelpers.CONTRACT_USAGE_ROLE
+          }`,
+        );
+      });
+
+      it("Should not allow revshare extend stake duration for uninitialized staking pool", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "881c6059-5f5a-4eac-a608-8c7422cbb416",
+        );
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "2007c66c-0cd8-4a4d-ad40-34aba95942a3",
+        );
+        const contractUsageAccount = contractUsageRoleAccounts[1];
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractUsageAccount)
+            .revshareExtendStakeDuration(
+              uninitializedPoolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith("SPool2: uninitialized");
+      });
+
+      it("Should not allow revshare extend stake duration for uninitialized stake", async () => {
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "de97352b-4b04-4caf-bb4e-f0a1d3246eb2",
+        );
+        const poolIndex = 2;
+        const contractUsageAccount = contractUsageRoleAccounts[1];
+        const enduserAccount = enduserAccounts[0];
+        const enduserAddress = await enduserAccount.getAddress();
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractUsageAccount)
+            .revshareExtendStakeDuration(
+              stakingPoolStakeRewardTokenSameConfigs[poolIndex].poolId,
+              enduserAddress,
+              uninitializedStakeId,
+            ),
+        ).to.be.revertedWith("SSvcs2: uninitialized stake");
+      });
+
+      it("should not allow revshare extend stake duration for revoked stake", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractUsageAccount = contractUsageRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestRevokeStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractUsageAccount)
+            .revshareExtendStakeDuration(
+              stakingPoolConfig.poolId,
+              enduserAddress,
+              stakeId,
+            ),
+        ).to.be.revertedWith("SSvcs2: revoked stake");
+      });
+
+      it("should not allow revshare extend stake duration for unstaked stake", async () => {
+        const adminWalletAccount = governanceRoleAccounts[0];
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const contractUsageAccount = contractUsageRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestUnstakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(contractUsageAccount)
+            .revshareExtendStakeDuration(
+              stakingPoolConfig.poolId,
+              enduserAddress,
+              stakeId,
+            ),
+        ).to.be.revertedWith("SSvcs2: unstaked");
       });
     });
   });

@@ -273,7 +273,7 @@ contract StakingServiceV2 is
 
         bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
-        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
+        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked stake");
         require(!_isStakeUnstakedFor(stakekey), "SSvcs2: unstaked");
 
         uint256 oldStakeMaturityTimestamp = _stakes[stakekey].stakeMaturityTimestamp;
