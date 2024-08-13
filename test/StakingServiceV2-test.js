@@ -1719,7 +1719,6 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow revshare extend stake duration for unstaked stake", async () => {
-        const adminWalletAccount = governanceRoleAccounts[0];
         const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const contractUsageAccount = contractUsageRoleAccounts[1];
