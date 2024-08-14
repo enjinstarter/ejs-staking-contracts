@@ -27,8 +27,10 @@ contract MockStakingPoolV2 is StakingPoolV2 {
         keccak256("POOL_ID_IS_ACTIVE_TRUE");
     bytes32 public constant POOL_ID_EARLY_UNSTAKE_COOLDOWN_PERIOD_DAYS_ZERO =
         keccak256("POOL_ID_EARLY_UNSTAKE_COOLDOWN_PERIOD_DAYS_ZERO");
-    bytes32 public constant POOL_ID_EARLY_UNSTAKE_PENALTY_PERCENT_WEI_ZERO =
-        keccak256("POOL_ID_EARLY_UNSTAKE_PENALTY_PERCENT_WEI_ZERO");
+    bytes32 public constant POOL_ID_EARLY_UNSTAKE_MAX_PENALTY_PERCENT_WEI_ZERO =
+        keccak256("POOL_ID_EARLY_UNSTAKE_MAX_PENALTY_PERCENT_WEI_ZERO");
+    bytes32 public constant POOL_ID_EARLY_UNSTAKE_MIN_PENALTY_PERCENT_WEI_ZERO =
+        keccak256("POOL_ID_EARLY_UNSTAKE_MIN_PENALTY_PERCENT_WEI_ZERO");
     bytes32 public constant POOL_ID_REVSHARE_STAKE_DURATION_EXTENSION_DAYS_ZERO =
         keccak256("POOL_ID_REVSHARE_STAKE_DURATION_EXTENSION_DAYS_ZERO");
 
@@ -64,7 +66,8 @@ contract MockStakingPoolV2 is StakingPoolV2 {
             : 18;
         stakingPoolInfo.poolAprWei = poolId == POOL_ID_POOL_APR_ZERO ? 0 : 1;
         stakingPoolInfo.earlyUnstakeCooldownPeriodDays = poolId == POOL_ID_EARLY_UNSTAKE_COOLDOWN_PERIOD_DAYS_ZERO ? 0 : 1;
-        stakingPoolInfo.earlyUnstakePenaltyPercentWei = poolId == POOL_ID_EARLY_UNSTAKE_PENALTY_PERCENT_WEI_ZERO ? 0: 1;
+        stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei = poolId == POOL_ID_EARLY_UNSTAKE_MAX_PENALTY_PERCENT_WEI_ZERO ? 0: 1;
+        stakingPoolInfo.earlyUnstakePenaltyMinPercentWei = poolId == POOL_ID_EARLY_UNSTAKE_MIN_PENALTY_PERCENT_WEI_ZERO ? 0: 1;
         stakingPoolInfo.revshareStakeDurationExtensionDays = poolId == POOL_ID_REVSHARE_STAKE_DURATION_EXTENSION_DAYS_ZERO ? 0 : 1;
         stakingPoolInfo.isOpen = poolId == POOL_ID_IS_OPEN_TRUE ? true : false;
         stakingPoolInfo.isActive = poolId == POOL_ID_IS_ACTIVE_TRUE ? true : false;

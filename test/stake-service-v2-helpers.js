@@ -363,14 +363,18 @@ function calculateTotalRemovableUnstakePenaltyWei(
 
 function calculateUnstakeAmountWei(
   stakeAmountWei,
-  earlyUnstakePenaltyPercentWei,
+  earlyUnstakePenaltyMaxPercentWei,
+  earlyUnstakePenaltyMinPercentWei,
+  stakeTimestamp,
   stakeMaturityTimestamp,
   currentTimestamp,
   unstakeTimestamp,
 ) {
-  const unstakePenaltyWei = calculateUnstakePenaltyWei(
+  const unstakePenaltyWei = calculateUnstakePenaltyAmountWei(
     stakeAmountWei,
-    earlyUnstakePenaltyPercentWei,
+    earlyUnstakePenaltyMaxPercentWei,
+    earlyUnstakePenaltyMinPercentWei,
+    stakeTimestamp,
     stakeMaturityTimestamp,
     currentTimestamp,
     unstakeTimestamp,
@@ -379,9 +383,33 @@ function calculateUnstakeAmountWei(
   return hre.ethers.BigNumber.from(stakeAmountWei).sub(unstakePenaltyWei);
 }
 
-function calculateUnstakePenaltyWei(
+function calculateUnstakePenaltyAmountWei(
   stakeAmountWei,
-  earlyUnstakePenaltyPercentWei,
+  earlyUnstakePenaltyMaxPercentWei,
+  earlyUnstakePenaltyMinPercentWei,
+  stakeTimestamp,
+  stakeMaturityTimestamp,
+  currentTimestamp,
+  unstakeTimestamp,
+) {
+  const unstakePenaltyPercentWei = calculateUnstakePenaltyPercentWei(
+    earlyUnstakePenaltyMaxPercentWei,
+    earlyUnstakePenaltyMinPercentWei,
+    stakeTimestamp,
+    stakeMaturityTimestamp,
+    currentTimestamp,
+    unstakeTimestamp,
+  );
+
+  return hre.ethers.BigNumber.from(stakeAmountWei)
+    .mul(unstakePenaltyPercentWei)
+    .div(testHelpers.BN_PERCENT_100_WEI);
+}
+
+function calculateUnstakePenaltyPercentWei(
+  earlyUnstakePenaltyMaxPercentWei,
+  earlyUnstakePenaltyMinPercentWei,
+  stakeTimestamp,
   stakeMaturityTimestamp,
   currentTimestamp,
   unstakeTimestamp,
@@ -392,11 +420,27 @@ function calculateUnstakePenaltyWei(
     unstakeTimestamp,
   );
 
+  const timestamp =
+    unstakeTimestamp &&
+    hre.ethers.BigNumber.from(unstakeTimestamp).gt(hre.ethers.constants.Zero)
+      ? hre.ethers.BigNumber.from(unstakeTimestamp)
+      : hre.ethers.BigNumber.from(currentTimestamp);
+
+  const stakeMaturityDuration = hre.ethers.BigNumber.from(
+    stakeMaturityTimestamp,
+  ).sub(stakeTimestamp);
+  const stakeDuration =
+    hre.ethers.BigNumber.from(timestamp).sub(stakeTimestamp);
+  const penaltyPercentDiff = hre.ethers.BigNumber.from(
+    earlyUnstakePenaltyMaxPercentWei,
+  ).sub(earlyUnstakePenaltyMinPercentWei);
+
   return isMatured
     ? hre.ethers.constants.Zero
-    : hre.ethers.BigNumber.from(stakeAmountWei)
-        .mul(earlyUnstakePenaltyPercentWei)
-        .div(testHelpers.BN_PERCENT_100_WEI);
+    : hre.ethers.BigNumber.from(earlyUnstakePenaltyMaxPercentWei)
+        .mul(stakeMaturityDuration)
+        .sub(penaltyPercentDiff.mul(stakeDuration))
+        .div(stakeMaturityDuration);
 }
 
 async function claimWithVerify(
@@ -3554,9 +3598,20 @@ async function unstakeWithVerify(
     stakeEvent.eventSecondsAfterStartblockTimestamp,
   );
 
-  const expectUnstakePenaltyAmountWei = calculateUnstakePenaltyWei(
+  const expectUnstakePenaltyPercentWei = calculateUnstakePenaltyPercentWei(
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
+    expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
+    expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
+    stakeEvent.eventSecondsAfterStartblockTimestamp,
+    stakeEvent.eventSecondsAfterStartblockTimestamp,
+  );
+
+  const expectUnstakePenaltyAmountWei = calculateUnstakePenaltyAmountWei(
     expectStakeInfoBeforeUnstake.stakeAmountWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
+    expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -3564,7 +3619,9 @@ async function unstakeWithVerify(
 
   const expectUnstakeAmountWei = calculateUnstakeAmountWei(
     expectStakeInfoBeforeUnstake.stakeAmountWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
+    expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -3601,10 +3658,12 @@ async function unstakeWithVerify(
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
       stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenInstance.address,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyPercentWei,
+      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
+      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
       expectStakeInfoBeforeUnstake.stakeAmountWei,
       expectUnstakeAmountWei,
       expectUnstakePenaltyAmountWei,
+      expectUnstakePenaltyPercentWei,
       isStakeMaturedAtUnstake
         ? hre.ethers.constants.Zero
         : stakingPoolConfigs[stakeEvent.poolIndex]
@@ -3941,7 +4000,10 @@ function updateExpectStakeInfoAfterUnstake(
     calculateUnstakeAmountWei(
       truncatedStakeAmountWei,
       stakingPoolConfigs[updateStakeEvent.poolIndex]
-        .earlyUnstakePenaltyPercentWei,
+        .earlyUnstakePenaltyMaxPercentWei,
+      stakingPoolConfigs[updateStakeEvent.poolIndex]
+        .earlyUnstakePenaltyMinPercentWei,
+      updateStakeEvent.eventSecondsAfterStartblockTimestamp,
       stakeMaturitySecondsAfterStartblockTimestamp,
       triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
       triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -3955,10 +4017,13 @@ function updateExpectStakeInfoAfterUnstake(
           triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
         ).toString();
   expectStakeInfoAfterTriggerStakeEvent.unstakePenaltyAmountWei =
-    calculateUnstakePenaltyWei(
+    calculateUnstakePenaltyAmountWei(
       truncatedStakeAmountWei,
       stakingPoolConfigs[updateStakeEvent.poolIndex]
-        .earlyUnstakePenaltyPercentWei,
+        .earlyUnstakePenaltyMaxPercentWei,
+      stakingPoolConfigs[updateStakeEvent.poolIndex]
+        .earlyUnstakePenaltyMinPercentWei,
+      updateStakeEvent.eventSecondsAfterStartblockTimestamp,
       stakeMaturitySecondsAfterStartblockTimestamp,
       triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
       triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -3986,7 +4051,10 @@ function updateExpectStakeInfoAfterWithdraw(
   const unstakeAmountWei = calculateUnstakeAmountWei(
     truncatedStakeAmountWei,
     stakingPoolConfigs[updateStakeEvent.poolIndex]
-      .earlyUnstakePenaltyPercentWei,
+      .earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyMinPercentWei,
+    updateStakeEvent.eventSecondsAfterStartblockTimestamp,
     stakeMaturitySecondsAfterStartblockTimestamp,
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
     unstakeStakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -4294,15 +4362,21 @@ function updateExpectStakingPoolStatsAfterUnstake(
   const unstakeAmountWei = calculateUnstakeAmountWei(
     truncatedStakeAmountWei,
     stakingPoolConfigs[updateStakeEvent.poolIndex]
-      .earlyUnstakePenaltyPercentWei,
+      .earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyMinPercentWei,
+    updateStakeEvent.eventSecondsAfterStartblockTimestamp,
     stakeMaturitySecondsAfterStartblockTimestamp,
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
   );
-  const unstakePenaltyWei = calculateUnstakePenaltyWei(
+  const unstakePenaltyWei = calculateUnstakePenaltyAmountWei(
     truncatedStakeAmountWei,
     stakingPoolConfigs[updateStakeEvent.poolIndex]
-      .earlyUnstakePenaltyPercentWei,
+      .earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyMinPercentWei,
+    updateStakeEvent.eventSecondsAfterStartblockTimestamp,
     stakeMaturitySecondsAfterStartblockTimestamp,
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -4356,7 +4430,10 @@ function updateExpectStakingPoolStatsAfterWithdraw(
   const unstakeAmountWei = calculateUnstakeAmountWei(
     truncatedStakeAmountWei,
     stakingPoolConfigs[updateStakeEvent.poolIndex]
-      .earlyUnstakePenaltyPercentWei,
+      .earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[updateStakeEvent.poolIndex]
+      .earlyUnstakePenaltyMinPercentWei,
+    updateStakeEvent.eventSecondsAfterStartblockTimestamp,
     stakeMaturitySecondsAfterStartblockTimestamp,
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
     unstakeStakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -4742,9 +4819,11 @@ async function withdrawWithVerify(
   ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
   await testHelpers.setTimeNextBlock(expectWithdrawTimestamp.toNumber());
 
-  const expectUnstakePenaltyAmountWei = calculateUnstakePenaltyWei(
+  const expectUnstakePenaltyAmountWei = calculateUnstakePenaltyAmountWei(
     expectStakeInfoBeforeWithdraw.stakeAmountWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
+    expectStakeInfoBeforeWithdraw.stakeSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeWithdraw.stakeMaturitySecondsAfterStartblockTimestamp,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
@@ -4752,7 +4831,9 @@ async function withdrawWithVerify(
 
   const expectUnstakeAmountWei = calculateUnstakeAmountWei(
     expectStakeInfoBeforeWithdraw.stakeAmountWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
+    expectStakeInfoBeforeWithdraw.stakeSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeWithdraw.stakeMaturitySecondsAfterStartblockTimestamp,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
@@ -4986,7 +5067,8 @@ module.exports = {
   calculateStateMaturityTimestamp,
   calculateTotalRemovableUnstakePenaltyWei,
   calculateUnstakeAmountWei,
-  calculateUnstakePenaltyWei,
+  calculateUnstakePenaltyAmountWei,
+  calculateUnstakePenaltyPercentWei,
   claimWithVerify,
   computeCloseToDelta,
   computePoolRemainingRewardWei,

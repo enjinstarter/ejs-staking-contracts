@@ -334,6 +334,7 @@ describe("StakingPoolV2", function () {
       contractAdminRoleAccounts[0],
       governanceRoleAccounts[1],
       hre.ethers.utils.parseEther("30"),
+      hre.ethers.utils.parseEther("10"),
       stakingPoolStakeRewardTokenSameConfigs.slice(1),
     );
   });
@@ -351,6 +352,7 @@ describe("StakingPoolV2", function () {
       stakingPoolStakeRewardTokenSameConfigs[0],
       contractAdminRoleAccounts[0],
       governanceRoleAccounts[1],
+      hre.ethers.constants.Zero,
       hre.ethers.constants.Zero,
       stakingPoolStakeRewardTokenSameConfigs.slice(1),
     );
@@ -370,6 +372,26 @@ describe("StakingPoolV2", function () {
       contractAdminRoleAccounts[0],
       governanceRoleAccounts[1],
       hre.ethers.utils.parseEther("100"),
+      hre.ethers.utils.parseEther("100"),
+      stakingPoolStakeRewardTokenSameConfigs.slice(1),
+    );
+  });
+
+  it("Should only allow contract admin role to set 100% and 0% early unstake max and min penalty percentage respectively for staking pool", async () => {
+    await stakePoolHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await stakePoolHelpers.testSetEarlyUnstakePenaltyPercent(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs[0],
+      contractAdminRoleAccounts[0],
+      governanceRoleAccounts[1],
+      hre.ethers.utils.parseEther("100"),
+      hre.ethers.constants.Zero,
       stakingPoolStakeRewardTokenSameConfigs.slice(1),
     );
   });
@@ -425,8 +447,12 @@ describe("StakingPoolV2", function () {
       earlyUnstakeCooldownPeriodDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakeCooldownPeriodDays,
-      earlyUnstakePenaltyPercentWei:
-        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      earlyUnstakePenaltyMaxPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMaxPercentWei,
+      earlyUnstakePenaltyMinPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMinPercentWei,
       revshareStakeDurationExtensionDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .revshareStakeDurationExtensionDays,
@@ -457,8 +483,12 @@ describe("StakingPoolV2", function () {
       earlyUnstakeCooldownPeriodDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakeCooldownPeriodDays,
-      earlyUnstakePenaltyPercentWei:
-        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      earlyUnstakePenaltyMaxPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMaxPercentWei,
+      earlyUnstakePenaltyMinPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMinPercentWei,
       revshareStakeDurationExtensionDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .revshareStakeDurationExtensionDays,
@@ -489,8 +519,12 @@ describe("StakingPoolV2", function () {
       earlyUnstakeCooldownPeriodDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakeCooldownPeriodDays,
-      earlyUnstakePenaltyPercentWei:
-        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      earlyUnstakePenaltyMaxPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMaxPercentWei,
+      earlyUnstakePenaltyMinPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMinPercentWei,
       revshareStakeDurationExtensionDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .revshareStakeDurationExtensionDays,
@@ -521,8 +555,12 @@ describe("StakingPoolV2", function () {
       earlyUnstakeCooldownPeriodDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakeCooldownPeriodDays,
-      earlyUnstakePenaltyPercentWei:
-        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      earlyUnstakePenaltyMaxPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMaxPercentWei,
+      earlyUnstakePenaltyMinPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMinPercentWei,
       revshareStakeDurationExtensionDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .revshareStakeDurationExtensionDays,
@@ -553,8 +591,12 @@ describe("StakingPoolV2", function () {
       earlyUnstakeCooldownPeriodDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakeCooldownPeriodDays,
-      earlyUnstakePenaltyPercentWei:
-        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      earlyUnstakePenaltyMaxPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMaxPercentWei,
+      earlyUnstakePenaltyMinPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMinPercentWei,
       revshareStakeDurationExtensionDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .revshareStakeDurationExtensionDays,
@@ -586,8 +628,12 @@ describe("StakingPoolV2", function () {
       earlyUnstakeCooldownPeriodDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakeCooldownPeriodDays,
-      earlyUnstakePenaltyPercentWei:
-        stakingPoolStakeRewardTokenSameConfigs[0].earlyUnstakePenaltyPercentWei,
+      earlyUnstakePenaltyMaxPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMaxPercentWei,
+      earlyUnstakePenaltyMinPercentWei:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakePenaltyMinPercentWei,
       revshareStakeDurationExtensionDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .revshareStakeDurationExtensionDays,
@@ -603,7 +649,7 @@ describe("StakingPoolV2", function () {
     ).to.be.revertedWith("SPool2: decimals different");
   });
 
-  it("should not allow creation of staking pool with early unstake penalty percentage more than 100%", async () => {
+  it("should not allow creation of staking pool with early unstake max penalty percentage more than 100%", async () => {
     const stakingPoolDto = {
       stakeDurationDays:
         stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
@@ -619,7 +665,43 @@ describe("StakingPoolV2", function () {
       earlyUnstakeCooldownPeriodDays:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakeCooldownPeriodDays,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther(
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther(
+        "100.000000000000000001",
+      ),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("100"),
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .createStakingPool(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          stakingPoolDto,
+        ),
+    ).to.be.revertedWith("SPool2: max penalty");
+  });
+
+  it("should not allow creation of staking pool with early unstake min penalty percentage more than 100%", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther(
         "100.000000000000000001",
       ),
       revshareStakeDurationExtensionDays:
@@ -634,7 +716,42 @@ describe("StakingPoolV2", function () {
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           stakingPoolDto,
         ),
-    ).to.be.revertedWith("SPool2: penalty");
+    ).to.be.revertedWith("SPool2: min penalty");
+  });
+
+  it("should not allow creation of staking pool with early unstake min penalty percentage more than max", async () => {
+    const stakingPoolDto = {
+      stakeDurationDays:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeDurationDays,
+      stakeTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenInstance.address,
+      stakeTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].stakeTokenDecimals,
+      rewardTokenAddress:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenInstance.address,
+      rewardTokenDecimals:
+        stakingPoolStakeRewardTokenSameConfigs[0].rewardTokenDecimals,
+      poolAprWei: stakingPoolStakeRewardTokenSameConfigs[0].poolAprWei,
+      earlyUnstakeCooldownPeriodDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .earlyUnstakeCooldownPeriodDays,
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("12"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther(
+        "12.000000000000000001",
+      ),
+      revshareStakeDurationExtensionDays:
+        stakingPoolStakeRewardTokenSameConfigs[0]
+          .revshareStakeDurationExtensionDays,
+    };
+
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .createStakingPool(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          stakingPoolDto,
+        ),
+    ).to.be.revertedWith("SPool2: min > max penalty");
   });
 
   it("should not allow closure of uninitialized staking pool", async () => {
@@ -687,11 +804,12 @@ describe("StakingPoolV2", function () {
         .setEarlyUnstakePenaltyPercent(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           hre.ethers.constants.One,
+          hre.ethers.constants.Zero,
         ),
     ).to.be.revertedWith("SPool2: uninitialized");
   });
 
-  it("should not allow setting early unstake penalty percentage to more than 100% for staking pool", async () => {
+  it("should not allow setting early unstake penalty max percentage to more than 100% for staking pool", async () => {
     await stakePoolHelpers.testCreateStakingPool(
       stakingPoolInstance,
       stakingPoolStakeRewardTokenSameConfigs,
@@ -705,8 +823,47 @@ describe("StakingPoolV2", function () {
         .setEarlyUnstakePenaltyPercent(
           stakingPoolStakeRewardTokenSameConfigs[0].poolId,
           hre.ethers.utils.parseEther("100.000000000000000001"),
+          hre.ethers.constants.Zero,
         ),
-    ).to.be.revertedWith("SPool2: penalty");
+    ).to.be.revertedWith("SPool2: max penalty");
+  });
+
+  it("should not allow setting early unstake penalty min percentage to more than 100% for staking pool", async () => {
+    await stakePoolHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .setEarlyUnstakePenaltyPercent(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          hre.ethers.constants.Zero,
+          hre.ethers.utils.parseEther("100.000000000000000001"),
+        ),
+    ).to.be.revertedWith("SPool2: min penalty");
+  });
+
+  it("should not allow setting early unstake penalty min percentage to be more than max percentage for staking pool", async () => {
+    await stakePoolHelpers.testCreateStakingPool(
+      stakingPoolInstance,
+      stakingPoolStakeRewardTokenSameConfigs,
+      contractAdminRoleAccounts.slice(0, 1),
+      true,
+    );
+
+    await expect(
+      stakingPoolInstance
+        .connect(contractAdminRoleAccounts[0])
+        .setEarlyUnstakePenaltyPercent(
+          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+          hre.ethers.utils.parseEther("50"),
+          hre.ethers.utils.parseEther("50.000000000000000001"),
+        ),
+    ).to.be.revertedWith("SPool2: min > max penalty");
   });
 
   it("should not allow setting stake duration extension for claim revshare of uninitialized staking pool", async () => {

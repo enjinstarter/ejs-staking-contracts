@@ -23,6 +23,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 unstakeAmountWei; // unstaked amount in Wei
         uint256 unstakeCooldownExpiryTimestamp; // timestamp when unstake cooldown expires
         uint256 unstakePenaltyAmountWei; // early unstake penalty amount in Wei
+        uint256 unstakePenaltyPercentWei; // early unstake penalty percentage in Wei
         uint256 unstakeTimestamp; // timestamp when unstake
         uint256 withdrawUnstakeTimestamp; // timestamp when unstake is withdrawn
         bool isActive; // true if allow claim rewards and unstake
@@ -240,10 +241,12 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @param account The address of the user wallet that unstaked
      * @param stakeId The stake identifier
      * @param stakeToken The address of the ERC20 stake token
-     * @param earlyUnstakePenaltyPercentWei The early unstake penalty percentage in wei
+     * @param earlyUnstakePenaltyMaxPercentWei The early unstake max penalty percentage in wei
+     * @param earlyUnstakePenaltyMinPercentWei The early unstake min penalty percentage in wei
      * @param stakeAmountWei The amount of tokens staked in Wei
      * @param unstakeAmountWei The amount of stake tokens unstaked in Wei
      * @param unstakePenaltyAmountWei The unstake penalty amount in wei
+     * @param unstakePenaltyPercentWei The unstake penalty percentage in wei
      * @param unstakeCooldownPeriodDays The unstake cooldown period in days
      * @param unstakeCooldownExpiryTimestamp The timestamp as seconds since unix epoch when the unstake cooldown expires
      */
@@ -252,10 +255,12 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         address indexed account,
         bytes32 indexed stakeId,
         address stakeToken,
-        uint256 earlyUnstakePenaltyPercentWei,
+        uint256 earlyUnstakePenaltyMaxPercentWei,
+        uint256 earlyUnstakePenaltyMinPercentWei,
         uint256 stakeAmountWei,
         uint256 unstakeAmountWei,
         uint256 unstakePenaltyAmountWei,
+        uint256 unstakePenaltyPercentWei,
         uint256 unstakeCooldownPeriodDays,
         uint256 unstakeCooldownExpiryTimestamp
     );

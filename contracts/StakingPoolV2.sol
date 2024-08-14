@@ -54,7 +54,9 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
                 stakingPoolDto.stakeTokenDecimals == stakingPoolDto.rewardTokenDecimals,
             "SPool2: decimals different"
         );
-        require(stakingPoolDto.earlyUnstakePenaltyPercentWei <= PERCENT_100_WEI, "SPool2: penalty");
+        require(stakingPoolDto.earlyUnstakePenaltyMaxPercentWei <= PERCENT_100_WEI, "SPool2: max penalty");
+        require(stakingPoolDto.earlyUnstakePenaltyMinPercentWei <= PERCENT_100_WEI, "SPool2: min penalty");
+        require(stakingPoolDto.earlyUnstakePenaltyMinPercentWei <= stakingPoolDto.earlyUnstakePenaltyMaxPercentWei, "SPool2: min > max penalty");
 
         require(!_stakingPools[poolId].isInitialized, "SPool2: exists");
 
@@ -66,7 +68,8 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
             rewardTokenDecimals: stakingPoolDto.rewardTokenDecimals,
             poolAprWei: stakingPoolDto.poolAprWei,
             earlyUnstakeCooldownPeriodDays: stakingPoolDto.earlyUnstakeCooldownPeriodDays,
-            earlyUnstakePenaltyPercentWei: stakingPoolDto.earlyUnstakePenaltyPercentWei,
+            earlyUnstakePenaltyMaxPercentWei: stakingPoolDto.earlyUnstakePenaltyMaxPercentWei,
+            earlyUnstakePenaltyMinPercentWei: stakingPoolDto.earlyUnstakePenaltyMinPercentWei,
             revshareStakeDurationExtensionDays: stakingPoolDto.revshareStakeDurationExtensionDays,
             isOpen: true,
             isActive: true,
@@ -83,7 +86,8 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
             stakingPoolDto.rewardTokenDecimals,
             stakingPoolDto.poolAprWei,
             stakingPoolDto.earlyUnstakeCooldownPeriodDays,
-            stakingPoolDto.earlyUnstakePenaltyPercentWei,
+            stakingPoolDto.earlyUnstakePenaltyMaxPercentWei,
+            stakingPoolDto.earlyUnstakePenaltyMinPercentWei,
             stakingPoolDto.revshareStakeDurationExtensionDays
         );
     }
@@ -139,16 +143,28 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
     /**
      * @inheritdoc IStakingPoolV2
      */
-    function setEarlyUnstakePenaltyPercent(bytes32 poolId, uint256 newPenaltyPercentWei)
+    function setEarlyUnstakePenaltyPercent(bytes32 poolId, uint256 newPenaltyMaxPercentWei, uint256 newPenaltyMinPercentWei)
         external virtual override onlyRole(CONTRACT_ADMIN_ROLE)
     {
         require(_stakingPools[poolId].isInitialized, "SPool2: uninitialized");
-        require(newPenaltyPercentWei <= PERCENT_100_WEI, "SPool2: penalty");
+        require(newPenaltyMaxPercentWei <= PERCENT_100_WEI, "SPool2: max penalty");
+        require(newPenaltyMinPercentWei <= PERCENT_100_WEI, "SPool2: min penalty");
+        require(newPenaltyMinPercentWei <= newPenaltyMaxPercentWei, "SPool2: min > max penalty");
 
-        uint256 oldPenaltyPercentWei = _stakingPools[poolId].earlyUnstakePenaltyPercentWei;
-        _stakingPools[poolId].earlyUnstakePenaltyPercentWei = newPenaltyPercentWei;
+        uint256 oldPenaltyMaxPercentWei = _stakingPools[poolId].earlyUnstakePenaltyMaxPercentWei;
+        uint256 oldPenaltyMinPercentWei = _stakingPools[poolId].earlyUnstakePenaltyMinPercentWei;
 
-        emit EarlyUnstakePenaltyPercentChanged(poolId, msg.sender, oldPenaltyPercentWei, newPenaltyPercentWei);
+        _stakingPools[poolId].earlyUnstakePenaltyMaxPercentWei = newPenaltyMaxPercentWei;
+        _stakingPools[poolId].earlyUnstakePenaltyMinPercentWei = newPenaltyMinPercentWei;
+
+        emit EarlyUnstakePenaltyPercentChanged(
+            poolId,
+            msg.sender,
+            oldPenaltyMaxPercentWei,
+            oldPenaltyMinPercentWei,
+            newPenaltyMaxPercentWei,
+            newPenaltyMinPercentWei
+        );
     }
 
     /**
@@ -206,7 +222,8 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
         stakingPoolInfo.rewardTokenDecimals = _stakingPools[poolId].rewardTokenDecimals;
         stakingPoolInfo.poolAprWei = _stakingPools[poolId].poolAprWei;
         stakingPoolInfo.earlyUnstakeCooldownPeriodDays = _stakingPools[poolId].earlyUnstakeCooldownPeriodDays;
-        stakingPoolInfo.earlyUnstakePenaltyPercentWei = _stakingPools[poolId].earlyUnstakePenaltyPercentWei;
+        stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei = _stakingPools[poolId].earlyUnstakePenaltyMaxPercentWei;
+        stakingPoolInfo.earlyUnstakePenaltyMinPercentWei = _stakingPools[poolId].earlyUnstakePenaltyMinPercentWei;
         stakingPoolInfo.revshareStakeDurationExtensionDays = _stakingPools[poolId].revshareStakeDurationExtensionDays;
         stakingPoolInfo.isOpen = _stakingPools[poolId].isOpen;
         stakingPoolInfo.isActive = _stakingPools[poolId].isActive;

@@ -18,7 +18,8 @@ interface IStakingPoolV2 is IAccessControl {
         uint256 rewardTokenDecimals; // ERC20 reward token decimal places
         uint256 poolAprWei; // APR (Annual Percentage Rate) in wei for staking pool
         uint256 earlyUnstakeCooldownPeriodDays;  // early unstake cooldown period in days
-        uint256 earlyUnstakePenaltyPercentWei; // early unstake penalty percentage in wei
+        uint256 earlyUnstakePenaltyMaxPercentWei; // early unstake max penalty percentage in wei
+        uint256 earlyUnstakePenaltyMinPercentWei; // early unstake min penalty percentage in wei
         uint256 revshareStakeDurationExtensionDays; // stake duration extension in days for claim revshare
     }
 
@@ -30,7 +31,8 @@ interface IStakingPoolV2 is IAccessControl {
         uint256 rewardTokenDecimals; // ERC20 reward token decimal places
         uint256 poolAprWei; // APR (Annual Percentage Rate) in wei for staking pool
         uint256 earlyUnstakeCooldownPeriodDays;  // early unstake cooldown period in days
-        uint256 earlyUnstakePenaltyPercentWei; // early unstake penalty percentage in wei
+        uint256 earlyUnstakePenaltyMaxPercentWei; // early unstake max penalty percentage in wei
+        uint256 earlyUnstakePenaltyMinPercentWei; // early unstake min penalty percentage in wei
         uint256 revshareStakeDurationExtensionDays; // stake duration extension in days for claim revshare
         bool isOpen; // true if staking pool allows staking
         bool isActive; // true if staking pool allows claim rewards and unstake
@@ -38,7 +40,8 @@ interface IStakingPoolV2 is IAccessControl {
     }
 
     /**
-     * @notice Emitted when early unstake cooldown period has been changed from `oldCooldownPeriodDays` to `newCooldownPeriodDays` for given staking pool
+     * @notice Emitted when early unstake cooldown period has been changed from `oldCooldownPeriodDays` to
+     *         `newCooldownPeriodDays` for given staking pool
      * @param poolId The staking pool identifier
      * @param sender The address that changed the early unstake cooldown period
      * @param oldCooldownPeriodDays The old early unstake cooldown period in days
@@ -52,17 +55,23 @@ interface IStakingPoolV2 is IAccessControl {
     );
 
     /**
-     * @notice Emitted when early unstake penalty percentage has been changed from `oldPenaltyPercentWei` to `newPenaltyPercentWei` for given staking pool
+     * @notice Emitted when early unstake max and min penalty percentage has been changed from
+     *         `oldPenaltyMaxPercentWei` and `oldPenaltyMinPercentWei` to `newPenaltyMaxPercentWei` and
+     *         `newPenaltyMinPercentWei` respectively for given staking pool
      * @param poolId The staking pool identifier
      * @param sender The address that changed the early unstake penalty percentage
-     * @param oldPenaltyPercentWei The old early unstake penalty percentage in wei
-     * @param newPenaltyPercentWei The new early unstake penalty percentage in wei
+     * @param oldPenaltyMaxPercentWei The old early unstake max penalty percentage in wei
+     * @param oldPenaltyMinPercentWei The old early unstake min penalty percentage in wei
+     * @param newPenaltyMaxPercentWei The new early unstake max penalty percentage in wei
+     * @param newPenaltyMinPercentWei The new early unstake min penalty percentage in wei
      */
     event EarlyUnstakePenaltyPercentChanged(
         bytes32 indexed poolId,
         address indexed sender,
-        uint256 oldPenaltyPercentWei,
-        uint256 newPenaltyPercentWei
+        uint256 oldPenaltyMaxPercentWei,
+        uint256 oldPenaltyMinPercentWei,
+        uint256 newPenaltyMaxPercentWei,
+        uint256 newPenaltyMinPercentWei
     );
 
     /**
@@ -97,7 +106,8 @@ interface IStakingPoolV2 is IAccessControl {
      * @param rewardTokenDecimals The ERC20 reward token decimal places
      * @param poolAprWei The APR (Annual Percentage Rate) in wei for staking pool
      * @param earlyUnstakeCooldownPeriodDays The early unstake cooldown period in days
-     * @param earlyUnstakePenaltyPercentWei The early unstake penalty percentage in wei
+     * @param earlyUnstakePenaltyMaxPercentWei The early unstake max penalty percentage in wei
+     * @param earlyUnstakePenaltyMinPercentWei The early unstake min penalty percentage in wei
      * @param revshareStakeDurationExtensionDays The stake duration extension in days for claim revshare
      */
     event StakingPoolCreated(
@@ -110,7 +120,8 @@ interface IStakingPoolV2 is IAccessControl {
         uint256 rewardTokenDecimals,
         uint256 poolAprWei,
         uint256 earlyUnstakeCooldownPeriodDays,
-        uint256 earlyUnstakePenaltyPercentWei,
+        uint256 earlyUnstakePenaltyMaxPercentWei,
+        uint256 earlyUnstakePenaltyMinPercentWei,
         uint256 revshareStakeDurationExtensionDays
     );
 
@@ -176,9 +187,10 @@ interface IStakingPoolV2 is IAccessControl {
      * @notice Set the early unstake penalty percentage in wei
      * @dev Must be called by contract admin role
      * @param poolId The staking pool identifier
-     * @param newPenaltyPercentWei The penalty percentage in wei
+     * @param newPenaltyMaxPercentWei The max penalty percentage in wei
+     * @param newPenaltyMinPercentWei The min penalty percentage in wei
      */
-    function setEarlyUnstakePenaltyPercent(bytes32 poolId, uint256 newPenaltyPercentWei) external;
+    function setEarlyUnstakePenaltyPercent(bytes32 poolId, uint256 newPenaltyMaxPercentWei, uint256 newPenaltyMinPercentWei) external;
 
     /**
      * @notice Set the stake duration extension in days for claim revshare

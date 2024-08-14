@@ -139,6 +139,7 @@ contract StakingServiceV2 is
             unstakeAmountWei: 0,
             unstakeCooldownExpiryTimestamp: 0,
             unstakePenaltyAmountWei: 0,
+            unstakePenaltyPercentWei: 0,
             unstakeTimestamp: 0,
             withdrawUnstakeTimestamp: 0,
             isActive: true,
@@ -182,6 +183,7 @@ contract StakingServiceV2 is
         (
             uint256 unstakeAmountWei,
             uint256 unstakePenaltyAmountWei,
+            uint256 unstakePenaltyPercentWei,
             uint256 unstakeCooldownPeriodDays,
             bool isStakeMature
         ) = _getUnstakeAmountWeiByStakekey(stakingPoolInfo, stakekey);
@@ -202,6 +204,7 @@ contract StakingServiceV2 is
         _stakes[stakekey].unstakeAmountWei = unstakeAmountWei;
         _stakes[stakekey].unstakeCooldownExpiryTimestamp = unstakeCooldownExpiryTimestamp;
         _stakes[stakekey].unstakePenaltyAmountWei = unstakePenaltyAmountWei;
+        _stakes[stakekey].unstakePenaltyPercentWei = unstakePenaltyPercentWei;
         _stakes[stakekey].unstakeTimestamp = block.timestamp;
 
         if (isStakeMature) {
@@ -217,10 +220,12 @@ contract StakingServiceV2 is
             msg.sender,
             stakeId,
             stakingPoolInfo.stakeTokenAddress,
-            stakingPoolInfo.earlyUnstakePenaltyPercentWei,
+            stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei,
+            stakingPoolInfo.earlyUnstakePenaltyMinPercentWei,
             stakeAmountWei,
             unstakeAmountWei,
             unstakePenaltyAmountWei,
+            unstakePenaltyPercentWei,
             unstakeCooldownPeriodDays,
             unstakeCooldownExpiryTimestamp
         );
@@ -606,6 +611,7 @@ contract StakingServiceV2 is
             unstakeAmountWei: _stakes[stakekey].unstakeAmountWei,
             unstakeCooldownExpiryTimestamp: _stakes[stakekey].unstakeCooldownExpiryTimestamp,
             unstakePenaltyAmountWei: _stakes[stakekey].unstakePenaltyAmountWei,
+            unstakePenaltyPercentWei: _stakes[stakekey].unstakePenaltyPercentWei,
             unstakeTimestamp: _stakes[stakekey].unstakeTimestamp,
             withdrawUnstakeTimestamp: _stakes[stakekey].withdrawUnstakeTimestamp,
             isActive: _stakes[stakekey].isActive,
@@ -779,6 +785,29 @@ contract StakingServiceV2 is
     }
 
     /**
+     * @dev Returns the unstake penalty percentage in wei for current block timestamp
+     * @param stakeTimestamp The timestamp when stake
+     * @param stakeMaturityTimestamp The timestamp when stake matures
+     * @param unstakePenaltyMaxPercentWei The unstake max penalty percentage in wei
+     * @param unstakePenaltyMinPercentWei The unstake min penalty percentage in wei
+     * @param isStakeMature True if stake has matured
+     * @return unstakePenaltyPercentWei The current unstake penalty percentage in Wei
+     */
+    function _getCurrentUnstakePenaltyPercentWei(
+        uint256 stakeTimestamp,
+        uint256 stakeMaturityTimestamp,
+        uint256 unstakePenaltyMaxPercentWei,
+        uint256 unstakePenaltyMinPercentWei,
+        bool isStakeMature
+    ) internal view virtual returns (uint256 unstakePenaltyPercentWei) {
+        unstakePenaltyPercentWei = isStakeMature
+            ? 0
+            : (unstakePenaltyMaxPercentWei * (stakeMaturityTimestamp - stakeTimestamp)
+                - (unstakePenaltyMaxPercentWei - unstakePenaltyMinPercentWei) * (block.timestamp - stakeTimestamp))
+                / (stakeMaturityTimestamp - stakeTimestamp);
+    }
+
+    /**
      * @dev Returns the staking pool size in Wei for the given parameters
      * @param stakeDurationDays The duration in days that user stakes will be locked in staking pool
      * @param poolAprWei The APR (Annual Percentage Rate) in Wei for staking pool
@@ -822,7 +851,9 @@ contract StakingServiceV2 is
             stakingPoolInfo.rewardTokenDecimals <= TOKEN_MAX_DECIMALS,
             "SSvcs2: reward decimals"
         );
-        require(stakingPoolInfo.earlyUnstakePenaltyPercentWei <= PERCENT_100_WEI, "SSvcs2: penalty");
+        require(stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei <= PERCENT_100_WEI, "SSvcs2: max penalty");
+        require(stakingPoolInfo.earlyUnstakePenaltyMinPercentWei <= PERCENT_100_WEI, "SSvcs2: min penalty");
+        require(stakingPoolInfo.earlyUnstakePenaltyMinPercentWei <= stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei, "SSvcs2: min > max penalty");
     }
 
     /**
@@ -832,20 +863,26 @@ contract StakingServiceV2 is
      * @param stakekey The stake identifier
      * @return unstakeAmountWei The unstake amount in Wei
      * @return unstakePenaltyAmountWei The unstake penalty amount in Wei
+     * @return unstakePenaltyPercentWei The current unstake penalty percentage in Wei
      * @return unstakeCooldownPeriodDays The unstake cooldown period in days
      */
     function _getUnstakeAmountWeiByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
         internal
         view
         virtual
-        returns (uint256 unstakeAmountWei, uint256 unstakePenaltyAmountWei, uint256 unstakeCooldownPeriodDays, bool isStakeMature)
+        returns (uint256 unstakeAmountWei, uint256 unstakePenaltyAmountWei, uint256 unstakePenaltyPercentWei, uint256 unstakeCooldownPeriodDays, bool isStakeMature)
     {
         isStakeMature = _isStakeMaturedFor(stakekey);
+        unstakePenaltyPercentWei = _getCurrentUnstakePenaltyPercentWei(
+            _stakes[stakekey].stakeTimestamp,
+            _stakes[stakekey].stakeMaturityTimestamp,
+            stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei,
+            stakingPoolInfo.earlyUnstakePenaltyMinPercentWei,
+            isStakeMature
+        );
         unstakePenaltyAmountWei = isStakeMature
             ? 0
-            : (stakingPoolInfo.earlyUnstakePenaltyPercentWei > 0
-                ? _stakes[stakekey].stakeAmountWei * stakingPoolInfo.earlyUnstakePenaltyPercentWei / PERCENT_100_WEI
-                : 0);
+            : _stakes[stakekey].stakeAmountWei * unstakePenaltyPercentWei / PERCENT_100_WEI;
         unstakeAmountWei =  _stakes[stakekey].stakeAmountWei - unstakePenaltyAmountWei;
         unstakeCooldownPeriodDays = isStakeMature ? 0 : stakingPoolInfo.earlyUnstakeCooldownPeriodDays;
     }

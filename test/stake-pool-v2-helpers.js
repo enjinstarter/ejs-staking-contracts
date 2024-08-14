@@ -83,8 +83,10 @@ async function createStakingPoolWithVerify(
     poolAprWei: stakingPoolConfig.poolAprWei,
     earlyUnstakeCooldownPeriodDays:
       stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
-    earlyUnstakePenaltyPercentWei:
-      stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+    earlyUnstakePenaltyMaxPercentWei:
+      stakingPoolConfig.earlyUnstakePenaltyMaxPercentWei,
+    earlyUnstakePenaltyMinPercentWei:
+      stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
     revshareStakeDurationExtensionDays:
       stakingPoolConfig.revshareStakeDurationExtensionDays,
   };
@@ -105,7 +107,8 @@ async function createStakingPoolWithVerify(
       stakingPoolConfig.rewardTokenDecimals,
       stakingPoolConfig.poolAprWei,
       stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
-      stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+      stakingPoolConfig.earlyUnstakePenaltyMaxPercentWei,
+      stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
       stakingPoolConfig.revshareStakeDurationExtensionDays,
     );
 
@@ -194,7 +197,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("100"),
       earlyUnstakeCooldownPeriodDays: 0,
-      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.constants.Zero,
       revshareStakeDurationExtensionDays: 0,
     },
     {
@@ -207,7 +211,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("75"),
       earlyUnstakeCooldownPeriodDays: 2,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("100"),
       revshareStakeDurationExtensionDays: 0,
     },
     {
@@ -220,7 +225,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.constants.Zero,
       earlyUnstakeCooldownPeriodDays: 1,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("10"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("50"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("10"),
       revshareStakeDurationExtensionDays: 7,
     },
     {
@@ -233,7 +239,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("25"),
       earlyUnstakeCooldownPeriodDays: 12,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("9"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("9"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("9"),
       revshareStakeDurationExtensionDays: 3,
     },
     {
@@ -246,7 +253,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("5"),
       earlyUnstakeCooldownPeriodDays: 13,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("13"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("13"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("3"),
       revshareStakeDurationExtensionDays: 13,
     },
     {
@@ -259,7 +267,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.constants.Zero,
       earlyUnstakeCooldownPeriodDays: 19,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("25"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("25"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("5"),
       revshareStakeDurationExtensionDays: 1,
     },
     {
@@ -272,7 +281,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("100"),
       earlyUnstakeCooldownPeriodDays: 5,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("18"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("18"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("1"),
       revshareStakeDurationExtensionDays: 6,
     },
     {
@@ -285,7 +295,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("75"),
       earlyUnstakeCooldownPeriodDays: 30,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("11"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("11"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("11"),
       revshareStakeDurationExtensionDays: 30,
     },
     {
@@ -298,7 +309,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("50"),
       earlyUnstakeCooldownPeriodDays: 60,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("50"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("50"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("5"),
       revshareStakeDurationExtensionDays: 60,
     },
     {
@@ -311,7 +323,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("25"),
       earlyUnstakeCooldownPeriodDays: 90,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("10"),
       revshareStakeDurationExtensionDays: 90,
     },
     {
@@ -324,7 +337,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("5"),
       earlyUnstakeCooldownPeriodDays: 7,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("90"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("90"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("10"),
       revshareStakeDurationExtensionDays: 7,
     },
     {
@@ -337,7 +351,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.constants.Zero,
       earlyUnstakeCooldownPeriodDays: 10,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("30"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("30"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("30"),
       revshareStakeDurationExtensionDays: 60,
     },
     {
@@ -350,7 +365,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("100"),
       earlyUnstakeCooldownPeriodDays: 180,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("75"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("75"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("25"),
       revshareStakeDurationExtensionDays: 2,
     },
     {
@@ -363,7 +379,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("75"),
       earlyUnstakeCooldownPeriodDays: 365,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("80"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("80"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("20"),
       revshareStakeDurationExtensionDays: 88,
     },
     {
@@ -376,7 +393,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("50"),
       earlyUnstakeCooldownPeriodDays: 188,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("68"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("68"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("18"),
       revshareStakeDurationExtensionDays: 366,
     },
     {
@@ -389,7 +407,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("25"),
       earlyUnstakeCooldownPeriodDays: 8,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("33"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("33"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("13"),
       revshareStakeDurationExtensionDays: 0,
     },
     {
@@ -402,7 +421,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.utils.parseEther("5"),
       earlyUnstakeCooldownPeriodDays: 0,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("23"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("23"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("3"),
       revshareStakeDurationExtensionDays: 4,
     },
     {
@@ -415,7 +435,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 6,
       poolAprWei: hre.ethers.constants.Zero,
       earlyUnstakeCooldownPeriodDays: 0,
-      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.constants.Zero,
       revshareStakeDurationExtensionDays: 11,
     },
     {
@@ -428,7 +449,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("100"),
       earlyUnstakeCooldownPeriodDays: 0,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.constants.Zero,
       revshareStakeDurationExtensionDays: 0,
     },
     {
@@ -441,7 +463,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("75"),
       earlyUnstakeCooldownPeriodDays: 17,
-      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.constants.Zero,
       revshareStakeDurationExtensionDays: 0,
     },
     {
@@ -454,7 +477,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("50"),
       earlyUnstakeCooldownPeriodDays: 0,
-      earlyUnstakePenaltyPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.constants.Zero,
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.constants.Zero,
       revshareStakeDurationExtensionDays: 37,
     },
     {
@@ -467,7 +491,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("25.43"),
       earlyUnstakeCooldownPeriodDays: 3,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("10"),
       revshareStakeDurationExtensionDays: 0,
     },
     {
@@ -480,7 +505,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.utils.parseEther("5"),
       earlyUnstakeCooldownPeriodDays: 0,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("5"),
       revshareStakeDurationExtensionDays: 1,
     },
     {
@@ -493,7 +519,8 @@ async function initializeStakingPoolTestData(
       rewardTokenDecimals: 18,
       poolAprWei: hre.ethers.constants.Zero,
       earlyUnstakeCooldownPeriodDays: 1,
-      earlyUnstakePenaltyPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
+      earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("100"),
       revshareStakeDurationExtensionDays: 1,
     },
   ];
@@ -843,8 +870,10 @@ async function testCreateStakingPool(
         poolAprWei: stakingPoolConfigs[i].poolAprWei,
         earlyUnstakeCooldownPeriodDays:
           stakingPoolConfigs[i].earlyUnstakeCooldownPeriodDays,
-        earlyUnstakePenaltyPercentWei:
-          stakingPoolConfigs[i].earlyUnstakePenaltyPercentWei,
+        earlyUnstakePenaltyMaxPercentWei:
+          stakingPoolConfigs[i].earlyUnstakePenaltyMaxPercentWei,
+        earlyUnstakePenaltyMinPercentWei:
+          stakingPoolConfigs[i].earlyUnstakePenaltyMinPercentWei,
         revshareStakeDurationExtensionDays:
           stakingPoolConfigs[i].revshareStakeDurationExtensionDays,
       };
@@ -952,7 +981,8 @@ async function testSetEarlyUnstakePenaltyPercent(
   stakingPoolConfig,
   authorizedSigner,
   unauthorizedSigner,
-  newPenaltyPercentWei,
+  newPenaltyMaxPercentWei,
+  newPenaltyMinPercentWei,
   verifyStakingPoolConfigs,
 ) {
   const expectIsOpen = true;
@@ -973,19 +1003,23 @@ async function testSetEarlyUnstakePenaltyPercent(
       .connect(authorizedSigner)
       .setEarlyUnstakePenaltyPercent(
         stakingPoolConfig.poolId,
-        newPenaltyPercentWei,
+        newPenaltyMaxPercentWei,
+        newPenaltyMinPercentWei,
       ),
   )
     .to.emit(stakingPoolContractInstance, "EarlyUnstakePenaltyPercentChanged")
     .withArgs(
       stakingPoolConfig.poolId,
       await authorizedSigner.getAddress(),
-      stakingPoolConfig.earlyUnstakePenaltyPercentWei,
-      newPenaltyPercentWei,
+      stakingPoolConfig.earlyUnstakePenaltyMaxPercentWei,
+      stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
+      newPenaltyMaxPercentWei,
+      newPenaltyMinPercentWei,
     );
 
   const stakingPoolConfigAfterSet = Object.assign({}, stakingPoolConfig, {
-    earlyUnstakePenaltyPercentWei: newPenaltyPercentWei,
+    earlyUnstakePenaltyMaxPercentWei: newPenaltyMaxPercentWei,
+    earlyUnstakePenaltyMinPercentWei: newPenaltyMinPercentWei,
   });
 
   await verifyStakingPoolInfo(
@@ -1009,7 +1043,8 @@ async function testSetEarlyUnstakePenaltyPercent(
       .connect(unauthorizedSigner)
       .setEarlyUnstakePenaltyPercent(
         stakingPoolConfig.poolId,
-        newPenaltyPercentWei,
+        newPenaltyMaxPercentWei,
+        newPenaltyMinPercentWei,
       ),
   ).to.be.revertedWith(
     `AccessControl: account ${unauthorizedSignerAddress.toLowerCase()} is missing role ${
@@ -1233,8 +1268,11 @@ async function verifyStakingPoolInfo(
   expect(stakingPoolInfo.earlyUnstakeCooldownPeriodDays).to.equal(
     stakingPoolConfig.earlyUnstakeCooldownPeriodDays,
   );
-  expect(stakingPoolInfo.earlyUnstakePenaltyPercentWei).to.equal(
-    stakingPoolConfig.earlyUnstakePenaltyPercentWei,
+  expect(stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei).to.equal(
+    stakingPoolConfig.earlyUnstakePenaltyMaxPercentWei,
+  );
+  expect(stakingPoolInfo.earlyUnstakePenaltyMinPercentWei).to.equal(
+    stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
   );
   expect(stakingPoolInfo.revshareStakeDurationExtensionDays).to.equal(
     stakingPoolConfig.revshareStakeDurationExtensionDays,
