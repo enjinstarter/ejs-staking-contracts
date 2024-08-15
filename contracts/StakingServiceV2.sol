@@ -787,9 +787,10 @@ contract StakingServiceV2 is
             ? _stakes[stakekey].estimatedRewardAtMaturityWei
             : _stakes[stakekey].estimatedRewardAtMaturityWei * (effectiveTimestamp - _stakes[stakekey].stakeTimestamp)
                 / (_stakes[stakekey].stakeMaturityTimestamp - _stakes[stakekey].stakeTimestamp);
-        require(estimatedRewardWei >= _stakes[stakekey].rewardClaimedWei, "SSvcs2: no reward");
 
-        claimableRewardWei = estimatedRewardWei - _stakes[stakekey].rewardClaimedWei;
+        claimableRewardWei = (estimatedRewardWei > _stakes[stakekey].rewardClaimedWei)
+            ? (estimatedRewardWei - _stakes[stakekey].rewardClaimedWei)
+            : 0;
     }
 
     /**

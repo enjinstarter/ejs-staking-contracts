@@ -324,7 +324,9 @@ function calculateClaimableRewardWei(
     .mul(effectiveTimestamp.sub(stakeTimestamp))
     .div(bnStakeMaturityTimestamp.sub(stakeTimestamp));
 
-  return hre.ethers.BigNumber.from(estimatedRewardWei).sub(rewardClaimedWei);
+  return estimatedRewardWei.gt(rewardClaimedWei)
+    ? estimatedRewardWei.sub(rewardClaimedWei)
+    : hre.ethers.constants.Zero;
 }
 
 function calculateCooldownExpiryTimestamp(

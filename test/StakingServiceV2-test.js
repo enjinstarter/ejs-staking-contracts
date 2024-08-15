@@ -1875,6 +1875,72 @@ describe("StakingServiceV2", function () {
           stakingServiceInstance.getStakingPoolStats(uninitializedPoolId),
         ).to.be.revertedWith("SPool2: uninitialized");
       });
+
+      it("should not allow invalid staking pool info", async () => {
+        const testPoolInstance = await stakePoolHelpers.newMockStakingPool();
+        const testServiceInstance = await stakeServiceHelpers.newStakingService(
+          testPoolInstance.address,
+        );
+
+        const poolIdStakeDurationZero =
+          await testPoolInstance.POOL_ID_STAKE_DURATION_ZERO();
+        const poolIdStakeTokenAddressZero =
+          await testPoolInstance.POOL_ID_STAKE_TOKEN_ADDRESS_ZERO();
+        const poolIdStakeTokenDecimalsNineteen =
+          await testPoolInstance.POOL_ID_STAKE_TOKEN_DECIMALS_NINETEEN();
+        const poolIdRewardTokenAddressZero =
+          await testPoolInstance.POOL_ID_REWARD_TOKEN_ADDRESS_ZERO();
+        const poolIdRewardTokenDecimalsNineteen =
+          await testPoolInstance.POOL_ID_REWARD_TOKEN_DECIMALS_NINETEEN();
+        const poolIdEarlyUnstakeMaxPenaltyPercentWeiExceed100 =
+          await testPoolInstance.POOL_ID_EARLY_UNSTAKE_MAX_PENALTY_PERCENT_WEI_EXCEED_100();
+        const poolIdEarlyUnstakeMinPenaltyPercentWeiExceed100 =
+          await testPoolInstance.POOL_ID_EARLY_UNSTAKE_MIN_PENALTY_PERCENT_WEI_EXCEED_100();
+        const poolIdEarlyUnstakeMinExceedMaxPenaltyPercentWei =
+          await testPoolInstance.POOL_ID_EARLY_UNSTAKE_MIN_EXCEED_MAX_PENALTY_PERCENT_WEI();
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(poolIdStakeDurationZero),
+        ).to.be.revertedWith("SSvcs2: stake duration");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(poolIdStakeTokenAddressZero),
+        ).to.be.revertedWith("SSvcs2: stake token");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(
+            poolIdStakeTokenDecimalsNineteen,
+          ),
+        ).to.be.revertedWith("SSvcs2: stake decimals");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(poolIdRewardTokenAddressZero),
+        ).to.be.revertedWith("SSvcs2: reward token");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(
+            poolIdRewardTokenDecimalsNineteen,
+          ),
+        ).to.be.revertedWith("SSvcs2: reward decimals");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(
+            poolIdEarlyUnstakeMaxPenaltyPercentWeiExceed100,
+          ),
+        ).to.be.revertedWith("SSvcs2: max penalty");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(
+            poolIdEarlyUnstakeMinPenaltyPercentWeiExceed100,
+          ),
+        ).to.be.revertedWith("SSvcs2: min penalty");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(
+            poolIdEarlyUnstakeMinExceedMaxPenaltyPercentWei,
+          ),
+        ).to.be.revertedWith("SSvcs2: min > max penalty");
+      });
     });
 
     describe("Stake", function () {
@@ -2477,51 +2543,6 @@ describe("StakingServiceV2", function () {
   });
 
   /*
-  it("should not allow invalid staking pool info", async () => {
-    const testPoolInstance = await stakeHelpers.newMockStakingPool();
-    const testServiceInstance = await stakeHelpers.newStakingService(
-      testPoolInstance.address,
-    );
-
-    const poolIdStakeDurationZero =
-      await testPoolInstance.POOL_ID_STAKE_DURATION_ZERO();
-    const poolIdStakeTokenAddressZero =
-      await testPoolInstance.POOL_ID_STAKE_TOKEN_ADDRESS_ZERO();
-    const poolIdStakeTokenDecimalsNineteen =
-      await testPoolInstance.POOL_ID_STAKE_TOKEN_DECIMALS_NINETEEN();
-    const poolIdRewardTokenAddressZero =
-      await testPoolInstance.POOL_ID_REWARD_TOKEN_ADDRESS_ZERO();
-    const poolIdRewardTokenDecimalsNineteen =
-      await testPoolInstance.POOL_ID_REWARD_TOKEN_DECIMALS_NINETEEN();
-    const poolIdPoolAprZero = await testPoolInstance.POOL_ID_POOL_APR_ZERO();
-
-    await expect(
-      testServiceInstance.getStakingPoolStats(poolIdStakeDurationZero),
-    ).to.be.revertedWith("SSvcs2: stake duration");
-
-    await expect(
-      testServiceInstance.getStakingPoolStats(poolIdStakeTokenAddressZero),
-    ).to.be.revertedWith("SSvcs2: stake token");
-
-    await expect(
-      testServiceInstance.getStakingPoolStats(poolIdStakeTokenDecimalsNineteen),
-    ).to.be.revertedWith("SSvcs2: stake decimals");
-
-    await expect(
-      testServiceInstance.getStakingPoolStats(poolIdRewardTokenAddressZero),
-    ).to.be.revertedWith("SSvcs2: reward token");
-
-    await expect(
-      testServiceInstance.getStakingPoolStats(
-        poolIdRewardTokenDecimalsNineteen,
-      ),
-    ).to.be.revertedWith("SSvcs2: reward decimals");
-
-    await expect(
-      testServiceInstance.getStakingPoolStats(poolIdPoolAprZero),
-    ).to.be.revertedWith("SSvcs2: pool APR");
-  });
-
   it("should not allow invalid transfer of tokens from contract to account and vice versa", async () => {
     const enduserAccountAddress = await enduserAccounts[0].getAddress();
     const tokenInstance = stakeToken18DecimalsInstances[0];
