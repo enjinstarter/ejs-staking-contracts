@@ -59,7 +59,7 @@ contract StakingServiceV2 is
         require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
         require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
         require(_stakes[stakekey].isActive, "SSvcs2: stake suspended");
-        require(_isStakeMaturedFor(stakekey), "SSvcs2: not mature");
+        require(_isStakeMaturedFor(stakekey) || _isStakeUnstakedFor(stakekey), "SSvcs2: not mature or unstaked");
 
         uint256 rewardAmountWei = _getClaimableRewardWeiFor(stakekey);
         require(rewardAmountWei > 0, "SSvcs2: zero reward");
@@ -775,13 +775,21 @@ contract StakingServiceV2 is
             return 0;
         }
 
-        if (!_isStakeMaturedFor(stakekey)) {
-            return 0;
-        }
+        bool isStakeMatured = _isStakeMaturedFor(stakekey);
 
-        claimableRewardWei =
-            _stakes[stakekey].estimatedRewardAtMaturityWei -
-            _stakes[stakekey].rewardClaimedWei;
+        uint256 effectiveTimestamp = (_stakes[stakekey].unstakeTimestamp > 0)
+            ? ((_stakes[stakekey].unstakeTimestamp > _stakes[stakekey].stakeMaturityTimestamp)
+                ? _stakes[stakekey].stakeMaturityTimestamp : _stakes[stakekey].unstakeTimestamp)
+            : (isStakeMatured ? _stakes[stakekey].stakeMaturityTimestamp : block.timestamp);
+        require(effectiveTimestamp <= _stakes[stakekey].stakeMaturityTimestamp, "Ssvcs2: after mature");
+
+        uint256 estimatedRewardWei = (effectiveTimestamp >= _stakes[stakekey].stakeMaturityTimestamp)
+            ? _stakes[stakekey].estimatedRewardAtMaturityWei
+            : _stakes[stakekey].estimatedRewardAtMaturityWei * (effectiveTimestamp - _stakes[stakekey].stakeTimestamp)
+                / (_stakes[stakekey].stakeMaturityTimestamp - _stakes[stakekey].stakeTimestamp);
+        require(estimatedRewardWei >= _stakes[stakekey].rewardClaimedWei, "SSvcs2: no reward");
+
+        claimableRewardWei = estimatedRewardWei - _stakes[stakekey].rewardClaimedWei;
     }
 
     /**
