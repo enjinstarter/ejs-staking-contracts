@@ -1892,6 +1892,8 @@ describe("StakingServiceV2", function () {
           await testPoolInstance.POOL_ID_REWARD_TOKEN_ADDRESS_ZERO();
         const poolIdRewardTokenDecimalsNineteen =
           await testPoolInstance.POOL_ID_REWARD_TOKEN_DECIMALS_NINETEEN();
+        const poolIdIsInitializedFalse =
+          await testPoolInstance.POOL_ID_IS_INITIALIZED_FALSE();
         const poolIdEarlyUnstakeMaxPenaltyPercentWeiExceed100 =
           await testPoolInstance.POOL_ID_EARLY_UNSTAKE_MAX_PENALTY_PERCENT_WEI_EXCEED_100();
         const poolIdEarlyUnstakeMinPenaltyPercentWeiExceed100 =
@@ -1922,6 +1924,10 @@ describe("StakingServiceV2", function () {
             poolIdRewardTokenDecimalsNineteen,
           ),
         ).to.be.revertedWith("SSvcs2: reward decimals");
+
+        await expect(
+          testServiceInstance.getStakingPoolStats(poolIdIsInitializedFalse),
+        ).to.be.revertedWith("SSvcs2: uninitialized pool");
 
         await expect(
           testServiceInstance.getStakingPoolStats(

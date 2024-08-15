@@ -25,6 +25,8 @@ contract MockStakingPoolV2 is StakingPoolV2 {
         keccak256("POOL_ID_IS_OPEN_TRUE");
     bytes32 public constant POOL_ID_IS_ACTIVE_TRUE =
         keccak256("POOL_ID_IS_ACTIVE_TRUE");
+    bytes32 public constant POOL_ID_IS_INITIALIZED_FALSE =
+        keccak256("POOL_ID_IS_INITIALIZED_FALSE");
     bytes32 public constant POOL_ID_EARLY_UNSTAKE_COOLDOWN_PERIOD_DAYS_ZERO =
         keccak256("POOL_ID_EARLY_UNSTAKE_COOLDOWN_PERIOD_DAYS_ZERO");
     bytes32 public constant POOL_ID_EARLY_UNSTAKE_MAX_PENALTY_PERCENT_WEI_EXCEED_100 =
@@ -77,6 +79,6 @@ contract MockStakingPoolV2 is StakingPoolV2 {
         stakingPoolInfo.revshareStakeDurationExtensionDays = poolId == POOL_ID_REVSHARE_STAKE_DURATION_EXTENSION_DAYS_ZERO ? 0 : 1;
         stakingPoolInfo.isOpen = poolId == POOL_ID_IS_OPEN_TRUE ? true : false;
         stakingPoolInfo.isActive = poolId == POOL_ID_IS_ACTIVE_TRUE ? true : false;
-        stakingPoolInfo.isInitialized = true;
+        stakingPoolInfo.isInitialized = poolId == POOL_ID_IS_INITIALIZED_FALSE ? false : true;
     }
 }
