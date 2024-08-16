@@ -11,6 +11,7 @@
     "deploy-bsc-mainnet-staking-service": "npx hardhat run --network bsc_mainnet scripts/deploys/deploy-staking-service.js",
     "deploy-bsc-testnet-mock-erc20-token": "npx hardhat run --network bsc_testnet scripts/deploys/deploy-mock-erc20-token.js",
     "deploy-bsc-testnet-staking-pool": "npx hardhat run --network bsc_testnet scripts/deploys/deploy-staking-pool.js",
+    "deploy-bsc-testnet-staking-pool-v2": "npx hardhat run --network bsc_testnet scripts/deploys/deploy-staking-pool-v2.js",
     "deploy-bsc-testnet-staking-service": "npx hardhat run --network bsc_testnet scripts/deploys/deploy-staking-service.js",
     "deploy-goerli-mock-erc20-token": "npx hardhat run --network goerli scripts/deploys/deploy-mock-erc20-token.js",
     "deploy-goerli-staking-pool": "npx hardhat run --network goerli scripts/deploys/deploy-staking-pool.js",

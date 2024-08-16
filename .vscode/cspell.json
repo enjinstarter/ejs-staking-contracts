@@ -3,6 +3,8 @@
   "version": "0.2",
   "words": [
     //
+    "arbitrum",
+    "avax",
     "bscscan",
     "cooldown",
     "dbaeumer",
@@ -11,6 +13,7 @@
     "esbenp",
     "hbenl",
     "juanblanco",
+    "lightlink",
     "mreward",
     "mstake",
     "mstakereward",
@@ -21,6 +24,7 @@
     "precoverage",
     "polygonscan",
     "revshare",
+    "sepolia",
     "solhint",
     "svcs",
     "tintinweb",
