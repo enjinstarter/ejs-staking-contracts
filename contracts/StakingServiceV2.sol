@@ -660,6 +660,40 @@ contract StakingServiceV2 is
     }
 
     /**
+     * @inheritdoc IStakingServiceV2
+     */
+    function getUnstakeInfo(bytes32 poolId, address account, bytes32 stakeId)
+        external
+        view
+        virtual
+        override
+        returns (UnstakeInfo memory unstakeInfo)
+    {
+        bytes memory stakekey = _getStakeKey(poolId, account, stakeId);
+        require(_stakes[stakekey].isInitialized, "SSvcs2: uninitialized stake");
+        require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked stake");
+        require(!_isStakeUnstakedFor(stakekey), "SSvcs2: unstaked");
+
+        IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
+
+        (
+            uint256 unstakeAmountWei,
+            uint256 unstakePenaltyAmountWei,
+            uint256 unstakePenaltyPercentWei,
+            uint256 unstakeCooldownPeriodDays,
+            bool isStakeMature
+        ) = _getUnstakeAmountWeiByStakekey(stakingPoolInfo, stakekey);
+
+        unstakeInfo = UnstakeInfo({
+            unstakeAmountWei: unstakeAmountWei,
+            unstakePenaltyAmountWei: unstakePenaltyAmountWei,
+            unstakePenaltyPercentWei: unstakePenaltyPercentWei,
+            unstakeCooldownPeriodDays: unstakeCooldownPeriodDays,
+            isStakeMature: isStakeMature
+        });
+    }
+
+    /**
      * @dev Returns the remaining reward for the given staking pool in Wei
      * @param poolId The staking pool identifier
      * @return calculatedRemainingRewardWei The calculaated remaining reward in Wei

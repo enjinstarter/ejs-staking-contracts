@@ -69,6 +69,14 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 totalWithdrawnUnstakeWei; // total unstake withdrawned from pool in wei
     }
 
+    struct UnstakeInfo {
+        uint256 unstakeAmountWei; // unstaked amount in Wei
+        uint256 unstakePenaltyAmountWei; // early unstake penalty amount in Wei
+        uint256 unstakePenaltyPercentWei; // early unstake penalty percentage in Wei
+        uint256 unstakeCooldownPeriodDays;  // early unstake cooldown period in days
+        bool isStakeMature; // true if stake is mature
+    }
+
     /**
      * @notice Emitted when revoked stakes have been removed from pool
      * @param poolId The staking pool identifier
@@ -446,7 +454,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @param poolId The staking pool identifier
      * @param account The address of the user wallet that staked
      * @param stakeId The stake identifier
-     * @return stakeInfo Thestake info for given staking pool and account
+     * @return stakeInfo The stake info for given staking pool and account
      */
     function getStakeInfo(bytes32 poolId, address account, bytes32 stakeId)
         external
@@ -462,6 +470,18 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         external
         view
         returns (StakingPoolStatsDto memory stakingPoolStatsDto);
+
+    /**
+     * @notice Returns the unstake info for given staking pool and account
+     * @param poolId The staking pool identifier
+     * @param account The address of the user wallet that staked
+     * @param stakeId The stake identifier
+     * @return unstakeInfo The unstake info for given staking pool and account
+     */
+    function getUnstakeInfo(bytes32 poolId, address account, bytes32 stakeId)
+        external
+        view
+        returns (UnstakeInfo memory unstakeInfo);
 
     /**
      * @notice Returns the staking pool contract address

@@ -1949,6 +1949,137 @@ describe("StakingServiceV2", function () {
       });
     });
 
+    describe("Get Unstake Info", function () {
+      it("should not allow get unstake info for uninitialized staking pool", async () => {
+        const uninitializedPoolId = hre.ethers.utils.id(
+          "da61b654-4973-4879-9166-723c0017dd6d",
+        );
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "b7c7ba28-8367-4499-a04c-8242dfd2295d",
+        );
+        const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+        await expect(
+          stakingServiceInstance.getUnstakeInfo(
+            uninitializedPoolId,
+            enduserAccountAddress,
+            uninitializedStakeId,
+          ),
+        ).to.be.revertedWith("SSvcs2: uninitialized stake");
+      });
+
+      it("should not allow get unstake info for uninitialized stake", async () => {
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "b7c7ba28-8367-4499-a04c-8242dfd2295d",
+        );
+        const enduserAccountAddress = await enduserAccounts[0].getAddress();
+
+        await expect(
+          stakingServiceInstance.getUnstakeInfo(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+            enduserAccountAddress,
+            uninitializedStakeId,
+          ),
+        ).to.be.revertedWith("SSvcs2: uninitialized stake");
+      });
+
+      it("should not allow get unstake info for zero address", async () => {
+        const uninitializedStakeId = hre.ethers.utils.id(
+          "5c54d4ca-6a15-48ba-b15c-9143b5781648",
+        );
+
+        await expect(
+          stakingServiceInstance.getUnstakeInfo(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+            hre.ethers.constants.AddressZero,
+            uninitializedStakeId,
+          ),
+        ).to.be.revertedWith("SSvcs2: account");
+      });
+
+      it("should not allow get unstake info for revoked stake", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestRevokeStakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .getUnstakeInfo(stakingPoolConfig.poolId, enduserAddress, stakeId),
+        ).to.be.revertedWith("SSvcs2: revoked stake");
+      });
+
+      it("should not allow get unstake info for unstaked stake", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const poolIndex = 2;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "ac0652f8-b3b6-4d67-9216-d6f5b77423af";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestUnstakeEnvironment(
+          stakingServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          360,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          stakingServiceInstance
+            .connect(enduserAccount)
+            .getUnstakeInfo(stakingPoolConfig.poolId, enduserAddress, stakeId),
+        ).to.be.revertedWith("SSvcs2: unstaked");
+      });
+    });
+
     describe("Stake", function () {
       it("should not allow stake when paused", async () => {
         const stakeId = hre.ethers.utils.id(
