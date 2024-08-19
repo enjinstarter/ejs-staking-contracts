@@ -86,7 +86,7 @@ async function isDeployed(contractInstance, isPublicNetwork) {
       case 137:
         numberOfConfirmations = 30; // 1 min for 2s block time (https://polygonscan.com/chart/blocktime)
         break;
-      case 80001:
+      case 80002:
         numberOfConfirmations = 5;
         break;
       default:
@@ -148,15 +148,15 @@ async function verifyContract(
       verifyPlugin = "blockscout-verify";
       verifyTask = "blockscout-verify";
       break;
-    case "okc_testnet":
-      explorer = "OKLink";
-      numberOfConfirmations = 5;
-      verifyPlugin = "oklink-verify";
-      verifyTask = "oklink-verify:verify";
-      break;
     case "okc_mainnet":
       explorer = "OKLink";
       numberOfConfirmations = 15; // 1 min for average block time of 4s
+      verifyPlugin = "oklink-verify";
+      verifyTask = "oklink-verify:verify";
+      break;
+    case "okc_testnet":
+      explorer = "OKLink";
+      numberOfConfirmations = 5;
       verifyPlugin = "oklink-verify";
       verifyTask = "oklink-verify:verify";
       break;
@@ -166,7 +166,7 @@ async function verifyContract(
       verifyPlugin = "verify";
       verifyTask = "verify:verify";
       break;
-    case "polygon_mumbai":
+    case "polygon_amoy":
       explorer = "Polygonscan";
       numberOfConfirmations = 5;
       verifyPlugin = "verify";

@@ -21,9 +21,7 @@ async function main() {
 
   let isPublicNetwork;
 
-  if (networkName === "goerli") {
-    isPublicNetwork = true;
-  } else if (networkName === "ropsten") {
+  if (networkName === "sepolia") {
     isPublicNetwork = true;
   } else if (networkName === "mainnet") {
     isPublicNetwork = true;
@@ -35,7 +33,7 @@ async function main() {
     isPublicNetwork = true;
   } else if (networkName === "okc_mainnet") {
     isPublicNetwork = true;
-  } else if (networkName === "polygon_mumbai") {
+  } else if (networkName === "polygon_amoy") {
     isPublicNetwork = true;
   } else if (networkName === "polygon_mainnet") {
     isPublicNetwork = true;

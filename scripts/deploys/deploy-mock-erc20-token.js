@@ -25,18 +25,12 @@ async function main() {
   let mockErc20TokenDecimals;
   let mockErc20TokenCapEther;
 
-  if (networkName === "goerli") {
+  if (networkName === "sepolia") {
     isPublicNetwork = true;
-    mockErc20TokenName = process.env.GOERLI_MOCK_ERC20_TOKEN_NAME;
-    mockErc20TokenSymbol = process.env.GOERLI_MOCK_ERC20_TOKEN_SYMBOL;
-    mockErc20TokenDecimals = process.env.GOERLI_MOCK_ERC20_TOKEN_DECIMALS;
-    mockErc20TokenCapEther = process.env.GOERLI_MOCK_ERC20_TOKEN_CAP_ETHER;
-  } else if (networkName === "ropsten") {
-    isPublicNetwork = true;
-    mockErc20TokenName = process.env.ROPSTEN_MOCK_ERC20_TOKEN_NAME;
-    mockErc20TokenSymbol = process.env.ROPSTEN_MOCK_ERC20_TOKEN_SYMBOL;
-    mockErc20TokenDecimals = process.env.ROPSTEN_MOCK_ERC20_TOKEN_DECIMALS;
-    mockErc20TokenCapEther = process.env.ROPSTEN_MOCK_ERC20_TOKEN_CAP_ETHER;
+    mockErc20TokenName = process.env.SEPOLIA_MOCK_ERC20_TOKEN_NAME;
+    mockErc20TokenSymbol = process.env.SEPOLIA_MOCK_ERC20_TOKEN_SYMBOL;
+    mockErc20TokenDecimals = process.env.SEPOLIA_MOCK_ERC20_TOKEN_DECIMALS;
+    mockErc20TokenCapEther = process.env.SEPOLIA_MOCK_ERC20_TOKEN_CAP_ETHER;
   } else if (networkName === "bsc_testnet") {
     isPublicNetwork = true;
     mockErc20TokenName = process.env.BSC_TESTNET_MOCK_ERC20_TOKEN_NAME;
@@ -49,14 +43,13 @@ async function main() {
     mockErc20TokenSymbol = process.env.OKC_TESTNET_MOCK_ERC20_TOKEN_SYMBOL;
     mockErc20TokenDecimals = process.env.OKC_TESTNET_MOCK_ERC20_TOKEN_DECIMALS;
     mockErc20TokenCapEther = process.env.OKC_TESTNET_MOCK_ERC20_TOKEN_CAP_ETHER;
-  } else if (networkName === "polygon_mumbai") {
+  } else if (networkName === "polygon_amoy") {
     isPublicNetwork = true;
-    mockErc20TokenName = process.env.POLYGON_MUMBAI_MOCK_ERC20_TOKEN_NAME;
-    mockErc20TokenSymbol = process.env.POLYGON_MUMBAI_MOCK_ERC20_TOKEN_SYMBOL;
-    mockErc20TokenDecimals =
-      process.env.POLYGON_MUMBAI_MOCK_ERC20_TOKEN_DECIMALS;
+    mockErc20TokenName = process.env.POLYGON_AMOY_MOCK_ERC20_TOKEN_NAME;
+    mockErc20TokenSymbol = process.env.POLYGON_AMOY_MOCK_ERC20_TOKEN_SYMBOL;
+    mockErc20TokenDecimals = process.env.POLYGON_AMOY_MOCK_ERC20_TOKEN_DECIMALS;
     mockErc20TokenCapEther =
-      process.env.POLYGON_MUMBAI_MOCK_ERC20_TOKEN_CAP_ETHER;
+      process.env.POLYGON_AMOY_MOCK_ERC20_TOKEN_CAP_ETHER;
   } else if (networkName === "localhost") {
     isPublicNetwork = false;
     mockErc20TokenName = process.env.LOCALHOST_MOCK_ERC20_TOKEN_NAME;

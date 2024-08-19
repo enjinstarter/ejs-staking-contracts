@@ -22,12 +22,9 @@ async function main() {
   let isPublicNetwork;
   let stakingPoolAddress;
 
-  if (networkName === "goerli") {
+  if (networkName === "sepolia") {
     isPublicNetwork = true;
-    stakingPoolAddress = process.env.GOERLI_STAKING_POOL_ADDRESS;
-  } else if (networkName === "ropsten") {
-    isPublicNetwork = true;
-    stakingPoolAddress = process.env.ROPSTEN_STAKING_POOL_ADDRESS;
+    stakingPoolAddress = process.env.SEPOLIA_STAKING_POOL_ADDRESS;
   } else if (networkName === "mainnet") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.MAINNET_STAKING_POOL_ADDRESS;
@@ -43,9 +40,9 @@ async function main() {
   } else if (networkName === "okc_mainnet") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.OKC_MAINNET_STAKING_POOL_ADDRESS;
-  } else if (networkName === "polygon_mumbai") {
+  } else if (networkName === "polygon_amoy") {
     isPublicNetwork = true;
-    stakingPoolAddress = process.env.POLYGON_MUMBAI_STAKING_POOL_ADDRESS;
+    stakingPoolAddress = process.env.POLYGON_AMOY_STAKING_POOL_ADDRESS;
   } else if (networkName === "polygon_mainnet") {
     isPublicNetwork = true;
     stakingPoolAddress = process.env.POLYGON_MAINNET_STAKING_POOL_ADDRESS;

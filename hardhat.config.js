@@ -47,20 +47,12 @@ module.exports = {
     hardhat: {
       accounts: { count: 210 },
     },
-    goerli: {
-      url: process.env.GOERLI_URL || "",
-      chainId: 5,
+    sepolia: {
+      url: process.env.SEPOLIA_URL || "",
+      chainId: 11155111,
       accounts:
-        process.env.GOERLI_PRIVATE_KEY !== undefined
-          ? [process.env.GOERLI_PRIVATE_KEY]
-          : [],
-    },
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      chainId: 3,
-      accounts:
-        process.env.ROPSTEN_PRIVATE_KEY !== undefined
-          ? [process.env.ROPSTEN_PRIVATE_KEY]
+        process.env.SEPOLIA_PRIVATE_KEY !== undefined
+          ? [process.env.SEPOLIA_PRIVATE_KEY]
           : [],
     },
     mainnet: {
@@ -89,12 +81,12 @@ module.exports = {
           : [],
       gasMultiplier: 1.02,
     },
-    polygon_mumbai: {
-      url: process.env.POLYGON_MUMBAI_URL || "",
-      chainId: 80001,
+    polygon_amoy: {
+      url: process.env.POLYGON_AMOY_URL || "",
+      chainId: 80002,
       accounts:
-        process.env.POLYGON_MUMBAI_PRIVATE_KEY !== undefined
-          ? [process.env.POLYGON_MUMBAI_PRIVATE_KEY]
+        process.env.POLYGON_AMOY_PRIVATE_KEY !== undefined
+          ? [process.env.POLYGON_AMOY_PRIVATE_KEY]
           : [],
       gasMultiplier: 2,
     },
@@ -109,7 +101,7 @@ module.exports = {
     },
     okc_testnet: {
       chainId: 65,
-      url: `https://exchaintestrpc.okex.org`,
+      url: process.env.OKC_TESTNET_URL || "",
       accounts:
         process.env.OKC_TESTNET_PRIVATE_KEY !== undefined
           ? [`0x${process.env.OKC_TESTNET_PRIVATE_KEY}`]
@@ -118,7 +110,7 @@ module.exports = {
     },
     okc_mainnet: {
       chainId: 66,
-      url: `https://exchainrpc.okex.org`,
+      url: process.env.OKC_MAINNET_URL || "",
       accounts:
         process.env.OKC_MAINNET_PRIVATE_KEY !== undefined
           ? [`0x${process.env.OKC_MAINNET_PRIVATE_KEY}`]
@@ -145,14 +137,13 @@ module.exports = {
     apiKey: {
       // ethereum
       mainnet: process.env.MAINNET_ETHERSCAN_API_KEY || "",
-      goerli: process.env.GOERLI_ETHERSCAN_API_KEY || "",
-      ropsten: process.env.ROPSTEN_ETHERSCAN_API_KEY || "",
+      sepolia: process.env.SEPOLIA_ETHERSCAN_API_KEY || "",
       // binance smart chain
       bsc: process.env.BSC_MAINNET_BSCSCAN_API_KEY || "",
       bscTestnet: process.env.BSC_TESTNET_BSCSCAN_API_KEY || "",
       // polygon
       polygon: process.env.POLYGON_MAINNET_POLYGONSCAN_API_KEY || "",
-      polygonMumbai: process.env.POLYGON_MUMBAI_POLYGONSCAN_API_KEY || "",
+      polygonAmoy: process.env.POLYGON_AMOY_POLYGONSCAN_API_KEY || "",
     },
   },
   oklink: {
