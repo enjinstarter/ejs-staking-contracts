@@ -662,7 +662,7 @@ contract StakingServiceV2 is
     /**
      * @inheritdoc IStakingServiceV2
      */
-    function getUnstakeInfo(bytes32 poolId, address account, bytes32 stakeId)
+    function getUnstakingInfo(bytes32 poolId, address account, bytes32 stakeId)
         external
         view
         virtual

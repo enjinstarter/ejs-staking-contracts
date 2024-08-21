@@ -1960,7 +1960,7 @@ describe("StakingServiceV2", function () {
         const enduserAccountAddress = await enduserAccounts[0].getAddress();
 
         await expect(
-          stakingServiceInstance.getUnstakeInfo(
+          stakingServiceInstance.getUnstakingInfo(
             uninitializedPoolId,
             enduserAccountAddress,
             uninitializedStakeId,
@@ -1975,7 +1975,7 @@ describe("StakingServiceV2", function () {
         const enduserAccountAddress = await enduserAccounts[0].getAddress();
 
         await expect(
-          stakingServiceInstance.getUnstakeInfo(
+          stakingServiceInstance.getUnstakingInfo(
             stakingPoolStakeRewardTokenSameConfigs[0].poolId,
             enduserAccountAddress,
             uninitializedStakeId,
@@ -1989,7 +1989,7 @@ describe("StakingServiceV2", function () {
         );
 
         await expect(
-          stakingServiceInstance.getUnstakeInfo(
+          stakingServiceInstance.getUnstakingInfo(
             stakingPoolStakeRewardTokenSameConfigs[0].poolId,
             hre.ethers.constants.AddressZero,
             uninitializedStakeId,
@@ -2034,7 +2034,11 @@ describe("StakingServiceV2", function () {
         await expect(
           stakingServiceInstance
             .connect(enduserAccount)
-            .getUnstakeInfo(stakingPoolConfig.poolId, enduserAddress, stakeId),
+            .getUnstakingInfo(
+              stakingPoolConfig.poolId,
+              enduserAddress,
+              stakeId,
+            ),
         ).to.be.revertedWith("SSvcs2: revoked stake");
       });
 
@@ -2075,7 +2079,11 @@ describe("StakingServiceV2", function () {
         await expect(
           stakingServiceInstance
             .connect(enduserAccount)
-            .getUnstakeInfo(stakingPoolConfig.poolId, enduserAddress, stakeId),
+            .getUnstakingInfo(
+              stakingPoolConfig.poolId,
+              enduserAddress,
+              stakeId,
+            ),
         ).to.be.revertedWith("SSvcs2: unstaked");
       });
     });

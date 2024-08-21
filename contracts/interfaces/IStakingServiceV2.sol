@@ -472,13 +472,13 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         returns (StakingPoolStatsDto memory stakingPoolStatsDto);
 
     /**
-     * @notice Returns the unstake info for given staking pool and account
+     * @notice Returns the unstaking info for given staking pool and account
      * @param poolId The staking pool identifier
      * @param account The address of the user wallet that staked
      * @param stakeId The stake identifier
-     * @return unstakeInfo The unstake info for given staking pool and account
+     * @return unstakeInfo The unstaking info for given staking pool and account
      */
-    function getUnstakeInfo(bytes32 poolId, address account, bytes32 stakeId)
+    function getUnstakingInfo(bytes32 poolId, address account, bytes32 stakeId)
         external
         view
         returns (UnstakeInfo memory unstakeInfo);

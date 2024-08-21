@@ -2746,7 +2746,7 @@ async function stakeWithVerify(
   ).to.be.revertedWith("SSvcs2: uninitialized stake");
 
   await expect(
-    stakingServiceContractInstance.getUnstakeInfo(
+    stakingServiceContractInstance.getUnstakingInfo(
       stakingPoolConfigs[stakeEvent.poolIndex].poolId,
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
@@ -2959,10 +2959,10 @@ async function stakeWithVerify(
     expectStakingPoolStatsAfterStake,
   );
 
-  const getUnstakeInfoBlockTimestamp =
+  const getUnstakingInfoBlockTimestamp =
     await testHelpers.getCurrentBlockTimestamp();
 
-  await verifyUnstakeInfo(
+  await verifyUnstakingInfo(
     stakingServiceContractInstance,
     stakingPoolConfigs[stakeEvent.poolIndex],
     stakeEvent.signerAddress,
@@ -2970,7 +2970,9 @@ async function stakeWithVerify(
     stakeEvent.stakeAmountWei,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
     expectStakeMaturityTimestamp.sub(startblockTimestamp),
-    getUnstakeInfoBlockTimestamp,
+    hre.ethers.BigNumber.from(getUnstakingInfoBlockTimestamp).sub(
+      startblockTimestamp,
+    ),
     stakeEvent.eventSecondsAfterStartblockTimestamp,
     false,
   );
@@ -3641,10 +3643,10 @@ async function unstakeWithVerify(
     expectStakingPoolStatsBeforeUnstake,
   );
 
-  const getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp =
+  const getUnstakingInfoBeforeUnstakeSecondsAfterStartblockTimestamp =
     hre.ethers.BigNumber.from(currentBlockTimestamp).sub(startblockTimestamp);
 
-  await verifyUnstakeInfo(
+  await verifyUnstakingInfo(
     stakingServiceContractInstance,
     stakingPoolConfigs[stakeEvent.poolIndex],
     stakeEvent.signerAddress,
@@ -3652,8 +3654,8 @@ async function unstakeWithVerify(
     expectStakeInfoBeforeUnstake.stakeAmountWei,
     expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
-    getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-    getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
+    getUnstakingInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
+    getUnstakingInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
   );
 
   const expectUnstakeTimestamp = hre.ethers.BigNumber.from(
@@ -3894,7 +3896,7 @@ async function unstakeWithVerify(
   );
 
   await expect(
-    stakingServiceContractInstance.getUnstakeInfo(
+    stakingServiceContractInstance.getUnstakingInfo(
       stakingPoolConfigs[stakeEvent.poolIndex].poolId,
       stakeEvent.signerAddress,
       stakeEvent.stakeId,
@@ -4828,7 +4830,7 @@ async function verifyStakingPoolStats(
   return stakingPoolStats;
 }
 
-async function verifyUnstakeInfo(
+async function verifyUnstakingInfo(
   stakingServiceContractInstance,
   stakingPoolConfig,
   signerAddress,
@@ -4836,13 +4838,13 @@ async function verifyUnstakeInfo(
   stakeAmountWei,
   stakeTimestamp,
   stakeMaturityTimestamp,
-  getUnstakeInfoTimestamp,
+  getUnstakingInfoTimestamp,
   unstakeTimestamp,
   expectedIsStakeMatured,
 ) {
   const expectIsStakeMatured = isStakeMatured(
     stakeMaturityTimestamp,
-    getUnstakeInfoTimestamp,
+    getUnstakingInfoTimestamp,
     unstakeTimestamp,
   );
 
@@ -4851,7 +4853,7 @@ async function verifyUnstakeInfo(
     stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
     stakeTimestamp,
     stakeMaturityTimestamp,
-    getUnstakeInfoTimestamp,
+    getUnstakingInfoTimestamp,
     unstakeTimestamp,
   );
 
@@ -4861,7 +4863,7 @@ async function verifyUnstakeInfo(
     stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
     stakeTimestamp,
     stakeMaturityTimestamp,
-    getUnstakeInfoTimestamp,
+    getUnstakingInfoTimestamp,
     unstakeTimestamp,
   );
 
@@ -4871,7 +4873,7 @@ async function verifyUnstakeInfo(
     stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
     stakeTimestamp,
     stakeMaturityTimestamp,
-    getUnstakeInfoTimestamp,
+    getUnstakingInfoTimestamp,
     unstakeTimestamp,
   );
 
@@ -4879,7 +4881,7 @@ async function verifyUnstakeInfo(
     ? hre.ethers.constants.Zero
     : stakingPoolConfig.earlyUnstakeCooldownPeriodDays;
 
-  const unstakeInfo = await stakingServiceContractInstance.getUnstakeInfo(
+  const unstakeInfo = await stakingServiceContractInstance.getUnstakingInfo(
     stakingPoolConfig.poolId,
     signerAddress,
     stakeId,
@@ -4971,6 +4973,37 @@ async function withdrawWithVerify(
     stakingServiceContractInstance,
     expectStakingPoolStatsBeforeWithdraw,
   );
+
+  if (
+    hre.ethers.BigNumber.from(
+      expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
+    ).eq(hre.ethers.constants.Zero)
+  ) {
+    const getUnstakingInfoBlockTimestampBeforeWithdraw =
+      await testHelpers.getCurrentBlockTimestamp();
+
+    await verifyUnstakingInfo(
+      stakingServiceContractInstance,
+      stakingPoolConfigs[stakeEvent.poolIndex],
+      stakeEvent.signerAddress,
+      stakeEvent.stakeId,
+      expectStakeInfoBeforeWithdraw.stakeAmountWei,
+      expectStakeInfoBeforeWithdraw.stakeSecondsAfterStartblockTimestamp,
+      expectStakeInfoBeforeWithdraw.stakeMaturitySecondsAfterStartblockTimestamp,
+      hre.ethers.BigNumber.from(
+        getUnstakingInfoBlockTimestampBeforeWithdraw,
+      ).sub(startblockTimestamp),
+      expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
+    );
+  } else {
+    await expect(
+      stakingServiceContractInstance.getUnstakingInfo(
+        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
+        stakeEvent.stakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: unstaked");
+  }
 
   const expectWithdrawTimestamp = hre.ethers.BigNumber.from(
     startblockTimestamp,
@@ -5279,6 +5312,6 @@ module.exports = {
   verifyRewardAtMaturity,
   verifyStakeInfo,
   verifyStakingPoolStats,
-  verifyUnstakeInfo,
+  verifyUnstakingInfo,
   withdrawWithVerify,
 };

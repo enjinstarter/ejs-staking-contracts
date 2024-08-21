@@ -29,6 +29,7 @@
     "svcs",
     "tintinweb",
     "unstake",
+    "unstaking",
     "unstaked"
   ],
   "ignorePaths": ["/.vscode/cspell.json", "/package-lock.json"]
