@@ -537,6 +537,37 @@ async function claimWithVerify(
     expectStakingPoolStatsBeforeClaim,
   );
 
+  if (
+    hre.ethers.BigNumber.from(
+      expectStakeInfoBeforeClaim.unstakeSecondsAfterStartblockTimestamp,
+    ).eq(hre.ethers.constants.Zero)
+  ) {
+    const getUnstakingInfoBlockTimestampBeforeClaim =
+      await testHelpers.getCurrentBlockTimestamp();
+
+    await verifyUnstakingInfo(
+      stakingServiceContractInstance,
+      stakingPoolConfigs[stakeEvent.poolIndex],
+      stakeEvent.signerAddress,
+      stakeEvent.stakeId,
+      expectStakeInfoBeforeClaim.stakeAmountWei,
+      expectStakeInfoBeforeClaim.stakeSecondsAfterStartblockTimestamp,
+      expectStakeInfoBeforeClaim.stakeMaturitySecondsAfterStartblockTimestamp,
+      hre.ethers.BigNumber.from(getUnstakingInfoBlockTimestampBeforeClaim).sub(
+        startblockTimestamp,
+      ),
+      expectStakeInfoBeforeClaim.unstakeSecondsAfterStartblockTimestamp,
+    );
+  } else {
+    await expect(
+      stakingServiceContractInstance.getUnstakingInfo(
+        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
+        stakeEvent.stakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: unstaked");
+  }
+
   const expectClaimTimestamp = hre.ethers.BigNumber.from(
     startblockTimestamp,
   ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
@@ -701,6 +732,37 @@ async function claimWithVerify(
     stakingServiceContractInstance,
     expectStakingPoolStatsAfterClaim,
   );
+
+  if (
+    hre.ethers.BigNumber.from(
+      expectStakeInfoBeforeClaim.unstakeSecondsAfterStartblockTimestamp,
+    ).eq(hre.ethers.constants.Zero)
+  ) {
+    const getUnstakingInfoBlockTimestampAfterClaim =
+      await testHelpers.getCurrentBlockTimestamp();
+
+    await verifyUnstakingInfo(
+      stakingServiceContractInstance,
+      stakingPoolConfigs[stakeEvent.poolIndex],
+      stakeEvent.signerAddress,
+      stakeEvent.stakeId,
+      expectStakeInfoBeforeClaim.stakeAmountWei,
+      expectStakeInfoBeforeClaim.stakeSecondsAfterStartblockTimestamp,
+      expectStakeInfoBeforeClaim.stakeMaturitySecondsAfterStartblockTimestamp,
+      hre.ethers.BigNumber.from(getUnstakingInfoBlockTimestampAfterClaim).sub(
+        startblockTimestamp,
+      ),
+      expectStakeInfoBeforeClaim.unstakeSecondsAfterStartblockTimestamp,
+    );
+  } else {
+    await expect(
+      stakingServiceContractInstance.getUnstakingInfo(
+        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
+        stakeEvent.stakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: unstaked");
+  }
 
   await expect(
     stakingServiceContractInstance
@@ -1506,6 +1568,37 @@ async function revokeWithVerify(
     expectStakingPoolStatsBeforeRevoke,
   );
 
+  if (
+    hre.ethers.BigNumber.from(
+      expectStakeInfoBeforeRevoke.unstakeSecondsAfterStartblockTimestamp,
+    ).eq(hre.ethers.constants.Zero)
+  ) {
+    const getUnstakingInfoBlockTimestampBeforeRevoke =
+      await testHelpers.getCurrentBlockTimestamp();
+
+    await verifyUnstakingInfo(
+      stakingServiceContractInstance,
+      stakingPoolConfigs[stakeEvent.poolIndex],
+      stakeEvent.signerAddress,
+      stakeEvent.stakeId,
+      expectStakeInfoBeforeRevoke.stakeAmountWei,
+      expectStakeInfoBeforeRevoke.stakeSecondsAfterStartblockTimestamp,
+      expectStakeInfoBeforeRevoke.stakeMaturitySecondsAfterStartblockTimestamp,
+      hre.ethers.BigNumber.from(getUnstakingInfoBlockTimestampBeforeRevoke).sub(
+        startblockTimestamp,
+      ),
+      expectStakeInfoBeforeRevoke.unstakeSecondsAfterStartblockTimestamp,
+    );
+  } else {
+    await expect(
+      stakingServiceContractInstance.getUnstakingInfo(
+        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
+        stakeEvent.stakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: unstaked");
+  }
+
   const expectRevokeTimestamp = hre.ethers.BigNumber.from(
     startblockTimestamp,
   ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
@@ -1689,6 +1782,14 @@ async function revokeWithVerify(
     stakingServiceContractInstance,
     expectStakingPoolStatsAfterRevoke,
   );
+
+  await expect(
+    stakingServiceContractInstance.getUnstakingInfo(
+      stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+      stakeEvent.signerAddress,
+      stakeEvent.stakeId,
+    ),
+  ).to.be.revertedWith("SSvcs2: revoked stake");
 
   await expect(
     stakingServiceContractInstance
