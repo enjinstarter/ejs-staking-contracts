@@ -99,6 +99,13 @@ async function addStakingPoolRewardWithVerify(
     expectStakingPoolStatsBeforeAdd,
   );
 
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosBeforeAdd,
+  );
+
   const truncatedRewardAmountWei = computeTruncatedAmountWei(
     rewardAmountWei,
     rewardTokenDecimals,
@@ -235,6 +242,12 @@ async function addStakingPoolRewardWithVerify(
   await verifyMultipleStakeInfos(
     stakingServiceContractInstance,
     startblockTimestamp,
+    expectStakeInfosBeforeAdd,
+  );
+
+  await verifyMultipleStakeInfos(
+    stakingServiceContractInstance,
+    startblockTimestamp,
     expectStakeInfosAfterAdd,
   );
 
@@ -275,6 +288,20 @@ async function addStakingPoolRewardWithVerify(
   await verifyMultipleStakingPoolStats(
     stakingServiceContractInstance,
     expectStakingPoolStatsAfterAdd,
+  );
+
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosBeforeAdd,
+  );
+
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosAfterAdd,
   );
 
   verifyActualWithTruncatedValueWei(
@@ -1110,6 +1137,13 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
     expectStakingPoolStatsBeforeRemove,
   );
 
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosBeforeRemove,
+  );
+
   const expectedPoolRewardWeiBeforeRemove = computePoolRewardWei(
     stakingPoolStatsBeforeRemove.totalRewardAddedWei,
     stakingPoolStatsBeforeRemove.totalRevokedRewardWei,
@@ -1242,6 +1276,12 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
   await verifyMultipleStakeInfos(
     stakingServiceContractInstance,
     startblockTimestamp,
+    expectStakeInfosBeforeRemove,
+  );
+
+  await verifyMultipleStakeInfos(
+    stakingServiceContractInstance,
+    startblockTimestamp,
     expectStakeInfosAfterRemove,
   );
 
@@ -1282,6 +1322,20 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
   await verifyMultipleStakingPoolStats(
     stakingServiceContractInstance,
     expectStakingPoolStatsAfterRemove,
+  );
+
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosBeforeRemove,
+  );
+
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosAfterRemove,
   );
 
   return expectContractWeiBalanceOfRewardAfterRemove;
@@ -4700,6 +4754,59 @@ async function verifyMultipleStakingPoolStats(
   }
 }
 
+async function verifyMultipleUnstakingInfos(
+  stakingServiceContractInstance,
+  stakingPoolConfigs,
+  startblockTimestamp,
+  expectMultipleStakeInfos,
+) {
+  const stakeInfosIterator = expectMultipleStakeInfos.entries();
+  for (const [key, expectStakeInfo] of stakeInfosIterator) {
+    const [poolId, signerAddress, stakeId] = key.split(",");
+
+    /*
+    console.log(
+      `\nverifyMultipleStakeInfos: poolId=${poolId}, signerAddress=${signerAddress}, stakeId=${stakeId}, expectStakeInfo=${JSON.stringify(expectStakeInfo)}`,
+    );
+    */
+
+    const getUnstakingInfoBlockTimestamp =
+      await testHelpers.getCurrentBlockTimestamp();
+
+    const stakingPoolConfig = stakingPoolConfigs.find(
+      (spc) => spc.poolId === poolId,
+    );
+
+    if (
+      hre.ethers.BigNumber.from(
+        expectStakeInfo.unstakeSecondsAfterStartblockTimestamp,
+      ).eq(hre.ethers.constants.Zero)
+    ) {
+      await verifyUnstakingInfo(
+        stakingServiceContractInstance,
+        stakingPoolConfig,
+        signerAddress,
+        stakeId,
+        expectStakeInfo.stakeAmountWei,
+        expectStakeInfo.stakeSecondsAfterStartblockTimestamp,
+        expectStakeInfo.stakeMaturitySecondsAfterStartblockTimestamp,
+        hre.ethers.BigNumber.from(getUnstakingInfoBlockTimestamp).sub(
+          startblockTimestamp,
+        ),
+        expectStakeInfo.unstakeSecondsAfterStartblockTimestamp,
+      );
+    } else {
+      await expect(
+        stakingServiceContractInstance.getUnstakingInfo(
+          stakingPoolConfig.poolId,
+          signerAddress,
+          stakeId,
+        ),
+      ).to.be.revertedWith("SSvcs2: unstaked");
+    }
+  }
+}
+
 function verifyRewardAtMaturity(
   stakingPoolConfig,
   stakeEvent,
@@ -5410,6 +5517,7 @@ module.exports = {
   verifyActualWithTruncatedValueWei,
   verifyMultipleStakeInfos,
   verifyMultipleStakingPoolStats,
+  verifyMultipleUnstakingInfos,
   verifyRewardAtMaturity,
   verifyStakeInfo,
   verifyStakingPoolStats,
