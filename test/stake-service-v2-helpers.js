@@ -2962,69 +2962,18 @@ async function stakeWithVerify(
   const getUnstakeInfoBlockTimestamp =
     await testHelpers.getCurrentBlockTimestamp();
 
-  const isStakeMaturedAfterStake = isStakeMatured(
-    expectStakeMaturityTimestamp.sub(startblockTimestamp),
-    getUnstakeInfoBlockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
-  );
-
-  const expectUnstakePenaltyPercentWeiAfterStake =
-    calculateUnstakePenaltyPercentWei(
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
-      stakeEvent.eventSecondsAfterStartblockTimestamp,
-      expectStakeMaturityTimestamp.sub(startblockTimestamp),
-      getUnstakeInfoBlockTimestamp,
-      stakeEvent.eventSecondsAfterStartblockTimestamp,
-    );
-
-  const expectUnstakePenaltyAmountWeiAfterStake =
-    calculateUnstakePenaltyAmountWei(
-      stakeEvent.stakeAmountWei,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
-      stakeEvent.eventSecondsAfterStartblockTimestamp,
-      expectStakeMaturityTimestamp.sub(startblockTimestamp),
-      getUnstakeInfoBlockTimestamp,
-      stakeEvent.eventSecondsAfterStartblockTimestamp,
-    );
-
-  const expectUnstakeAmountWeiAfterStake = calculateUnstakeAmountWei(
+  await verifyUnstakeInfo(
+    stakingServiceContractInstance,
+    stakingPoolConfigs[stakeEvent.poolIndex],
+    stakeEvent.signerAddress,
+    stakeEvent.stakeId,
     stakeEvent.stakeAmountWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
     expectStakeMaturityTimestamp.sub(startblockTimestamp),
     getUnstakeInfoBlockTimestamp,
     stakeEvent.eventSecondsAfterStartblockTimestamp,
+    false,
   );
-
-  const expectUnstakeCooldownPeriodDaysAfterStake = isStakeMaturedAfterStake
-    ? hre.ethers.constants.Zero
-    : stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakeCooldownPeriodDays;
-
-  const unstakeInfoAfterStake =
-    await stakingServiceContractInstance.getUnstakeInfo(
-      stakingPoolConfigs[stakeEvent.poolIndex].poolId,
-      stakeEvent.signerAddress,
-      stakeEvent.stakeId,
-    );
-  expect(unstakeInfoAfterStake.unstakeAmountWei).to.equal(
-    expectUnstakeAmountWeiAfterStake,
-  );
-  expect(unstakeInfoAfterStake.unstakePenaltyAmountWei).to.equal(
-    expectUnstakePenaltyAmountWeiAfterStake,
-  );
-  expect(unstakeInfoAfterStake.unstakePenaltyPercentWei).to.equal(
-    expectUnstakePenaltyPercentWeiAfterStake,
-  );
-  expect(unstakeInfoAfterStake.unstakeCooldownPeriodDays).to.equal(
-    expectUnstakeCooldownPeriodDaysAfterStake,
-  );
-  expect(unstakeInfoAfterStake.isStakeMature).to.equal(
-    isStakeMaturedAfterStake,
-  );
-  expect(unstakeInfoAfterStake.isStakeMature).to.equal(false);
 
   if (stakeEvent.stakeExceedPoolReward) {
     await expect(
@@ -3695,68 +3644,16 @@ async function unstakeWithVerify(
   const getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp =
     hre.ethers.BigNumber.from(currentBlockTimestamp).sub(startblockTimestamp);
 
-  const isStakeMaturedBeforeUnstake = isStakeMatured(
-    expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
-    getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-    getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-  );
-
-  const expectUnstakePenaltyPercentWeiBeforeUnstake =
-    calculateUnstakePenaltyPercentWei(
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
-      expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
-      expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
-      getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-      getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-    );
-
-  const expectUnstakePenaltyAmountWeiBeforeUnstake =
-    calculateUnstakePenaltyAmountWei(
-      expectStakeInfoBeforeUnstake.stakeAmountWei,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
-      stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
-      expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
-      expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
-      getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-      getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-    );
-
-  const expectUnstakeAmountWeiBeforeUnstake = calculateUnstakeAmountWei(
+  await verifyUnstakeInfo(
+    stakingServiceContractInstance,
+    stakingPoolConfigs[stakeEvent.poolIndex],
+    stakeEvent.signerAddress,
+    stakeEvent.stakeId,
     expectStakeInfoBeforeUnstake.stakeAmountWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMaxPercentWei,
-    stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakePenaltyMinPercentWei,
     expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
     getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
     getUnstakeInfoBeforeUnstakeSecondsAfterStartblockTimestamp,
-  );
-
-  const expectUnstakeCooldownPeriodDaysBeforeUnstake =
-    isStakeMaturedBeforeUnstake
-      ? hre.ethers.constants.Zero
-      : stakingPoolConfigs[stakeEvent.poolIndex].earlyUnstakeCooldownPeriodDays;
-
-  const unstakeInfoBeforeUnstake =
-    await stakingServiceContractInstance.getUnstakeInfo(
-      stakingPoolConfigs[stakeEvent.poolIndex].poolId,
-      stakeEvent.signerAddress,
-      stakeEvent.stakeId,
-    );
-  expect(unstakeInfoBeforeUnstake.unstakeAmountWei).to.equal(
-    expectUnstakeAmountWeiBeforeUnstake,
-  );
-  expect(unstakeInfoBeforeUnstake.unstakePenaltyAmountWei).to.equal(
-    expectUnstakePenaltyAmountWeiBeforeUnstake,
-  );
-  expect(unstakeInfoBeforeUnstake.unstakePenaltyPercentWei).to.equal(
-    expectUnstakePenaltyPercentWeiBeforeUnstake,
-  );
-  expect(unstakeInfoBeforeUnstake.unstakeCooldownPeriodDays).to.equal(
-    expectUnstakeCooldownPeriodDaysBeforeUnstake,
-  );
-  expect(unstakeInfoBeforeUnstake.isStakeMature).to.equal(
-    isStakeMaturedBeforeUnstake,
   );
 
   const expectUnstakeTimestamp = hre.ethers.BigNumber.from(
@@ -4931,6 +4828,79 @@ async function verifyStakingPoolStats(
   return stakingPoolStats;
 }
 
+async function verifyUnstakeInfo(
+  stakingServiceContractInstance,
+  stakingPoolConfig,
+  signerAddress,
+  stakeId,
+  stakeAmountWei,
+  stakeTimestamp,
+  stakeMaturityTimestamp,
+  getUnstakeInfoTimestamp,
+  unstakeTimestamp,
+  expectedIsStakeMatured,
+) {
+  const expectIsStakeMatured = isStakeMatured(
+    stakeMaturityTimestamp,
+    getUnstakeInfoTimestamp,
+    unstakeTimestamp,
+  );
+
+  const expectUnstakePenaltyPercentWei = calculateUnstakePenaltyPercentWei(
+    stakingPoolConfig.earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
+    stakeTimestamp,
+    stakeMaturityTimestamp,
+    getUnstakeInfoTimestamp,
+    unstakeTimestamp,
+  );
+
+  const expectUnstakePenaltyAmountWei = calculateUnstakePenaltyAmountWei(
+    stakeAmountWei,
+    stakingPoolConfig.earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
+    stakeTimestamp,
+    stakeMaturityTimestamp,
+    getUnstakeInfoTimestamp,
+    unstakeTimestamp,
+  );
+
+  const expectUnstakeAmountWei = calculateUnstakeAmountWei(
+    stakeAmountWei,
+    stakingPoolConfig.earlyUnstakePenaltyMaxPercentWei,
+    stakingPoolConfig.earlyUnstakePenaltyMinPercentWei,
+    stakeTimestamp,
+    stakeMaturityTimestamp,
+    getUnstakeInfoTimestamp,
+    unstakeTimestamp,
+  );
+
+  const expectUnstakeCooldownPeriodDays = expectIsStakeMatured
+    ? hre.ethers.constants.Zero
+    : stakingPoolConfig.earlyUnstakeCooldownPeriodDays;
+
+  const unstakeInfo = await stakingServiceContractInstance.getUnstakeInfo(
+    stakingPoolConfig.poolId,
+    signerAddress,
+    stakeId,
+  );
+  expect(unstakeInfo.unstakeAmountWei).to.equal(expectUnstakeAmountWei);
+  expect(unstakeInfo.unstakePenaltyAmountWei).to.equal(
+    expectUnstakePenaltyAmountWei,
+  );
+  expect(unstakeInfo.unstakePenaltyPercentWei).to.equal(
+    expectUnstakePenaltyPercentWei,
+  );
+  expect(unstakeInfo.unstakeCooldownPeriodDays).to.equal(
+    expectUnstakeCooldownPeriodDays,
+  );
+  expect(unstakeInfo.isStakeMature).to.equal(expectIsStakeMatured);
+
+  if (expectedIsStakeMatured != null) {
+    expect(unstakeInfo.isStakeMature).to.equal(expectedIsStakeMatured);
+  }
+}
+
 async function withdrawWithVerify(
   stakingServiceContractInstance,
   stakingPoolConfigs,
@@ -5309,5 +5279,6 @@ module.exports = {
   verifyRewardAtMaturity,
   verifyStakeInfo,
   verifyStakingPoolStats,
+  verifyUnstakeInfo,
   withdrawWithVerify,
 };
