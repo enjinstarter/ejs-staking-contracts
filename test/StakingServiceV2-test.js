@@ -593,9 +593,11 @@ describe("StakingServiceV2", function () {
           const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
           const signerIndex = i % deployerSigners.length;
 
+          /*
           console.log(
             `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
           );
+          */
 
           stakeEvents004.push({
             eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
@@ -629,9 +631,11 @@ describe("StakingServiceV2", function () {
           const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
           const signerIndex = i % governanceRoleSigners.length;
 
+          /*
           console.log(
             `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
           );
+          */
 
           stakeEvents005.push({
             eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
@@ -666,9 +670,11 @@ describe("StakingServiceV2", function () {
           const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
           const signerIndex = i % contractAdminRoleSigners.length;
 
+          /*
           console.log(
             `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
           );
+          */
 
           stakeEvents006.push({
             eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
@@ -703,9 +709,11 @@ describe("StakingServiceV2", function () {
           const poolIndex = i % stakingPoolStakeRewardTokenSameConfigs.length;
           const signerIndex = i % enduserSigners.length;
 
+          /*
           console.log(
             `${i}: poolIndex=${poolIndex}, signerIndex=${signerIndex}`,
           );
+          */
 
           stakeEvents007.push({
             eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
