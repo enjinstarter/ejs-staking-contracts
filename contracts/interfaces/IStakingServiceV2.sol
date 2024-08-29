@@ -13,6 +13,7 @@ import {IAdminWallet} from "./IAdminWallet.sol";
 interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     struct StakeInfo {
         uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in Wei
+        uint256 estimatedRewardAtUnstakeWei; // estimated reward at unstake in Wei
         uint256 revokedRewardAmountWei; // revoked reward amount in Wei
         uint256 revokedStakeAmountWei; // revoked stake amount in Wei
         uint256 revokeTimestamp; // timestamp when stake is revoked
@@ -70,6 +71,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     }
 
     struct UnstakeInfo {
+        uint256 estimatedRewardAtUnstakeWei; // estimated reward at unstake in Wei
         uint256 unstakeAmountWei; // unstaked amount in Wei
         uint256 unstakePenaltyAmountWei; // early unstake penalty amount in Wei
         uint256 unstakePenaltyPercentWei; // early unstake penalty percentage in Wei
@@ -252,6 +254,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @param earlyUnstakePenaltyMaxPercentWei The early unstake max penalty percentage in wei
      * @param earlyUnstakePenaltyMinPercentWei The early unstake min penalty percentage in wei
      * @param stakeAmountWei The amount of tokens staked in Wei
+     * @param estimatedRewardAtUnstakeWei The estimated reward at unstake in wei
      * @param unstakeAmountWei The amount of stake tokens unstaked in Wei
      * @param unstakePenaltyAmountWei The unstake penalty amount in wei
      * @param unstakePenaltyPercentWei The unstake penalty percentage in wei
@@ -266,6 +269,7 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         uint256 earlyUnstakePenaltyMaxPercentWei,
         uint256 earlyUnstakePenaltyMinPercentWei,
         uint256 stakeAmountWei,
+        uint256 estimatedRewardAtUnstakeWei,
         uint256 unstakeAmountWei,
         uint256 unstakePenaltyAmountWei,
         uint256 unstakePenaltyPercentWei,

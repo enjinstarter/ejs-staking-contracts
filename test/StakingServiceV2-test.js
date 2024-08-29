@@ -2219,7 +2219,7 @@ describe("StakingServiceV2", function () {
       });
 
       it("should not allow stake if insufficient reward", async () => {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[0];
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[2];
         const poolId = stakingPoolConfig.poolId;
         const stakeId = hre.ethers.utils.id(
           "8dad50f1-9d6c-41db-bbce-0d7276511173",

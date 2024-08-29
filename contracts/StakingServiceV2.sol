@@ -129,6 +129,7 @@ contract StakingServiceV2 is
 
         _stakes[stakekey] = StakeInfo({
             estimatedRewardAtMaturityWei: estimatedRewardAtMaturityWei,
+            estimatedRewardAtUnstakeWei: 0,
             revokedRewardAmountWei: 0,
             revokedStakeAmountWei: 0,
             revokeTimestamp: 0,
@@ -186,9 +187,10 @@ contract StakingServiceV2 is
             uint256 unstakePenaltyPercentWei,
             uint256 unstakeCooldownPeriodDays,
             bool isStakeMature
-        ) = _getUnstakeAmountWeiByStakekey(stakingPoolInfo, stakekey);
+        ) = _getUnstakeInfoByStakekey(stakingPoolInfo, stakekey);
         require(unstakeAmountWei > 0 || unstakePenaltyAmountWei > 0, "SSvcs2: zero unstake");
 
+        uint256 estimatedRewardAtUnstakeWei = _getEstimatedRewardAtUnstakeWeiFor(stakekey);
         uint256 unstakeCooldownExpiryTimestamp = _calculateUnstakeCooldownExpiryTimestamp(
             unstakeCooldownPeriodDays,
             block.timestamp
@@ -201,6 +203,7 @@ contract StakingServiceV2 is
             "SSvcs2: cooldown timestamp"
         );
 
+        _stakes[stakekey].estimatedRewardAtUnstakeWei = estimatedRewardAtUnstakeWei;
         _stakes[stakekey].unstakeAmountWei = unstakeAmountWei;
         _stakes[stakekey].unstakeCooldownExpiryTimestamp = unstakeCooldownExpiryTimestamp;
         _stakes[stakekey].unstakePenaltyAmountWei = unstakePenaltyAmountWei;
@@ -212,7 +215,10 @@ contract StakingServiceV2 is
         } else {
             _stakingPoolStats[poolId].totalUnstakedBeforeMatureWei += unstakeAmountWei;
             _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei += unstakePenaltyAmountWei;
-            _stakingPoolStats[poolId].totalUnstakedRewardBeforeMatureWei += _stakes[stakekey].estimatedRewardAtMaturityWei;
+            _stakingPoolStats[poolId].totalUnstakedRewardBeforeMatureWei += _getUnstakedRewardBeforeMatureWei(
+                _stakes[stakekey].estimatedRewardAtMaturityWei,
+                estimatedRewardAtUnstakeWei
+            );
         }
 
         emit Unstaked(
@@ -223,6 +229,7 @@ contract StakingServiceV2 is
             stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei,
             stakingPoolInfo.earlyUnstakePenaltyMinPercentWei,
             stakeAmountWei,
+            estimatedRewardAtUnstakeWei,
             unstakeAmountWei,
             unstakePenaltyAmountWei,
             unstakePenaltyPercentWei,
@@ -601,6 +608,7 @@ contract StakingServiceV2 is
 
         stakeInfo = StakeInfo({
             estimatedRewardAtMaturityWei: _stakes[stakekey].estimatedRewardAtMaturityWei,
+            estimatedRewardAtUnstakeWei: _stakes[stakekey].estimatedRewardAtUnstakeWei,
             revokedRewardAmountWei: _stakes[stakekey].revokedRewardAmountWei,
             revokedStakeAmountWei: _stakes[stakekey].revokedStakeAmountWei,
             revokeTimestamp: _stakes[stakekey].revokeTimestamp,
@@ -682,9 +690,12 @@ contract StakingServiceV2 is
             uint256 unstakePenaltyPercentWei,
             uint256 unstakeCooldownPeriodDays,
             bool isStakeMature
-        ) = _getUnstakeAmountWeiByStakekey(stakingPoolInfo, stakekey);
+        ) = _getUnstakeInfoByStakekey(stakingPoolInfo, stakekey);
+
+        uint256 estimatedRewardAtUnstakeWei = _getEstimatedRewardAtUnstakeWeiFor(stakekey);
 
         unstakeInfo = UnstakeInfo({
+            estimatedRewardAtUnstakeWei: estimatedRewardAtUnstakeWei,
             unstakeAmountWei: unstakeAmountWei,
             unstakePenaltyAmountWei: unstakePenaltyAmountWei,
             unstakePenaltyPercentWei: unstakePenaltyPercentWei,
@@ -811,20 +822,42 @@ contract StakingServiceV2 is
 
         bool isStakeMatured = _isStakeMaturedFor(stakekey);
 
+        uint256 estimatedRewardWei = _stakes[stakekey].unstakeTimestamp > 0
+            ? _stakes[stakekey].estimatedRewardAtUnstakeWei
+            : (isStakeMatured ? _stakes[stakekey].estimatedRewardAtMaturityWei : 0);
+
+        claimableRewardWei = (estimatedRewardWei > _stakes[stakekey].rewardClaimedWei)
+            ? (estimatedRewardWei - _stakes[stakekey].rewardClaimedWei)
+            : 0;
+    }
+
+    /**
+     * @dev Returns the estimated reward at unstake in Wei for the given stake key, returns zero if stake has been suspended
+     * @param stakekey The stake identifier
+     * @return estimatedRewardAtUnstakeWei The estimated reward at unstake in Wei
+     */
+    function _getEstimatedRewardAtUnstakeWeiFor(bytes memory stakekey)
+        internal
+        view
+        virtual
+        returns (uint256 estimatedRewardAtUnstakeWei)
+    {
+        if (_isStakeRevokedFor(stakekey)) {
+            return 0;
+        }
+
+        bool isStakeMatured = _isStakeMaturedFor(stakekey);
+
         uint256 effectiveTimestamp = (_stakes[stakekey].unstakeTimestamp > 0)
             ? ((_stakes[stakekey].unstakeTimestamp > _stakes[stakekey].stakeMaturityTimestamp)
                 ? _stakes[stakekey].stakeMaturityTimestamp : _stakes[stakekey].unstakeTimestamp)
             : (isStakeMatured ? _stakes[stakekey].stakeMaturityTimestamp : block.timestamp);
         require(effectiveTimestamp <= _stakes[stakekey].stakeMaturityTimestamp, "Ssvcs2: after mature");
 
-        uint256 estimatedRewardWei = (effectiveTimestamp >= _stakes[stakekey].stakeMaturityTimestamp)
+        estimatedRewardAtUnstakeWei = (effectiveTimestamp >= _stakes[stakekey].stakeMaturityTimestamp)
             ? _stakes[stakekey].estimatedRewardAtMaturityWei
             : _stakes[stakekey].estimatedRewardAtMaturityWei * (effectiveTimestamp - _stakes[stakekey].stakeTimestamp)
                 / (_stakes[stakekey].stakeMaturityTimestamp - _stakes[stakekey].stakeTimestamp);
-
-        claimableRewardWei = (estimatedRewardWei > _stakes[stakekey].rewardClaimedWei)
-            ? (estimatedRewardWei - _stakes[stakekey].rewardClaimedWei)
-            : 0;
     }
 
     /**
@@ -909,7 +942,7 @@ contract StakingServiceV2 is
      * @return unstakePenaltyPercentWei The current unstake penalty percentage in Wei
      * @return unstakeCooldownPeriodDays The unstake cooldown period in days
      */
-    function _getUnstakeAmountWeiByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
+    function _getUnstakeInfoByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
         internal
         view
         virtual
@@ -928,6 +961,17 @@ contract StakingServiceV2 is
             : _stakes[stakekey].stakeAmountWei * unstakePenaltyPercentWei / PERCENT_100_WEI;
         unstakeAmountWei =  _stakes[stakekey].stakeAmountWei - unstakePenaltyAmountWei;
         unstakeCooldownPeriodDays = isStakeMature ? 0 : stakingPoolInfo.earlyUnstakeCooldownPeriodDays;
+    }
+
+    function _getUnstakedRewardBeforeMatureWei(uint256 estimatedRewardAtMaturityWei, uint256 estimatedRewardAtUnstakeWei)
+        internal
+        view
+        virtual
+        returns (uint256 unstakedRewardBeforeMatureWei)
+    {
+        require(estimatedRewardAtUnstakeWei <= estimatedRewardAtMaturityWei, "SSvcs2: claimable > mature");
+
+        unstakedRewardBeforeMatureWei = estimatedRewardAtMaturityWei - estimatedRewardAtUnstakeWei;
     }
 
     /**
