@@ -3227,15 +3227,13 @@ async function stakeWithVerify(
     stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenDecimals,
   );
 
-  if (!stakeEvent.stakeExceedPoolReward) {
-    const claimableRewardWeiAfterStake =
-      await stakingServiceContractInstance.getClaimableRewardWei(
-        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
-        stakeEvent.signerAddress,
-        stakeEvent.stakeId,
-      );
-    expect(claimableRewardWeiAfterStake).to.equal(hre.ethers.constants.Zero);
-  }
+  const claimableRewardWeiAfterStake =
+    await stakingServiceContractInstance.getClaimableRewardWei(
+      stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+      stakeEvent.signerAddress,
+      stakeEvent.stakeId,
+    );
+  expect(claimableRewardWeiAfterStake).to.equal(hre.ethers.constants.Zero);
 
   const stakeInfoAfterStake = await verifyStakeInfo(
     stakingServiceContractInstance,
@@ -5156,6 +5154,12 @@ async function verifyMultipleStakingPoolStats(
   stakingServiceContractInstance,
   expectMultipleStakingPoolStats,
 ) {
+  /*
+  console.log(
+    `verifyMultipleStakingPoolStats: expectMultipleStakingPoolStatsSize=${expectMultipleStakingPoolStats.size}`,
+  );
+  */
+
   const stakePoolStatsIterator = expectMultipleStakingPoolStats.entries();
   for (const [poolId, expectStakingPoolStats] of stakePoolStatsIterator) {
     verifyStakingPoolStats(
