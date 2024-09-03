@@ -52,7 +52,9 @@ contract MockStakingServiceV2 is StakingServiceV2 {
         override
         returns (uint256 unstakeAmountWei, uint256 unstakePenaltyAmountWei, uint256 unstakePenaltyPercentWei, uint256 unstakeCooldownPeriodDays, bool isStakeMature)
     {
-        if (keccak256(stakekey) == keccak256(abi.encodePacked("491fbb37-cd20-4edd-90e8-a4dc5c590c43"))) {
+        bytes memory testStakekey = _getStakeKey(keccak256(abi.encodePacked("b2507daa-6117-4da1-a037-5483116c1397")), msg.sender, keccak256(abi.encodePacked("491fbb37-cd20-4edd-90e8-a4dc5c590c43")));
+
+        if (keccak256(stakekey) == keccak256(testStakekey)) {
             isStakeMature = false;
             unstakePenaltyPercentWei = 0;
             unstakePenaltyAmountWei = 0;

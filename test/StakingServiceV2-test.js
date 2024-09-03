@@ -2586,6 +2586,66 @@ describe("StakingServiceV2", function () {
             .unstake(stakingPoolConfig.poolId, stakeId),
         ).to.be.revertedWith("SSvcs2: cooldown timestamp");
       });
+
+      it("should not allow zero unstake", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 4;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "7044.421500482479764155",
+        );
+        const stakeUuid = "491fbb37-cd20-4edd-90e8-a4dc5c590c43";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const testServiceInstance =
+          await stakeServiceHelpers.newMockStakingService(
+            stakingPoolInstance.address,
+          );
+
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.GOVERNANCE_ROLE,
+          governanceRoleAccounts.slice(1),
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.CONTRACT_ADMIN_ROLE,
+          contractAdminRoleAccounts,
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestStakeEnvironment(
+          testServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          testServiceInstance
+            .connect(enduserAccount)
+            .unstake(stakingPoolConfig.poolId, stakeId),
+        ).to.be.revertedWith("SSvcs2: zero unstake");
+      });
     });
 
     describe("Withdraw Unstake", function () {
