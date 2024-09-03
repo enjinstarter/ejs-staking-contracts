@@ -766,10 +766,11 @@ contract StakingServiceV2 is
      * @param stakeTimestamp The timestamp as seconds since unix epoch when the stake was placed
      * @return calculatedStakeMaturityTimestamp The timestamp as seconds since unix epoch when the stake matures
      */
+    // slither-disable-next-line dead-code
     function _calculateStakeMaturityTimestamp(
         uint256 stakeDurationDays,
         uint256 stakeTimestamp
-    ) internal view virtual returns (uint256 calculatedStakeMaturityTimestamp) {
+    ) internal pure virtual returns (uint256 calculatedStakeMaturityTimestamp) {
         calculatedStakeMaturityTimestamp =
             stakeTimestamp + stakeDurationDays * SECONDS_IN_DAY;
     }
@@ -780,10 +781,11 @@ contract StakingServiceV2 is
      * @param unstakeTimestamp The timestamp as seconds since unix epoch when the stake was unstaked
      * @return calculatedCooldownExpiryTimestamp The timestamp as seconds since unix epoch when the unstake cooldown expires
      */
+    // slither-disable-next-line dead-code
     function _calculateUnstakeCooldownExpiryTimestamp(
         uint256 cooldownPeriodDays,
         uint256 unstakeTimestamp
-    ) internal view virtual returns (uint256 calculatedCooldownExpiryTimestamp) {
+    ) internal pure virtual returns (uint256 calculatedCooldownExpiryTimestamp) {
         calculatedCooldownExpiryTimestamp =
             unstakeTimestamp + cooldownPeriodDays * SECONDS_IN_DAY;
     }
@@ -799,7 +801,7 @@ contract StakingServiceV2 is
         uint256 stakeDurationDays,
         uint256 poolAprWei,
         uint256 stakeAmountWei
-    ) internal view virtual returns (uint256 estimatedRewardAtMaturityWei) {
+    ) internal pure virtual returns (uint256 estimatedRewardAtMaturityWei) {
         estimatedRewardAtMaturityWei = poolAprWei > 0
             ? (poolAprWei * stakeDurationDays * stakeAmountWei) / (DAYS_IN_YEAR * PERCENT_100_WEI)
             : 0;

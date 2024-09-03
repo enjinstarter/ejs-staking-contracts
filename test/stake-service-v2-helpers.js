@@ -1170,6 +1170,17 @@ function isStakeMatured(
   );
 }
 
+async function newMockStakingService(stakingPoolAddress) {
+  const MockStakingServiceFactory = await hre.ethers.getContractFactory(
+    "MockStakingServiceV2",
+  );
+  const mockStakingServiceContractInstance =
+    await MockStakingServiceFactory.deploy(stakingPoolAddress);
+  await mockStakingServiceContractInstance.deployed();
+
+  return mockStakingServiceContractInstance;
+}
+
 async function newStakingService(stakingPoolAddress) {
   const StakingServiceFactory =
     await hre.ethers.getContractFactory("StakingServiceV2");
@@ -5953,6 +5964,7 @@ module.exports = {
   initialStakeInfo,
   initialStakingPoolStat,
   isStakeMatured,
+  newMockStakingService,
   newStakingService,
   removeUnallocatedStakingPoolRewardWithVerify,
   removeUnstakePenaltyWithVerify,

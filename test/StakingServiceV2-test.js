@@ -2278,6 +2278,28 @@ describe("StakingServiceV2", function () {
             .stake(poolId, stakeId, stakeAmountWei),
         ).to.be.revertedWith("SSvcs2: insufficient");
       });
+
+      it("should not allow invalid stake maturity timestamp", async () => {
+        const stakeId = hre.ethers.utils.id(
+          "e08b17b5-7df2-4cb0-9cc6-aebe34dfe59f",
+        );
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "0.000000000000000001",
+        );
+
+        const testServiceInstance =
+          await stakeServiceHelpers.newMockStakingService(
+            stakingPoolInstance.address,
+          );
+
+        await expect(
+          testServiceInstance.stake(
+            stakingPoolStakeRewardTokenSameConfigs[2].poolId,
+            stakeId,
+            stakeAmountWei,
+          ),
+        ).to.be.revertedWith("SSvcs2: maturity timestamp");
+      });
     });
 
     describe("Claim Reward", function () {
@@ -2504,6 +2526,66 @@ describe("StakingServiceV2", function () {
             .unstake(stakingPoolConfig.poolId, stakeId),
         ).to.be.revertedWith("SSvcs2: stake suspended");
       });
+
+      it("should not allow invalid unstake cooldown expiry timestamp", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const poolIndex = 3;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9710.926728739897698939",
+        );
+        const stakeUuid = "1cf28c21-9360-4dcd-a9d3-20c415d75ec9";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const testServiceInstance =
+          await stakeServiceHelpers.newMockStakingService(
+            stakingPoolInstance.address,
+          );
+
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.GOVERNANCE_ROLE,
+          governanceRoleAccounts.slice(1),
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.CONTRACT_ADMIN_ROLE,
+          contractAdminRoleAccounts,
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestStakeEnvironment(
+          testServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          testServiceInstance
+            .connect(enduserAccount)
+            .unstake(stakingPoolConfig.poolId, stakeId),
+        ).to.be.revertedWith("SSvcs2: cooldown timestamp");
+      });
     });
 
     describe("Withdraw Unstake", function () {
@@ -2694,108 +2776,4 @@ describe("StakingServiceV2", function () {
       });
     });
   });
-
-  /*
-  it("should not allow invalid transfer of tokens from contract to account and vice versa", async () => {
-    const enduserAccountAddress = await enduserAccounts[0].getAddress();
-    const tokenInstance = stakeToken18DecimalsInstances[0];
-    const tokenAddress = tokenInstance.address;
-    const tokenDecimals = await tokenInstance.decimals();
-    const transferAmountWei = hre.ethers.utils.parseEther(
-      "0.000000000000000001",
-    );
-
-    const testPoolInstance = await stakeHelpers.newMockStakingPool();
-    const testServiceInstance = await stakeHelpers.newMockStakingService(
-      testPoolInstance.address,
-    );
-
-    await expect(
-      testServiceInstance.transferTokensToAccount(
-        hre.ethers.constants.AddressZero,
-        tokenDecimals,
-        transferAmountWei,
-        enduserAccountAddress,
-      ),
-    ).to.be.revertedWith("SSvcs: token address");
-
-    await expect(
-      testServiceInstance.transferTokensToAccount(
-        tokenAddress,
-        19,
-        transferAmountWei,
-        enduserAccountAddress,
-      ),
-    ).to.be.revertedWith("SSvcs: token decimals");
-
-    await expect(
-      testServiceInstance.transferTokensToAccount(
-        tokenAddress,
-        tokenDecimals,
-        hre.ethers.constants.Zero,
-        enduserAccountAddress,
-      ),
-    ).to.be.revertedWith("SSvcs: amount");
-
-    await expect(
-      testServiceInstance.transferTokensToAccount(
-        tokenAddress,
-        tokenDecimals,
-        transferAmountWei,
-        hre.ethers.constants.AddressZero,
-      ),
-    ).to.be.revertedWith("SSvcs: account");
-
-    await expect(
-      testServiceInstance.transferTokensToContract(
-        hre.ethers.constants.AddressZero,
-        tokenDecimals,
-        transferAmountWei,
-        enduserAccountAddress,
-      ),
-    ).to.be.revertedWith("SSvcs: token address");
-
-    await expect(
-      testServiceInstance.transferTokensToContract(
-        tokenAddress,
-        19,
-        transferAmountWei,
-        enduserAccountAddress,
-      ),
-    ).to.be.revertedWith("SSvcs: token decimals");
-
-    await expect(
-      testServiceInstance.transferTokensToContract(
-        tokenAddress,
-        tokenDecimals,
-        hre.ethers.constants.Zero,
-        enduserAccountAddress,
-      ),
-    ).to.be.revertedWith("SSvcs: amount");
-
-    await expect(
-      testServiceInstance.transferTokensToContract(
-        tokenAddress,
-        tokenDecimals,
-        transferAmountWei,
-        hre.ethers.constants.AddressZero,
-      ),
-    ).to.be.revertedWith("SSvcs: account");
-  });
-
-  it("should not allow invalid stake maturity timestamp", async () => {
-    const stakeAmountWei = hre.ethers.utils.parseEther("0.000000000000000001");
-
-    const testServiceInstance = await stakeHelpers.newMockStakingService(
-      stakingPoolInstance.address,
-    );
-
-    await expect(
-      testServiceInstance.stake(
-        stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-        stakeAmountWei,
-      ),
-    ).to.be.revertedWith("SSvcs: maturity timestamp");
-  });
-  */
 });

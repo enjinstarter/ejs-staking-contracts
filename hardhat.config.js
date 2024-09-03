@@ -41,7 +41,7 @@ module.exports = {
     },
   },
   mocha: {
-    timeout: 900000,
+    timeout: 1200000,
   },
   networks: {
     hardhat: {
