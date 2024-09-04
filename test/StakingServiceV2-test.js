@@ -2168,8 +2168,6 @@ describe("StakingServiceV2", function () {
         );
         const stakeUuid = "2c5fd824-e60b-495a-b8a1-5b3e95b81972";
         const stakeId = hre.ethers.utils.id(stakeUuid);
-        const addRewardSecondsAfterStartblockTimestamp = 120;
-        const stakeSecondsAfterStartblockTimestamp = 240;
 
         const stakingPoolConfig =
           stakingPoolStakeRewardTokenSameConfigs[poolIndex];
@@ -2195,23 +2193,11 @@ describe("StakingServiceV2", function () {
           true,
         );
 
+        const addRewardSecondsAfterStartblockTimestamp = 120;
+        const stakeSecondsAfterStartblockTimestamp = 240;
+
         const startblockTimestamp =
           await testHelpers.getCurrentBlockTimestamp();
-
-        await stakeServiceHelpers.setupTestStakeEnvironment(
-          testServiceInstance,
-          stakingPoolStakeRewardTokenSameConfigs,
-          startblockTimestamp,
-          contractAdminAccount,
-          enduserAccount,
-          poolIndex,
-          stakeAmountWei,
-          stakeUuid,
-          addRewardSecondsAfterStartblockTimestamp,
-          stakeSecondsAfterStartblockTimestamp,
-          bankAccount,
-          stakingPoolsRewardBalanceOf,
-        );
 
         const expectStakeTimestamp = hre.ethers.BigNumber.from(
           startblockTimestamp,
@@ -2223,8 +2209,6 @@ describe("StakingServiceV2", function () {
             expectStakeTimestamp,
           );
 
-        const expectUnstakeTimestamp = expectStakeMaturityTimestamp.add(300);
-
         const expectEstimateRewardAtMaturityWei =
           stakeServiceHelpers.computeTruncatedAmountWei(
             stakeServiceHelpers.estimateRewardAtMaturityWei(
@@ -2235,16 +2219,37 @@ describe("StakingServiceV2", function () {
             stakingPoolConfig.rewardTokenDecimals,
           );
 
+        const expectUnstakeTimestamp = expectStakeMaturityTimestamp.add(300);
+        const unstakeSecondsAfterStartblockTimestamp =
+          expectUnstakeTimestamp.sub(startblockTimestamp);
+
+        await stakeServiceHelpers.setupTestUnstakeEnvironment(
+          testServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          addRewardSecondsAfterStartblockTimestamp,
+          stakeSecondsAfterStartblockTimestamp,
+          unstakeSecondsAfterStartblockTimestamp,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        const afterUnstakeTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
         const expectUnstakedRewardBeforeMatureWei =
           stakeServiceHelpers.calculateUnstakedRewardBeforeMatureWei(
             expectEstimateRewardAtMaturityWei,
             expectStakeTimestamp,
             expectStakeMaturityTimestamp,
+            afterUnstakeTimestamp,
             expectUnstakeTimestamp,
-            0,
           );
-
-        await testHelpers.setTimeNextBlock(expectUnstakeTimestamp.toNumber());
 
         const estimatedRewardAtUnstakeWei = await testServiceInstance
           .connect(enduserAccount)
