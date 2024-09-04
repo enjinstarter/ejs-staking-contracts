@@ -17,6 +17,24 @@ contract MockStakingServiceV2 is StakingServiceV2 {
 
     }
 
+    function getEstimatedRewardAtUnstakeWeiFor(bytes32 poolId, bytes32 stakeId)
+        external
+        view
+        returns (uint256 estimatedRewardAtUnstakeWei)
+    {
+        bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
+
+        estimatedRewardAtUnstakeWei = _getEstimatedRewardAtUnstakeWeiFor(stakekey);
+    }
+
+    function getUnstakedRewardBeforeMatureWei(uint256 estimatedRewardAtMaturityWei, uint256 estimatedRewardAtUnstakeWei)
+        external
+        pure
+        returns (uint256 unstakedRewardBeforeMatureWei)
+    {
+        unstakedRewardBeforeMatureWei = _getUnstakedRewardBeforeMatureWei(estimatedRewardAtMaturityWei, estimatedRewardAtUnstakeWei);
+    }
+
     function _calculateStakeMaturityTimestamp(uint256 stakeDurationDays, uint256 stakeTimestamp)
         internal
         pure

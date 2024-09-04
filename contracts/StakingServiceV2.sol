@@ -854,7 +854,7 @@ contract StakingServiceV2 is
             ? ((_stakes[stakekey].unstakeTimestamp > _stakes[stakekey].stakeMaturityTimestamp)
                 ? _stakes[stakekey].stakeMaturityTimestamp : _stakes[stakekey].unstakeTimestamp)
             : (isStakeMatured ? _stakes[stakekey].stakeMaturityTimestamp : block.timestamp);
-        require(effectiveTimestamp <= _stakes[stakekey].stakeMaturityTimestamp, "Ssvcs2: after mature");
+        require(effectiveTimestamp <= _stakes[stakekey].stakeMaturityTimestamp, "SSvcs2: after mature");
 
         estimatedRewardAtUnstakeWei = (effectiveTimestamp >= _stakes[stakekey].stakeMaturityTimestamp)
             ? _stakes[stakekey].estimatedRewardAtMaturityWei
@@ -898,7 +898,7 @@ contract StakingServiceV2 is
         uint256 poolAprWei,
         uint256 poolRewardWei,
         uint256 stakeTokenDecimals
-    ) internal view virtual returns (uint256 poolSizeWei) {
+    ) internal pure virtual returns (uint256 poolSizeWei) {
         poolSizeWei = poolAprWei > 0
             ? ((DAYS_IN_YEAR * PERCENT_100_WEI * poolRewardWei) / (stakeDurationDays * poolAprWei))
                 .truncateWeiToDecimals(stakeTokenDecimals)
@@ -967,7 +967,7 @@ contract StakingServiceV2 is
 
     function _getUnstakedRewardBeforeMatureWei(uint256 estimatedRewardAtMaturityWei, uint256 estimatedRewardAtUnstakeWei)
         internal
-        view
+        pure
         virtual
         returns (uint256 unstakedRewardBeforeMatureWei)
     {

@@ -260,7 +260,7 @@ async function initializeStakingPoolTestData(
     {
       poolUuid: "81bfecad-21aa-4253-8f3c-8e2a5a5a7908",
       poolId: hre.ethers.utils.id("81bfecad-21aa-4253-8f3c-8e2a5a5a7908"),
-      stakeDurationDays: 180,
+      stakeDurationDays: 18,
       stakeTokenInstance: stakeRewardTokenInstances[0],
       stakeTokenDecimals: 18,
       rewardTokenInstance: stakeRewardTokenInstances[0],
