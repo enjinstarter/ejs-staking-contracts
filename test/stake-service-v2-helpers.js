@@ -410,18 +410,9 @@ function calculateEstimatedRewardAtUnstakeWei(
 function calculateRevokedRewardAmountWei(
   estimatedRewardAtMaturityWei,
   rewardClaimedWei,
-  stakeTimestamp,
-  stakeMaturityTimestamp,
-  currentTimestamp,
-  unstakeTimestamp,
 ) {
-  return calculateClaimableRewardWei(
-    estimatedRewardAtMaturityWei,
+  return hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei).sub(
     rewardClaimedWei,
-    stakeTimestamp,
-    stakeMaturityTimestamp,
-    currentTimestamp,
-    unstakeTimestamp,
   );
 }
 
@@ -1812,10 +1803,6 @@ async function revokeWithVerify(
   const expectRevokedRewardAmountWei = calculateRevokedRewardAmountWei(
     expectStakeInfoBeforeRevoke.estimatedRewardAtMaturityWei,
     expectStakeInfoBeforeRevoke.rewardClaimedWei,
-    expectStakeInfoBeforeRevoke.stakeSecondsAfterStartblockTimestamp,
-    expectStakeInfoBeforeRevoke.stakeMaturitySecondsAfterStartblockTimestamp,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
-    expectStakeInfoBeforeRevoke.unstakeSecondsAfterStartblockTimestamp,
   );
 
   const contractBalanceOfBeforeRevoke = await stakingPoolConfigs[
@@ -4463,10 +4450,6 @@ function updateExpectStakeInfoAfterRevoke(
     calculateRevokedRewardAmountWei(
       expectStakeInfoAfterTriggerStakeEvent.estimatedRewardAtMaturityWei,
       expectStakeInfoAfterTriggerStakeEvent.rewardClaimedWei,
-      updateStakeEvent.eventSecondsAfterStartblockTimestamp,
-      expectStakeInfoAfterTriggerStakeEvent.stakeMaturitySecondsAfterStartblockTimestamp,
-      triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
-      expectStakeInfoAfterTriggerStakeEvent.unstakeSecondsAfterStartblockTimestamp,
     ).toString();
   expectStakeInfoAfterTriggerStakeEvent.revokedStakeAmountWei =
     calculateRevokedStakeAmountWei(
@@ -4849,12 +4832,6 @@ function updateExpectStakingPoolStatsAfterRevoke(
   const revokedRewardAmountWei = calculateRevokedRewardAmountWei(
     estimatedRewardAtMaturityWei,
     expectStakeInfoAfterTriggerStakeEvent.rewardClaimedWei,
-    updateStakeEvent.eventSecondsAfterStartblockTimestamp,
-    stakeMaturitySecondsAfterStartblockTimestamp,
-    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
-    unstakeStakeEvent == null
-      ? hre.ethers.constants.Zero
-      : unstakeStakeEvent.eventSecondsAfterStartblockTimestamp,
   );
   const revokedStakeAmountWei = calculateRevokedStakeAmountWei(
     truncatedStakeAmountWei,

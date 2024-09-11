@@ -757,7 +757,7 @@ contract StakingServiceV2 is
                         ? _stakes[stakekey].unstakeAmountWei
                         : _stakes[stakekey].stakeAmountWei
                 );
-        revokedRewardAmountWei = _getClaimableRewardWeiFor(stakekey);
+        revokedRewardAmountWei = _stakes[stakekey].estimatedRewardAtMaturityWei - _stakes[stakekey].rewardClaimedWei;
     }
 
     /**
