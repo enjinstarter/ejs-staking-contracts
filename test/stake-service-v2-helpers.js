@@ -4600,6 +4600,7 @@ function updateExpectStakeInfoAfterUnstake(
             .earlyUnstakeCooldownPeriodDays,
           triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
         ).toString();
+
   expectStakeInfoAfterTriggerStakeEvent.unstakePenaltyAmountWei =
     calculateUnstakePenaltyAmountWei(
       truncatedStakeAmountWei,
@@ -5710,17 +5711,13 @@ async function withdrawWithVerify(
     stakeEvent.eventSecondsAfterStartblockTimestamp,
   );
 
-  const expectUnstakeCooldownExpiryTimestamp = isStakeMaturedAtUnstake
+  const expectUnstakeCooldownExpiryTimestamp = hre.ethers.BigNumber.from(
+    expectStakeInfoBeforeWithdraw.unstakeCooldownExpirySecondsAfterStartblockTimestamp,
+  ).gt(hre.ethers.constants.Zero)
     ? hre.ethers.BigNumber.from(startblockTimestamp).add(
-        expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
+        expectStakeInfoBeforeWithdraw.unstakeCooldownExpirySecondsAfterStartblockTimestamp,
       )
-    : hre.ethers.BigNumber.from(startblockTimestamp).add(
-        calculateCooldownExpiryTimestamp(
-          stakingPoolConfigs[stakeEvent.poolIndex]
-            .earlyUnstakeCooldownPeriodDays,
-          expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
-        ),
-      );
+    : hre.ethers.constants.Zero;
 
   const contractBalanceOfBeforeWithdraw = await stakingPoolConfigs[
     stakeEvent.poolIndex
@@ -5819,9 +5816,13 @@ async function withdrawWithVerify(
         expectStakeInfoBeforeWithdraw.stakeSecondsAfterStartblockTimestamp,
       unstakeAmountWei: expectUnstakeAmountWei,
       unstakeCooldownExpirySecondsAfterStartblockTimestamp:
-        hre.ethers.BigNumber.from(expectUnstakeCooldownExpiryTimestamp).sub(
-          startblockTimestamp,
-        ),
+        hre.ethers.BigNumber.from(expectUnstakeCooldownExpiryTimestamp).gt(
+          hre.ethers.constants.Zero,
+        )
+          ? hre.ethers.BigNumber.from(expectUnstakeCooldownExpiryTimestamp).sub(
+              startblockTimestamp,
+            )
+          : hre.ethers.constants.Zero,
       unstakePenaltyAmountWei: expectUnstakePenaltyAmountWei,
       unstakeSecondsAfterStartblockTimestamp:
         expectStakeInfoBeforeWithdraw.unstakeSecondsAfterStartblockTimestamp,
