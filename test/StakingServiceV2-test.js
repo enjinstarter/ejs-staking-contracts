@@ -2096,8 +2096,8 @@ describe("StakingServiceV2", function () {
       });
     });
 
-    describe("Get Estimated Reward At Unstake For", function () {
-      it("should return zero estimated reward at unstake for revoked stake", async () => {
+    describe("Get Estimated Reward At Unstaking", function () {
+      it("should return zero estimated reward at unstaking for revoked stake", async () => {
         const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const enduserAccount = enduserAccounts[1];
@@ -2151,11 +2151,22 @@ describe("StakingServiceV2", function () {
           stakingPoolsRewardBalanceOf,
         );
 
-        const estimatedRewardAtUnstakeWei = await testServiceInstance
-          .connect(enduserAccount)
-          .getEstimatedRewardAtUnstakeWeiFor(stakingPoolConfig.poolId, stakeId);
+        const unstakingTimestamp = await testHelpers.getCurrentBlockTimestamp();
 
-        expect(estimatedRewardAtUnstakeWei).to.equal(hre.ethers.constants.Zero);
+        const estimatedRewardAtUnstakingWei = await testServiceInstance
+          .connect(enduserAccount)
+          .getEstimatedRewardAtUnstakingWei(
+            stakingPoolConfig.poolId,
+            stakeId,
+            unstakingTimestamp,
+          );
+
+        expect(
+          estimatedRewardAtUnstakingWei.estimatedRewardAtUnstakingWei,
+        ).to.equal(hre.ethers.constants.Zero);
+        expect(
+          estimatedRewardAtUnstakingWei.estimatedRewardAtUnstakingWithRevshareExtendWei,
+        ).to.equal(hre.ethers.constants.Zero);
       });
 
       it("should return correct estimated reward at unstake for unstake after maturity", async () => {
@@ -2251,18 +2262,30 @@ describe("StakingServiceV2", function () {
             expectUnstakeTimestamp,
           );
 
-        const estimatedRewardAtUnstakeWei = await testServiceInstance
+        const estimatedRewardAtUnstakingWei = await testServiceInstance
           .connect(enduserAccount)
-          .getEstimatedRewardAtUnstakeWeiFor(stakingPoolConfig.poolId, stakeId);
+          .getEstimatedRewardAtUnstakingWei(
+            stakingPoolConfig.poolId,
+            stakeId,
+            expectUnstakeTimestamp,
+          );
 
-        expect(estimatedRewardAtUnstakeWei).to.equal(
-          expectUnstakedRewardBeforeMatureWei,
-        );
+        expect(
+          estimatedRewardAtUnstakingWei.estimatedRewardAtUnstakingWei,
+        ).to.equal(expectUnstakedRewardBeforeMatureWei);
+        expect(
+          estimatedRewardAtUnstakingWei.estimatedRewardAtUnstakingWithRevshareExtendWei,
+        ).to.equal(expectUnstakedRewardBeforeMatureWei);
       });
 
       it("should not allow get estimated reward at unstake for effective timestamp after maturity", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
         const enduserAccount = enduserAccounts[1];
         const poolIndex = 5;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "3224.787426083092191172",
+        );
         const stakeUuid = "620a7628-70f8-4522-8250-09816e9f6441";
         const stakeId = hre.ethers.utils.id(stakeUuid);
 
@@ -2274,14 +2297,51 @@ describe("StakingServiceV2", function () {
             stakingPoolInstance.address,
           );
 
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.GOVERNANCE_ROLE,
+          governanceRoleAccounts.slice(1),
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.CONTRACT_ADMIN_ROLE,
+          contractAdminRoleAccounts,
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestStakeEnvironment(
+          testServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
         await expect(
           testServiceInstance
             .connect(enduserAccount)
-            .getEstimatedRewardAtUnstakeWeiFor(
+            .getEstimatedRewardAtUnstakingWei(
               stakingPoolConfig.poolId,
               stakeId,
+              hre.ethers.BigNumber.from(startblockTimestamp).sub(
+                hre.ethers.constants.One,
+              ),
             ),
-        ).to.be.revertedWith("SSvcs2: after mature");
+        ).to.be.revertedWith("SSvcs2: unstake before stake");
       });
     });
 
@@ -3000,7 +3060,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: revoked");
       });
 
-      it("should not allow withdraw unstake for during early unstake cooldown", async () => {
+      it("should not allow withdraw unstake during early unstake cooldown", async () => {
         const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const enduserAccount = enduserAccounts[1];

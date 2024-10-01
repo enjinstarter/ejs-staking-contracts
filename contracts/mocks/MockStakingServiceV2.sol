@@ -17,14 +17,14 @@ contract MockStakingServiceV2 is StakingServiceV2 {
 
     }
 
-    function getEstimatedRewardAtUnstakeWeiFor(bytes32 poolId, bytes32 stakeId)
+    function getEstimatedRewardAtUnstakingWei(bytes32 poolId, bytes32 stakeId, uint256 unstakingTimestamp)
         external
         view
-        returns (uint256 estimatedRewardAtUnstakeWei)
+        returns (uint256 estimatedRewardAtUnstakingWei, uint256 estimatedRewardAtUnstakingWithRevshareExtendWei)
     {
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
 
-        estimatedRewardAtUnstakeWei = _getEstimatedRewardAtUnstakeWeiFor(stakekey);
+        (estimatedRewardAtUnstakingWei, estimatedRewardAtUnstakingWithRevshareExtendWei) = _getEstimatedRewardAtUnstakingWei(stakekey, unstakingTimestamp);
     }
 
     function getUnstakedRewardBeforeMatureWei(uint256 estimatedRewardAtMaturityWei, uint256 estimatedRewardAtUnstakeWei)
@@ -64,28 +64,26 @@ contract MockStakingServiceV2 is StakingServiceV2 {
         }
     }
 
-    function _getUnstakeInfoByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
+    function _getUnstakingInfoByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
         internal
         view
         override
-        returns (uint256 unstakeAmountWei, uint256 unstakePenaltyAmountWei, uint256 unstakePenaltyPercentWei, uint256 unstakeCooldownPeriodDays, bool isStakeMature)
+        returns (UnstakingInfo memory unstakingInfo)
     {
         bytes memory testStakekey = _getStakeKey(keccak256(abi.encodePacked("b2507daa-6117-4da1-a037-5483116c1397")), msg.sender, keccak256(abi.encodePacked("491fbb37-cd20-4edd-90e8-a4dc5c590c43")));
 
         if (keccak256(stakekey) == keccak256(testStakekey)) {
-            isStakeMature = false;
-            unstakePenaltyPercentWei = 0;
-            unstakePenaltyAmountWei = 0;
-            unstakeAmountWei =  0;
-            unstakeCooldownPeriodDays = 0;
+            unstakingInfo = UnstakingInfo({
+                estimatedRewardAtUnstakingWei: 0,
+                estimatedRewardAtUnstakingWithRevshareExtendWei: 0,
+                isStakeMature: false,
+                unstakePenaltyPercentWei: 0,
+                unstakePenaltyAmountWei: 0,
+                unstakeAmountWei: 0,
+                unstakeCooldownPeriodDays: 0
+            });
         } else {
-            (
-                unstakeAmountWei,
-                unstakePenaltyAmountWei,
-                unstakePenaltyPercentWei,
-                unstakeCooldownPeriodDays,
-                isStakeMature
-            ) = super._getUnstakeInfoByStakekey(stakingPoolInfo, stakekey);
+            unstakingInfo = super._getUnstakingInfoByStakekey(stakingPoolInfo, stakekey);
         }
     }
 }

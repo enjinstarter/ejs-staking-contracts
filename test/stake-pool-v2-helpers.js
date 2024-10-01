@@ -213,7 +213,7 @@ async function initializeStakingPoolTestData(
       earlyUnstakeCooldownPeriodDays: 2,
       earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("100"),
       earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("100"),
-      revshareStakeDurationExtensionDays: 0,
+      revshareStakeDurationExtensionDays: 2,
     },
     {
       poolUuid: "fc1999e6-e88b-4450-bfae-80d4c6bfd775",
@@ -227,7 +227,7 @@ async function initializeStakingPoolTestData(
       earlyUnstakeCooldownPeriodDays: 1,
       earlyUnstakePenaltyMaxPercentWei: hre.ethers.utils.parseEther("36"),
       earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("10"),
-      revshareStakeDurationExtensionDays: 7,
+      revshareStakeDurationExtensionDays: 3,
     },
     {
       poolUuid: "b6fdcc87-6475-4326-967f-8ce616cd9c23",
