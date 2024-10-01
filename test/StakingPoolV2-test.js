@@ -396,42 +396,6 @@ describe("StakingPoolV2", function () {
     );
   });
 
-  it("Should only allow contract admin role to set stake duration extension for claim revshare of staking pool", async () => {
-    await stakePoolHelpers.testCreateStakingPool(
-      stakingPoolInstance,
-      stakingPoolStakeRewardTokenSameConfigs,
-      contractAdminRoleAccounts.slice(0, 1),
-      true,
-    );
-
-    await stakePoolHelpers.testSetRevshareStakeDurationExtension(
-      stakingPoolInstance,
-      stakingPoolStakeRewardTokenSameConfigs[0],
-      contractAdminRoleAccounts[0],
-      governanceRoleAccounts[1],
-      60,
-      stakingPoolStakeRewardTokenSameConfigs.slice(1),
-    );
-  });
-
-  it("Should only allow contract admin role to set stake duration extension for claim revshare of staking pool", async () => {
-    await stakePoolHelpers.testCreateStakingPool(
-      stakingPoolInstance,
-      stakingPoolStakeRewardTokenSameConfigs,
-      contractAdminRoleAccounts.slice(0, 1),
-      true,
-    );
-
-    await stakePoolHelpers.testSetRevshareStakeDurationExtension(
-      stakingPoolInstance,
-      stakingPoolStakeRewardTokenSameConfigs[0],
-      contractAdminRoleAccounts[0],
-      governanceRoleAccounts[1],
-      0,
-      stakingPoolStakeRewardTokenSameConfigs.slice(1),
-    );
-  });
-
   it("should not allow creation of staking pool with zero duration", async () => {
     const stakingPoolDto = {
       stakeDurationDays: 0,
@@ -453,9 +417,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakePenaltyMinPercentWei,
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -489,9 +450,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakePenaltyMinPercentWei,
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -525,9 +483,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakePenaltyMinPercentWei,
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -561,9 +516,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakePenaltyMinPercentWei,
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -597,9 +549,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakePenaltyMinPercentWei,
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -634,9 +583,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei:
         stakingPoolStakeRewardTokenSameConfigs[0]
           .earlyUnstakePenaltyMinPercentWei,
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -669,9 +615,6 @@ describe("StakingPoolV2", function () {
         "100.000000000000000001",
       ),
       earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther("100"),
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -704,9 +647,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther(
         "100.000000000000000001",
       ),
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -739,9 +679,6 @@ describe("StakingPoolV2", function () {
       earlyUnstakePenaltyMinPercentWei: hre.ethers.utils.parseEther(
         "12.000000000000000001",
       ),
-      revshareStakeDurationExtensionDays:
-        stakingPoolStakeRewardTokenSameConfigs[0]
-          .revshareStakeDurationExtensionDays,
     };
 
     await expect(
@@ -864,16 +801,5 @@ describe("StakingPoolV2", function () {
           hre.ethers.utils.parseEther("50.000000000000000001"),
         ),
     ).to.be.revertedWith("SPool2: min > max penalty");
-  });
-
-  it("should not allow setting stake duration extension for claim revshare of uninitialized staking pool", async () => {
-    await expect(
-      stakingPoolInstance
-        .connect(contractAdminRoleAccounts[0])
-        .setRevshareStakeDurationExtension(
-          stakingPoolStakeRewardTokenSameConfigs[0].poolId,
-          hre.ethers.constants.One,
-        ),
-    ).to.be.revertedWith("SPool2: uninitialized");
   });
 });

@@ -20,11 +20,11 @@ contract MockStakingServiceV2 is StakingServiceV2 {
     function getEstimatedRewardAtUnstakingWei(bytes32 poolId, bytes32 stakeId, uint256 unstakingTimestamp)
         external
         view
-        returns (uint256 estimatedRewardAtUnstakingWei, uint256 estimatedRewardAtUnstakingWithRevshareExtendWei)
+        returns (uint256 estimatedRewardAtUnstakingWei)
     {
         bytes memory stakekey = _getStakeKey(poolId, msg.sender, stakeId);
 
-        (estimatedRewardAtUnstakingWei, estimatedRewardAtUnstakingWithRevshareExtendWei) = _getEstimatedRewardAtUnstakingWei(stakekey, unstakingTimestamp);
+        estimatedRewardAtUnstakingWei = _getEstimatedRewardAtUnstakingWei(stakekey, unstakingTimestamp);
     }
 
     function getUnstakedRewardBeforeMatureWei(uint256 estimatedRewardAtMaturityWei, uint256 estimatedRewardAtUnstakeWei)
@@ -75,7 +75,6 @@ contract MockStakingServiceV2 is StakingServiceV2 {
         if (keccak256(stakekey) == keccak256(testStakekey)) {
             unstakingInfo = UnstakingInfo({
                 estimatedRewardAtUnstakingWei: 0,
-                estimatedRewardAtUnstakingWithRevshareExtendWei: 0,
                 isStakeMature: false,
                 unstakePenaltyPercentWei: 0,
                 unstakePenaltyAmountWei: 0,

@@ -70,7 +70,6 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
             earlyUnstakeCooldownPeriodDays: stakingPoolDto.earlyUnstakeCooldownPeriodDays,
             earlyUnstakePenaltyMaxPercentWei: stakingPoolDto.earlyUnstakePenaltyMaxPercentWei,
             earlyUnstakePenaltyMinPercentWei: stakingPoolDto.earlyUnstakePenaltyMinPercentWei,
-            revshareStakeDurationExtensionDays: stakingPoolDto.revshareStakeDurationExtensionDays,
             isOpen: true,
             isActive: true,
             isInitialized: true
@@ -87,8 +86,7 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
             stakingPoolDto.poolAprWei,
             stakingPoolDto.earlyUnstakeCooldownPeriodDays,
             stakingPoolDto.earlyUnstakePenaltyMaxPercentWei,
-            stakingPoolDto.earlyUnstakePenaltyMinPercentWei,
-            stakingPoolDto.revshareStakeDurationExtensionDays
+            stakingPoolDto.earlyUnstakePenaltyMinPercentWei
         );
     }
 
@@ -170,25 +168,6 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
     /**
      * @inheritdoc IStakingPoolV2
      */
-    function setRevshareStakeDurationExtension(bytes32 poolId, uint256 newStakeDurationExtensionDays)
-        external virtual override onlyRole(CONTRACT_ADMIN_ROLE)
-    {
-        require(_stakingPools[poolId].isInitialized, "SPool2: uninitialized");
-
-        uint256 oldStakeDurationExtensionDays = _stakingPools[poolId].revshareStakeDurationExtensionDays;
-        _stakingPools[poolId].revshareStakeDurationExtensionDays = newStakeDurationExtensionDays;
-
-        emit RevshareStakeDurationExtensionChanged(
-            poolId,
-            msg.sender,
-            oldStakeDurationExtensionDays,
-            newStakeDurationExtensionDays
-        );
-    }
-
-    /**
-     * @inheritdoc IStakingPoolV2
-     */
     function suspendStakingPool(bytes32 poolId)
         external
         virtual
@@ -224,7 +203,6 @@ contract StakingPoolV2 is AdminPrivileges, IStakingPoolV2 {
         stakingPoolInfo.earlyUnstakeCooldownPeriodDays = _stakingPools[poolId].earlyUnstakeCooldownPeriodDays;
         stakingPoolInfo.earlyUnstakePenaltyMaxPercentWei = _stakingPools[poolId].earlyUnstakePenaltyMaxPercentWei;
         stakingPoolInfo.earlyUnstakePenaltyMinPercentWei = _stakingPools[poolId].earlyUnstakePenaltyMinPercentWei;
-        stakingPoolInfo.revshareStakeDurationExtensionDays = _stakingPools[poolId].revshareStakeDurationExtensionDays;
         stakingPoolInfo.isOpen = _stakingPools[poolId].isOpen;
         stakingPoolInfo.isActive = _stakingPools[poolId].isActive;
         stakingPoolInfo.isInitialized = _stakingPools[poolId].isInitialized;

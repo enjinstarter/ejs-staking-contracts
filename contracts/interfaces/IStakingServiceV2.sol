@@ -14,7 +14,6 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     struct StakeInfo {
         uint256 estimatedRewardAtMaturityWei; // estimated reward at maturity in Wei
         uint256 estimatedRewardAtUnstakeWei; // estimated reward at unstake in Wei
-        bool isStakeMaturedAtRevshareExtend; // true if stake is matured at claim revshare extend stake duration
         uint256 revokedRewardAmountWei; // revoked reward amount in Wei
         uint256 revokedStakeAmountWei; // revoked stake amount in Wei
         uint256 revokeTimestamp; // timestamp when stake is revoked
@@ -73,7 +72,6 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
 
     struct UnstakingInfo {
         uint256 estimatedRewardAtUnstakingWei; // estimated reward at unstaking in Wei
-        uint256 estimatedRewardAtUnstakingWithRevshareExtendWei; // estimated reward at unstaking with revshare extend in Wei
         uint256 unstakeAmountWei; // unstaked amount in Wei
         uint256 unstakePenaltyAmountWei; // early unstake penalty amount in Wei
         uint256 unstakePenaltyPercentWei; // early unstake penalty percentage in Wei
@@ -95,28 +93,6 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
         address indexed adminWallet,
         address stakeToken,
         uint256 stakeAmountWei
-    );
-
-    /**
-     * @notice Emitted when stake duration has been changed due to revshare claim
-     * @param poolId The staking pool identifier
-     * @param account The address of the user wallet that placed the stake
-     * @param stakeId The stake identifier
-     * @param revshareStakeDurationExtensionDays The stake duration extension in days for claim revshare
-     * @param oldStakeMaturityTimestamp The timestamp when stake matures before the stake duration was changed
-     * @param newStakeMaturityTimestamp The timestamp when stake matures after the stake duration was changed
-     * @param isStakeMaturedAtRevshareExtend True if stake is matured at claim revshare extend stake duration
-     * @param sender The address that changed the stake duration
-     */
-    event RevshareStakeDurationExtended(
-        bytes32 indexed poolId,
-        address indexed account,
-        bytes32 indexed stakeId,
-        uint256 revshareStakeDurationExtensionDays,
-        uint256 oldStakeMaturityTimestamp,
-        uint256 newStakeMaturityTimestamp,
-        bool isStakeMaturedAtRevshareExtend,
-        address sender
     );
 
     /**
@@ -348,20 +324,6 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
     function withdrawUnstake(bytes32 poolId, bytes32 stakeId) external;
 
     /**
-     * @notice Extend stake duration in days for claim revshare
-     * @dev Must be called by contract usage role.
-     * @param poolId The staking pool identifier
-     * @param account The address of the user wallet that staked
-     * @param stakeId The stake identifier
-     * @return isExtended true if stake duration has been extended
-     */
-    function revshareExtendStakeDuration(
-        bytes32 poolId,
-        address account,
-        bytes32 stakeId
-    ) external returns (bool isExtended);
-
-    /**
      * @notice Add reward to given staking pool
      * @dev Must be called by contract admin role.
      *      Requires the admin user to have approved the transfer of reward amount to this contract.
@@ -496,12 +458,4 @@ interface IStakingServiceV2 is IAccessControl, IAdminWallet {
      * @return Staking pool contract address
      */
     function stakingPoolContract() external view returns (address);
-
-    /**
-     * @notice Get contract usage role definition
-     * @return Returns contract usage role definition
-     */
-    // https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
-    // slither-disable-next-line naming-convention
-    function CONTRACT_USAGE_ROLE() external view returns (bytes32); // solhint-disable-line func-name-mixedcase
 }

@@ -20,7 +20,6 @@ interface IStakingPoolV2 is IAccessControl {
         uint256 earlyUnstakeCooldownPeriodDays;  // early unstake cooldown period in days
         uint256 earlyUnstakePenaltyMaxPercentWei; // early unstake max penalty percentage in wei
         uint256 earlyUnstakePenaltyMinPercentWei; // early unstake min penalty percentage in wei
-        uint256 revshareStakeDurationExtensionDays; // stake duration extension in days for claim revshare
     }
 
     struct StakingPoolInfo {
@@ -33,7 +32,6 @@ interface IStakingPoolV2 is IAccessControl {
         uint256 earlyUnstakeCooldownPeriodDays;  // early unstake cooldown period in days
         uint256 earlyUnstakePenaltyMaxPercentWei; // early unstake max penalty percentage in wei
         uint256 earlyUnstakePenaltyMinPercentWei; // early unstake min penalty percentage in wei
-        uint256 revshareStakeDurationExtensionDays; // stake duration extension in days for claim revshare
         bool isOpen; // true if staking pool allows staking
         bool isActive; // true if staking pool allows claim rewards and unstake
         bool isInitialized; // true if staking pool has been initialized
@@ -75,20 +73,6 @@ interface IStakingPoolV2 is IAccessControl {
     );
 
     /**
-     * @notice Emitted when stake duration extension for claim revshare has been changed from `oldStakeDurationExtensionDays` to `newStakeDurationExtensionDays` for given staking pool
-     * @param poolId The staking pool identifier
-     * @param sender The address that changed the stake duration extension for claim revshare
-     * @param oldStakeDurationExtensionDays The old stake duration extension in days for claim revshare
-     * @param newStakeDurationExtensionDays The new stake duration extension in days for claim revshare
-     */
-    event RevshareStakeDurationExtensionChanged(
-        bytes32 indexed poolId,
-        address indexed sender,
-        uint256 oldStakeDurationExtensionDays,
-        uint256 newStakeDurationExtensionDays
-    );
-
-    /**
      * @notice Emitted when a staking pool has been closed
      * @param poolId The staking pool identifier
      * @param sender The address that closed the staking pool
@@ -108,7 +92,6 @@ interface IStakingPoolV2 is IAccessControl {
      * @param earlyUnstakeCooldownPeriodDays The early unstake cooldown period in days
      * @param earlyUnstakePenaltyMaxPercentWei The early unstake max penalty percentage in wei
      * @param earlyUnstakePenaltyMinPercentWei The early unstake min penalty percentage in wei
-     * @param revshareStakeDurationExtensionDays The stake duration extension in days for claim revshare
      */
     event StakingPoolCreated(
         bytes32 indexed poolId,
@@ -121,8 +104,7 @@ interface IStakingPoolV2 is IAccessControl {
         uint256 poolAprWei,
         uint256 earlyUnstakeCooldownPeriodDays,
         uint256 earlyUnstakePenaltyMaxPercentWei,
-        uint256 earlyUnstakePenaltyMinPercentWei,
-        uint256 revshareStakeDurationExtensionDays
+        uint256 earlyUnstakePenaltyMinPercentWei
     );
 
     /**
@@ -191,14 +173,6 @@ interface IStakingPoolV2 is IAccessControl {
      * @param newPenaltyMinPercentWei The min penalty percentage in wei
      */
     function setEarlyUnstakePenaltyPercent(bytes32 poolId, uint256 newPenaltyMaxPercentWei, uint256 newPenaltyMinPercentWei) external;
-
-    /**
-     * @notice Set the stake duration extension in days for claim revshare
-     * @dev Must be called by contract admin role
-     * @param poolId The staking pool identifier
-     * @param newStakeDurationExtensionDays The stake duration extension in days
-     */
-    function setRevshareStakeDurationExtension(bytes32 poolId, uint256 newStakeDurationExtensionDays) external;
 
     /**
      * @notice Suspends the given staking pool to prevent user reward claims and unstakes
