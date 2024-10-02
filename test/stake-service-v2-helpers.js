@@ -1888,6 +1888,8 @@ async function revokeWithVerify(
         expectStakeInfoBeforeRevoke.estimatedRewardAtUnstakeWei,
       revokedRewardAmountWei: expectRevokedRewardAmountWei,
       revokedStakeAmountWei: expectRevokedStakeAmountWei,
+      revokeSecondsAfterStartblockTimestamp:
+        stakeEvent.eventSecondsAfterStartblockTimestamp,
       rewardClaimedWei: expectStakeInfoBeforeRevoke.rewardClaimedWei,
       stakeAmountWei: expectStakeInfoBeforeRevoke.stakeAmountWei,
       stakeMaturitySecondsAfterStartblockTimestamp:
@@ -4995,6 +4997,15 @@ async function verifyStakeInfo(
     );
     expect(stakeInfo.revokedStakeAmountWei).to.equal(
       expectStakeInfo.revokedStakeAmountWei,
+    );
+    expect(stakeInfo.revokeTimestamp).to.equal(
+      hre.ethers.BigNumber.from(
+        expectStakeInfo.revokeSecondsAfterStartblockTimestamp,
+      ).gt(hre.ethers.constants.Zero)
+        ? hre.ethers.BigNumber.from(startblockTimestamp).add(
+            expectStakeInfo.revokeSecondsAfterStartblockTimestamp,
+          )
+        : hre.ethers.constants.Zero,
     );
     expect(stakeInfo.rewardClaimedWei).to.equal(
       expectStakeInfo.rewardClaimedWei,
