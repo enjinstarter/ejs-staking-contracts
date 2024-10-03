@@ -8175,6 +8175,7 @@ describe("StakingServiceV2", function () {
         stakingServiceInstance,
         stakingPoolStakeRewardTokenSameConfigs,
         contractAdminRoleAccounts[1],
+        contractUsageRoleAccounts[1],
         stakeEvents,
         stakeInfos,
         stakingPoolStats,

@@ -936,7 +936,7 @@ contract StakingServiceV2 is
 
     /**
      * @dev Returns the unstake amount, penalty, cooldown period and whether stake has matured for the given stake key
-     * @dev assumes pool is not suspended, stake is not revoked, stake is not suspended and stake has not been unstaked
+     * @dev assumes pool is not suspended, stake is not revoked and stake has not been unstaked
      * @param stakingPoolInfo The staking pool info
      * @param stakekey The stake identifier
      * @return unstakingInfo The unstaking info for given staking pool and account

@@ -338,7 +338,6 @@ function calculateClaimableRewardWei(
 
   const estimatedRewardAtUnstakingWei = calculateEstimatedRewardAtUnstakingWei(
     estimatedRewardAtMaturityWei,
-    isStakeMaturedAtRevshareExtend,
     stakeTimestamp,
     stakeMaturityTimestamp,
     currentTimestamp,
@@ -375,7 +374,6 @@ function calculateCooldownExpiryTimestamp(
 
 function calculateEstimatedRewardAtUnstakingWei(
   estimatedRewardAtMaturityWei,
-  isStakeMaturedAtRevshareExtend,
   stakeTimestamp,
   stakeMaturityTimestamp,
   currentTimestamp,
@@ -403,7 +401,7 @@ function calculateEstimatedRewardAtUnstakingWei(
         ? bnStakeMaturityTimestamp
         : hre.ethers.BigNumber.from(currentTimestamp);
 
-  const estimatedRewardAtUnstakingWei = isStakeMaturedAtRevshareExtend
+  const estimatedRewardAtUnstakingWei = isMatured
     ? hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei)
     : hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei)
         .mul(effectiveTimestamp.sub(stakeTimestamp))
@@ -533,7 +531,6 @@ function calculateUnstakePenaltyPercentWei(
 
 function calculateUnstakedRewardBeforeMatureWei(
   estimatedRewardAtMaturityWei,
-  isStakeMaturedAtRevshareExtend,
   stakeTimestamp,
   stakeMaturityTimestamp,
   currentTimestamp,
@@ -547,7 +544,6 @@ function calculateUnstakedRewardBeforeMatureWei(
 
   const estimatedRewardAtUnstakeWei = calculateEstimatedRewardAtUnstakingWei(
     estimatedRewardAtMaturityWei,
-    isStakeMaturedAtRevshareExtend,
     stakeTimestamp,
     stakeMaturityTimestamp,
     currentTimestamp,
@@ -1916,6 +1912,8 @@ async function revokeWithVerify(
         expectStakeInfoBeforeRevoke.isStakeMaturedAtRevshareExtend,
       revokedRewardAmountWei: expectRevokedRewardAmountWei,
       revokedStakeAmountWei: expectRevokedStakeAmountWei,
+      revokeSecondsAfterStartblockTimestamp:
+        stakeEvent.eventSecondsAfterStartblockTimestamp,
       rewardClaimedWei: expectStakeInfoBeforeRevoke.rewardClaimedWei,
       stakeAmountWei: expectStakeInfoBeforeRevoke.stakeAmountWei,
       stakeMaturitySecondsAfterStartblockTimestamp:
@@ -2130,7 +2128,7 @@ async function revshareExtendStakeDurationWithVerify(
     expectStakeInfoBeforeExtend.unstakeSecondsAfterStartblockTimestamp,
     expectStakeInfoBeforeExtend.unstakeSecondsAfterStartblockTimestamp,
     null,
-    false,
+    null,
   );
 
   await verifyMultipleUnstakingInfos(
@@ -2146,16 +2144,21 @@ async function revshareExtendStakeDurationWithVerify(
   await testHelpers.setTimeNextBlock(expectExtendTimestamp.toNumber());
 
   const expectStakeMaturitySecondsAfterStartblockTimestampAfterExtend =
-    hre.ethers.BigNumber.from(
-      expectStakeInfoBeforeExtend.stakeMaturitySecondsAfterStartblockTimestamp,
-    ).add(
+    calculateStateMaturityTimestamp(
       stakingPoolConfigs[stakeEvent.poolIndex]
         .revshareStakeDurationExtensionDays,
+      hre.ethers.BigNumber.from(
+        stakeEvent.eventSecondsAfterStartblockTimestamp,
+      ).gt(
+        expectStakeInfoBeforeExtend.stakeMaturitySecondsAfterStartblockTimestamp,
+      )
+        ? stakeEvent.eventSecondsAfterStartblockTimestamp
+        : expectStakeInfoBeforeExtend.stakeMaturitySecondsAfterStartblockTimestamp,
     );
 
   const expectIsStakeMaturedAtRevshareExtend = isStakeMatured(
     expectStakeInfoBeforeExtend.stakeMaturitySecondsAfterStartblockTimestamp,
-    triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+    stakeEvent.eventSecondsAfterStartblockTimestamp,
     null,
   );
 
@@ -2182,8 +2185,12 @@ async function revshareExtendStakeDurationWithVerify(
       stakeEvent.stakeId,
       stakingPoolConfigs[stakeEvent.poolIndex]
         .revshareStakeDurationExtensionDays,
-      expectStakeInfoBeforeExtend.stakeMaturitySecondsAfterStartblockTimestamp,
-      expectStakeMaturitySecondsAfterStartblockTimestampAfterExtend,
+      hre.ethers.BigNumber.from(startblockTimestamp).add(
+        expectStakeInfoBeforeExtend.stakeMaturitySecondsAfterStartblockTimestamp,
+      ),
+      hre.ethers.BigNumber.from(startblockTimestamp).add(
+        expectStakeMaturitySecondsAfterStartblockTimestampAfterExtend,
+      ),
       expectIsStakeMaturedAtRevshareExtend,
       extenderAddress,
     );
@@ -2257,7 +2264,7 @@ async function revshareExtendStakeDurationWithVerify(
     expectStakeInfosAfterExtend,
   );
 
-  const stakingPoolStatsAfterRevoke = await verifyStakingPoolStats(
+  const stakingPoolStatsAfterExtend = await verifyStakingPoolStats(
     stakingServiceContractInstance,
     stakingPoolConfigs[stakeEvent.poolIndex].poolId,
     {
@@ -3967,7 +3974,8 @@ async function testSetStakingPoolContract(
 async function testStakeClaimRevokeUnstakeWithdraw(
   stakingServiceContractInstance,
   stakingPoolConfigs,
-  revoker,
+  contractAdminRoleUser,
+  contractUsageRoleUser,
   stakeEvents,
   stakeInfos,
   stakingPoolStats,
@@ -4008,7 +4016,21 @@ async function testStakeClaimRevokeUnstakeWithdraw(
           stakingServiceContractInstance,
           stakingPoolConfigs,
           startblockTimestamp,
-          revoker,
+          contractAdminRoleUser,
+          stakeEvents[i],
+          stakeInfos[i],
+          stakeInfos[i + 1],
+          stakingPoolStats[i],
+          stakingPoolStats[i + 1],
+        );
+        break;
+      case "RevshareExtend":
+        console.log(`\n${i}: RevshareExtend`);
+        await revshareExtendStakeDurationWithVerify(
+          stakingServiceContractInstance,
+          stakingPoolConfigs,
+          startblockTimestamp,
+          contractUsageRoleUser,
           stakeEvents[i],
           stakeInfos[i],
           stakeInfos[i + 1],
@@ -4175,7 +4197,6 @@ async function unstakeWithVerify(
   const expectEstimatedRewardAtUnstakeWei =
     calculateEstimatedRewardAtUnstakingWei(
       expectStakeInfoBeforeUnstake.estimatedRewardAtMaturityWei,
-      expectStakeInfoBeforeUnstake.isStakeMaturedAtRevshareExtend,
       expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
       expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
       stakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -4216,7 +4237,6 @@ async function unstakeWithVerify(
   const expectUnstakedRewardBeforeMatureWeiAtUnstake =
     calculateUnstakedRewardBeforeMatureWei(
       expectStakeInfoBeforeUnstake.estimatedRewardAtMaturityWei,
-      expectStakeInfoBeforeUnstake.isStakeMaturedAtRevshareExtend,
       expectStakeInfoBeforeUnstake.stakeSecondsAfterStartblockTimestamp,
       expectStakeInfoBeforeUnstake.stakeMaturitySecondsAfterStartblockTimestamp,
       stakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -4550,14 +4570,17 @@ function updateExpectStakeInfoAfterRevshareExtend(
   }
 
   expectStakeInfoAfterTriggerStakeEvent.stakeMaturitySecondsAfterStartblockTimestamp =
-    hre.ethers.BigNumber.from(
-      expectStakeInfoAfterTriggerStakeEvent.stakeMaturitySecondsAfterStartblockTimestamp,
-    )
-      .add(
-        stakingPoolConfigs[triggerStakeEvent.poolIndex]
-          .revshareStakeDurationExtensionDays,
+    calculateStateMaturityTimestamp(
+      stakingPoolConfigs[triggerStakeEvent.poolIndex]
+        .revshareStakeDurationExtensionDays,
+      hre.ethers.BigNumber.from(
+        triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
+      ).gt(
+        expectStakeInfoAfterTriggerStakeEvent.stakeMaturitySecondsAfterStartblockTimestamp,
       )
-      .toString();
+        ? triggerStakeEvent.eventSecondsAfterStartblockTimestamp
+        : expectStakeInfoAfterTriggerStakeEvent.stakeMaturitySecondsAfterStartblockTimestamp,
+    ).toString();
 }
 
 function updateExpectStakeInfoAfterStake(
@@ -4648,7 +4671,6 @@ function updateExpectStakeInfoAfterUnstake(
   expectStakeInfoAfterTriggerStakeEvent.estimatedRewardAtUnstakeWei =
     calculateEstimatedRewardAtUnstakingWei(
       expectStakeInfoAfterTriggerStakeEvent.estimatedRewardAtMaturityWei,
-      expectStakeInfoAfterTriggerStakeEvent.isStakeMaturedAtRevshareExtend,
       updateStakeEvent.eventSecondsAfterStartblockTimestamp,
       stakeMaturitySecondsAfterStartblockTimestamp,
       triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -5042,7 +5064,6 @@ function updateExpectStakingPoolStatsAfterUnstake(
   );
   const unstakedRewardBeforeMatureWei = calculateUnstakedRewardBeforeMatureWei(
     estimatedRewardAtMaturityWei,
-    expectStakeInfoAfterTriggerStakeEvent.isStakeMaturedAtRevshareExtend,
     updateStakeEvent.eventSecondsAfterStartblockTimestamp,
     stakeMaturitySecondsAfterStartblockTimestamp,
     triggerStakeEvent.eventSecondsAfterStartblockTimestamp,
@@ -5383,6 +5404,15 @@ async function verifyStakeInfo(
     expect(stakeInfo.revokedStakeAmountWei).to.equal(
       expectStakeInfo.revokedStakeAmountWei,
     );
+    expect(stakeInfo.revokeTimestamp).to.equal(
+      hre.ethers.BigNumber.from(
+        expectStakeInfo.revokeSecondsAfterStartblockTimestamp,
+      ).gt(hre.ethers.constants.Zero)
+        ? hre.ethers.BigNumber.from(startblockTimestamp).add(
+            expectStakeInfo.revokeSecondsAfterStartblockTimestamp,
+          )
+        : hre.ethers.constants.Zero,
+    );
     expect(stakeInfo.rewardClaimedWei).to.equal(
       expectStakeInfo.rewardClaimedWei,
     );
@@ -5573,7 +5603,6 @@ async function verifyUnstakingInfo(
     const expectEstimatedRewardAtUnstakingWei =
       calculateEstimatedRewardAtUnstakingWei(
         estimatedRewardAtMaturityWei,
-        isStakeMaturedAtRevshareExtend,
         stakeTimestamp,
         stakeMaturityTimestamp,
         getUnstakingInfoTimestamp,
