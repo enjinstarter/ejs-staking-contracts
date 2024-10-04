@@ -1890,6 +1890,71 @@ describe("StakingServiceV2", function () {
             ),
         ).to.be.revertedWith("SSvcs2: unstaked");
       });
+
+      it.only("should not allow get unstake info for estimated unstake reward more than maturity reward", async () => {
+        const bankAccount = governanceRoleAccounts[0];
+        const contractAdminAccount = contractAdminRoleAccounts[1];
+        const enduserAccount = enduserAccounts[1];
+        const enduserAddress = await enduserAccount.getAddress();
+        const poolIndex = 4;
+        const stakeAmountWei = hre.ethers.utils.parseEther(
+          "9599.378692908225033340",
+        );
+        const stakeUuid = "142bc4db-2401-4a6b-a20c-d36860cfe4e9";
+        const stakeId = hre.ethers.utils.id(stakeUuid);
+
+        const stakingPoolConfig =
+          stakingPoolStakeRewardTokenSameConfigs[poolIndex];
+
+        const testServiceInstance =
+          await stakeServiceHelpers.newMockStakingService(
+            stakingPoolInstance.address,
+          );
+
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.GOVERNANCE_ROLE,
+          governanceRoleAccounts.slice(1),
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        await testHelpers.grantRole(
+          testServiceInstance,
+          testHelpers.CONTRACT_ADMIN_ROLE,
+          contractAdminRoleAccounts,
+          governanceRoleAccounts[0],
+          true,
+        );
+
+        const startblockTimestamp =
+          await testHelpers.getCurrentBlockTimestamp();
+
+        await stakeServiceHelpers.setupTestStakeEnvironment(
+          testServiceInstance,
+          stakingPoolStakeRewardTokenSameConfigs,
+          startblockTimestamp,
+          contractAdminAccount,
+          enduserAccount,
+          poolIndex,
+          stakeAmountWei,
+          stakeUuid,
+          120,
+          240,
+          bankAccount,
+          stakingPoolsRewardBalanceOf,
+        );
+
+        await expect(
+          testServiceInstance
+            .connect(enduserAccount)
+            .getUnstakingInfo(
+              stakingPoolConfig.poolId,
+              enduserAddress,
+              stakeId,
+            ),
+        ).to.be.revertedWith("SSvcs2: reward > maturity reward");
+      });
     });
 
     describe("Get Estimated Reward At Unstaking", function () {

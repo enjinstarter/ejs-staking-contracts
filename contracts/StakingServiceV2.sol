@@ -792,14 +792,11 @@ contract StakingServiceV2 is
             return 0;
         }
 
-        uint256 effectiveTimestamp = (unstakingTimestamp > 0) ? unstakingTimestamp : block.timestamp;
-        require(effectiveTimestamp >= _stakes[stakekey].stakeTimestamp, "SSvcs2: effective before stake");
-
-        estimatedRewardAtUnstakingWei = (effectiveTimestamp >= _stakes[stakekey].stakeMaturityTimestamp)
-                ? _stakes[stakekey].estimatedRewardAtMaturityWei
-                : _stakes[stakekey].estimatedRewardAtMaturityWei
-                    * (effectiveTimestamp - _stakes[stakekey].stakeTimestamp)
-                    / (_stakes[stakekey].stakeMaturityTimestamp - _stakes[stakekey].stakeTimestamp);
+        estimatedRewardAtUnstakingWei = (unstakingTimestamp >= _stakes[stakekey].stakeMaturityTimestamp)
+            ? _stakes[stakekey].estimatedRewardAtMaturityWei
+            : _stakes[stakekey].estimatedRewardAtMaturityWei
+                * (unstakingTimestamp - _stakes[stakekey].stakeTimestamp)
+                / (_stakes[stakekey].stakeMaturityTimestamp - _stakes[stakekey].stakeTimestamp);
     }
 
     /**

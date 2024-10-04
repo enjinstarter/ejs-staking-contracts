@@ -64,6 +64,22 @@ contract MockStakingServiceV2 is StakingServiceV2 {
         }
     }
 
+    function _getEstimatedRewardAtUnstakingWei(bytes memory stakekey, uint256 unstakingTimestamp)
+        internal
+        view
+        override
+        returns (uint256 estimatedRewardAtUnstakingWei)
+    {
+        bytes memory testStakekey = _getStakeKey(keccak256(abi.encodePacked("b2507daa-6117-4da1-a037-5483116c1397")), msg.sender, keccak256(abi.encodePacked("142bc4db-2401-4a6b-a20c-d36860cfe4e9")));
+
+        if (keccak256(stakekey) == keccak256(testStakekey)) {
+            // slither-disable-next-line too-many-digits
+            estimatedRewardAtUnstakingWei = 1000000000 ether;
+        } else {
+            estimatedRewardAtUnstakingWei = super._getEstimatedRewardAtUnstakingWei(stakekey, unstakingTimestamp);
+        }
+    }
+
     function _getUnstakingInfoByStakekey(IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo, bytes memory stakekey)
         internal
         view
