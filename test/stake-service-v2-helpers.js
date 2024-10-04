@@ -3627,7 +3627,7 @@ async function testSetStakingPoolContract(
 async function testStakeClaimRevokeUnstakeWithdraw(
   stakingServiceContractInstance,
   stakingPoolConfigs,
-  revoker,
+  contractAdminRoleUser,
   stakeEvents,
   stakeInfos,
   stakingPoolStats,
@@ -3668,7 +3668,7 @@ async function testStakeClaimRevokeUnstakeWithdraw(
           stakingServiceContractInstance,
           stakingPoolConfigs,
           startblockTimestamp,
-          revoker,
+          contractAdminRoleUser,
           stakeEvents[i],
           stakeInfos[i],
           stakeInfos[i + 1],
