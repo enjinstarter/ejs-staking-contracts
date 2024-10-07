@@ -1891,7 +1891,7 @@ describe("StakingServiceV2", function () {
         ).to.be.revertedWith("SSvcs2: unstaked");
       });
 
-      it.only("should not allow get unstake info for estimated unstake reward more than maturity reward", async () => {
+      it("should not allow get unstake info for estimated unstake reward more than maturity reward", async () => {
         const bankAccount = governanceRoleAccounts[0];
         const contractAdminAccount = contractAdminRoleAccounts[1];
         const enduserAccount = enduserAccounts[1];
