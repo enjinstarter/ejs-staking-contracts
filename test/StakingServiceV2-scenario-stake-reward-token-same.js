@@ -177,8 +177,28 @@ describe("StakingServiceV2", function () {
     it("Should be able to stake, claim reward, revoke, unstake and withdraw", async () => {
       const stakeEvents = [
         {
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(64),
+          eventType: "AddReward",
+          poolIndex: 2,
+          signer: contractAdminRoleAccounts[1],
+          signerAddress: await contractAdminRoleAccounts[1].getAddress(),
+          rewardAmountWei: hre.ethers.constants.Zero, // hre.ethers.utils.parseEther("0.000000000000000001"),
+          hasPermission: true,
+        },
+        {
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(185),
+          eventType: "AddReward",
+          poolIndex: 1,
+          signer: contractAdminRoleAccounts[1],
+          signerAddress: await contractAdminRoleAccounts[1].getAddress(),
+          rewardAmountWei: hre.ethers.utils.parseEther(
+            "176892.717713562728261908",
+          ),
+          hasPermission: true,
+        },
+        {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(10),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(306),
           eventType: "Stake",
           poolIndex: 1,
           signer: enduserAccounts[0],
@@ -192,7 +212,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(143),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(427),
           eventType: "Stake",
           poolIndex: 2,
           signer: enduserAccounts[0],
@@ -206,7 +226,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(279),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(548),
           eventType: "Stake",
           poolIndex: 0,
           signer: enduserAccounts[1],
@@ -220,7 +240,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(415),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(669),
           eventType: "Stake",
           poolIndex: 0,
           signer: enduserAccounts[2],
@@ -234,7 +254,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(548),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(790),
           eventType: "Stake",
           poolIndex: 2,
           signer: enduserAccounts[1],
@@ -247,7 +267,7 @@ describe("StakingServiceV2", function () {
           stakeId: hre.ethers.utils.id("f3159f39-bb26-47fc-8b0f-44d6959b20e1"),
         },
         {
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(679),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(911),
           eventType: "Unstake",
           poolIndex: 0,
           signer: enduserAccounts[1],
@@ -256,7 +276,7 @@ describe("StakingServiceV2", function () {
           stakeId: hre.ethers.utils.id("d5f88099-472a-4974-ad2a-c8d70af8f37f"),
         },
         {
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(810),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1032),
           eventType: "Withdraw",
           poolIndex: 0,
           signer: enduserAccounts[1],
@@ -266,7 +286,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(946),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1153),
           eventType: "Stake",
           poolIndex: 0,
           signer: enduserAccounts[1],
@@ -280,7 +300,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1077),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1274),
           eventType: "Stake",
           poolIndex: 1,
           signer: enduserAccounts[1],
@@ -294,7 +314,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1189),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1395),
           eventType: "Stake",
           poolIndex: 1,
           signer: enduserAccounts[1],
@@ -308,7 +328,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1348),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1516),
           eventType: "Stake",
           poolIndex: 0,
           signer: enduserAccounts[0],
@@ -321,7 +341,7 @@ describe("StakingServiceV2", function () {
           stakeId: hre.ethers.utils.id("4defd107-efe9-414a-8354-0f37d113b24a"),
         },
         {
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1486),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1637),
           eventType: "Unstake",
           poolIndex: 2,
           signer: enduserAccounts[0],
@@ -331,7 +351,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1553),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1758),
           eventType: "Stake",
           poolIndex: 2,
           signer: enduserAccounts[0],
@@ -344,7 +364,7 @@ describe("StakingServiceV2", function () {
           stakeId: hre.ethers.utils.id("f0cc2925-5733-4e6e-976d-57b093e0edff"),
         },
         {
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1756),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1879),
           eventType: "Revoke",
           poolIndex: 0,
           signer: enduserAccounts[1],
@@ -354,7 +374,7 @@ describe("StakingServiceV2", function () {
         },
         {
           bankSigner: governanceRoleAccounts[0],
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(1833),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2000),
           eventType: "Stake",
           poolIndex: 1,
           signer: enduserAccounts[2],
@@ -367,7 +387,7 @@ describe("StakingServiceV2", function () {
           stakeId: hre.ethers.utils.id("76643db8-1d4f-4983-bcd2-d262b24b0336"),
         },
         {
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2107),
+          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(2121),
           eventType: "Revoke",
           poolIndex: 2,
           signer: enduserAccounts[1],
@@ -483,7 +503,7 @@ describe("StakingServiceV2", function () {
         },
         {
           eventSecondsAfterStartblockTimestamp:
-            hre.ethers.BigNumber.from(87886),
+            hre.ethers.BigNumber.from(88037),
           eventType: "Withdraw",
           poolIndex: 2,
           signer: enduserAccounts[0],
@@ -757,7 +777,7 @@ describe("StakingServiceV2", function () {
         },
         {
           eventSecondsAfterStartblockTimestamp:
-            hre.ethers.BigNumber.from(31537077),
+            hre.ethers.BigNumber.from(31537274),
           eventType: "Unstake",
           poolIndex: 1,
           signer: enduserAccounts[1],
@@ -2836,14 +2856,6 @@ describe("StakingServiceV2", function () {
 
       const stakeInfos000 = new Map();
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`,
-        structuredClone(stakeServiceHelpers.initialStakeInfo),
-      );
-      stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`,
-        structuredClone(stakeServiceHelpers.initialStakeInfo),
-      );
-      stakeInfos000.set(
         `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
@@ -2856,11 +2868,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId},${stakeEvents[5].signerAddress},${stakeEvents[5].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[6].poolIndex].poolId},${stakeEvents[6].signerAddress},${stakeEvents[6].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -2869,6 +2881,10 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos000.set(
         `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`,
+        structuredClone(stakeServiceHelpers.initialStakeInfo),
+      );
+      stakeInfos000.set(
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId},${stakeEvents[11].signerAddress},${stakeEvents[11].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -2884,19 +2900,19 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId},${stakeEvents[20].signerAddress},${stakeEvents[20].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId},${stakeEvents[18].signerAddress},${stakeEvents[18].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId},${stakeEvents[23].signerAddress},${stakeEvents[23].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[22].poolIndex].poolId},${stakeEvents[22].signerAddress},${stakeEvents[22].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId},${stakeEvents[24].signerAddress},${stakeEvents[24].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId},${stakeEvents[25].signerAddress},${stakeEvents[25].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId},${stakeEvents[31].signerAddress},${stakeEvents[31].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId},${stakeEvents[26].signerAddress},${stakeEvents[26].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -2904,7 +2920,7 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId},${stakeEvents[36].signerAddress},${stakeEvents[36].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[35].poolIndex].poolId},${stakeEvents[35].signerAddress},${stakeEvents[35].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -2912,15 +2928,15 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId},${stakeEvents[43].signerAddress},${stakeEvents[43].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[40].poolIndex].poolId},${stakeEvents[40].signerAddress},${stakeEvents[40].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId},${stakeEvents[45].signerAddress},${stakeEvents[45].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId},${stakeEvents[46].signerAddress},${stakeEvents[46].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -2929,10 +2945,6 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos000.set(
         `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`,
-        structuredClone(stakeServiceHelpers.initialStakeInfo),
-      );
-      stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId},${stakeEvents[53].signerAddress},${stakeEvents[53].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -2952,27 +2964,27 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId},${stakeEvents[62].signerAddress},${stakeEvents[62].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[58].poolIndex].poolId},${stakeEvents[58].signerAddress},${stakeEvents[58].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId},${stakeEvents[63].signerAddress},${stakeEvents[63].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId},${stakeEvents[59].signerAddress},${stakeEvents[59].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[66].poolIndex].poolId},${stakeEvents[66].signerAddress},${stakeEvents[66].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId},${stakeEvents[64].signerAddress},${stakeEvents[64].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId},${stakeEvents[67].signerAddress},${stakeEvents[67].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId},${stakeEvents[65].signerAddress},${stakeEvents[65].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId},${stakeEvents[72].signerAddress},${stakeEvents[72].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[68].poolIndex].poolId},${stakeEvents[68].signerAddress},${stakeEvents[68].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[73].poolIndex].poolId},${stakeEvents[73].signerAddress},${stakeEvents[73].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId},${stakeEvents[69].signerAddress},${stakeEvents[69].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -2992,7 +3004,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId},${stakeEvents[98].signerAddress},${stakeEvents[98].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[78].poolIndex].poolId},${stakeEvents[78].signerAddress},${stakeEvents[78].stakeId}`,
+        structuredClone(stakeServiceHelpers.initialStakeInfo),
+      );
+      stakeInfos000.set(
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[79].poolIndex].poolId},${stakeEvents[79].signerAddress},${stakeEvents[79].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3000,15 +3016,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId},${stakeEvents[101].signerAddress},${stakeEvents[101].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[102].poolIndex].poolId},${stakeEvents[102].signerAddress},${stakeEvents[102].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId},${stakeEvents[114].signerAddress},${stakeEvents[114].stakeId}`,
-        structuredClone(stakeServiceHelpers.initialStakeInfo),
-      );
-      stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId},${stakeEvents[115].signerAddress},${stakeEvents[115].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId},${stakeEvents[103].signerAddress},${stakeEvents[103].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3028,11 +3040,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[122].poolIndex].poolId},${stakeEvents[122].signerAddress},${stakeEvents[122].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[120].poolIndex].poolId},${stakeEvents[120].signerAddress},${stakeEvents[120].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId},${stakeEvents[123].signerAddress},${stakeEvents[123].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[121].poolIndex].poolId},${stakeEvents[121].signerAddress},${stakeEvents[121].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3044,11 +3056,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId},${stakeEvents[128].signerAddress},${stakeEvents[128].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId},${stakeEvents[126].signerAddress},${stakeEvents[126].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId},${stakeEvents[129].signerAddress},${stakeEvents[129].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId},${stakeEvents[127].signerAddress},${stakeEvents[127].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3064,7 +3076,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[167].poolIndex].poolId},${stakeEvents[167].signerAddress},${stakeEvents[167].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[133].poolIndex].poolId},${stakeEvents[133].signerAddress},${stakeEvents[133].stakeId}`,
+        structuredClone(stakeServiceHelpers.initialStakeInfo),
+      );
+      stakeInfos000.set(
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[134].poolIndex].poolId},${stakeEvents[134].signerAddress},${stakeEvents[134].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3072,15 +3088,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[191].poolIndex].poolId},${stakeEvents[191].signerAddress},${stakeEvents[191].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[171].poolIndex].poolId},${stakeEvents[171].signerAddress},${stakeEvents[171].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
         `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[193].poolIndex].poolId},${stakeEvents[193].signerAddress},${stakeEvents[193].stakeId}`,
-        structuredClone(stakeServiceHelpers.initialStakeInfo),
-      );
-      stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[194].poolIndex].poolId},${stakeEvents[194].signerAddress},${stakeEvents[194].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3096,11 +3108,11 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId},${stakeEvents[198].signerAddress},${stakeEvents[198].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[200].poolIndex].poolId},${stakeEvents[200].signerAddress},${stakeEvents[200].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3108,11 +3120,15 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[202].poolIndex].poolId},${stakeEvents[202].signerAddress},${stakeEvents[202].stakeId}`,
+        structuredClone(stakeServiceHelpers.initialStakeInfo),
+      );
+      stakeInfos000.set(
         `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[203].poolIndex].poolId},${stakeEvents[203].signerAddress},${stakeEvents[203].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[204].poolIndex].poolId},${stakeEvents[204].signerAddress},${stakeEvents[204].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[205].poolIndex].poolId},${stakeEvents[205].signerAddress},${stakeEvents[205].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
@@ -3120,50 +3136,74 @@ describe("StakingServiceV2", function () {
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[207].poolIndex].poolId},${stakeEvents[207].signerAddress},${stakeEvents[207].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[208].poolIndex].poolId},${stakeEvents[208].signerAddress},${stakeEvents[208].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[210].poolIndex].poolId},${stakeEvents[210].signerAddress},${stakeEvents[210].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[209].poolIndex].poolId},${stakeEvents[209].signerAddress},${stakeEvents[209].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[213].poolIndex].poolId},${stakeEvents[213].signerAddress},${stakeEvents[213].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[212].poolIndex].poolId},${stakeEvents[212].signerAddress},${stakeEvents[212].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[219].poolIndex].poolId},${stakeEvents[219].signerAddress},${stakeEvents[219].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[215].poolIndex].poolId},${stakeEvents[215].signerAddress},${stakeEvents[215].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[226].poolIndex].poolId},${stakeEvents[226].signerAddress},${stakeEvents[226].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[221].poolIndex].poolId},${stakeEvents[221].signerAddress},${stakeEvents[221].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[229].poolIndex].poolId},${stakeEvents[229].signerAddress},${stakeEvents[229].stakeId}`,
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[228].poolIndex].poolId},${stakeEvents[228].signerAddress},${stakeEvents[228].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
       stakeInfos000.set(
         `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[231].poolIndex].poolId},${stakeEvents[231].signerAddress},${stakeEvents[231].stakeId}`,
         structuredClone(stakeServiceHelpers.initialStakeInfo),
       );
+      stakeInfos000.set(
+        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[233].poolIndex].poolId},${stakeEvents[233].signerAddress},${stakeEvents[233].stakeId}`,
+        structuredClone(stakeServiceHelpers.initialStakeInfo),
+      );
       stakeInfos.push(stakeInfos000);
 
       const stakingPoolStats = [];
-
       const stakingPoolStats000 = new Map();
-      stakingPoolStats000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`,
-        structuredClone(stakeServiceHelpers.initialStakingPoolStat),
-      );
-      stakingPoolStats000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`,
-        structuredClone(stakeServiceHelpers.initialStakingPoolStat),
-      );
-      stakingPoolStats000.set(
-        `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`,
-        structuredClone(stakeServiceHelpers.initialStakingPoolStat),
-      );
+      const firstStakeEvents = [4, 2, 3];
+
+      for (let i = 0; i < firstStakeEvents.length; i++) {
+        const stakingPoolStatInitial = structuredClone(
+          stakeServiceHelpers.initialStakingPoolStat,
+        );
+        if (
+          stakingPoolStakeRewardTokenSameConfigs[
+            stakeEvents[firstStakeEvents[i]].poolIndex
+          ].poolAprWei.eq(hre.ethers.constants.Zero)
+        ) {
+          stakingPoolStatInitial.poolSizeWei = stakeServiceHelpers
+            .computePoolSizeWei(
+              stakingPoolStakeRewardTokenSameConfigs[
+                stakeEvents[firstStakeEvents[i]].poolIndex
+              ].stakeDurationDays,
+              stakingPoolStakeRewardTokenSameConfigs[
+                stakeEvents[firstStakeEvents[i]].poolIndex
+              ].poolAprWei,
+              hre.ethers.constants.Zero,
+              stakingPoolStakeRewardTokenSameConfigs[
+                stakeEvents[firstStakeEvents[i]].poolIndex
+              ].stakeTokenDecimals,
+            )
+            .toString();
+        }
+
+        stakingPoolStats000.set(
+          `${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[firstStakeEvents[i]].poolIndex].poolId}`,
+          stakingPoolStatInitial,
+        );
+      }
+
       stakingPoolStats.push(stakingPoolStats000);
 
       const {
@@ -3178,9 +3218,6 @@ describe("StakingServiceV2", function () {
         stakingPoolStats000,
       );
       stakeInfos.push(stakeInfos001);
-      console.log(
-        `\nstakeInfoAfterEvent000 after: ${JSON.stringify(stakeInfos[1].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`))}`,
-      );
       stakingPoolStats.push(stakingPoolStats001);
       console.log(
         `stakingPoolStatsAfterEvent000 after: ${JSON.stringify(stakingPoolStats[1].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`))}`,
@@ -3198,9 +3235,6 @@ describe("StakingServiceV2", function () {
         stakingPoolStats001,
       );
       stakeInfos.push(stakeInfos002);
-      console.log(
-        `\nstakeInfoAfterEvent001 after: ${JSON.stringify(stakeInfos[2].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`))}`,
-      );
       stakingPoolStats.push(stakingPoolStats002);
       console.log(
         `stakingPoolStatsAfterEvent001 after: ${JSON.stringify(stakingPoolStats[2].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`))}`,
@@ -3271,7 +3305,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats006,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[5],
-        stakeEvents[2],
+        stakeEvents[5],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos005,
@@ -3279,11 +3313,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos006);
       console.log(
-        `\nstakeInfoAfterEvent005 after: ${JSON.stringify(stakeInfos[6].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`))}`,
+        `\nstakeInfoAfterEvent005 after: ${JSON.stringify(stakeInfos[6].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId},${stakeEvents[5].signerAddress},${stakeEvents[5].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats006);
       console.log(
-        `stakingPoolStatsAfterEvent005 after: ${JSON.stringify(stakingPoolStats[6].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent005 after: ${JSON.stringify(stakingPoolStats[6].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3291,19 +3325,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats007,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[6],
-        stakeEvents[2],
-        stakeEvents[5],
+        stakeEvents[6],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos006,
         stakingPoolStats006,
       );
       stakeInfos.push(stakeInfos007);
       console.log(
-        `\nstakeInfoAfterEvent006 after: ${JSON.stringify(stakeInfos[7].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`))}`,
+        `\nstakeInfoAfterEvent006 after: ${JSON.stringify(stakeInfos[7].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[6].poolIndex].poolId},${stakeEvents[6].signerAddress},${stakeEvents[6].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats007);
       console.log(
-        `stakingPoolStatsAfterEvent006 after: ${JSON.stringify(stakingPoolStats[7].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent006 after: ${JSON.stringify(stakingPoolStats[7].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[6].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3311,7 +3345,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats008,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[7],
-        stakeEvents[7],
+        stakeEvents[4],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos007,
@@ -3319,11 +3353,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos008);
       console.log(
-        `\nstakeInfoAfterEvent007 after: ${JSON.stringify(stakeInfos[8].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`))}`,
+        `\nstakeInfoAfterEvent007 after: ${JSON.stringify(stakeInfos[8].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats008);
       console.log(
-        `stakingPoolStatsAfterEvent007 after: ${JSON.stringify(stakingPoolStats[8].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent007 after: ${JSON.stringify(stakingPoolStats[8].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3331,19 +3365,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats009,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[8],
-        stakeEvents[8],
-        null,
+        stakeEvents[4],
+        stakeEvents[7],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos008,
         stakingPoolStats008,
       );
       stakeInfos.push(stakeInfos009);
       console.log(
-        `\nstakeInfoAfterEvent008 after: ${JSON.stringify(stakeInfos[9].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`))}`,
+        `\nstakeInfoAfterEvent008 after: ${JSON.stringify(stakeInfos[9].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats009);
       console.log(
-        `stakingPoolStatsAfterEvent008 after: ${JSON.stringify(stakingPoolStats[9].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent008 after: ${JSON.stringify(stakingPoolStats[9].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3391,7 +3425,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats012,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[11],
-        stakeEvents[1],
+        stakeEvents[11],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos011,
@@ -3399,11 +3433,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos012);
       console.log(
-        `\nstakeInfoAfterEvent011 after: ${JSON.stringify(stakeInfos[12].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`))}`,
+        `\nstakeInfoAfterEvent011 after: ${JSON.stringify(stakeInfos[12].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId},${stakeEvents[11].signerAddress},${stakeEvents[11].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats012);
       console.log(
-        `stakingPoolStatsAfterEvent011 after: ${JSON.stringify(stakingPoolStats[12].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent011 after: ${JSON.stringify(stakingPoolStats[12].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3431,7 +3465,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats014,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[13],
-        stakeEvents[7],
+        stakeEvents[3],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos013,
@@ -3439,11 +3473,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos014);
       console.log(
-        `\nstakeInfoAfterEvent013 after: ${JSON.stringify(stakeInfos[14].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId},${stakeEvents[7].signerAddress},${stakeEvents[7].stakeId}`))}`,
+        `\nstakeInfoAfterEvent013 after: ${JSON.stringify(stakeInfos[14].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats014);
       console.log(
-        `stakingPoolStatsAfterEvent013 after: ${JSON.stringify(stakingPoolStats[14].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[7].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent013 after: ${JSON.stringify(stakingPoolStats[14].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3471,7 +3505,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats016,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[15],
-        stakeEvents[4],
+        stakeEvents[9],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos015,
@@ -3479,11 +3513,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos016);
       console.log(
-        `\nstakeInfoAfterEvent015 after: ${JSON.stringify(stakeInfos[16].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
+        `\nstakeInfoAfterEvent015 after: ${JSON.stringify(stakeInfos[16].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats016);
       console.log(
-        `stakingPoolStatsAfterEvent015 after: ${JSON.stringify(stakingPoolStats[16].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent015 after: ${JSON.stringify(stakingPoolStats[16].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3511,7 +3545,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats018,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[17],
-        stakeEvents[12],
+        stakeEvents[6],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos017,
@@ -3519,11 +3553,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos018);
       console.log(
-        `\nstakeInfoAfterEvent017 after: ${JSON.stringify(stakeInfos[18].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
+        `\nstakeInfoAfterEvent017 after: ${JSON.stringify(stakeInfos[18].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[6].poolIndex].poolId},${stakeEvents[6].signerAddress},${stakeEvents[6].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats018);
       console.log(
-        `stakingPoolStatsAfterEvent017 after: ${JSON.stringify(stakingPoolStats[18].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent017 after: ${JSON.stringify(stakingPoolStats[18].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[6].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3531,7 +3565,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats019,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[18],
-        stakeEvents[14],
+        stakeEvents[18],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos018,
@@ -3539,11 +3573,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos019);
       console.log(
-        `\nstakeInfoAfterEvent018 after: ${JSON.stringify(stakeInfos[19].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
+        `\nstakeInfoAfterEvent018 after: ${JSON.stringify(stakeInfos[19].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId},${stakeEvents[18].signerAddress},${stakeEvents[18].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats019);
       console.log(
-        `stakingPoolStatsAfterEvent018 after: ${JSON.stringify(stakingPoolStats[19].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent018 after: ${JSON.stringify(stakingPoolStats[19].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3552,7 +3586,7 @@ describe("StakingServiceV2", function () {
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[19],
         stakeEvents[14],
-        stakeEvents[18],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos019,
         stakingPoolStats019,
@@ -3571,7 +3605,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats021,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[20],
-        stakeEvents[20],
+        stakeEvents[16],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos020,
@@ -3579,11 +3613,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos021);
       console.log(
-        `\nstakeInfoAfterEvent020 after: ${JSON.stringify(stakeInfos[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId},${stakeEvents[20].signerAddress},${stakeEvents[20].stakeId}`))}`,
+        `\nstakeInfoAfterEvent020 after: ${JSON.stringify(stakeInfos[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId},${stakeEvents[16].signerAddress},${stakeEvents[16].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats021);
       console.log(
-        `stakingPoolStatsAfterEvent020 after: ${JSON.stringify(stakingPoolStats[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent020 after: ${JSON.stringify(stakingPoolStats[21].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3591,19 +3625,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats022,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[21],
-        stakeEvents[3],
-        null,
+        stakeEvents[16],
+        stakeEvents[20],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos021,
         stakingPoolStats021,
       );
       stakeInfos.push(stakeInfos022);
       console.log(
-        `\nstakeInfoAfterEvent021 after: ${JSON.stringify(stakeInfos[22].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
+        `\nstakeInfoAfterEvent021 after: ${JSON.stringify(stakeInfos[22].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId},${stakeEvents[16].signerAddress},${stakeEvents[16].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats022);
       console.log(
-        `stakingPoolStatsAfterEvent021 after: ${JSON.stringify(stakingPoolStats[22].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent021 after: ${JSON.stringify(stakingPoolStats[22].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3611,7 +3645,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats023,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[22],
-        stakeEvents[20],
+        stakeEvents[22],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos022,
@@ -3619,11 +3653,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos023);
       console.log(
-        `\nstakeInfoAfterEvent022 after: ${JSON.stringify(stakeInfos[23].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId},${stakeEvents[20].signerAddress},${stakeEvents[20].stakeId}`))}`,
+        `\nstakeInfoAfterEvent022 after: ${JSON.stringify(stakeInfos[23].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[22].poolIndex].poolId},${stakeEvents[22].signerAddress},${stakeEvents[22].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats023);
       console.log(
-        `stakingPoolStatsAfterEvent022 after: ${JSON.stringify(stakingPoolStats[23].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent022 after: ${JSON.stringify(stakingPoolStats[23].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[22].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3631,7 +3665,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats024,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[23],
-        stakeEvents[23],
+        stakeEvents[5],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos023,
@@ -3639,11 +3673,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos024);
       console.log(
-        `\nstakeInfoAfterEvent023 after: ${JSON.stringify(stakeInfos[24].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId},${stakeEvents[23].signerAddress},${stakeEvents[23].stakeId}`))}`,
+        `\nstakeInfoAfterEvent023 after: ${JSON.stringify(stakeInfos[24].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId},${stakeEvents[5].signerAddress},${stakeEvents[5].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats024);
       console.log(
-        `stakingPoolStatsAfterEvent023 after: ${JSON.stringify(stakingPoolStats[24].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent023 after: ${JSON.stringify(stakingPoolStats[24].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3651,7 +3685,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats025,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[24],
-        stakeEvents[24],
+        stakeEvents[22],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos024,
@@ -3659,11 +3693,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos025);
       console.log(
-        `\nstakeInfoAfterEvent024 after: ${JSON.stringify(stakeInfos[25].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId},${stakeEvents[24].signerAddress},${stakeEvents[24].stakeId}`))}`,
+        `\nstakeInfoAfterEvent024 after: ${JSON.stringify(stakeInfos[25].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[22].poolIndex].poolId},${stakeEvents[22].signerAddress},${stakeEvents[22].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats025);
       console.log(
-        `stakingPoolStatsAfterEvent024 after: ${JSON.stringify(stakingPoolStats[25].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent024 after: ${JSON.stringify(stakingPoolStats[25].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[22].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3671,7 +3705,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats026,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[25],
-        stakeEvents[0],
+        stakeEvents[25],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos025,
@@ -3679,11 +3713,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos026);
       console.log(
-        `\nstakeInfoAfterEvent025 after: ${JSON.stringify(stakeInfos[26].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`))}`,
+        `\nstakeInfoAfterEvent025 after: ${JSON.stringify(stakeInfos[26].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId},${stakeEvents[25].signerAddress},${stakeEvents[25].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats026);
       console.log(
-        `stakingPoolStatsAfterEvent025 after: ${JSON.stringify(stakingPoolStats[26].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent025 after: ${JSON.stringify(stakingPoolStats[26].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3691,19 +3725,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats027,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[26],
-        stakeEvents[1],
-        stakeEvents[11],
+        stakeEvents[26],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos026,
         stakingPoolStats026,
       );
       stakeInfos.push(stakeInfos027);
       console.log(
-        `\nstakeInfoAfterEvent026 after: ${JSON.stringify(stakeInfos[27].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`))}`,
+        `\nstakeInfoAfterEvent026 after: ${JSON.stringify(stakeInfos[27].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId},${stakeEvents[26].signerAddress},${stakeEvents[26].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats027);
       console.log(
-        `stakingPoolStatsAfterEvent026 after: ${JSON.stringify(stakingPoolStats[27].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent026 after: ${JSON.stringify(stakingPoolStats[27].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3711,19 +3745,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats028,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[27],
-        stakeEvents[12],
-        stakeEvents[17],
+        stakeEvents[2],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos027,
         stakingPoolStats027,
       );
       stakeInfos.push(stakeInfos028);
       console.log(
-        `\nstakeInfoAfterEvent027 after: ${JSON.stringify(stakeInfos[28].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
+        `\nstakeInfoAfterEvent027 after: ${JSON.stringify(stakeInfos[28].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats028);
       console.log(
-        `stakingPoolStatsAfterEvent027 after: ${JSON.stringify(stakingPoolStats[28].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent027 after: ${JSON.stringify(stakingPoolStats[28].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3731,19 +3765,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats029,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[28],
-        stakeEvents[9],
-        null,
+        stakeEvents[3],
+        stakeEvents[13],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos028,
         stakingPoolStats028,
       );
       stakeInfos.push(stakeInfos029);
       console.log(
-        `\nstakeInfoAfterEvent028 after: ${JSON.stringify(stakeInfos[29].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`))}`,
+        `\nstakeInfoAfterEvent028 after: ${JSON.stringify(stakeInfos[29].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats029);
       console.log(
-        `stakingPoolStatsAfterEvent028 after: ${JSON.stringify(stakingPoolStats[29].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent028 after: ${JSON.stringify(stakingPoolStats[29].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3751,19 +3785,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats030,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[29],
-        stakeEvents[20],
-        stakeEvents[22],
+        stakeEvents[14],
+        stakeEvents[19],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos029,
         stakingPoolStats029,
       );
       stakeInfos.push(stakeInfos030);
       console.log(
-        `\nstakeInfoAfterEvent029 after: ${JSON.stringify(stakeInfos[30].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId},${stakeEvents[20].signerAddress},${stakeEvents[20].stakeId}`))}`,
+        `\nstakeInfoAfterEvent029 after: ${JSON.stringify(stakeInfos[30].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats030);
       console.log(
-        `stakingPoolStatsAfterEvent029 after: ${JSON.stringify(stakingPoolStats[30].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[20].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent029 after: ${JSON.stringify(stakingPoolStats[30].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3771,19 +3805,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats031,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[30],
-        stakeEvents[12],
-        stakeEvents[17],
+        stakeEvents[11],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos030,
         stakingPoolStats030,
       );
       stakeInfos.push(stakeInfos031);
       console.log(
-        `\nstakeInfoAfterEvent030 after: ${JSON.stringify(stakeInfos[31].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId},${stakeEvents[12].signerAddress},${stakeEvents[12].stakeId}`))}`,
+        `\nstakeInfoAfterEvent030 after: ${JSON.stringify(stakeInfos[31].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId},${stakeEvents[11].signerAddress},${stakeEvents[11].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats031);
       console.log(
-        `stakingPoolStatsAfterEvent030 after: ${JSON.stringify(stakingPoolStats[31].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[12].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent030 after: ${JSON.stringify(stakingPoolStats[31].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3791,19 +3825,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats032,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[31],
-        stakeEvents[31],
-        null,
+        stakeEvents[22],
+        stakeEvents[24],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos031,
         stakingPoolStats031,
       );
       stakeInfos.push(stakeInfos032);
       console.log(
-        `\nstakeInfoAfterEvent031 after: ${JSON.stringify(stakeInfos[32].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId},${stakeEvents[31].signerAddress},${stakeEvents[31].stakeId}`))}`,
+        `\nstakeInfoAfterEvent031 after: ${JSON.stringify(stakeInfos[32].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[22].poolIndex].poolId},${stakeEvents[22].signerAddress},${stakeEvents[22].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats032);
       console.log(
-        `stakingPoolStatsAfterEvent031 after: ${JSON.stringify(stakingPoolStats[32].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent031 after: ${JSON.stringify(stakingPoolStats[32].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[22].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3811,19 +3845,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats033,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[32],
-        stakeEvents[23],
-        null,
+        stakeEvents[14],
+        stakeEvents[19],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos032,
         stakingPoolStats032,
       );
       stakeInfos.push(stakeInfos033);
       console.log(
-        `\nstakeInfoAfterEvent032 after: ${JSON.stringify(stakeInfos[33].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId},${stakeEvents[23].signerAddress},${stakeEvents[23].stakeId}`))}`,
+        `\nstakeInfoAfterEvent032 after: ${JSON.stringify(stakeInfos[33].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId},${stakeEvents[14].signerAddress},${stakeEvents[14].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats033);
       console.log(
-        `stakingPoolStatsAfterEvent032 after: ${JSON.stringify(stakingPoolStats[33].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent032 after: ${JSON.stringify(stakingPoolStats[33].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[14].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3851,7 +3885,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats035,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[34],
-        stakeEvents[31],
+        stakeEvents[25],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos034,
@@ -3859,11 +3893,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos035);
       console.log(
-        `\nstakeInfoAfterEvent034 after: ${JSON.stringify(stakeInfos[35].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId},${stakeEvents[31].signerAddress},${stakeEvents[31].stakeId}`))}`,
+        `\nstakeInfoAfterEvent034 after: ${JSON.stringify(stakeInfos[35].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId},${stakeEvents[25].signerAddress},${stakeEvents[25].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats035);
       console.log(
-        `stakingPoolStatsAfterEvent034 after: ${JSON.stringify(stakingPoolStats[35].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent034 after: ${JSON.stringify(stakingPoolStats[35].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3871,19 +3905,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats036,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[35],
-        stakeEvents[9],
-        stakeEvents[28],
+        stakeEvents[35],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos035,
         stakingPoolStats035,
       );
       stakeInfos.push(stakeInfos036);
       console.log(
-        `\nstakeInfoAfterEvent035 after: ${JSON.stringify(stakeInfos[36].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`))}`,
+        `\nstakeInfoAfterEvent035 after: ${JSON.stringify(stakeInfos[36].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[35].poolIndex].poolId},${stakeEvents[35].signerAddress},${stakeEvents[35].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats036);
       console.log(
-        `stakingPoolStatsAfterEvent035 after: ${JSON.stringify(stakingPoolStats[36].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent035 after: ${JSON.stringify(stakingPoolStats[36].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[35].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3891,7 +3925,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats037,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[36],
-        stakeEvents[36],
+        stakeEvents[33],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos036,
@@ -3899,11 +3933,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos037);
       console.log(
-        `\nstakeInfoAfterEvent036 after: ${JSON.stringify(stakeInfos[37].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId},${stakeEvents[36].signerAddress},${stakeEvents[36].stakeId}`))}`,
+        `\nstakeInfoAfterEvent036 after: ${JSON.stringify(stakeInfos[37].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId},${stakeEvents[33].signerAddress},${stakeEvents[33].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats037);
       console.log(
-        `stakingPoolStatsAfterEvent036 after: ${JSON.stringify(stakingPoolStats[37].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent036 after: ${JSON.stringify(stakingPoolStats[37].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3911,19 +3945,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats038,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[37],
-        stakeEvents[24],
-        null,
+        stakeEvents[11],
+        stakeEvents[30],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos037,
         stakingPoolStats037,
       );
       stakeInfos.push(stakeInfos038);
       console.log(
-        `\nstakeInfoAfterEvent037 after: ${JSON.stringify(stakeInfos[38].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId},${stakeEvents[24].signerAddress},${stakeEvents[24].stakeId}`))}`,
+        `\nstakeInfoAfterEvent037 after: ${JSON.stringify(stakeInfos[38].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId},${stakeEvents[11].signerAddress},${stakeEvents[11].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats038);
       console.log(
-        `stakingPoolStatsAfterEvent037 after: ${JSON.stringify(stakingPoolStats[38].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent037 after: ${JSON.stringify(stakingPoolStats[38].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3951,19 +3985,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats040,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[39],
-        stakeEvents[31],
-        stakeEvents[34],
+        stakeEvents[26],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos039,
         stakingPoolStats039,
       );
       stakeInfos.push(stakeInfos040);
       console.log(
-        `\nstakeInfoAfterEvent039 after: ${JSON.stringify(stakeInfos[40].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId},${stakeEvents[31].signerAddress},${stakeEvents[31].stakeId}`))}`,
+        `\nstakeInfoAfterEvent039 after: ${JSON.stringify(stakeInfos[40].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId},${stakeEvents[26].signerAddress},${stakeEvents[26].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats040);
       console.log(
-        `stakingPoolStatsAfterEvent039 after: ${JSON.stringify(stakingPoolStats[40].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent039 after: ${JSON.stringify(stakingPoolStats[40].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3971,19 +4005,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats041,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[40],
-        stakeEvents[24],
-        stakeEvents[37],
+        stakeEvents[40],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos040,
         stakingPoolStats040,
       );
       stakeInfos.push(stakeInfos041);
       console.log(
-        `\nstakeInfoAfterEvent040 after: ${JSON.stringify(stakeInfos[41].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId},${stakeEvents[24].signerAddress},${stakeEvents[24].stakeId}`))}`,
+        `\nstakeInfoAfterEvent040 after: ${JSON.stringify(stakeInfos[41].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[40].poolIndex].poolId},${stakeEvents[40].signerAddress},${stakeEvents[40].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats041);
       console.log(
-        `stakingPoolStatsAfterEvent040 after: ${JSON.stringify(stakingPoolStats[41].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent040 after: ${JSON.stringify(stakingPoolStats[41].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[40].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -3991,19 +4025,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats042,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[41],
-        stakeEvents[9],
-        stakeEvents[28],
+        stakeEvents[33],
+        stakeEvents[36],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos041,
         stakingPoolStats041,
       );
       stakeInfos.push(stakeInfos042);
       console.log(
-        `\nstakeInfoAfterEvent041 after: ${JSON.stringify(stakeInfos[42].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId},${stakeEvents[9].signerAddress},${stakeEvents[9].stakeId}`))}`,
+        `\nstakeInfoAfterEvent041 after: ${JSON.stringify(stakeInfos[42].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId},${stakeEvents[33].signerAddress},${stakeEvents[33].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats042);
       console.log(
-        `stakingPoolStatsAfterEvent041 after: ${JSON.stringify(stakingPoolStats[42].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[9].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent041 after: ${JSON.stringify(stakingPoolStats[42].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4011,19 +4045,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats043,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[42],
-        stakeEvents[31],
-        stakeEvents[34],
+        stakeEvents[26],
+        stakeEvents[39],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos042,
         stakingPoolStats042,
       );
       stakeInfos.push(stakeInfos043);
       console.log(
-        `\nstakeInfoAfterEvent042 after: ${JSON.stringify(stakeInfos[43].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId},${stakeEvents[31].signerAddress},${stakeEvents[31].stakeId}`))}`,
+        `\nstakeInfoAfterEvent042 after: ${JSON.stringify(stakeInfos[43].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId},${stakeEvents[26].signerAddress},${stakeEvents[26].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats043);
       console.log(
-        `stakingPoolStatsAfterEvent042 after: ${JSON.stringify(stakingPoolStats[43].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[31].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent042 after: ${JSON.stringify(stakingPoolStats[43].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4031,19 +4065,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats044,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[43],
-        stakeEvents[43],
-        null,
+        stakeEvents[11],
+        stakeEvents[30],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos043,
         stakingPoolStats043,
       );
       stakeInfos.push(stakeInfos044);
       console.log(
-        `\nstakeInfoAfterEvent043 after: ${JSON.stringify(stakeInfos[44].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId},${stakeEvents[43].signerAddress},${stakeEvents[43].stakeId}`))}`,
+        `\nstakeInfoAfterEvent043 after: ${JSON.stringify(stakeInfos[44].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId},${stakeEvents[11].signerAddress},${stakeEvents[11].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats044);
       console.log(
-        `stakingPoolStatsAfterEvent043 after: ${JSON.stringify(stakingPoolStats[44].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent043 after: ${JSON.stringify(stakingPoolStats[44].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[11].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4051,19 +4085,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats045,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[44],
-        stakeEvents[44],
-        null,
+        stakeEvents[33],
+        stakeEvents[36],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos044,
         stakingPoolStats044,
       );
       stakeInfos.push(stakeInfos045);
       console.log(
-        `\nstakeInfoAfterEvent044 after: ${JSON.stringify(stakeInfos[45].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`))}`,
+        `\nstakeInfoAfterEvent044 after: ${JSON.stringify(stakeInfos[45].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId},${stakeEvents[33].signerAddress},${stakeEvents[33].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats045);
       console.log(
-        `stakingPoolStatsAfterEvent044 after: ${JSON.stringify(stakingPoolStats[45].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent044 after: ${JSON.stringify(stakingPoolStats[45].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4071,7 +4105,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats046,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[45],
-        stakeEvents[38],
+        stakeEvents[45],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos045,
@@ -4079,11 +4113,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos046);
       console.log(
-        `\nstakeInfoAfterEvent045 after: ${JSON.stringify(stakeInfos[46].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId},${stakeEvents[38].signerAddress},${stakeEvents[38].stakeId}`))}`,
+        `\nstakeInfoAfterEvent045 after: ${JSON.stringify(stakeInfos[46].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId},${stakeEvents[45].signerAddress},${stakeEvents[45].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats046);
       console.log(
-        `stakingPoolStatsAfterEvent045 after: ${JSON.stringify(stakingPoolStats[46].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent045 after: ${JSON.stringify(stakingPoolStats[46].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4091,7 +4125,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats047,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[46],
-        stakeEvents[33],
+        stakeEvents[46],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos046,
@@ -4099,11 +4133,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos047);
       console.log(
-        `\nstakeInfoAfterEvent046 after: ${JSON.stringify(stakeInfos[47].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId},${stakeEvents[33].signerAddress},${stakeEvents[33].stakeId}`))}`,
+        `\nstakeInfoAfterEvent046 after: ${JSON.stringify(stakeInfos[47].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId},${stakeEvents[46].signerAddress},${stakeEvents[46].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats047);
       console.log(
-        `stakingPoolStatsAfterEvent046 after: ${JSON.stringify(stakingPoolStats[47].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[33].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent046 after: ${JSON.stringify(stakingPoolStats[47].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4111,19 +4145,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats048,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[47],
-        stakeEvents[38],
-        stakeEvents[45],
+        stakeEvents[40],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos047,
         stakingPoolStats047,
       );
       stakeInfos.push(stakeInfos048);
       console.log(
-        `\nstakeInfoAfterEvent047 after: ${JSON.stringify(stakeInfos[48].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId},${stakeEvents[38].signerAddress},${stakeEvents[38].stakeId}`))}`,
+        `\nstakeInfoAfterEvent047 after: ${JSON.stringify(stakeInfos[48].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[40].poolIndex].poolId},${stakeEvents[40].signerAddress},${stakeEvents[40].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats048);
       console.log(
-        `stakingPoolStatsAfterEvent047 after: ${JSON.stringify(stakingPoolStats[48].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent047 after: ${JSON.stringify(stakingPoolStats[48].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[40].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4131,7 +4165,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats049,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[48],
-        stakeEvents[48],
+        stakeEvents[35],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos048,
@@ -4139,11 +4173,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos049);
       console.log(
-        `\nstakeInfoAfterEvent048 after: ${JSON.stringify(stakeInfos[49].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`))}`,
+        `\nstakeInfoAfterEvent048 after: ${JSON.stringify(stakeInfos[49].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[35].poolIndex].poolId},${stakeEvents[35].signerAddress},${stakeEvents[35].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats049);
       console.log(
-        `stakingPoolStatsAfterEvent048 after: ${JSON.stringify(stakingPoolStats[49].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent048 after: ${JSON.stringify(stakingPoolStats[49].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[35].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4151,19 +4185,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats050,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[49],
-        stakeEvents[16],
-        null,
+        stakeEvents[40],
+        stakeEvents[47],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos049,
         stakingPoolStats049,
       );
       stakeInfos.push(stakeInfos050);
       console.log(
-        `\nstakeInfoAfterEvent049 after: ${JSON.stringify(stakeInfos[50].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId},${stakeEvents[16].signerAddress},${stakeEvents[16].stakeId}`))}`,
+        `\nstakeInfoAfterEvent049 after: ${JSON.stringify(stakeInfos[50].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[40].poolIndex].poolId},${stakeEvents[40].signerAddress},${stakeEvents[40].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats050);
       console.log(
-        `stakingPoolStatsAfterEvent049 after: ${JSON.stringify(stakingPoolStats[50].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent049 after: ${JSON.stringify(stakingPoolStats[50].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[40].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4191,7 +4225,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats052,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[51],
-        stakeEvents[8],
+        stakeEvents[18],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos051,
@@ -4199,11 +4233,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos052);
       console.log(
-        `\nstakeInfoAfterEvent051 after: ${JSON.stringify(stakeInfos[52].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`))}`,
+        `\nstakeInfoAfterEvent051 after: ${JSON.stringify(stakeInfos[52].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId},${stakeEvents[18].signerAddress},${stakeEvents[18].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats052);
       console.log(
-        `stakingPoolStatsAfterEvent051 after: ${JSON.stringify(stakingPoolStats[52].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent051 after: ${JSON.stringify(stakingPoolStats[52].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4231,7 +4265,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats054,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[53],
-        stakeEvents[53],
+        stakeEvents[10],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos053,
@@ -4239,11 +4273,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos054);
       console.log(
-        `\nstakeInfoAfterEvent053 after: ${JSON.stringify(stakeInfos[54].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId},${stakeEvents[53].signerAddress},${stakeEvents[53].stakeId}`))}`,
+        `\nstakeInfoAfterEvent053 after: ${JSON.stringify(stakeInfos[54].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats054);
       console.log(
-        `stakingPoolStatsAfterEvent053 after: ${JSON.stringify(stakingPoolStats[54].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent053 after: ${JSON.stringify(stakingPoolStats[54].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4331,7 +4365,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats059,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[58],
-        stakeEvents[44],
+        stakeEvents[58],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos058,
@@ -4339,11 +4373,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos059);
       console.log(
-        `\nstakeInfoAfterEvent058 after: ${JSON.stringify(stakeInfos[59].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`))}`,
+        `\nstakeInfoAfterEvent058 after: ${JSON.stringify(stakeInfos[59].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[58].poolIndex].poolId},${stakeEvents[58].signerAddress},${stakeEvents[58].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats059);
       console.log(
-        `stakingPoolStatsAfterEvent058 after: ${JSON.stringify(stakingPoolStats[59].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent058 after: ${JSON.stringify(stakingPoolStats[59].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[58].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4351,7 +4385,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats060,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[59],
-        stakeEvents[48],
+        stakeEvents[59],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos059,
@@ -4359,11 +4393,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos060);
       console.log(
-        `\nstakeInfoAfterEvent059 after: ${JSON.stringify(stakeInfos[60].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`))}`,
+        `\nstakeInfoAfterEvent059 after: ${JSON.stringify(stakeInfos[60].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId},${stakeEvents[59].signerAddress},${stakeEvents[59].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats060);
       console.log(
-        `stakingPoolStatsAfterEvent059 after: ${JSON.stringify(stakingPoolStats[60].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent059 after: ${JSON.stringify(stakingPoolStats[60].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4371,7 +4405,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats061,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[60],
-        stakeEvents[43],
+        stakeEvents[46],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos060,
@@ -4379,11 +4413,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos061);
       console.log(
-        `\nstakeInfoAfterEvent060 after: ${JSON.stringify(stakeInfos[61].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId},${stakeEvents[43].signerAddress},${stakeEvents[43].stakeId}`))}`,
+        `\nstakeInfoAfterEvent060 after: ${JSON.stringify(stakeInfos[61].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId},${stakeEvents[46].signerAddress},${stakeEvents[46].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats061);
       console.log(
-        `stakingPoolStatsAfterEvent060 after: ${JSON.stringify(stakingPoolStats[61].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent060 after: ${JSON.stringify(stakingPoolStats[61].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4391,7 +4425,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats062,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[61],
-        stakeEvents[16],
+        stakeEvents[50],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos061,
@@ -4399,11 +4433,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos062);
       console.log(
-        `\nstakeInfoAfterEvent061 after: ${JSON.stringify(stakeInfos[62].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId},${stakeEvents[16].signerAddress},${stakeEvents[16].stakeId}`))}`,
+        `\nstakeInfoAfterEvent061 after: ${JSON.stringify(stakeInfos[62].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats062);
       console.log(
-        `stakingPoolStatsAfterEvent061 after: ${JSON.stringify(stakingPoolStats[62].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent061 after: ${JSON.stringify(stakingPoolStats[62].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4411,7 +4445,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats063,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[62],
-        stakeEvents[62],
+        stakeEvents[45],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos062,
@@ -4419,11 +4453,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos063);
       console.log(
-        `\nstakeInfoAfterEvent062 after: ${JSON.stringify(stakeInfos[63].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId},${stakeEvents[62].signerAddress},${stakeEvents[62].stakeId}`))}`,
+        `\nstakeInfoAfterEvent062 after: ${JSON.stringify(stakeInfos[63].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId},${stakeEvents[45].signerAddress},${stakeEvents[45].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats063);
       console.log(
-        `stakingPoolStatsAfterEvent062 after: ${JSON.stringify(stakingPoolStats[63].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent062 after: ${JSON.stringify(stakingPoolStats[63].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4431,7 +4465,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats064,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[63],
-        stakeEvents[63],
+        stakeEvents[18],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos063,
@@ -4439,11 +4473,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos064);
       console.log(
-        `\nstakeInfoAfterEvent063 after: ${JSON.stringify(stakeInfos[64].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId},${stakeEvents[63].signerAddress},${stakeEvents[63].stakeId}`))}`,
+        `\nstakeInfoAfterEvent063 after: ${JSON.stringify(stakeInfos[64].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId},${stakeEvents[18].signerAddress},${stakeEvents[18].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats064);
       console.log(
-        `stakingPoolStatsAfterEvent063 after: ${JSON.stringify(stakingPoolStats[64].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent063 after: ${JSON.stringify(stakingPoolStats[64].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4451,7 +4485,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats065,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[64],
-        stakeEvents[50],
+        stakeEvents[64],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos064,
@@ -4459,11 +4493,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos065);
       console.log(
-        `\nstakeInfoAfterEvent064 after: ${JSON.stringify(stakeInfos[65].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`))}`,
+        `\nstakeInfoAfterEvent064 after: ${JSON.stringify(stakeInfos[65].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId},${stakeEvents[64].signerAddress},${stakeEvents[64].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats065);
       console.log(
-        `stakingPoolStatsAfterEvent064 after: ${JSON.stringify(stakingPoolStats[65].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent064 after: ${JSON.stringify(stakingPoolStats[65].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4471,19 +4505,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats066,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[65],
-        stakeEvents[8],
-        stakeEvents[51],
+        stakeEvents[65],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos065,
         stakingPoolStats065,
       );
       stakeInfos.push(stakeInfos066);
       console.log(
-        `\nstakeInfoAfterEvent065 after: ${JSON.stringify(stakeInfos[66].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`))}`,
+        `\nstakeInfoAfterEvent065 after: ${JSON.stringify(stakeInfos[66].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId},${stakeEvents[65].signerAddress},${stakeEvents[65].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats066);
       console.log(
-        `stakingPoolStatsAfterEvent065 after: ${JSON.stringify(stakingPoolStats[66].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent065 after: ${JSON.stringify(stakingPoolStats[66].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4491,7 +4525,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats067,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[66],
-        stakeEvents[66],
+        stakeEvents[52],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos066,
@@ -4499,11 +4533,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos067);
       console.log(
-        `\nstakeInfoAfterEvent066 after: ${JSON.stringify(stakeInfos[67].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[66].poolIndex].poolId},${stakeEvents[66].signerAddress},${stakeEvents[66].stakeId}`))}`,
+        `\nstakeInfoAfterEvent066 after: ${JSON.stringify(stakeInfos[67].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats067);
       console.log(
-        `stakingPoolStatsAfterEvent066 after: ${JSON.stringify(stakingPoolStats[67].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[66].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent066 after: ${JSON.stringify(stakingPoolStats[67].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4511,19 +4545,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats068,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[67],
-        stakeEvents[67],
-        null,
+        stakeEvents[10],
+        stakeEvents[53],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos067,
         stakingPoolStats067,
       );
       stakeInfos.push(stakeInfos068);
       console.log(
-        `\nstakeInfoAfterEvent067 after: ${JSON.stringify(stakeInfos[68].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId},${stakeEvents[67].signerAddress},${stakeEvents[67].stakeId}`))}`,
+        `\nstakeInfoAfterEvent067 after: ${JSON.stringify(stakeInfos[68].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats068);
       console.log(
-        `stakingPoolStatsAfterEvent067 after: ${JSON.stringify(stakingPoolStats[68].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent067 after: ${JSON.stringify(stakingPoolStats[68].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4531,7 +4565,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats069,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[68],
-        stakeEvents[53],
+        stakeEvents[68],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos068,
@@ -4539,11 +4573,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos069);
       console.log(
-        `\nstakeInfoAfterEvent068 after: ${JSON.stringify(stakeInfos[69].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId},${stakeEvents[53].signerAddress},${stakeEvents[53].stakeId}`))}`,
+        `\nstakeInfoAfterEvent068 after: ${JSON.stringify(stakeInfos[69].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[68].poolIndex].poolId},${stakeEvents[68].signerAddress},${stakeEvents[68].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats069);
       console.log(
-        `stakingPoolStatsAfterEvent068 after: ${JSON.stringify(stakingPoolStats[69].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent068 after: ${JSON.stringify(stakingPoolStats[69].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[68].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4551,7 +4585,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats070,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[69],
-        stakeEvents[54],
+        stakeEvents[69],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos069,
@@ -4559,11 +4593,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos070);
       console.log(
-        `\nstakeInfoAfterEvent069 after: ${JSON.stringify(stakeInfos[70].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`))}`,
+        `\nstakeInfoAfterEvent069 after: ${JSON.stringify(stakeInfos[70].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId},${stakeEvents[69].signerAddress},${stakeEvents[69].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats070);
       console.log(
-        `stakingPoolStatsAfterEvent069 after: ${JSON.stringify(stakingPoolStats[70].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent069 after: ${JSON.stringify(stakingPoolStats[70].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4571,19 +4605,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats071,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[70],
-        stakeEvents[43],
-        stakeEvents[60],
+        stakeEvents[55],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos070,
         stakingPoolStats070,
       );
       stakeInfos.push(stakeInfos071);
       console.log(
-        `\nstakeInfoAfterEvent070 after: ${JSON.stringify(stakeInfos[71].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId},${stakeEvents[43].signerAddress},${stakeEvents[43].stakeId}`))}`,
+        `\nstakeInfoAfterEvent070 after: ${JSON.stringify(stakeInfos[71].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId},${stakeEvents[55].signerAddress},${stakeEvents[55].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats071);
       console.log(
-        `stakingPoolStatsAfterEvent070 after: ${JSON.stringify(stakingPoolStats[71].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent070 after: ${JSON.stringify(stakingPoolStats[71].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4591,19 +4625,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats072,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[71],
-        stakeEvents[44],
-        stakeEvents[58],
+        stakeEvents[56],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos071,
         stakingPoolStats071,
       );
       stakeInfos.push(stakeInfos072);
       console.log(
-        `\nstakeInfoAfterEvent071 after: ${JSON.stringify(stakeInfos[72].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`))}`,
+        `\nstakeInfoAfterEvent071 after: ${JSON.stringify(stakeInfos[72].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId},${stakeEvents[56].signerAddress},${stakeEvents[56].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats072);
       console.log(
-        `stakingPoolStatsAfterEvent071 after: ${JSON.stringify(stakingPoolStats[72].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent071 after: ${JSON.stringify(stakingPoolStats[72].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4611,19 +4645,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats073,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[72],
-        stakeEvents[72],
-        null,
+        stakeEvents[45],
+        stakeEvents[62],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos072,
         stakingPoolStats072,
       );
       stakeInfos.push(stakeInfos073);
       console.log(
-        `\nstakeInfoAfterEvent072 after: ${JSON.stringify(stakeInfos[73].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId},${stakeEvents[72].signerAddress},${stakeEvents[72].stakeId}`))}`,
+        `\nstakeInfoAfterEvent072 after: ${JSON.stringify(stakeInfos[73].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId},${stakeEvents[45].signerAddress},${stakeEvents[45].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats073);
       console.log(
-        `stakingPoolStatsAfterEvent072 after: ${JSON.stringify(stakingPoolStats[73].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent072 after: ${JSON.stringify(stakingPoolStats[73].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4631,19 +4665,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats074,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[73],
-        stakeEvents[73],
-        null,
+        stakeEvents[46],
+        stakeEvents[60],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos073,
         stakingPoolStats073,
       );
       stakeInfos.push(stakeInfos074);
       console.log(
-        `\nstakeInfoAfterEvent073 after: ${JSON.stringify(stakeInfos[74].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[73].poolIndex].poolId},${stakeEvents[73].signerAddress},${stakeEvents[73].stakeId}`))}`,
+        `\nstakeInfoAfterEvent073 after: ${JSON.stringify(stakeInfos[74].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId},${stakeEvents[46].signerAddress},${stakeEvents[46].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats074);
       console.log(
-        `stakingPoolStatsAfterEvent073 after: ${JSON.stringify(stakingPoolStats[74].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[73].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent073 after: ${JSON.stringify(stakingPoolStats[74].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4731,7 +4765,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats079,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[78],
-        stakeEvents[57],
+        stakeEvents[78],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos078,
@@ -4739,11 +4773,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos079);
       console.log(
-        `\nstakeInfoAfterEvent078 after: ${JSON.stringify(stakeInfos[79].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId},${stakeEvents[57].signerAddress},${stakeEvents[57].stakeId}`))}`,
+        `\nstakeInfoAfterEvent078 after: ${JSON.stringify(stakeInfos[79].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[78].poolIndex].poolId},${stakeEvents[78].signerAddress},${stakeEvents[78].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats079);
       console.log(
-        `stakingPoolStatsAfterEvent078 after: ${JSON.stringify(stakingPoolStats[79].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent078 after: ${JSON.stringify(stakingPoolStats[79].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[78].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4751,7 +4785,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats080,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[79],
-        stakeEvents[63],
+        stakeEvents[79],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos079,
@@ -4759,11 +4793,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos080);
       console.log(
-        `\nstakeInfoAfterEvent079 after: ${JSON.stringify(stakeInfos[80].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId},${stakeEvents[63].signerAddress},${stakeEvents[63].stakeId}`))}`,
+        `\nstakeInfoAfterEvent079 after: ${JSON.stringify(stakeInfos[80].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[79].poolIndex].poolId},${stakeEvents[79].signerAddress},${stakeEvents[79].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats080);
       console.log(
-        `stakingPoolStatsAfterEvent079 after: ${JSON.stringify(stakingPoolStats[80].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent079 after: ${JSON.stringify(stakingPoolStats[80].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[79].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4771,7 +4805,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats081,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[80],
-        stakeEvents[56],
+        stakeEvents[59],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos080,
@@ -4779,11 +4813,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos081);
       console.log(
-        `\nstakeInfoAfterEvent080 after: ${JSON.stringify(stakeInfos[81].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId},${stakeEvents[56].signerAddress},${stakeEvents[56].stakeId}`))}`,
+        `\nstakeInfoAfterEvent080 after: ${JSON.stringify(stakeInfos[81].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId},${stakeEvents[59].signerAddress},${stakeEvents[59].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats081);
       console.log(
-        `stakingPoolStatsAfterEvent080 after: ${JSON.stringify(stakingPoolStats[81].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent080 after: ${JSON.stringify(stakingPoolStats[81].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4791,7 +4825,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats082,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[81],
-        stakeEvents[62],
+        stakeEvents[65],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos081,
@@ -4799,11 +4833,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos082);
       console.log(
-        `\nstakeInfoAfterEvent081 after: ${JSON.stringify(stakeInfos[82].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId},${stakeEvents[62].signerAddress},${stakeEvents[62].stakeId}`))}`,
+        `\nstakeInfoAfterEvent081 after: ${JSON.stringify(stakeInfos[82].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId},${stakeEvents[65].signerAddress},${stakeEvents[65].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats082);
       console.log(
-        `stakingPoolStatsAfterEvent081 after: ${JSON.stringify(stakingPoolStats[82].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent081 after: ${JSON.stringify(stakingPoolStats[82].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4811,19 +4845,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats083,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[82],
-        stakeEvents[43],
-        stakeEvents[70],
+        stakeEvents[58],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos082,
         stakingPoolStats082,
       );
       stakeInfos.push(stakeInfos083);
       console.log(
-        `\nstakeInfoAfterEvent082 after: ${JSON.stringify(stakeInfos[83].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId},${stakeEvents[43].signerAddress},${stakeEvents[43].stakeId}`))}`,
+        `\nstakeInfoAfterEvent082 after: ${JSON.stringify(stakeInfos[83].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[58].poolIndex].poolId},${stakeEvents[58].signerAddress},${stakeEvents[58].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats083);
       console.log(
-        `stakingPoolStatsAfterEvent082 after: ${JSON.stringify(stakingPoolStats[83].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent082 after: ${JSON.stringify(stakingPoolStats[83].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[58].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4831,19 +4865,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats084,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[83],
-        stakeEvents[50],
         stakeEvents[64],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos083,
         stakingPoolStats083,
       );
       stakeInfos.push(stakeInfos084);
       console.log(
-        `\nstakeInfoAfterEvent083 after: ${JSON.stringify(stakeInfos[84].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`))}`,
+        `\nstakeInfoAfterEvent083 after: ${JSON.stringify(stakeInfos[84].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId},${stakeEvents[64].signerAddress},${stakeEvents[64].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats084);
       console.log(
-        `stakingPoolStatsAfterEvent083 after: ${JSON.stringify(stakingPoolStats[84].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent083 after: ${JSON.stringify(stakingPoolStats[84].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4851,19 +4885,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats085,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[84],
-        stakeEvents[44],
-        stakeEvents[58],
+        stakeEvents[45],
+        stakeEvents[72],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos084,
         stakingPoolStats084,
       );
       stakeInfos.push(stakeInfos085);
       console.log(
-        `\nstakeInfoAfterEvent084 after: ${JSON.stringify(stakeInfos[85].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`))}`,
+        `\nstakeInfoAfterEvent084 after: ${JSON.stringify(stakeInfos[85].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId},${stakeEvents[45].signerAddress},${stakeEvents[45].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats085);
       console.log(
-        `stakingPoolStatsAfterEvent084 after: ${JSON.stringify(stakingPoolStats[85].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent084 after: ${JSON.stringify(stakingPoolStats[85].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4871,19 +4905,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats086,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[85],
-        stakeEvents[48],
-        null,
+        stakeEvents[52],
+        stakeEvents[66],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos085,
         stakingPoolStats085,
       );
       stakeInfos.push(stakeInfos086);
       console.log(
-        `\nstakeInfoAfterEvent085 after: ${JSON.stringify(stakeInfos[86].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`))}`,
+        `\nstakeInfoAfterEvent085 after: ${JSON.stringify(stakeInfos[86].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats086);
       console.log(
-        `stakingPoolStatsAfterEvent085 after: ${JSON.stringify(stakingPoolStats[86].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent085 after: ${JSON.stringify(stakingPoolStats[86].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4891,19 +4925,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats087,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[86],
-        stakeEvents[8],
-        stakeEvents[51],
+        stakeEvents[46],
+        stakeEvents[60],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos086,
         stakingPoolStats086,
       );
       stakeInfos.push(stakeInfos087);
       console.log(
-        `\nstakeInfoAfterEvent086 after: ${JSON.stringify(stakeInfos[87].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`))}`,
+        `\nstakeInfoAfterEvent086 after: ${JSON.stringify(stakeInfos[87].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId},${stakeEvents[46].signerAddress},${stakeEvents[46].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats087);
       console.log(
-        `stakingPoolStatsAfterEvent086 after: ${JSON.stringify(stakingPoolStats[87].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent086 after: ${JSON.stringify(stakingPoolStats[87].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4911,19 +4945,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats088,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[87],
-        stakeEvents[57],
-        stakeEvents[78],
+        stakeEvents[50],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos087,
         stakingPoolStats087,
       );
       stakeInfos.push(stakeInfos088);
       console.log(
-        `\nstakeInfoAfterEvent087 after: ${JSON.stringify(stakeInfos[88].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId},${stakeEvents[57].signerAddress},${stakeEvents[57].stakeId}`))}`,
+        `\nstakeInfoAfterEvent087 after: ${JSON.stringify(stakeInfos[88].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats088);
       console.log(
-        `stakingPoolStatsAfterEvent087 after: ${JSON.stringify(stakingPoolStats[88].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent087 after: ${JSON.stringify(stakingPoolStats[88].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4931,19 +4965,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats089,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[88],
-        stakeEvents[48],
-        stakeEvents[85],
+        stakeEvents[10],
+        stakeEvents[53],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos088,
         stakingPoolStats088,
       );
       stakeInfos.push(stakeInfos089);
       console.log(
-        `\nstakeInfoAfterEvent088 after: ${JSON.stringify(stakeInfos[89].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`))}`,
+        `\nstakeInfoAfterEvent088 after: ${JSON.stringify(stakeInfos[89].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats089);
       console.log(
-        `stakingPoolStatsAfterEvent088 after: ${JSON.stringify(stakingPoolStats[89].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent088 after: ${JSON.stringify(stakingPoolStats[89].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4951,19 +4985,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats090,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[89],
-        stakeEvents[43],
-        stakeEvents[70],
+        stakeEvents[59],
+        stakeEvents[80],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos089,
         stakingPoolStats089,
       );
       stakeInfos.push(stakeInfos090);
       console.log(
-        `\nstakeInfoAfterEvent089 after: ${JSON.stringify(stakeInfos[90].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId},${stakeEvents[43].signerAddress},${stakeEvents[43].stakeId}`))}`,
+        `\nstakeInfoAfterEvent089 after: ${JSON.stringify(stakeInfos[90].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId},${stakeEvents[59].signerAddress},${stakeEvents[59].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats090);
       console.log(
-        `stakingPoolStatsAfterEvent089 after: ${JSON.stringify(stakingPoolStats[90].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[43].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent089 after: ${JSON.stringify(stakingPoolStats[90].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4971,19 +5005,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats091,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[90],
-        stakeEvents[53],
-        null,
+        stakeEvents[50],
+        stakeEvents[87],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos090,
         stakingPoolStats090,
       );
       stakeInfos.push(stakeInfos091);
       console.log(
-        `\nstakeInfoAfterEvent090 after: ${JSON.stringify(stakeInfos[91].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId},${stakeEvents[53].signerAddress},${stakeEvents[53].stakeId}`))}`,
+        `\nstakeInfoAfterEvent090 after: ${JSON.stringify(stakeInfos[91].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats091);
       console.log(
-        `stakingPoolStatsAfterEvent090 after: ${JSON.stringify(stakingPoolStats[91].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent090 after: ${JSON.stringify(stakingPoolStats[91].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -4991,19 +5025,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats092,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[91],
-        stakeEvents[44],
-        stakeEvents[58],
+        stakeEvents[45],
+        stakeEvents[72],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos091,
         stakingPoolStats091,
       );
       stakeInfos.push(stakeInfos092);
       console.log(
-        `\nstakeInfoAfterEvent091 after: ${JSON.stringify(stakeInfos[92].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId},${stakeEvents[44].signerAddress},${stakeEvents[44].stakeId}`))}`,
+        `\nstakeInfoAfterEvent091 after: ${JSON.stringify(stakeInfos[92].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId},${stakeEvents[45].signerAddress},${stakeEvents[45].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats092);
       console.log(
-        `stakingPoolStatsAfterEvent091 after: ${JSON.stringify(stakingPoolStats[92].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[44].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent091 after: ${JSON.stringify(stakingPoolStats[92].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[45].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5011,7 +5045,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats093,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[92],
-        stakeEvents[67],
+        stakeEvents[55],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos092,
@@ -5019,11 +5053,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos093);
       console.log(
-        `\nstakeInfoAfterEvent092 after: ${JSON.stringify(stakeInfos[93].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId},${stakeEvents[67].signerAddress},${stakeEvents[67].stakeId}`))}`,
+        `\nstakeInfoAfterEvent092 after: ${JSON.stringify(stakeInfos[93].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId},${stakeEvents[55].signerAddress},${stakeEvents[55].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats093);
       console.log(
-        `stakingPoolStatsAfterEvent092 after: ${JSON.stringify(stakingPoolStats[93].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent092 after: ${JSON.stringify(stakingPoolStats[93].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5031,19 +5065,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats094,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[93],
-        stakeEvents[62],
-        null,
+        stakeEvents[46],
+        stakeEvents[60],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos093,
         stakingPoolStats093,
       );
       stakeInfos.push(stakeInfos094);
       console.log(
-        `\nstakeInfoAfterEvent093 after: ${JSON.stringify(stakeInfos[94].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId},${stakeEvents[62].signerAddress},${stakeEvents[62].stakeId}`))}`,
+        `\nstakeInfoAfterEvent093 after: ${JSON.stringify(stakeInfos[94].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId},${stakeEvents[46].signerAddress},${stakeEvents[46].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats094);
       console.log(
-        `stakingPoolStatsAfterEvent093 after: ${JSON.stringify(stakingPoolStats[94].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent093 after: ${JSON.stringify(stakingPoolStats[94].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[46].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5051,19 +5085,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats095,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[94],
-        stakeEvents[54],
         stakeEvents[69],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos094,
         stakingPoolStats094,
       );
       stakeInfos.push(stakeInfos095);
       console.log(
-        `\nstakeInfoAfterEvent094 after: ${JSON.stringify(stakeInfos[95].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`))}`,
+        `\nstakeInfoAfterEvent094 after: ${JSON.stringify(stakeInfos[95].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId},${stakeEvents[69].signerAddress},${stakeEvents[69].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats095);
       console.log(
-        `stakingPoolStatsAfterEvent094 after: ${JSON.stringify(stakingPoolStats[95].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent094 after: ${JSON.stringify(stakingPoolStats[95].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5071,19 +5105,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats096,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[95],
-        stakeEvents[53],
-        stakeEvents[90],
+        stakeEvents[64],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos095,
         stakingPoolStats095,
       );
       stakeInfos.push(stakeInfos096);
       console.log(
-        `\nstakeInfoAfterEvent095 after: ${JSON.stringify(stakeInfos[96].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId},${stakeEvents[53].signerAddress},${stakeEvents[53].stakeId}`))}`,
+        `\nstakeInfoAfterEvent095 after: ${JSON.stringify(stakeInfos[96].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId},${stakeEvents[64].signerAddress},${stakeEvents[64].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats096);
       console.log(
-        `stakingPoolStatsAfterEvent095 after: ${JSON.stringify(stakingPoolStats[96].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[53].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent095 after: ${JSON.stringify(stakingPoolStats[96].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5091,19 +5125,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats097,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[96],
-        stakeEvents[66],
-        null,
+        stakeEvents[56],
+        stakeEvents[71],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos096,
         stakingPoolStats096,
       );
       stakeInfos.push(stakeInfos097);
       console.log(
-        `\nstakeInfoAfterEvent096 after: ${JSON.stringify(stakeInfos[97].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[66].poolIndex].poolId},${stakeEvents[66].signerAddress},${stakeEvents[66].stakeId}`))}`,
+        `\nstakeInfoAfterEvent096 after: ${JSON.stringify(stakeInfos[97].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId},${stakeEvents[56].signerAddress},${stakeEvents[56].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats097);
       console.log(
-        `stakingPoolStatsAfterEvent096 after: ${JSON.stringify(stakingPoolStats[97].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[66].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent096 after: ${JSON.stringify(stakingPoolStats[97].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5111,19 +5145,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats098,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[97],
-        stakeEvents[48],
-        stakeEvents[85],
+        stakeEvents[55],
+        stakeEvents[92],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos097,
         stakingPoolStats097,
       );
       stakeInfos.push(stakeInfos098);
       console.log(
-        `\nstakeInfoAfterEvent097 after: ${JSON.stringify(stakeInfos[98].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId},${stakeEvents[48].signerAddress},${stakeEvents[48].stakeId}`))}`,
+        `\nstakeInfoAfterEvent097 after: ${JSON.stringify(stakeInfos[98].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId},${stakeEvents[55].signerAddress},${stakeEvents[55].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats098);
       console.log(
-        `stakingPoolStatsAfterEvent097 after: ${JSON.stringify(stakingPoolStats[98].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[48].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent097 after: ${JSON.stringify(stakingPoolStats[98].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5131,7 +5165,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats099,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[98],
-        stakeEvents[98],
+        stakeEvents[68],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos098,
@@ -5139,11 +5173,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos099);
       console.log(
-        `\nstakeInfoAfterEvent098 after: ${JSON.stringify(stakeInfos[99].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId},${stakeEvents[98].signerAddress},${stakeEvents[98].stakeId}`))}`,
+        `\nstakeInfoAfterEvent098 after: ${JSON.stringify(stakeInfos[99].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[68].poolIndex].poolId},${stakeEvents[68].signerAddress},${stakeEvents[68].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats099);
       console.log(
-        `stakingPoolStatsAfterEvent098 after: ${JSON.stringify(stakingPoolStats[99].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent098 after: ${JSON.stringify(stakingPoolStats[99].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[68].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5151,19 +5185,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats100,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[99],
-        stakeEvents[16],
-        stakeEvents[61],
+        stakeEvents[50],
+        stakeEvents[87],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos099,
         stakingPoolStats099,
       );
       stakeInfos.push(stakeInfos100);
       console.log(
-        `\nstakeInfoAfterEvent099 after: ${JSON.stringify(stakeInfos[100].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId},${stakeEvents[16].signerAddress},${stakeEvents[16].stakeId}`))}`,
+        `\nstakeInfoAfterEvent099 after: ${JSON.stringify(stakeInfos[100].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats100);
       console.log(
-        `stakingPoolStatsAfterEvent099 after: ${JSON.stringify(stakingPoolStats[100].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[16].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent099 after: ${JSON.stringify(stakingPoolStats[100].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5191,19 +5225,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats102,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[101],
-        stakeEvents[101],
-        null,
+        stakeEvents[18],
+        stakeEvents[63],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos101,
         stakingPoolStats101,
       );
       stakeInfos.push(stakeInfos102);
       console.log(
-        `\nstakeInfoAfterEvent101 after: ${JSON.stringify(stakeInfos[102].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId},${stakeEvents[101].signerAddress},${stakeEvents[101].stakeId}`))}`,
+        `\nstakeInfoAfterEvent101 after: ${JSON.stringify(stakeInfos[102].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId},${stakeEvents[18].signerAddress},${stakeEvents[18].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats102);
       console.log(
-        `stakingPoolStatsAfterEvent101 after: ${JSON.stringify(stakingPoolStats[102].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent101 after: ${JSON.stringify(stakingPoolStats[102].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[18].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5211,7 +5245,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats103,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[102],
-        stakeEvents[72],
+        stakeEvents[102],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos102,
@@ -5219,11 +5253,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos103);
       console.log(
-        `\nstakeInfoAfterEvent102 after: ${JSON.stringify(stakeInfos[103].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId},${stakeEvents[72].signerAddress},${stakeEvents[72].stakeId}`))}`,
+        `\nstakeInfoAfterEvent102 after: ${JSON.stringify(stakeInfos[103].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[102].poolIndex].poolId},${stakeEvents[102].signerAddress},${stakeEvents[102].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats103);
       console.log(
-        `stakingPoolStatsAfterEvent102 after: ${JSON.stringify(stakingPoolStats[103].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent102 after: ${JSON.stringify(stakingPoolStats[103].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[102].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5231,7 +5265,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats104,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[103],
-        stakeEvents[63],
+        stakeEvents[103],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos103,
@@ -5239,11 +5273,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos104);
       console.log(
-        `\nstakeInfoAfterEvent103 after: ${JSON.stringify(stakeInfos[104].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId},${stakeEvents[63].signerAddress},${stakeEvents[63].stakeId}`))}`,
+        `\nstakeInfoAfterEvent103 after: ${JSON.stringify(stakeInfos[104].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId},${stakeEvents[103].signerAddress},${stakeEvents[103].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats104);
       console.log(
-        `stakingPoolStatsAfterEvent103 after: ${JSON.stringify(stakingPoolStats[104].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent103 after: ${JSON.stringify(stakingPoolStats[104].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5251,19 +5285,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats105,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[104],
-        stakeEvents[62],
-        stakeEvents[93],
+        stakeEvents[74],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos104,
         stakingPoolStats104,
       );
       stakeInfos.push(stakeInfos105);
       console.log(
-        `\nstakeInfoAfterEvent104 after: ${JSON.stringify(stakeInfos[105].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId},${stakeEvents[62].signerAddress},${stakeEvents[62].stakeId}`))}`,
+        `\nstakeInfoAfterEvent104 after: ${JSON.stringify(stakeInfos[105].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId},${stakeEvents[74].signerAddress},${stakeEvents[74].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats105);
       console.log(
-        `stakingPoolStatsAfterEvent104 after: ${JSON.stringify(stakingPoolStats[105].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[62].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent104 after: ${JSON.stringify(stakingPoolStats[105].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5271,7 +5305,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats106,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[105],
-        stakeEvents[76],
+        stakeEvents[65],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos105,
@@ -5279,11 +5313,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos106);
       console.log(
-        `\nstakeInfoAfterEvent105 after: ${JSON.stringify(stakeInfos[106].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId},${stakeEvents[76].signerAddress},${stakeEvents[76].stakeId}`))}`,
+        `\nstakeInfoAfterEvent105 after: ${JSON.stringify(stakeInfos[106].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId},${stakeEvents[65].signerAddress},${stakeEvents[65].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats106);
       console.log(
-        `stakingPoolStatsAfterEvent105 after: ${JSON.stringify(stakingPoolStats[106].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent105 after: ${JSON.stringify(stakingPoolStats[106].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5291,19 +5325,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats107,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[106],
-        stakeEvents[75],
-        null,
+        stakeEvents[64],
+        stakeEvents[95],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos106,
         stakingPoolStats106,
       );
       stakeInfos.push(stakeInfos107);
       console.log(
-        `\nstakeInfoAfterEvent106 after: ${JSON.stringify(stakeInfos[107].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[75].poolIndex].poolId},${stakeEvents[75].signerAddress},${stakeEvents[75].stakeId}`))}`,
+        `\nstakeInfoAfterEvent106 after: ${JSON.stringify(stakeInfos[107].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId},${stakeEvents[64].signerAddress},${stakeEvents[64].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats107);
       console.log(
-        `stakingPoolStatsAfterEvent106 after: ${JSON.stringify(stakingPoolStats[107].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[75].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent106 after: ${JSON.stringify(stakingPoolStats[107].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[64].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5311,19 +5345,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats108,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[107],
-        stakeEvents[63],
-        stakeEvents[103],
+        stakeEvents[78],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos107,
         stakingPoolStats107,
       );
       stakeInfos.push(stakeInfos108);
       console.log(
-        `\nstakeInfoAfterEvent107 after: ${JSON.stringify(stakeInfos[108].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId},${stakeEvents[63].signerAddress},${stakeEvents[63].stakeId}`))}`,
+        `\nstakeInfoAfterEvent107 after: ${JSON.stringify(stakeInfos[108].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[78].poolIndex].poolId},${stakeEvents[78].signerAddress},${stakeEvents[78].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats108);
       console.log(
-        `stakingPoolStatsAfterEvent107 after: ${JSON.stringify(stakingPoolStats[108].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent107 after: ${JSON.stringify(stakingPoolStats[108].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[78].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5331,7 +5365,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats109,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[108],
-        stakeEvents[66],
+        stakeEvents[77],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos108,
@@ -5339,11 +5373,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos109);
       console.log(
-        `\nstakeInfoAfterEvent108 after: ${JSON.stringify(stakeInfos[109].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[66].poolIndex].poolId},${stakeEvents[66].signerAddress},${stakeEvents[66].stakeId}`))}`,
+        `\nstakeInfoAfterEvent108 after: ${JSON.stringify(stakeInfos[109].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[77].poolIndex].poolId},${stakeEvents[77].signerAddress},${stakeEvents[77].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats109);
       console.log(
-        `stakingPoolStatsAfterEvent108 after: ${JSON.stringify(stakingPoolStats[109].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[63].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent108 after: ${JSON.stringify(stakingPoolStats[109].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[77].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5351,19 +5385,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats110,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[109],
-        stakeEvents[100],
-        null,
+        stakeEvents[65],
+        stakeEvents[105],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos109,
         stakingPoolStats109,
       );
       stakeInfos.push(stakeInfos110);
       console.log(
-        `\nstakeInfoAfterEvent109 after: ${JSON.stringify(stakeInfos[110].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId},${stakeEvents[100].signerAddress},${stakeEvents[100].stakeId}`))}`,
+        `\nstakeInfoAfterEvent109 after: ${JSON.stringify(stakeInfos[110].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId},${stakeEvents[65].signerAddress},${stakeEvents[65].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats110);
       console.log(
-        `stakingPoolStatsAfterEvent109 after: ${JSON.stringify(stakingPoolStats[110].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent109 after: ${JSON.stringify(stakingPoolStats[110].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[65].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5371,7 +5405,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats111,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[110],
-        stakeEvents[72],
+        stakeEvents[68],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos110,
@@ -5379,11 +5413,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos111);
       console.log(
-        `\nstakeInfoAfterEvent110 after: ${JSON.stringify(stakeInfos[111].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId},${stakeEvents[72].signerAddress},${stakeEvents[72].stakeId}`))}`,
+        `\nstakeInfoAfterEvent110 after: ${JSON.stringify(stakeInfos[111].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[68].poolIndex].poolId},${stakeEvents[68].signerAddress},${stakeEvents[68].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats111);
       console.log(
-        `stakingPoolStatsAfterEvent110 after: ${JSON.stringify(stakingPoolStats[111].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[72].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent110 after: ${JSON.stringify(stakingPoolStats[111].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[68].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5391,7 +5425,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats112,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[111],
-        stakeEvents[73],
+        stakeEvents[102],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos111,
@@ -5399,11 +5433,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos112);
       console.log(
-        `\nstakeInfoAfterEvent111 after: ${JSON.stringify(stakeInfos[112].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[73].poolIndex].poolId},${stakeEvents[73].signerAddress},${stakeEvents[73].stakeId}`))}`,
+        `\nstakeInfoAfterEvent111 after: ${JSON.stringify(stakeInfos[112].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[102].poolIndex].poolId},${stakeEvents[102].signerAddress},${stakeEvents[102].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats112);
       console.log(
-        `stakingPoolStatsAfterEvent111 after: ${JSON.stringify(stakingPoolStats[112].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[73].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent111 after: ${JSON.stringify(stakingPoolStats[112].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[102].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5411,7 +5445,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats113,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[112],
-        stakeEvents[75],
+        stakeEvents[74],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos112,
@@ -5419,11 +5453,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos113);
       console.log(
-        `\nstakeInfoAfterEvent112 after: ${JSON.stringify(stakeInfos[113].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[75].poolIndex].poolId},${stakeEvents[75].signerAddress},${stakeEvents[75].stakeId}`))}`,
+        `\nstakeInfoAfterEvent112 after: ${JSON.stringify(stakeInfos[113].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId},${stakeEvents[74].signerAddress},${stakeEvents[74].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats113);
       console.log(
-        `stakingPoolStatsAfterEvent112 after: ${JSON.stringify(stakingPoolStats[113].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[75].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent112 after: ${JSON.stringify(stakingPoolStats[113].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5431,7 +5465,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats114,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[113],
-        stakeEvents[100],
+        stakeEvents[75],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos113,
@@ -5439,11 +5473,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos114);
       console.log(
-        `\nstakeInfoAfterEvent113 after: ${JSON.stringify(stakeInfos[114].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId},${stakeEvents[100].signerAddress},${stakeEvents[100].stakeId}`))}`,
+        `\nstakeInfoAfterEvent113 after: ${JSON.stringify(stakeInfos[114].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[75].poolIndex].poolId},${stakeEvents[75].signerAddress},${stakeEvents[75].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats114);
       console.log(
-        `stakingPoolStatsAfterEvent113 after: ${JSON.stringify(stakingPoolStats[114].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent113 after: ${JSON.stringify(stakingPoolStats[114].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[75].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5451,7 +5485,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats115,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[114],
-        stakeEvents[114],
+        stakeEvents[77],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos114,
@@ -5459,11 +5493,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos115);
       console.log(
-        `\nstakeInfoAfterEvent114 after: ${JSON.stringify(stakeInfos[115].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId},${stakeEvents[114].signerAddress},${stakeEvents[114].stakeId}`))}`,
+        `\nstakeInfoAfterEvent114 after: ${JSON.stringify(stakeInfos[115].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[77].poolIndex].poolId},${stakeEvents[77].signerAddress},${stakeEvents[77].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats115);
       console.log(
-        `stakingPoolStatsAfterEvent114 after: ${JSON.stringify(stakingPoolStats[115].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent114 after: ${JSON.stringify(stakingPoolStats[115].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[77].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5471,7 +5505,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats116,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[115],
-        stakeEvents[115],
+        stakeEvents[102],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos115,
@@ -5479,11 +5513,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos116);
       console.log(
-        `\nstakeInfoAfterEvent115 after: ${JSON.stringify(stakeInfos[116].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId},${stakeEvents[115].signerAddress},${stakeEvents[115].stakeId}`))}`,
+        `\nstakeInfoAfterEvent115 after: ${JSON.stringify(stakeInfos[116].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[102].poolIndex].poolId},${stakeEvents[102].signerAddress},${stakeEvents[102].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats116);
       console.log(
-        `stakingPoolStatsAfterEvent115 after: ${JSON.stringify(stakingPoolStats[116].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent115 after: ${JSON.stringify(stakingPoolStats[116].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[102].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5571,19 +5605,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats121,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[120],
-        stakeEvents[54],
-        stakeEvents[69],
+        stakeEvents[120],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos120,
         stakingPoolStats120,
       );
       stakeInfos.push(stakeInfos121);
       console.log(
-        `\nstakeInfoAfterEvent120 after: ${JSON.stringify(stakeInfos[121].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`))}`,
+        `\nstakeInfoAfterEvent120 after: ${JSON.stringify(stakeInfos[121].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[120].poolIndex].poolId},${stakeEvents[120].signerAddress},${stakeEvents[120].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats121);
       console.log(
-        `stakingPoolStatsAfterEvent120 after: ${JSON.stringify(stakingPoolStats[121].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent120 after: ${JSON.stringify(stakingPoolStats[121].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[120].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5591,19 +5625,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats122,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[121],
-        stakeEvents[8],
-        stakeEvents[51],
+        stakeEvents[121],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos121,
         stakingPoolStats121,
       );
       stakeInfos.push(stakeInfos122);
       console.log(
-        `\nstakeInfoAfterEvent121 after: ${JSON.stringify(stakeInfos[122].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId},${stakeEvents[8].signerAddress},${stakeEvents[8].stakeId}`))}`,
+        `\nstakeInfoAfterEvent121 after: ${JSON.stringify(stakeInfos[122].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[121].poolIndex].poolId},${stakeEvents[121].signerAddress},${stakeEvents[121].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats122);
       console.log(
-        `stakingPoolStatsAfterEvent121 after: ${JSON.stringify(stakingPoolStats[122].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[8].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent121 after: ${JSON.stringify(stakingPoolStats[122].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[121].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5611,19 +5645,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats123,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[122],
-        stakeEvents[122],
-        null,
+        stakeEvents[56],
+        stakeEvents[71],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos122,
         stakingPoolStats122,
       );
       stakeInfos.push(stakeInfos123);
       console.log(
-        `\nstakeInfoAfterEvent122 after: ${JSON.stringify(stakeInfos[123].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[122].poolIndex].poolId},${stakeEvents[122].signerAddress},${stakeEvents[122].stakeId}`))}`,
+        `\nstakeInfoAfterEvent122 after: ${JSON.stringify(stakeInfos[123].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId},${stakeEvents[56].signerAddress},${stakeEvents[56].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats123);
       console.log(
-        `stakingPoolStatsAfterEvent122 after: ${JSON.stringify(stakingPoolStats[123].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[122].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent122 after: ${JSON.stringify(stakingPoolStats[123].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5631,19 +5665,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats124,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[123],
-        stakeEvents[123],
-        null,
+        stakeEvents[10],
+        stakeEvents[53],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos123,
         stakingPoolStats123,
       );
       stakeInfos.push(stakeInfos124);
       console.log(
-        `\nstakeInfoAfterEvent123 after: ${JSON.stringify(stakeInfos[124].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId},${stakeEvents[123].signerAddress},${stakeEvents[123].stakeId}`))}`,
+        `\nstakeInfoAfterEvent123 after: ${JSON.stringify(stakeInfos[124].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId},${stakeEvents[10].signerAddress},${stakeEvents[10].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats124);
       console.log(
-        `stakingPoolStatsAfterEvent123 after: ${JSON.stringify(stakingPoolStats[124].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent123 after: ${JSON.stringify(stakingPoolStats[124].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[10].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5691,19 +5725,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats127,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[126],
-        stakeEvents[57],
-        stakeEvents[78],
+        stakeEvents[126],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos126,
         stakingPoolStats126,
       );
       stakeInfos.push(stakeInfos127);
       console.log(
-        `\nstakeInfoAfterEvent126 after: ${JSON.stringify(stakeInfos[127].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId},${stakeEvents[57].signerAddress},${stakeEvents[57].stakeId}`))}`,
+        `\nstakeInfoAfterEvent126 after: ${JSON.stringify(stakeInfos[127].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId},${stakeEvents[126].signerAddress},${stakeEvents[126].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats127);
       console.log(
-        `stakingPoolStatsAfterEvent126 after: ${JSON.stringify(stakingPoolStats[127].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent126 after: ${JSON.stringify(stakingPoolStats[127].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5711,19 +5745,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats128,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[127],
-        stakeEvents[67],
-        stakeEvents[92],
+        stakeEvents[127],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos127,
         stakingPoolStats127,
       );
       stakeInfos.push(stakeInfos128);
       console.log(
-        `\nstakeInfoAfterEvent127 after: ${JSON.stringify(stakeInfos[128].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId},${stakeEvents[67].signerAddress},${stakeEvents[67].stakeId}`))}`,
+        `\nstakeInfoAfterEvent127 after: ${JSON.stringify(stakeInfos[128].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId},${stakeEvents[127].signerAddress},${stakeEvents[127].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats128);
       console.log(
-        `stakingPoolStatsAfterEvent127 after: ${JSON.stringify(stakingPoolStats[128].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent127 after: ${JSON.stringify(stakingPoolStats[128].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5731,19 +5765,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats129,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[128],
-        stakeEvents[128],
-        null,
+        stakeEvents[59],
+        stakeEvents[80],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos128,
         stakingPoolStats128,
       );
       stakeInfos.push(stakeInfos129);
       console.log(
-        `\nstakeInfoAfterEvent128 after: ${JSON.stringify(stakeInfos[129].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId},${stakeEvents[128].signerAddress},${stakeEvents[128].stakeId}`))}`,
+        `\nstakeInfoAfterEvent128 after: ${JSON.stringify(stakeInfos[129].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId},${stakeEvents[59].signerAddress},${stakeEvents[59].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats129);
       console.log(
-        `stakingPoolStatsAfterEvent128 after: ${JSON.stringify(stakingPoolStats[129].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent128 after: ${JSON.stringify(stakingPoolStats[129].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[59].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5751,19 +5785,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats130,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[129],
-        stakeEvents[129],
-        null,
+        stakeEvents[69],
+        stakeEvents[94],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos129,
         stakingPoolStats129,
       );
       stakeInfos.push(stakeInfos130);
       console.log(
-        `\nstakeInfoAfterEvent129 after: ${JSON.stringify(stakeInfos[130].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId},${stakeEvents[129].signerAddress},${stakeEvents[129].stakeId}`))}`,
+        `\nstakeInfoAfterEvent129 after: ${JSON.stringify(stakeInfos[130].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId},${stakeEvents[69].signerAddress},${stakeEvents[69].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats130);
       console.log(
-        `stakingPoolStatsAfterEvent129 after: ${JSON.stringify(stakingPoolStats[130].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent129 after: ${JSON.stringify(stakingPoolStats[130].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5831,7 +5865,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats134,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[133],
-        stakeEvents[98],
+        stakeEvents[133],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos133,
@@ -5839,11 +5873,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos134);
       console.log(
-        `\nstakeInfoAfterEvent133 after: ${JSON.stringify(stakeInfos[134].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId},${stakeEvents[98].signerAddress},${stakeEvents[98].stakeId}`))}`,
+        `\nstakeInfoAfterEvent133 after: ${JSON.stringify(stakeInfos[134].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[133].poolIndex].poolId},${stakeEvents[133].signerAddress},${stakeEvents[133].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats134);
       console.log(
-        `stakingPoolStatsAfterEvent133 after: ${JSON.stringify(stakingPoolStats[134].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent133 after: ${JSON.stringify(stakingPoolStats[134].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[133].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5851,19 +5885,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats135,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[134],
-        stakeEvents[56],
-        stakeEvents[80],
+        stakeEvents[134],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos134,
         stakingPoolStats134,
       );
       stakeInfos.push(stakeInfos135);
       console.log(
-        `\nstakeInfoAfterEvent134 after: ${JSON.stringify(stakeInfos[135].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId},${stakeEvents[56].signerAddress},${stakeEvents[56].stakeId}`))}`,
+        `\nstakeInfoAfterEvent134 after: ${JSON.stringify(stakeInfos[135].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[134].poolIndex].poolId},${stakeEvents[134].signerAddress},${stakeEvents[134].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats135);
       console.log(
-        `stakingPoolStatsAfterEvent134 after: ${JSON.stringify(stakingPoolStats[135].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[56].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent134 after: ${JSON.stringify(stakingPoolStats[135].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[134].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5871,7 +5905,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats136,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[135],
-        stakeEvents[117],
+        stakeEvents[100],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos135,
@@ -5879,11 +5913,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos136);
       console.log(
-        `\nstakeInfoAfterEvent135 after: ${JSON.stringify(stakeInfos[136].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId},${stakeEvents[117].signerAddress},${stakeEvents[117].stakeId}`))}`,
+        `\nstakeInfoAfterEvent135 after: ${JSON.stringify(stakeInfos[136].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId},${stakeEvents[100].signerAddress},${stakeEvents[100].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats136);
       console.log(
-        `stakingPoolStatsAfterEvent135 after: ${JSON.stringify(stakingPoolStats[136].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent135 after: ${JSON.stringify(stakingPoolStats[136].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5891,19 +5925,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats137,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[136],
-        stakeEvents[124],
-        null,
+        stakeEvents[58],
+        stakeEvents[82],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos136,
         stakingPoolStats136,
       );
       stakeInfos.push(stakeInfos137);
       console.log(
-        `\nstakeInfoAfterEvent136 after: ${JSON.stringify(stakeInfos[137].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId},${stakeEvents[124].signerAddress},${stakeEvents[124].stakeId}`))}`,
+        `\nstakeInfoAfterEvent136 after: ${JSON.stringify(stakeInfos[137].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[58].poolIndex].poolId},${stakeEvents[58].signerAddress},${stakeEvents[58].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats137);
       console.log(
-        `stakingPoolStatsAfterEvent136 after: ${JSON.stringify(stakingPoolStats[137].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent136 after: ${JSON.stringify(stakingPoolStats[137].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[58].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5911,19 +5945,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats138,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[137],
-        stakeEvents[67],
-        stakeEvents[92],
+        stakeEvents[119],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos137,
         stakingPoolStats137,
       );
       stakeInfos.push(stakeInfos138);
       console.log(
-        `\nstakeInfoAfterEvent137 after: ${JSON.stringify(stakeInfos[138].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId},${stakeEvents[67].signerAddress},${stakeEvents[67].stakeId}`))}`,
+        `\nstakeInfoAfterEvent137 after: ${JSON.stringify(stakeInfos[138].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[119].poolIndex].poolId},${stakeEvents[119].signerAddress},${stakeEvents[119].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats138);
       console.log(
-        `stakingPoolStatsAfterEvent137 after: ${JSON.stringify(stakingPoolStats[138].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[67].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent137 after: ${JSON.stringify(stakingPoolStats[138].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[119].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5931,19 +5965,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats139,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[138],
-        stakeEvents[98],
-        stakeEvents[133],
+        stakeEvents[126],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos138,
         stakingPoolStats138,
       );
       stakeInfos.push(stakeInfos139);
       console.log(
-        `\nstakeInfoAfterEvent138 after: ${JSON.stringify(stakeInfos[139].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId},${stakeEvents[98].signerAddress},${stakeEvents[98].stakeId}`))}`,
+        `\nstakeInfoAfterEvent138 after: ${JSON.stringify(stakeInfos[139].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId},${stakeEvents[126].signerAddress},${stakeEvents[126].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats139);
       console.log(
-        `stakingPoolStatsAfterEvent138 after: ${JSON.stringify(stakingPoolStats[139].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent138 after: ${JSON.stringify(stakingPoolStats[139].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5951,19 +5985,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats140,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[139],
-        stakeEvents[50],
-        stakeEvents[64],
+        stakeEvents[69],
+        stakeEvents[94],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos139,
         stakingPoolStats139,
       );
       stakeInfos.push(stakeInfos140);
       console.log(
-        `\nstakeInfoAfterEvent139 after: ${JSON.stringify(stakeInfos[140].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId},${stakeEvents[50].signerAddress},${stakeEvents[50].stakeId}`))}`,
+        `\nstakeInfoAfterEvent139 after: ${JSON.stringify(stakeInfos[140].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId},${stakeEvents[69].signerAddress},${stakeEvents[69].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats140);
       console.log(
-        `stakingPoolStatsAfterEvent139 after: ${JSON.stringify(stakingPoolStats[140].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[50].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent139 after: ${JSON.stringify(stakingPoolStats[140].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[69].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5971,19 +6005,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats141,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[140],
-        stakeEvents[124],
-        stakeEvents[136],
+        stakeEvents[100],
+        stakeEvents[135],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos140,
         stakingPoolStats140,
       );
       stakeInfos.push(stakeInfos141);
       console.log(
-        `\nstakeInfoAfterEvent140 after: ${JSON.stringify(stakeInfos[141].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId},${stakeEvents[124].signerAddress},${stakeEvents[124].stakeId}`))}`,
+        `\nstakeInfoAfterEvent140 after: ${JSON.stringify(stakeInfos[141].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId},${stakeEvents[100].signerAddress},${stakeEvents[100].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats141);
       console.log(
-        `stakingPoolStatsAfterEvent140 after: ${JSON.stringify(stakingPoolStats[141].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent140 after: ${JSON.stringify(stakingPoolStats[141].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -5991,19 +6025,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats142,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[141],
-        stakeEvents[98],
-        stakeEvents[133],
+        stakeEvents[52],
+        stakeEvents[66],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos141,
         stakingPoolStats141,
       );
       stakeInfos.push(stakeInfos142);
       console.log(
-        `\nstakeInfoAfterEvent141 after: ${JSON.stringify(stakeInfos[142].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId},${stakeEvents[98].signerAddress},${stakeEvents[98].stakeId}`))}`,
+        `\nstakeInfoAfterEvent141 after: ${JSON.stringify(stakeInfos[142].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats142);
       console.log(
-        `stakingPoolStatsAfterEvent141 after: ${JSON.stringify(stakingPoolStats[142].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent141 after: ${JSON.stringify(stakingPoolStats[142].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6011,19 +6045,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats143,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[142],
-        stakeEvents[117],
-        stakeEvents[135],
+        stakeEvents[126],
+        stakeEvents[138],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos142,
         stakingPoolStats142,
       );
       stakeInfos.push(stakeInfos143);
       console.log(
-        `\nstakeInfoAfterEvent142 after: ${JSON.stringify(stakeInfos[143].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId},${stakeEvents[117].signerAddress},${stakeEvents[117].stakeId}`))}`,
+        `\nstakeInfoAfterEvent142 after: ${JSON.stringify(stakeInfos[143].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId},${stakeEvents[126].signerAddress},${stakeEvents[126].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats143);
       console.log(
-        `stakingPoolStatsAfterEvent142 after: ${JSON.stringify(stakingPoolStats[143].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent142 after: ${JSON.stringify(stakingPoolStats[143].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6031,19 +6065,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats144,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[143],
-        stakeEvents[114],
-        null,
+        stakeEvents[100],
+        stakeEvents[135],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos143,
         stakingPoolStats143,
       );
       stakeInfos.push(stakeInfos144);
       console.log(
-        `\nstakeInfoAfterEvent143 after: ${JSON.stringify(stakeInfos[144].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId},${stakeEvents[114].signerAddress},${stakeEvents[114].stakeId}`))}`,
+        `\nstakeInfoAfterEvent143 after: ${JSON.stringify(stakeInfos[144].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId},${stakeEvents[100].signerAddress},${stakeEvents[100].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats144);
       console.log(
-        `stakingPoolStatsAfterEvent143 after: ${JSON.stringify(stakingPoolStats[144].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent143 after: ${JSON.stringify(stakingPoolStats[144].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6051,19 +6085,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats145,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[144],
-        stakeEvents[124],
-        stakeEvents[136],
+        stakeEvents[119],
+        stakeEvents[137],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos144,
         stakingPoolStats144,
       );
       stakeInfos.push(stakeInfos145);
       console.log(
-        `\nstakeInfoAfterEvent144 after: ${JSON.stringify(stakeInfos[145].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId},${stakeEvents[124].signerAddress},${stakeEvents[124].stakeId}`))}`,
+        `\nstakeInfoAfterEvent144 after: ${JSON.stringify(stakeInfos[145].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[119].poolIndex].poolId},${stakeEvents[119].signerAddress},${stakeEvents[119].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats145);
       console.log(
-        `stakingPoolStatsAfterEvent144 after: ${JSON.stringify(stakingPoolStats[145].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent144 after: ${JSON.stringify(stakingPoolStats[145].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[119].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6071,19 +6105,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats146,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[145],
-        stakeEvents[98],
-        stakeEvents[133],
+        stakeEvents[116],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos145,
         stakingPoolStats145,
       );
       stakeInfos.push(stakeInfos146);
       console.log(
-        `\nstakeInfoAfterEvent145 after: ${JSON.stringify(stakeInfos[146].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId},${stakeEvents[98].signerAddress},${stakeEvents[98].stakeId}`))}`,
+        `\nstakeInfoAfterEvent145 after: ${JSON.stringify(stakeInfos[146].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId},${stakeEvents[116].signerAddress},${stakeEvents[116].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats146);
       console.log(
-        `stakingPoolStatsAfterEvent145 after: ${JSON.stringify(stakingPoolStats[146].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[98].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent145 after: ${JSON.stringify(stakingPoolStats[146].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6091,19 +6125,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats147,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[146],
-        stakeEvents[123],
-        null,
+        stakeEvents[126],
+        stakeEvents[138],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos146,
         stakingPoolStats146,
       );
       stakeInfos.push(stakeInfos147);
       console.log(
-        `\nstakeInfoAfterEvent146 after: ${JSON.stringify(stakeInfos[147].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId},${stakeEvents[123].signerAddress},${stakeEvents[123].stakeId}`))}`,
+        `\nstakeInfoAfterEvent146 after: ${JSON.stringify(stakeInfos[147].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId},${stakeEvents[126].signerAddress},${stakeEvents[126].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats147);
       console.log(
-        `stakingPoolStatsAfterEvent146 after: ${JSON.stringify(stakingPoolStats[147].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent146 after: ${JSON.stringify(stakingPoolStats[147].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6111,7 +6145,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats148,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[147],
-        stakeEvents[117],
+        stakeEvents[100],
         stakeEvents[135],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos147,
@@ -6119,11 +6153,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos148);
       console.log(
-        `\nstakeInfoAfterEvent147 after: ${JSON.stringify(stakeInfos[148].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId},${stakeEvents[117].signerAddress},${stakeEvents[117].stakeId}`))}`,
+        `\nstakeInfoAfterEvent147 after: ${JSON.stringify(stakeInfos[148].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId},${stakeEvents[100].signerAddress},${stakeEvents[100].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats148);
       console.log(
-        `stakingPoolStatsAfterEvent147 after: ${JSON.stringify(stakingPoolStats[148].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent147 after: ${JSON.stringify(stakingPoolStats[148].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[100].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6131,19 +6165,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats149,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[148],
-        stakeEvents[114],
-        stakeEvents[143],
+        stakeEvents[125],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos148,
         stakingPoolStats148,
       );
       stakeInfos.push(stakeInfos149);
       console.log(
-        `\nstakeInfoAfterEvent148 after: ${JSON.stringify(stakeInfos[149].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId},${stakeEvents[114].signerAddress},${stakeEvents[114].stakeId}`))}`,
+        `\nstakeInfoAfterEvent148 after: ${JSON.stringify(stakeInfos[149].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId},${stakeEvents[125].signerAddress},${stakeEvents[125].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats149);
       console.log(
-        `stakingPoolStatsAfterEvent148 after: ${JSON.stringify(stakingPoolStats[149].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent148 after: ${JSON.stringify(stakingPoolStats[149].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6152,7 +6186,7 @@ describe("StakingServiceV2", function () {
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[149],
         stakeEvents[119],
-        null,
+        stakeEvents[137],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos149,
         stakingPoolStats149,
@@ -6171,19 +6205,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats151,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[150],
-        stakeEvents[123],
-        stakeEvents[146],
+        stakeEvents[116],
+        stakeEvents[145],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos150,
         stakingPoolStats150,
       );
       stakeInfos.push(stakeInfos151);
       console.log(
-        `\nstakeInfoAfterEvent150 after: ${JSON.stringify(stakeInfos[151].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId},${stakeEvents[123].signerAddress},${stakeEvents[123].stakeId}`))}`,
+        `\nstakeInfoAfterEvent150 after: ${JSON.stringify(stakeInfos[151].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId},${stakeEvents[116].signerAddress},${stakeEvents[116].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats151);
       console.log(
-        `stakingPoolStatsAfterEvent150 after: ${JSON.stringify(stakingPoolStats[151].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[123].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent150 after: ${JSON.stringify(stakingPoolStats[151].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6191,7 +6225,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats152,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[151],
-        stakeEvents[116],
+        stakeEvents[121],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos151,
@@ -6199,11 +6233,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos152);
       console.log(
-        `\nstakeInfoAfterEvent151 after: ${JSON.stringify(stakeInfos[152].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId},${stakeEvents[116].signerAddress},${stakeEvents[116].stakeId}`))}`,
+        `\nstakeInfoAfterEvent151 after: ${JSON.stringify(stakeInfos[152].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[121].poolIndex].poolId},${stakeEvents[121].signerAddress},${stakeEvents[121].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats152);
       console.log(
-        `stakingPoolStatsAfterEvent151 after: ${JSON.stringify(stakingPoolStats[152].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent151 after: ${JSON.stringify(stakingPoolStats[152].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[121].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6211,19 +6245,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats153,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[152],
-        stakeEvents[124],
-        stakeEvents[136],
+        stakeEvents[125],
+        stakeEvents[148],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos152,
         stakingPoolStats152,
       );
       stakeInfos.push(stakeInfos153);
       console.log(
-        `\nstakeInfoAfterEvent152 after: ${JSON.stringify(stakeInfos[153].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId},${stakeEvents[124].signerAddress},${stakeEvents[124].stakeId}`))}`,
+        `\nstakeInfoAfterEvent152 after: ${JSON.stringify(stakeInfos[153].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId},${stakeEvents[125].signerAddress},${stakeEvents[125].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats153);
       console.log(
-        `stakingPoolStatsAfterEvent152 after: ${JSON.stringify(stakingPoolStats[153].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent152 after: ${JSON.stringify(stakingPoolStats[153].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6231,7 +6265,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats154,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[153],
-        stakeEvents[128],
+        stakeEvents[118],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos153,
@@ -6239,11 +6273,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos154);
       console.log(
-        `\nstakeInfoAfterEvent153 after: ${JSON.stringify(stakeInfos[154].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId},${stakeEvents[128].signerAddress},${stakeEvents[128].stakeId}`))}`,
+        `\nstakeInfoAfterEvent153 after: ${JSON.stringify(stakeInfos[154].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId},${stakeEvents[118].signerAddress},${stakeEvents[118].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats154);
       console.log(
-        `stakingPoolStatsAfterEvent153 after: ${JSON.stringify(stakingPoolStats[154].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent153 after: ${JSON.stringify(stakingPoolStats[154].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6251,19 +6285,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats155,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[154],
-        stakeEvents[130],
-        null,
+        stakeEvents[126],
+        stakeEvents[138],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos154,
         stakingPoolStats154,
       );
       stakeInfos.push(stakeInfos155);
       console.log(
-        `\nstakeInfoAfterEvent154 after: ${JSON.stringify(stakeInfos[155].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId},${stakeEvents[130].signerAddress},${stakeEvents[130].stakeId}`))}`,
+        `\nstakeInfoAfterEvent154 after: ${JSON.stringify(stakeInfos[155].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId},${stakeEvents[126].signerAddress},${stakeEvents[126].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats155);
       console.log(
-        `stakingPoolStatsAfterEvent154 after: ${JSON.stringify(stakingPoolStats[155].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent154 after: ${JSON.stringify(stakingPoolStats[155].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[126].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6271,19 +6305,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats156,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[155],
-        stakeEvents[116],
-        stakeEvents[151],
+        stakeEvents[130],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos155,
         stakingPoolStats155,
       );
       stakeInfos.push(stakeInfos156);
       console.log(
-        `\nstakeInfoAfterEvent155 after: ${JSON.stringify(stakeInfos[156].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId},${stakeEvents[116].signerAddress},${stakeEvents[116].stakeId}`))}`,
+        `\nstakeInfoAfterEvent155 after: ${JSON.stringify(stakeInfos[156].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId},${stakeEvents[130].signerAddress},${stakeEvents[130].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats156);
       console.log(
-        `stakingPoolStatsAfterEvent155 after: ${JSON.stringify(stakingPoolStats[156].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent155 after: ${JSON.stringify(stakingPoolStats[156].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6291,19 +6325,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats157,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[156],
-        stakeEvents[114],
-        stakeEvents[143],
+        stakeEvents[132],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos156,
         stakingPoolStats156,
       );
       stakeInfos.push(stakeInfos157);
       console.log(
-        `\nstakeInfoAfterEvent156 after: ${JSON.stringify(stakeInfos[157].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId},${stakeEvents[114].signerAddress},${stakeEvents[114].stakeId}`))}`,
+        `\nstakeInfoAfterEvent156 after: ${JSON.stringify(stakeInfos[157].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId},${stakeEvents[132].signerAddress},${stakeEvents[132].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats157);
       console.log(
-        `stakingPoolStatsAfterEvent156 after: ${JSON.stringify(stakingPoolStats[157].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent156 after: ${JSON.stringify(stakingPoolStats[157].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6311,19 +6345,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats158,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[157],
-        stakeEvents[119],
-        stakeEvents[149],
+        stakeEvents[118],
+        stakeEvents[153],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos157,
         stakingPoolStats157,
       );
       stakeInfos.push(stakeInfos158);
       console.log(
-        `\nstakeInfoAfterEvent157 after: ${JSON.stringify(stakeInfos[158].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[119].poolIndex].poolId},${stakeEvents[119].signerAddress},${stakeEvents[119].stakeId}`))}`,
+        `\nstakeInfoAfterEvent157 after: ${JSON.stringify(stakeInfos[158].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId},${stakeEvents[118].signerAddress},${stakeEvents[118].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats158);
       console.log(
-        `stakingPoolStatsAfterEvent157 after: ${JSON.stringify(stakingPoolStats[158].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[114].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent157 after: ${JSON.stringify(stakingPoolStats[158].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6331,19 +6365,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats159,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[158],
-        stakeEvents[130],
-        stakeEvents[154],
+        stakeEvents[116],
+        stakeEvents[145],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos158,
         stakingPoolStats158,
       );
       stakeInfos.push(stakeInfos159);
       console.log(
-        `\nstakeInfoAfterEvent158 after: ${JSON.stringify(stakeInfos[159].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId},${stakeEvents[130].signerAddress},${stakeEvents[130].stakeId}`))}`,
+        `\nstakeInfoAfterEvent158 after: ${JSON.stringify(stakeInfos[159].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId},${stakeEvents[116].signerAddress},${stakeEvents[116].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats159);
       console.log(
-        `stakingPoolStatsAfterEvent158 after: ${JSON.stringify(stakingPoolStats[159].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent158 after: ${JSON.stringify(stakingPoolStats[159].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[116].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6351,19 +6385,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats160,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[159],
-        stakeEvents[128],
-        stakeEvents[153],
+        stakeEvents[121],
+        stakeEvents[151],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos159,
         stakingPoolStats159,
       );
       stakeInfos.push(stakeInfos160);
       console.log(
-        `\nstakeInfoAfterEvent159 after: ${JSON.stringify(stakeInfos[160].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId},${stakeEvents[128].signerAddress},${stakeEvents[128].stakeId}`))}`,
+        `\nstakeInfoAfterEvent159 after: ${JSON.stringify(stakeInfos[160].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[121].poolIndex].poolId},${stakeEvents[121].signerAddress},${stakeEvents[121].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats160);
       console.log(
-        `stakingPoolStatsAfterEvent159 after: ${JSON.stringify(stakingPoolStats[160].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[128].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent159 after: ${JSON.stringify(stakingPoolStats[160].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[121].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6371,19 +6405,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats161,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[160],
-        stakeEvents[130],
-        stakeEvents[154],
+        stakeEvents[132],
+        stakeEvents[156],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos160,
         stakingPoolStats160,
       );
       stakeInfos.push(stakeInfos161);
       console.log(
-        `\nstakeInfoAfterEvent160 after: ${JSON.stringify(stakeInfos[161].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId},${stakeEvents[130].signerAddress},${stakeEvents[130].stakeId}`))}`,
+        `\nstakeInfoAfterEvent160 after: ${JSON.stringify(stakeInfos[161].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId},${stakeEvents[132].signerAddress},${stakeEvents[132].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats161);
       console.log(
-        `stakingPoolStatsAfterEvent160 after: ${JSON.stringify(stakingPoolStats[161].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent160 after: ${JSON.stringify(stakingPoolStats[161].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6391,19 +6425,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats162,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[161],
-        stakeEvents[125],
-        null,
+        stakeEvents[130],
+        stakeEvents[155],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos161,
         stakingPoolStats161,
       );
       stakeInfos.push(stakeInfos162);
       console.log(
-        `\nstakeInfoAfterEvent161 after: ${JSON.stringify(stakeInfos[162].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId},${stakeEvents[125].signerAddress},${stakeEvents[125].stakeId}`))}`,
+        `\nstakeInfoAfterEvent161 after: ${JSON.stringify(stakeInfos[162].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId},${stakeEvents[130].signerAddress},${stakeEvents[130].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats162);
       console.log(
-        `stakingPoolStatsAfterEvent161 after: ${JSON.stringify(stakingPoolStats[162].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent161 after: ${JSON.stringify(stakingPoolStats[162].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[130].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6411,19 +6445,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats163,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[162],
-        stakeEvents[125],
-        stakeEvents[161],
+        stakeEvents[132],
+        stakeEvents[156],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos162,
         stakingPoolStats162,
       );
       stakeInfos.push(stakeInfos163);
       console.log(
-        `\nstakeInfoAfterEvent162 after: ${JSON.stringify(stakeInfos[163].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId},${stakeEvents[125].signerAddress},${stakeEvents[125].stakeId}`))}`,
+        `\nstakeInfoAfterEvent162 after: ${JSON.stringify(stakeInfos[163].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId},${stakeEvents[132].signerAddress},${stakeEvents[132].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats163);
       console.log(
-        `stakingPoolStatsAfterEvent162 after: ${JSON.stringify(stakingPoolStats[163].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent162 after: ${JSON.stringify(stakingPoolStats[163].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6431,7 +6465,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats164,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[163],
-        stakeEvents[132],
+        stakeEvents[127],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos163,
@@ -6439,11 +6473,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos164);
       console.log(
-        `\nstakeInfoAfterEvent163 after: ${JSON.stringify(stakeInfos[164].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId},${stakeEvents[132].signerAddress},${stakeEvents[132].stakeId}`))}`,
+        `\nstakeInfoAfterEvent163 after: ${JSON.stringify(stakeInfos[164].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId},${stakeEvents[127].signerAddress},${stakeEvents[127].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats164);
       console.log(
-        `stakingPoolStatsAfterEvent163 after: ${JSON.stringify(stakingPoolStats[164].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent163 after: ${JSON.stringify(stakingPoolStats[164].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6451,19 +6485,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats165,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[164],
-        stakeEvents[125],
-        stakeEvents[161],
+        stakeEvents[127],
+        stakeEvents[163],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos164,
         stakingPoolStats164,
       );
       stakeInfos.push(stakeInfos165);
       console.log(
-        `\nstakeInfoAfterEvent164 after: ${JSON.stringify(stakeInfos[165].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId},${stakeEvents[125].signerAddress},${stakeEvents[125].stakeId}`))}`,
+        `\nstakeInfoAfterEvent164 after: ${JSON.stringify(stakeInfos[165].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId},${stakeEvents[127].signerAddress},${stakeEvents[127].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats165);
       console.log(
-        `stakingPoolStatsAfterEvent164 after: ${JSON.stringify(stakingPoolStats[165].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[125].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent164 after: ${JSON.stringify(stakingPoolStats[165].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6471,19 +6505,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats166,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[165],
-        stakeEvents[132],
-        stakeEvents[163],
+        stakeEvents[134],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos165,
         stakingPoolStats165,
       );
       stakeInfos.push(stakeInfos166);
       console.log(
-        `\nstakeInfoAfterEvent165 after: ${JSON.stringify(stakeInfos[166].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId},${stakeEvents[132].signerAddress},${stakeEvents[132].stakeId}`))}`,
+        `\nstakeInfoAfterEvent165 after: ${JSON.stringify(stakeInfos[166].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[134].poolIndex].poolId},${stakeEvents[134].signerAddress},${stakeEvents[134].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats166);
       console.log(
-        `stakingPoolStatsAfterEvent165 after: ${JSON.stringify(stakingPoolStats[166].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[132].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent165 after: ${JSON.stringify(stakingPoolStats[166].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[134].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6491,19 +6525,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats167,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[166],
-        stakeEvents[36],
-        null,
+        stakeEvents[127],
+        stakeEvents[163],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos166,
         stakingPoolStats166,
       );
       stakeInfos.push(stakeInfos167);
       console.log(
-        `\nstakeInfoAfterEvent166 after: ${JSON.stringify(stakeInfos[167].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId},${stakeEvents[36].signerAddress},${stakeEvents[36].stakeId}`))}`,
+        `\nstakeInfoAfterEvent166 after: ${JSON.stringify(stakeInfos[167].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId},${stakeEvents[127].signerAddress},${stakeEvents[127].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats167);
       console.log(
-        `stakingPoolStatsAfterEvent166 after: ${JSON.stringify(stakingPoolStats[167].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent166 after: ${JSON.stringify(stakingPoolStats[167].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[127].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6511,19 +6545,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats168,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[167],
-        stakeEvents[167],
-        null,
+        stakeEvents[134],
+        stakeEvents[165],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos167,
         stakingPoolStats167,
       );
       stakeInfos.push(stakeInfos168);
       console.log(
-        `\nstakeInfoAfterEvent167 after: ${JSON.stringify(stakeInfos[168].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[167].poolIndex].poolId},${stakeEvents[167].signerAddress},${stakeEvents[167].stakeId}`))}`,
+        `\nstakeInfoAfterEvent167 after: ${JSON.stringify(stakeInfos[168].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[134].poolIndex].poolId},${stakeEvents[134].signerAddress},${stakeEvents[134].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats168);
       console.log(
-        `stakingPoolStatsAfterEvent167 after: ${JSON.stringify(stakingPoolStats[168].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[167].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent167 after: ${JSON.stringify(stakingPoolStats[168].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[134].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6531,7 +6565,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats169,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[168],
-        stakeEvents[52],
+        stakeEvents[38],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos168,
@@ -6539,11 +6573,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos169);
       console.log(
-        `\nstakeInfoAfterEvent168 after: ${JSON.stringify(stakeInfos[169].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`))}`,
+        `\nstakeInfoAfterEvent168 after: ${JSON.stringify(stakeInfos[169].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId},${stakeEvents[38].signerAddress},${stakeEvents[38].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats169);
       console.log(
-        `stakingPoolStatsAfterEvent168 after: ${JSON.stringify(stakingPoolStats[169].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent168 after: ${JSON.stringify(stakingPoolStats[169].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6571,7 +6605,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats171,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[170],
-        stakeEvents[55],
+        stakeEvents[54],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos170,
@@ -6579,11 +6613,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos171);
       console.log(
-        `\nstakeInfoAfterEvent170 after: ${JSON.stringify(stakeInfos[171].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId},${stakeEvents[55].signerAddress},${stakeEvents[55].stakeId}`))}`,
+        `\nstakeInfoAfterEvent170 after: ${JSON.stringify(stakeInfos[171].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats171);
       console.log(
-        `stakingPoolStatsAfterEvent170 after: ${JSON.stringify(stakingPoolStats[171].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent170 after: ${JSON.stringify(stakingPoolStats[171].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6591,7 +6625,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats172,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[171],
-        stakeEvents[74],
+        stakeEvents[171],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos171,
@@ -6599,11 +6633,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos172);
       console.log(
-        `\nstakeInfoAfterEvent171 after: ${JSON.stringify(stakeInfos[172].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId},${stakeEvents[74].signerAddress},${stakeEvents[74].stakeId}`))}`,
+        `\nstakeInfoAfterEvent171 after: ${JSON.stringify(stakeInfos[172].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[171].poolIndex].poolId},${stakeEvents[171].signerAddress},${stakeEvents[171].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats172);
       console.log(
-        `stakingPoolStatsAfterEvent171 after: ${JSON.stringify(stakingPoolStats[172].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent171 after: ${JSON.stringify(stakingPoolStats[172].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[171].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6611,7 +6645,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats173,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[172],
-        stakeEvents[36],
+        stakeEvents[57],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos172,
@@ -6619,11 +6653,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos173);
       console.log(
-        `\nstakeInfoAfterEvent172 after: ${JSON.stringify(stakeInfos[173].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId},${stakeEvents[36].signerAddress},${stakeEvents[36].stakeId}`))}`,
+        `\nstakeInfoAfterEvent172 after: ${JSON.stringify(stakeInfos[173].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId},${stakeEvents[57].signerAddress},${stakeEvents[57].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats173);
       console.log(
-        `stakingPoolStatsAfterEvent172 after: ${JSON.stringify(stakingPoolStats[173].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent172 after: ${JSON.stringify(stakingPoolStats[173].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6631,7 +6665,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats174,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[173],
-        stakeEvents[169],
+        stakeEvents[76],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos173,
@@ -6639,11 +6673,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos174);
       console.log(
-        `\nstakeInfoAfterEvent173 after: ${JSON.stringify(stakeInfos[174].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[169].poolIndex].poolId},${stakeEvents[169].signerAddress},${stakeEvents[169].stakeId}`))}`,
+        `\nstakeInfoAfterEvent173 after: ${JSON.stringify(stakeInfos[174].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId},${stakeEvents[76].signerAddress},${stakeEvents[76].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats174);
       console.log(
-        `stakingPoolStatsAfterEvent173 after: ${JSON.stringify(stakingPoolStats[174].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[169].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent173 after: ${JSON.stringify(stakingPoolStats[174].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6651,7 +6685,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats175,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[174],
-        stakeEvents[77],
+        stakeEvents[38],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos174,
@@ -6659,11 +6693,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos175);
       console.log(
-        `\nstakeInfoAfterEvent174 after: ${JSON.stringify(stakeInfos[175].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[77].poolIndex].poolId},${stakeEvents[77].signerAddress},${stakeEvents[77].stakeId}`))}`,
+        `\nstakeInfoAfterEvent174 after: ${JSON.stringify(stakeInfos[175].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId},${stakeEvents[38].signerAddress},${stakeEvents[38].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats175);
       console.log(
-        `stakingPoolStatsAfterEvent174 after: ${JSON.stringify(stakingPoolStats[175].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[77].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent174 after: ${JSON.stringify(stakingPoolStats[175].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6671,7 +6705,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats176,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[175],
-        stakeEvents[101],
+        stakeEvents[171],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos175,
@@ -6679,11 +6713,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos176);
       console.log(
-        `\nstakeInfoAfterEvent175 after: ${JSON.stringify(stakeInfos[176].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId},${stakeEvents[101].signerAddress},${stakeEvents[101].stakeId}`))}`,
+        `\nstakeInfoAfterEvent175 after: ${JSON.stringify(stakeInfos[176].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[171].poolIndex].poolId},${stakeEvents[171].signerAddress},${stakeEvents[171].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats176);
       console.log(
-        `stakingPoolStatsAfterEvent175 after: ${JSON.stringify(stakingPoolStats[176].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent175 after: ${JSON.stringify(stakingPoolStats[176].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[171].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6691,7 +6725,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats177,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[176],
-        stakeEvents[55],
+        stakeEvents[79],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos176,
@@ -6699,11 +6733,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos177);
       console.log(
-        `\nstakeInfoAfterEvent176 after: ${JSON.stringify(stakeInfos[177].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId},${stakeEvents[55].signerAddress},${stakeEvents[55].stakeId}`))}`,
+        `\nstakeInfoAfterEvent176 after: ${JSON.stringify(stakeInfos[177].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[79].poolIndex].poolId},${stakeEvents[79].signerAddress},${stakeEvents[79].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats177);
       console.log(
-        `stakingPoolStatsAfterEvent176 after: ${JSON.stringify(stakingPoolStats[177].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[55].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent176 after: ${JSON.stringify(stakingPoolStats[177].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[79].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6711,19 +6745,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats178,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[177],
-        stakeEvents[36],
-        stakeEvents[172],
+        stakeEvents[103],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos177,
         stakingPoolStats177,
       );
       stakeInfos.push(stakeInfos178);
       console.log(
-        `\nstakeInfoAfterEvent177 after: ${JSON.stringify(stakeInfos[178].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId},${stakeEvents[36].signerAddress},${stakeEvents[36].stakeId}`))}`,
+        `\nstakeInfoAfterEvent177 after: ${JSON.stringify(stakeInfos[178].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId},${stakeEvents[103].signerAddress},${stakeEvents[103].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats178);
       console.log(
-        `stakingPoolStatsAfterEvent177 after: ${JSON.stringify(stakingPoolStats[178].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[36].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent177 after: ${JSON.stringify(stakingPoolStats[178].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6731,19 +6765,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats179,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[178],
-        stakeEvents[52],
-        stakeEvents[168],
+        stakeEvents[57],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos178,
         stakingPoolStats178,
       );
       stakeInfos.push(stakeInfos179);
       console.log(
-        `\nstakeInfoAfterEvent178 after: ${JSON.stringify(stakeInfos[179].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`))}`,
+        `\nstakeInfoAfterEvent178 after: ${JSON.stringify(stakeInfos[179].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId},${stakeEvents[57].signerAddress},${stakeEvents[57].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats179);
       console.log(
-        `stakingPoolStatsAfterEvent178 after: ${JSON.stringify(stakingPoolStats[179].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent178 after: ${JSON.stringify(stakingPoolStats[179].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[57].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6751,19 +6785,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats180,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[179],
-        stakeEvents[74],
-        stakeEvents[171],
+        stakeEvents[38],
+        stakeEvents[174],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos179,
         stakingPoolStats179,
       );
       stakeInfos.push(stakeInfos180);
       console.log(
-        `\nstakeInfoAfterEvent179 after: ${JSON.stringify(stakeInfos[180].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId},${stakeEvents[74].signerAddress},${stakeEvents[74].stakeId}`))}`,
+        `\nstakeInfoAfterEvent179 after: ${JSON.stringify(stakeInfos[180].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId},${stakeEvents[38].signerAddress},${stakeEvents[38].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats180);
       console.log(
-        `stakingPoolStatsAfterEvent179 after: ${JSON.stringify(stakingPoolStats[180].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent179 after: ${JSON.stringify(stakingPoolStats[180].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[38].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6771,19 +6805,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats181,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[180],
-        stakeEvents[52],
-        stakeEvents[168],
+        stakeEvents[54],
+        stakeEvents[170],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos180,
         stakingPoolStats180,
       );
       stakeInfos.push(stakeInfos181);
       console.log(
-        `\nstakeInfoAfterEvent180 after: ${JSON.stringify(stakeInfos[181].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`))}`,
+        `\nstakeInfoAfterEvent180 after: ${JSON.stringify(stakeInfos[181].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats181);
       console.log(
-        `stakingPoolStatsAfterEvent180 after: ${JSON.stringify(stakingPoolStats[181].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent180 after: ${JSON.stringify(stakingPoolStats[181].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6791,19 +6825,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats182,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[181],
-        stakeEvents[74],
-        stakeEvents[171],
+        stakeEvents[76],
+        stakeEvents[173],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos181,
         stakingPoolStats181,
       );
       stakeInfos.push(stakeInfos182);
       console.log(
-        `\nstakeInfoAfterEvent181 after: ${JSON.stringify(stakeInfos[182].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId},${stakeEvents[74].signerAddress},${stakeEvents[74].stakeId}`))}`,
+        `\nstakeInfoAfterEvent181 after: ${JSON.stringify(stakeInfos[182].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId},${stakeEvents[76].signerAddress},${stakeEvents[76].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats182);
       console.log(
-        `stakingPoolStatsAfterEvent181 after: ${JSON.stringify(stakingPoolStats[182].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[74].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent181 after: ${JSON.stringify(stakingPoolStats[182].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6811,19 +6845,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats183,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[182],
-        stakeEvents[52],
-        stakeEvents[168],
+        stakeEvents[54],
+        stakeEvents[170],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos182,
         stakingPoolStats182,
       );
       stakeInfos.push(stakeInfos183);
       console.log(
-        `\nstakeInfoAfterEvent182 after: ${JSON.stringify(stakeInfos[183].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId},${stakeEvents[52].signerAddress},${stakeEvents[52].stakeId}`))}`,
+        `\nstakeInfoAfterEvent182 after: ${JSON.stringify(stakeInfos[183].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats183);
       console.log(
-        `stakingPoolStatsAfterEvent182 after: ${JSON.stringify(stakingPoolStats[183].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[52].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent182 after: ${JSON.stringify(stakingPoolStats[183].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6831,19 +6865,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats184,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[183],
-        stakeEvents[115],
-        null,
+        stakeEvents[76],
+        stakeEvents[173],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos183,
         stakingPoolStats183,
       );
       stakeInfos.push(stakeInfos184);
       console.log(
-        `\nstakeInfoAfterEvent183 after: ${JSON.stringify(stakeInfos[184].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId},${stakeEvents[115].signerAddress},${stakeEvents[115].stakeId}`))}`,
+        `\nstakeInfoAfterEvent183 after: ${JSON.stringify(stakeInfos[184].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId},${stakeEvents[76].signerAddress},${stakeEvents[76].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats184);
       console.log(
-        `stakingPoolStatsAfterEvent183 after: ${JSON.stringify(stakingPoolStats[184].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent183 after: ${JSON.stringify(stakingPoolStats[184].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[76].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6851,19 +6885,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats185,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[184],
-        stakeEvents[122],
-        null,
+        stakeEvents[54],
+        stakeEvents[170],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos184,
         stakingPoolStats184,
       );
       stakeInfos.push(stakeInfos185);
       console.log(
-        `\nstakeInfoAfterEvent184 after: ${JSON.stringify(stakeInfos[185].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[122].poolIndex].poolId},${stakeEvents[122].signerAddress},${stakeEvents[122].stakeId}`))}`,
+        `\nstakeInfoAfterEvent184 after: ${JSON.stringify(stakeInfos[185].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId},${stakeEvents[54].signerAddress},${stakeEvents[54].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats185);
       console.log(
-        `stakingPoolStatsAfterEvent184 after: ${JSON.stringify(stakingPoolStats[185].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[122].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent184 after: ${JSON.stringify(stakingPoolStats[185].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[54].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6871,7 +6905,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats186,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[185],
-        stakeEvents[118],
+        stakeEvents[117],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos185,
@@ -6879,11 +6913,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos186);
       console.log(
-        `\nstakeInfoAfterEvent185 after: ${JSON.stringify(stakeInfos[186].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId},${stakeEvents[118].signerAddress},${stakeEvents[118].stakeId}`))}`,
+        `\nstakeInfoAfterEvent185 after: ${JSON.stringify(stakeInfos[186].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId},${stakeEvents[117].signerAddress},${stakeEvents[117].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats186);
       console.log(
-        `stakingPoolStatsAfterEvent185 after: ${JSON.stringify(stakingPoolStats[186].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent185 after: ${JSON.stringify(stakingPoolStats[186].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6891,7 +6925,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats187,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[186],
-        stakeEvents[118],
+        stakeEvents[124],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos186,
@@ -6899,11 +6933,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos187);
       console.log(
-        `\nstakeInfoAfterEvent186 after: ${JSON.stringify(stakeInfos[187].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId},${stakeEvents[118].signerAddress},${stakeEvents[118].stakeId}`))}`,
+        `\nstakeInfoAfterEvent186 after: ${JSON.stringify(stakeInfos[187].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId},${stakeEvents[124].signerAddress},${stakeEvents[124].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats187);
       console.log(
-        `stakingPoolStatsAfterEvent186 after: ${JSON.stringify(stakingPoolStats[187].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[118].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent186 after: ${JSON.stringify(stakingPoolStats[187].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[124].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6911,7 +6945,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats188,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[187],
-        stakeEvents[129],
+        stakeEvents[120],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos187,
@@ -6919,11 +6953,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos188);
       console.log(
-        `\nstakeInfoAfterEvent187 after: ${JSON.stringify(stakeInfos[188].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId},${stakeEvents[129].signerAddress},${stakeEvents[129].stakeId}`))}`,
+        `\nstakeInfoAfterEvent187 after: ${JSON.stringify(stakeInfos[188].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[120].poolIndex].poolId},${stakeEvents[120].signerAddress},${stakeEvents[120].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats188);
       console.log(
-        `stakingPoolStatsAfterEvent187 after: ${JSON.stringify(stakingPoolStats[188].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent187 after: ${JSON.stringify(stakingPoolStats[188].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[120].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6931,7 +6965,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats189,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[188],
-        stakeEvents[131],
+        stakeEvents[120],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos188,
@@ -6939,11 +6973,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos189);
       console.log(
-        `\nstakeInfoAfterEvent188 after: ${JSON.stringify(stakeInfos[189].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId},${stakeEvents[131].signerAddress},${stakeEvents[131].stakeId}`))}`,
+        `\nstakeInfoAfterEvent188 after: ${JSON.stringify(stakeInfos[189].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[120].poolIndex].poolId},${stakeEvents[120].signerAddress},${stakeEvents[120].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats189);
       console.log(
-        `stakingPoolStatsAfterEvent188 after: ${JSON.stringify(stakingPoolStats[189].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent188 after: ${JSON.stringify(stakingPoolStats[189].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[120].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6951,19 +6985,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats190,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[189],
-        stakeEvents[129],
-        stakeEvents[187],
+        stakeEvents[131],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos189,
         stakingPoolStats189,
       );
       stakeInfos.push(stakeInfos190);
       console.log(
-        `\nstakeInfoAfterEvent189 after: ${JSON.stringify(stakeInfos[190].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId},${stakeEvents[129].signerAddress},${stakeEvents[129].stakeId}`))}`,
+        `\nstakeInfoAfterEvent189 after: ${JSON.stringify(stakeInfos[190].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId},${stakeEvents[131].signerAddress},${stakeEvents[131].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats190);
       console.log(
-        `stakingPoolStatsAfterEvent189 after: ${JSON.stringify(stakingPoolStats[190].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[129].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent189 after: ${JSON.stringify(stakingPoolStats[190].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6971,19 +7005,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats191,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[190],
-        stakeEvents[131],
-        stakeEvents[188],
+        stakeEvents[133],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos190,
         stakingPoolStats190,
       );
       stakeInfos.push(stakeInfos191);
       console.log(
-        `\nstakeInfoAfterEvent190 after: ${JSON.stringify(stakeInfos[191].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId},${stakeEvents[131].signerAddress},${stakeEvents[131].stakeId}`))}`,
+        `\nstakeInfoAfterEvent190 after: ${JSON.stringify(stakeInfos[191].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[133].poolIndex].poolId},${stakeEvents[133].signerAddress},${stakeEvents[133].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats191);
       console.log(
-        `stakingPoolStatsAfterEvent190 after: ${JSON.stringify(stakingPoolStats[191].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent190 after: ${JSON.stringify(stakingPoolStats[191].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[133].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -6991,19 +7025,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats192,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[191],
-        stakeEvents[191],
-        null,
+        stakeEvents[131],
+        stakeEvents[189],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos191,
         stakingPoolStats191,
       );
       stakeInfos.push(stakeInfos192);
       console.log(
-        `\nstakeInfoAfterEvent191 after: ${JSON.stringify(stakeInfos[192].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[191].poolIndex].poolId},${stakeEvents[191].signerAddress},${stakeEvents[191].stakeId}`))}`,
+        `\nstakeInfoAfterEvent191 after: ${JSON.stringify(stakeInfos[192].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId},${stakeEvents[131].signerAddress},${stakeEvents[131].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats192);
       console.log(
-        `stakingPoolStatsAfterEvent191 after: ${JSON.stringify(stakingPoolStats[192].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[191].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent191 after: ${JSON.stringify(stakingPoolStats[192].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[131].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7011,19 +7045,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats193,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[192],
-        stakeEvents[101],
-        null,
+        stakeEvents[133],
+        stakeEvents[190],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos192,
         stakingPoolStats192,
       );
       stakeInfos.push(stakeInfos193);
       console.log(
-        `\nstakeInfoAfterEvent192 after: ${JSON.stringify(stakeInfos[193].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId},${stakeEvents[101].signerAddress},${stakeEvents[101].stakeId}`))}`,
+        `\nstakeInfoAfterEvent192 after: ${JSON.stringify(stakeInfos[193].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[133].poolIndex].poolId},${stakeEvents[133].signerAddress},${stakeEvents[133].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats193);
       console.log(
-        `stakingPoolStatsAfterEvent192 after: ${JSON.stringify(stakingPoolStats[193].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent192 after: ${JSON.stringify(stakingPoolStats[193].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[133].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7051,7 +7085,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats195,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[194],
-        stakeEvents[194],
+        stakeEvents[103],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos194,
@@ -7059,11 +7093,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos195);
       console.log(
-        `\nstakeInfoAfterEvent194 after: ${JSON.stringify(stakeInfos[195].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[194].poolIndex].poolId},${stakeEvents[194].signerAddress},${stakeEvents[194].stakeId}`))}`,
+        `\nstakeInfoAfterEvent194 after: ${JSON.stringify(stakeInfos[195].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId},${stakeEvents[103].signerAddress},${stakeEvents[103].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats195);
       console.log(
-        `stakingPoolStatsAfterEvent194 after: ${JSON.stringify(stakingPoolStats[195].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[194].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent194 after: ${JSON.stringify(stakingPoolStats[195].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7131,19 +7165,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats199,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[198],
-        stakeEvents[101],
-        stakeEvents[192],
+        stakeEvents[198],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos198,
         stakingPoolStats198,
       );
       stakeInfos.push(stakeInfos199);
       console.log(
-        `\nstakeInfoAfterEvent198 after: ${JSON.stringify(stakeInfos[199].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId},${stakeEvents[101].signerAddress},${stakeEvents[101].stakeId}`))}`,
+        `\nstakeInfoAfterEvent198 after: ${JSON.stringify(stakeInfos[199].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId},${stakeEvents[198].signerAddress},${stakeEvents[198].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats199);
       console.log(
-        `stakingPoolStatsAfterEvent198 after: ${JSON.stringify(stakingPoolStats[199].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[101].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent198 after: ${JSON.stringify(stakingPoolStats[199].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7171,19 +7205,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats201,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[200],
-        stakeEvents[200],
-        null,
+        stakeEvents[103],
+        stakeEvents[194],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos200,
         stakingPoolStats200,
       );
       stakeInfos.push(stakeInfos201);
       console.log(
-        `\nstakeInfoAfterEvent200 after: ${JSON.stringify(stakeInfos[201].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[200].poolIndex].poolId},${stakeEvents[200].signerAddress},${stakeEvents[200].stakeId}`))}`,
+        `\nstakeInfoAfterEvent200 after: ${JSON.stringify(stakeInfos[201].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId},${stakeEvents[103].signerAddress},${stakeEvents[103].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats201);
       console.log(
-        `stakingPoolStatsAfterEvent200 after: ${JSON.stringify(stakingPoolStats[201].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[200].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent200 after: ${JSON.stringify(stakingPoolStats[201].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[103].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7211,19 +7245,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats203,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[202],
-        stakeEvents[115],
-        stakeEvents[183],
+        stakeEvents[202],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos202,
         stakingPoolStats202,
       );
       stakeInfos.push(stakeInfos203);
       console.log(
-        `\nstakeInfoAfterEvent202 after: ${JSON.stringify(stakeInfos[203].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId},${stakeEvents[115].signerAddress},${stakeEvents[115].stakeId}`))}`,
+        `\nstakeInfoAfterEvent202 after: ${JSON.stringify(stakeInfos[203].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[202].poolIndex].poolId},${stakeEvents[202].signerAddress},${stakeEvents[202].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats203);
       console.log(
-        `stakingPoolStatsAfterEvent202 after: ${JSON.stringify(stakingPoolStats[203].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent202 after: ${JSON.stringify(stakingPoolStats[203].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[202].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7251,19 +7285,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats205,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[204],
-        stakeEvents[204],
-        null,
+        stakeEvents[117],
+        stakeEvents[185],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos204,
         stakingPoolStats204,
       );
       stakeInfos.push(stakeInfos205);
       console.log(
-        `\nstakeInfoAfterEvent204 after: ${JSON.stringify(stakeInfos[205].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[204].poolIndex].poolId},${stakeEvents[204].signerAddress},${stakeEvents[204].stakeId}`))}`,
+        `\nstakeInfoAfterEvent204 after: ${JSON.stringify(stakeInfos[205].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId},${stakeEvents[117].signerAddress},${stakeEvents[117].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats205);
       console.log(
-        `stakingPoolStatsAfterEvent204 after: ${JSON.stringify(stakingPoolStats[205].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[204].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent204 after: ${JSON.stringify(stakingPoolStats[205].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7271,7 +7305,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats206,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[205],
-        stakeEvents[167],
+        stakeEvents[205],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos205,
@@ -7311,7 +7345,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats208,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[207],
-        stakeEvents[207],
+        stakeEvents[169],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos207,
@@ -7331,7 +7365,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats209,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[208],
-        stakeEvents[201],
+        stakeEvents[208],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos208,
@@ -7339,11 +7373,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos209);
       console.log(
-        `\nstakeInfoAfterEvent208 after: ${JSON.stringify(stakeInfos[209].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId},${stakeEvents[201].signerAddress},${stakeEvents[201].stakeId}`))}`,
+        `\nstakeInfoAfterEvent208 after: ${JSON.stringify(stakeInfos[209].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[208].poolIndex].poolId},${stakeEvents[208].signerAddress},${stakeEvents[208].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats209);
       console.log(
-        `stakingPoolStatsAfterEvent208 after: ${JSON.stringify(stakingPoolStats[209].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent208 after: ${JSON.stringify(stakingPoolStats[209].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[208].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7351,7 +7385,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats210,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[209],
-        stakeEvents[195],
+        stakeEvents[209],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos209,
@@ -7359,11 +7393,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos210);
       console.log(
-        `\nstakeInfoAfterEvent209 after: ${JSON.stringify(stakeInfos[210].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[195].poolIndex].poolId},${stakeEvents[195].signerAddress},${stakeEvents[195].stakeId}`))}`,
+        `\nstakeInfoAfterEvent209 after: ${JSON.stringify(stakeInfos[210].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[209].poolIndex].poolId},${stakeEvents[209].signerAddress},${stakeEvents[209].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats210);
       console.log(
-        `stakingPoolStatsAfterEvent209 after: ${JSON.stringify(stakingPoolStats[210].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[195].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent209 after: ${JSON.stringify(stakingPoolStats[210].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[209].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7371,7 +7405,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats211,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[210],
-        stakeEvents[210],
+        stakeEvents[203],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos210,
@@ -7379,11 +7413,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos211);
       console.log(
-        `\nstakeInfoAfterEvent210 after: ${JSON.stringify(stakeInfos[211].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[210].poolIndex].poolId},${stakeEvents[210].signerAddress},${stakeEvents[210].stakeId}`))}`,
+        `\nstakeInfoAfterEvent210 after: ${JSON.stringify(stakeInfos[211].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[203].poolIndex].poolId},${stakeEvents[203].signerAddress},${stakeEvents[203].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats211);
       console.log(
-        `stakingPoolStatsAfterEvent210 after: ${JSON.stringify(stakingPoolStats[211].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[210].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent210 after: ${JSON.stringify(stakingPoolStats[211].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[203].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7391,7 +7425,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats212,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[211],
-        stakeEvents[191],
+        stakeEvents[197],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos211,
@@ -7399,11 +7433,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos212);
       console.log(
-        `\nstakeInfoAfterEvent211 after: ${JSON.stringify(stakeInfos[212].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[191].poolIndex].poolId},${stakeEvents[191].signerAddress},${stakeEvents[191].stakeId}`))}`,
+        `\nstakeInfoAfterEvent211 after: ${JSON.stringify(stakeInfos[212].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId},${stakeEvents[197].signerAddress},${stakeEvents[197].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats212);
       console.log(
-        `stakingPoolStatsAfterEvent211 after: ${JSON.stringify(stakingPoolStats[212].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[191].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent211 after: ${JSON.stringify(stakingPoolStats[212].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7411,19 +7445,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats213,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[212],
-        stakeEvents[23],
-        stakeEvents[32],
+        stakeEvents[212],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos212,
         stakingPoolStats212,
       );
       stakeInfos.push(stakeInfos213);
       console.log(
-        `\nstakeInfoAfterEvent212 after: ${JSON.stringify(stakeInfos[213].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId},${stakeEvents[23].signerAddress},${stakeEvents[23].stakeId}`))}`,
+        `\nstakeInfoAfterEvent212 after: ${JSON.stringify(stakeInfos[213].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[212].poolIndex].poolId},${stakeEvents[212].signerAddress},${stakeEvents[212].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats213);
       console.log(
-        `stakingPoolStatsAfterEvent212 after: ${JSON.stringify(stakingPoolStats[213].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent212 after: ${JSON.stringify(stakingPoolStats[213].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[212].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7431,7 +7465,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats214,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[213],
-        stakeEvents[213],
+        stakeEvents[193],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos213,
@@ -7439,11 +7473,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos214);
       console.log(
-        `\nstakeInfoAfterEvent213 after: ${JSON.stringify(stakeInfos[214].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[213].poolIndex].poolId},${stakeEvents[213].signerAddress},${stakeEvents[213].stakeId}`))}`,
+        `\nstakeInfoAfterEvent213 after: ${JSON.stringify(stakeInfos[214].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[193].poolIndex].poolId},${stakeEvents[193].signerAddress},${stakeEvents[193].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats214);
       console.log(
-        `stakingPoolStatsAfterEvent213 after: ${JSON.stringify(stakingPoolStats[214].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[213].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent213 after: ${JSON.stringify(stakingPoolStats[214].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[193].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7451,19 +7485,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats215,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[214],
-        stakeEvents[115],
-        stakeEvents[183],
+        stakeEvents[25],
+        stakeEvents[34],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos214,
         stakingPoolStats214,
       );
       stakeInfos.push(stakeInfos215);
       console.log(
-        `\nstakeInfoAfterEvent214 after: ${JSON.stringify(stakeInfos[215].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId},${stakeEvents[115].signerAddress},${stakeEvents[115].stakeId}`))}`,
+        `\nstakeInfoAfterEvent214 after: ${JSON.stringify(stakeInfos[215].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId},${stakeEvents[25].signerAddress},${stakeEvents[25].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats215);
       console.log(
-        `stakingPoolStatsAfterEvent214 after: ${JSON.stringify(stakingPoolStats[215].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[115].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent214 after: ${JSON.stringify(stakingPoolStats[215].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7471,19 +7505,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats216,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[215],
-        stakeEvents[0],
-        stakeEvents[25],
+        stakeEvents[215],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos215,
         stakingPoolStats215,
       );
       stakeInfos.push(stakeInfos216);
       console.log(
-        `\nstakeInfoAfterEvent215 after: ${JSON.stringify(stakeInfos[216].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`))}`,
+        `\nstakeInfoAfterEvent215 after: ${JSON.stringify(stakeInfos[216].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[215].poolIndex].poolId},${stakeEvents[215].signerAddress},${stakeEvents[215].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats216);
       console.log(
-        `stakingPoolStatsAfterEvent215 after: ${JSON.stringify(stakingPoolStats[216].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent215 after: ${JSON.stringify(stakingPoolStats[216].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[215].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7491,19 +7525,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats217,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[216],
-        stakeEvents[1],
-        stakeEvents[11],
+        stakeEvents[117],
+        stakeEvents[185],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos216,
         stakingPoolStats216,
       );
       stakeInfos.push(stakeInfos217);
       console.log(
-        `\nstakeInfoAfterEvent216 after: ${JSON.stringify(stakeInfos[217].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`))}`,
+        `\nstakeInfoAfterEvent216 after: ${JSON.stringify(stakeInfos[217].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId},${stakeEvents[117].signerAddress},${stakeEvents[117].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats217);
       console.log(
-        `stakingPoolStatsAfterEvent216 after: ${JSON.stringify(stakingPoolStats[217].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent216 after: ${JSON.stringify(stakingPoolStats[217].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[117].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7511,19 +7545,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats218,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[217],
-        stakeEvents[3],
-        stakeEvents[21],
+        stakeEvents[2],
+        stakeEvents[27],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos217,
         stakingPoolStats217,
       );
       stakeInfos.push(stakeInfos218);
       console.log(
-        `\nstakeInfoAfterEvent217 after: ${JSON.stringify(stakeInfos[218].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
+        `\nstakeInfoAfterEvent217 after: ${JSON.stringify(stakeInfos[218].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats218);
       console.log(
-        `stakingPoolStatsAfterEvent217 after: ${JSON.stringify(stakingPoolStats[218].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent217 after: ${JSON.stringify(stakingPoolStats[218].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7531,19 +7565,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats219,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[218],
-        stakeEvents[199],
-        null,
+        stakeEvents[3],
+        stakeEvents[13],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos218,
         stakingPoolStats218,
       );
       stakeInfos.push(stakeInfos219);
       console.log(
-        `\nstakeInfoAfterEvent218 after: ${JSON.stringify(stakeInfos[219].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`))}`,
+        `\nstakeInfoAfterEvent218 after: ${JSON.stringify(stakeInfos[219].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats219);
       console.log(
-        `stakingPoolStatsAfterEvent218 after: ${JSON.stringify(stakingPoolStats[219].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent218 after: ${JSON.stringify(stakingPoolStats[219].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7551,19 +7585,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats220,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[219],
-        stakeEvents[219],
-        null,
+        stakeEvents[5],
+        stakeEvents[23],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos219,
         stakingPoolStats219,
       );
       stakeInfos.push(stakeInfos220);
       console.log(
-        `\nstakeInfoAfterEvent219 after: ${JSON.stringify(stakeInfos[220].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[219].poolIndex].poolId},${stakeEvents[219].signerAddress},${stakeEvents[219].stakeId}`))}`,
+        `\nstakeInfoAfterEvent219 after: ${JSON.stringify(stakeInfos[220].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId},${stakeEvents[5].signerAddress},${stakeEvents[5].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats220);
       console.log(
-        `stakingPoolStatsAfterEvent219 after: ${JSON.stringify(stakingPoolStats[220].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[219].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent219 after: ${JSON.stringify(stakingPoolStats[220].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7571,19 +7605,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats221,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[220],
-        stakeEvents[23],
-        stakeEvents[32],
+        stakeEvents[201],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos220,
         stakingPoolStats220,
       );
       stakeInfos.push(stakeInfos221);
       console.log(
-        `\nstakeInfoAfterEvent220 after: ${JSON.stringify(stakeInfos[221].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId},${stakeEvents[23].signerAddress},${stakeEvents[23].stakeId}`))}`,
+        `\nstakeInfoAfterEvent220 after: ${JSON.stringify(stakeInfos[221].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId},${stakeEvents[201].signerAddress},${stakeEvents[201].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats221);
       console.log(
-        `stakingPoolStatsAfterEvent220 after: ${JSON.stringify(stakingPoolStats[221].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent220 after: ${JSON.stringify(stakingPoolStats[221].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7591,7 +7625,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats222,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[221],
-        stakeEvents[196],
+        stakeEvents[221],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos221,
@@ -7599,11 +7633,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos222);
       console.log(
-        `\nstakeInfoAfterEvent221 after: ${JSON.stringify(stakeInfos[222].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[196].poolIndex].poolId},${stakeEvents[196].signerAddress},${stakeEvents[196].stakeId}`))}`,
+        `\nstakeInfoAfterEvent221 after: ${JSON.stringify(stakeInfos[222].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[221].poolIndex].poolId},${stakeEvents[221].signerAddress},${stakeEvents[221].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats222);
       console.log(
-        `stakingPoolStatsAfterEvent221 after: ${JSON.stringify(stakingPoolStats[222].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[196].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent221 after: ${JSON.stringify(stakingPoolStats[222].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[221].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7611,19 +7645,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats223,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[222],
-        stakeEvents[24],
-        stakeEvents[37],
+        stakeEvents[25],
+        stakeEvents[34],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos222,
         stakingPoolStats222,
       );
       stakeInfos.push(stakeInfos223);
       console.log(
-        `\nstakeInfoAfterEvent222 after: ${JSON.stringify(stakeInfos[223].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId},${stakeEvents[24].signerAddress},${stakeEvents[24].stakeId}`))}`,
+        `\nstakeInfoAfterEvent222 after: ${JSON.stringify(stakeInfos[223].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId},${stakeEvents[25].signerAddress},${stakeEvents[25].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats223);
       console.log(
-        `stakingPoolStatsAfterEvent222 after: ${JSON.stringify(stakingPoolStats[223].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent222 after: ${JSON.stringify(stakingPoolStats[223].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7631,19 +7665,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats224,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[223],
-        stakeEvents[3],
-        stakeEvents[21],
+        stakeEvents[198],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos223,
         stakingPoolStats223,
       );
       stakeInfos.push(stakeInfos224);
       console.log(
-        `\nstakeInfoAfterEvent223 after: ${JSON.stringify(stakeInfos[224].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
+        `\nstakeInfoAfterEvent223 after: ${JSON.stringify(stakeInfos[224].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId},${stakeEvents[198].signerAddress},${stakeEvents[198].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats224);
       console.log(
-        `stakingPoolStatsAfterEvent223 after: ${JSON.stringify(stakingPoolStats[224].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent223 after: ${JSON.stringify(stakingPoolStats[224].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7651,19 +7685,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats225,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[224],
-        stakeEvents[197],
-        null,
+        stakeEvents[26],
+        stakeEvents[39],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos224,
         stakingPoolStats224,
       );
       stakeInfos.push(stakeInfos225);
       console.log(
-        `\nstakeInfoAfterEvent224 after: ${JSON.stringify(stakeInfos[225].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId},${stakeEvents[197].signerAddress},${stakeEvents[197].stakeId}`))}`,
+        `\nstakeInfoAfterEvent224 after: ${JSON.stringify(stakeInfos[225].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId},${stakeEvents[26].signerAddress},${stakeEvents[26].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats225);
       console.log(
-        `stakingPoolStatsAfterEvent224 after: ${JSON.stringify(stakingPoolStats[225].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent224 after: ${JSON.stringify(stakingPoolStats[225].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7671,19 +7705,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats226,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[225],
+        stakeEvents[5],
         stakeEvents[23],
-        stakeEvents[32],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos225,
         stakingPoolStats225,
       );
       stakeInfos.push(stakeInfos226);
       console.log(
-        `\nstakeInfoAfterEvent225 after: ${JSON.stringify(stakeInfos[226].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId},${stakeEvents[23].signerAddress},${stakeEvents[23].stakeId}`))}`,
+        `\nstakeInfoAfterEvent225 after: ${JSON.stringify(stakeInfos[226].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId},${stakeEvents[5].signerAddress},${stakeEvents[5].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats226);
       console.log(
-        `stakingPoolStatsAfterEvent225 after: ${JSON.stringify(stakingPoolStats[226].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[23].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent225 after: ${JSON.stringify(stakingPoolStats[226].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7691,7 +7725,7 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats227,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[226],
-        stakeEvents[226],
+        stakeEvents[199],
         null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos226,
@@ -7699,11 +7733,11 @@ describe("StakingServiceV2", function () {
       );
       stakeInfos.push(stakeInfos227);
       console.log(
-        `\nstakeInfoAfterEvent226 after: ${JSON.stringify(stakeInfos[227].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[226].poolIndex].poolId},${stakeEvents[226].signerAddress},${stakeEvents[226].stakeId}`))}`,
+        `\nstakeInfoAfterEvent226 after: ${JSON.stringify(stakeInfos[227].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats227);
       console.log(
-        `stakingPoolStatsAfterEvent226 after: ${JSON.stringify(stakingPoolStats[227].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[226].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent226 after: ${JSON.stringify(stakingPoolStats[227].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7711,19 +7745,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats228,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[227],
-        stakeEvents[199],
-        stakeEvents[218],
+        stakeEvents[25],
+        stakeEvents[34],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos227,
         stakingPoolStats227,
       );
       stakeInfos.push(stakeInfos228);
       console.log(
-        `\nstakeInfoAfterEvent227 after: ${JSON.stringify(stakeInfos[228].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`))}`,
+        `\nstakeInfoAfterEvent227 after: ${JSON.stringify(stakeInfos[228].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId},${stakeEvents[25].signerAddress},${stakeEvents[25].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats228);
       console.log(
-        `stakingPoolStatsAfterEvent227 after: ${JSON.stringify(stakingPoolStats[228].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent227 after: ${JSON.stringify(stakingPoolStats[228].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[25].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7731,19 +7765,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats229,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[228],
-        stakeEvents[1],
-        stakeEvents[11],
+        stakeEvents[228],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos228,
         stakingPoolStats228,
       );
       stakeInfos.push(stakeInfos229);
       console.log(
-        `\nstakeInfoAfterEvent228 after: ${JSON.stringify(stakeInfos[229].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId},${stakeEvents[1].signerAddress},${stakeEvents[1].stakeId}`))}`,
+        `\nstakeInfoAfterEvent228 after: ${JSON.stringify(stakeInfos[229].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[228].poolIndex].poolId},${stakeEvents[228].signerAddress},${stakeEvents[228].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats229);
       console.log(
-        `stakingPoolStatsAfterEvent228 after: ${JSON.stringify(stakingPoolStats[229].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[1].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent228 after: ${JSON.stringify(stakingPoolStats[229].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[228].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7751,19 +7785,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats230,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[229],
-        stakeEvents[229],
-        null,
+        stakeEvents[201],
+        stakeEvents[220],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos229,
         stakingPoolStats229,
       );
       stakeInfos.push(stakeInfos230);
       console.log(
-        `\nstakeInfoAfterEvent229 after: ${JSON.stringify(stakeInfos[230].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[229].poolIndex].poolId},${stakeEvents[229].signerAddress},${stakeEvents[229].stakeId}`))}`,
+        `\nstakeInfoAfterEvent229 after: ${JSON.stringify(stakeInfos[230].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId},${stakeEvents[201].signerAddress},${stakeEvents[201].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats230);
       console.log(
-        `stakingPoolStatsAfterEvent229 after: ${JSON.stringify(stakingPoolStats[230].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[229].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent229 after: ${JSON.stringify(stakingPoolStats[230].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7771,19 +7805,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats231,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[230],
-        stakeEvents[196],
-        stakeEvents[221],
+        stakeEvents[3],
+        stakeEvents[13],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos230,
         stakingPoolStats230,
       );
       stakeInfos.push(stakeInfos231);
       console.log(
-        `\nstakeInfoAfterEvent230 after: ${JSON.stringify(stakeInfos[231].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[196].poolIndex].poolId},${stakeEvents[196].signerAddress},${stakeEvents[196].stakeId}`))}`,
+        `\nstakeInfoAfterEvent230 after: ${JSON.stringify(stakeInfos[231].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats231);
       console.log(
-        `stakingPoolStatsAfterEvent230 after: ${JSON.stringify(stakingPoolStats[231].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[196].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent230 after: ${JSON.stringify(stakingPoolStats[231].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7811,19 +7845,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats233,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[232],
-        stakeEvents[199],
-        stakeEvents[218],
+        stakeEvents[198],
+        stakeEvents[223],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos232,
         stakingPoolStats232,
       );
       stakeInfos.push(stakeInfos233);
       console.log(
-        `\nstakeInfoAfterEvent232 after: ${JSON.stringify(stakeInfos[233].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`))}`,
+        `\nstakeInfoAfterEvent232 after: ${JSON.stringify(stakeInfos[233].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId},${stakeEvents[198].signerAddress},${stakeEvents[198].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats233);
       console.log(
-        `stakingPoolStatsAfterEvent232 after: ${JSON.stringify(stakingPoolStats[233].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent232 after: ${JSON.stringify(stakingPoolStats[233].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7831,19 +7865,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats234,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[233],
-        stakeEvents[2],
-        stakeEvents[5],
+        stakeEvents[233],
+        null,
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos233,
         stakingPoolStats233,
       );
       stakeInfos.push(stakeInfos234);
       console.log(
-        `\nstakeInfoAfterEvent233 after: ${JSON.stringify(stakeInfos[234].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`))}`,
+        `\nstakeInfoAfterEvent233 after: ${JSON.stringify(stakeInfos[234].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[233].poolIndex].poolId},${stakeEvents[233].signerAddress},${stakeEvents[233].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats234);
       console.log(
-        `stakingPoolStatsAfterEvent233 after: ${JSON.stringify(stakingPoolStats[234].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent233 after: ${JSON.stringify(stakingPoolStats[234].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[233].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7851,19 +7885,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats235,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[234],
-        stakeEvents[0],
-        stakeEvents[25],
+        stakeEvents[201],
+        stakeEvents[220],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos234,
         stakingPoolStats234,
       );
       stakeInfos.push(stakeInfos235);
       console.log(
-        `\nstakeInfoAfterEvent234 after: ${JSON.stringify(stakeInfos[235].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`))}`,
+        `\nstakeInfoAfterEvent234 after: ${JSON.stringify(stakeInfos[235].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId},${stakeEvents[201].signerAddress},${stakeEvents[201].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats235);
       console.log(
-        `stakingPoolStatsAfterEvent234 after: ${JSON.stringify(stakingPoolStats[235].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent234 after: ${JSON.stringify(stakingPoolStats[235].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[201].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7871,19 +7905,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats236,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[235],
-        stakeEvents[197],
-        stakeEvents[224],
+        stakeEvents[4],
+        stakeEvents[7],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos235,
         stakingPoolStats235,
       );
       stakeInfos.push(stakeInfos236);
       console.log(
-        `\nstakeInfoAfterEvent235 after: ${JSON.stringify(stakeInfos[236].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId},${stakeEvents[197].signerAddress},${stakeEvents[197].stakeId}`))}`,
+        `\nstakeInfoAfterEvent235 after: ${JSON.stringify(stakeInfos[236].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats236);
       console.log(
-        `stakingPoolStatsAfterEvent235 after: ${JSON.stringify(stakingPoolStats[236].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent235 after: ${JSON.stringify(stakingPoolStats[236].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7891,19 +7925,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats237,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[236],
-        stakeEvents[3],
-        stakeEvents[21],
+        stakeEvents[2],
+        stakeEvents[27],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos236,
         stakingPoolStats236,
       );
       stakeInfos.push(stakeInfos237);
       console.log(
-        `\nstakeInfoAfterEvent236 after: ${JSON.stringify(stakeInfos[237].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId},${stakeEvents[3].signerAddress},${stakeEvents[3].stakeId}`))}`,
+        `\nstakeInfoAfterEvent236 after: ${JSON.stringify(stakeInfos[237].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId},${stakeEvents[2].signerAddress},${stakeEvents[2].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats237);
       console.log(
-        `stakingPoolStatsAfterEvent236 after: ${JSON.stringify(stakingPoolStats[237].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[3].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent236 after: ${JSON.stringify(stakingPoolStats[237].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7911,19 +7945,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats238,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[237],
-        stakeEvents[24],
-        stakeEvents[37],
+        stakeEvents[199],
+        stakeEvents[226],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos237,
         stakingPoolStats237,
       );
       stakeInfos.push(stakeInfos238);
       console.log(
-        `\nstakeInfoAfterEvent237 after: ${JSON.stringify(stakeInfos[238].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId},${stakeEvents[24].signerAddress},${stakeEvents[24].stakeId}`))}`,
+        `\nstakeInfoAfterEvent237 after: ${JSON.stringify(stakeInfos[238].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats238);
       console.log(
-        `stakingPoolStatsAfterEvent237 after: ${JSON.stringify(stakingPoolStats[238].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[24].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent237 after: ${JSON.stringify(stakingPoolStats[238].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7931,19 +7965,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats239,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[238],
-        stakeEvents[196],
-        stakeEvents[221],
+        stakeEvents[5],
+        stakeEvents[23],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos238,
         stakingPoolStats238,
       );
       stakeInfos.push(stakeInfos239);
       console.log(
-        `\nstakeInfoAfterEvent238 after: ${JSON.stringify(stakeInfos[239].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[196].poolIndex].poolId},${stakeEvents[196].signerAddress},${stakeEvents[196].stakeId}`))}`,
+        `\nstakeInfoAfterEvent238 after: ${JSON.stringify(stakeInfos[239].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId},${stakeEvents[5].signerAddress},${stakeEvents[5].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats239);
       console.log(
-        `stakingPoolStatsAfterEvent238 after: ${JSON.stringify(stakingPoolStats[239].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[196].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent238 after: ${JSON.stringify(stakingPoolStats[239].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[5].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7951,19 +7985,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats240,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[239],
-        stakeEvents[0],
-        stakeEvents[25],
+        stakeEvents[26],
+        stakeEvents[39],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos239,
         stakingPoolStats239,
       );
       stakeInfos.push(stakeInfos240);
       console.log(
-        `\nstakeInfoAfterEvent239 after: ${JSON.stringify(stakeInfos[240].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId},${stakeEvents[0].signerAddress},${stakeEvents[0].stakeId}`))}`,
+        `\nstakeInfoAfterEvent239 after: ${JSON.stringify(stakeInfos[240].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId},${stakeEvents[26].signerAddress},${stakeEvents[26].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats240);
       console.log(
-        `stakingPoolStatsAfterEvent239 after: ${JSON.stringify(stakingPoolStats[240].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[0].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent239 after: ${JSON.stringify(stakingPoolStats[240].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[26].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7971,19 +8005,19 @@ describe("StakingServiceV2", function () {
         nextExpectStakingPoolStats: stakingPoolStats241,
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[240],
-        stakeEvents[197],
-        stakeEvents[224],
+        stakeEvents[198],
+        stakeEvents[223],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos240,
         stakingPoolStats240,
       );
       stakeInfos.push(stakeInfos241);
       console.log(
-        `\nstakeInfoAfterEvent240 after: ${JSON.stringify(stakeInfos[241].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId},${stakeEvents[197].signerAddress},${stakeEvents[197].stakeId}`))}`,
+        `\nstakeInfoAfterEvent240 after: ${JSON.stringify(stakeInfos[241].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId},${stakeEvents[198].signerAddress},${stakeEvents[198].stakeId}`))}`,
       );
       stakingPoolStats.push(stakingPoolStats241);
       console.log(
-        `stakingPoolStatsAfterEvent240 after: ${JSON.stringify(stakingPoolStats[241].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[197].poolIndex].poolId}`))}`,
+        `stakingPoolStatsAfterEvent240 after: ${JSON.stringify(stakingPoolStats[241].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[198].poolIndex].poolId}`))}`,
       );
 
       const {
@@ -7992,7 +8026,7 @@ describe("StakingServiceV2", function () {
       } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
         stakeEvents[241],
         stakeEvents[2],
-        stakeEvents[5],
+        stakeEvents[27],
         stakingPoolStakeRewardTokenSameConfigs,
         stakeInfos241,
         stakingPoolStats241,
@@ -8004,6 +8038,46 @@ describe("StakingServiceV2", function () {
       stakingPoolStats.push(stakingPoolStats242);
       console.log(
         `stakingPoolStatsAfterEvent241 after: ${JSON.stringify(stakingPoolStats[242].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[2].poolIndex].poolId}`))}`,
+      );
+
+      const {
+        nextExpectStakeInfos: stakeInfos243,
+        nextExpectStakingPoolStats: stakingPoolStats243,
+      } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+        stakeEvents[242],
+        stakeEvents[199],
+        stakeEvents[226],
+        stakingPoolStakeRewardTokenSameConfigs,
+        stakeInfos242,
+        stakingPoolStats242,
+      );
+      stakeInfos.push(stakeInfos243);
+      console.log(
+        `\nstakeInfoAfterEvent242 after: ${JSON.stringify(stakeInfos[243].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId},${stakeEvents[199].signerAddress},${stakeEvents[199].stakeId}`))}`,
+      );
+      stakingPoolStats.push(stakingPoolStats243);
+      console.log(
+        `stakingPoolStatsAfterEvent242 after: ${JSON.stringify(stakingPoolStats[243].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[199].poolIndex].poolId}`))}`,
+      );
+
+      const {
+        nextExpectStakeInfos: stakeInfos244,
+        nextExpectStakingPoolStats: stakingPoolStats244,
+      } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+        stakeEvents[243],
+        stakeEvents[4],
+        stakeEvents[7],
+        stakingPoolStakeRewardTokenSameConfigs,
+        stakeInfos243,
+        stakingPoolStats243,
+      );
+      stakeInfos.push(stakeInfos244);
+      console.log(
+        `\nstakeInfoAfterEvent243 after: ${JSON.stringify(stakeInfos[244].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId},${stakeEvents[4].signerAddress},${stakeEvents[4].stakeId}`))}`,
+      );
+      stakingPoolStats.push(stakingPoolStats244);
+      console.log(
+        `stakingPoolStatsAfterEvent243 after: ${JSON.stringify(stakingPoolStats[244].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`))}`,
       );
 
       const totalStakeAmountsWei = new Map();
@@ -8033,18 +8107,23 @@ describe("StakingServiceV2", function () {
         const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs.find(
           (stakingPoolConfig) => stakingPoolConfig.poolId === poolId,
         );
-        const totalStakeAmountWei = hre.ethers.BigNumber.from(
-          totalStakeAmountsWei.get(poolId),
-        );
-        const totalRewardToBeDistributedWei =
-          stakeServiceHelpers.computeTruncatedAmountWei(
-            stakeServiceHelpers.estimateRewardAtMaturityWei(
-              stakingPoolConfig.poolAprWei,
-              stakingPoolConfig.stakeDurationDays,
-              totalStakeAmountWei,
-            ),
-            stakingPoolConfig.rewardTokenDecimals,
-          );
+        const totalStakeAmountWei =
+          poolId ==
+          "0x872a842c2cba7ade47a67a77555bec65d8cffbbd050afaa52d6a7d0d590904e2"
+            ? hre.ethers.BigNumber.from(totalStakeAmountsWei.get(poolId))
+            : hre.ethers.constants.Zero;
+        const totalRewardToBeDistributedWei = totalStakeAmountWei.gt(
+          hre.ethers.constants.Zero,
+        )
+          ? stakeServiceHelpers.computeTruncatedAmountWei(
+              stakeServiceHelpers.estimateRewardAtMaturityWei(
+                stakingPoolConfig.poolAprWei,
+                stakingPoolConfig.stakeDurationDays,
+                totalStakeAmountWei,
+              ),
+              stakingPoolConfig.rewardTokenDecimals,
+            )
+          : hre.ethers.constants.Zero;
 
         const stakeInfos000 = new Map();
         const stakingPoolStats000 = new Map();
@@ -8096,6 +8175,13 @@ describe("StakingServiceV2", function () {
         );
 
         for (let j = 0; j < stakingPoolStats.length; j++) {
+          if (
+            poolId !==
+            "0x872a842c2cba7ade47a67a77555bec65d8cffbbd050afaa52d6a7d0d590904e2"
+          ) {
+            console.log(`${j}: ${poolId}`);
+            continue;
+          }
           const poolIdStakingStats = stakingPoolStats[j].get(`${poolId}`);
           poolIdStakingStats.totalRewardAddedWei =
             totalRewardToBeDistributedWei.gt(hre.ethers.constants.Zero)
