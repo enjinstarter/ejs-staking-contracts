@@ -182,7 +182,9 @@ describe("StakingServiceV2", function () {
           poolIndex: 2,
           signer: contractAdminRoleAccounts[1],
           signerAddress: await contractAdminRoleAccounts[1].getAddress(),
-          rewardAmountWei: hre.ethers.constants.Zero, // hre.ethers.utils.parseEther("0.000000000000000001"),
+          rewardAmountWei: hre.ethers.utils.parseEther(
+            "3221.751459875567837144",
+          ),
           hasPermission: true,
         },
         {
@@ -8079,145 +8081,6 @@ describe("StakingServiceV2", function () {
       console.log(
         `stakingPoolStatsAfterEvent243 after: ${JSON.stringify(stakingPoolStats[244].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[4].poolIndex].poolId}`))}`,
       );
-
-      const totalStakeAmountsWei = new Map();
-      for (let i = 0; i < stakeEvents.length; i++) {
-        if (stakeEvents[i].eventType !== "Stake") {
-          continue;
-        }
-
-        const stakePoolId =
-          stakingPoolStakeRewardTokenSameConfigs[stakeEvents[i].poolIndex]
-            .poolId;
-        const totalStakeAmountWei = hre.ethers.BigNumber.from(
-          totalStakeAmountsWei.has(stakePoolId)
-            ? totalStakeAmountsWei.get(stakePoolId)
-            : hre.ethers.constants.Zero,
-        ).add(stakeEvents[i].stakeAmountWei);
-
-        totalStakeAmountsWei.set(stakePoolId, totalStakeAmountWei.toString());
-      }
-
-      const startblockTimestamp = await testHelpers.getCurrentBlockTimestamp();
-
-      const stakePoolStatsIterator =
-        stakingPoolStats[stakingPoolStats.length - 1].entries();
-      let i = 0;
-      for (const [poolId, expectStakingPoolStats] of stakePoolStatsIterator) {
-        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs.find(
-          (stakingPoolConfig) => stakingPoolConfig.poolId === poolId,
-        );
-        const totalStakeAmountWei =
-          poolId ==
-          "0x872a842c2cba7ade47a67a77555bec65d8cffbbd050afaa52d6a7d0d590904e2"
-            ? hre.ethers.BigNumber.from(totalStakeAmountsWei.get(poolId))
-            : hre.ethers.constants.Zero;
-        const totalRewardToBeDistributedWei = totalStakeAmountWei.gt(
-          hre.ethers.constants.Zero,
-        )
-          ? stakeServiceHelpers.computeTruncatedAmountWei(
-              stakeServiceHelpers.estimateRewardAtMaturityWei(
-                stakingPoolConfig.poolAprWei,
-                stakingPoolConfig.stakeDurationDays,
-                totalStakeAmountWei,
-              ),
-              stakingPoolConfig.rewardTokenDecimals,
-            )
-          : hre.ethers.constants.Zero;
-
-        const stakeInfos000 = new Map();
-        const stakingPoolStats000 = new Map();
-
-        const stakingPoolStat = structuredClone(
-          stakeServiceHelpers.initialStakingPoolStat,
-        );
-        if (stakingPoolConfig.poolAprWei.eq(hre.ethers.constants.Zero)) {
-          stakingPoolStat.poolSizeWei = stakeServiceHelpers
-            .computePoolSizeWei(
-              stakingPoolConfig.stakeDurationDays,
-              stakingPoolConfig.poolAprWei,
-              hre.ethers.constants.Zero,
-              stakingPoolConfig.stakeTokenDecimals,
-            )
-            .toString();
-        }
-        stakingPoolStats000.set(`${stakingPoolConfig.poolId}`, stakingPoolStat);
-
-        const contractAdminRoleSigner = contractAdminRoleAccounts[0];
-        const stakeEvents000 = [];
-        stakeEvents000.push({
-          eventSecondsAfterStartblockTimestamp: hre.ethers.BigNumber.from(
-            120 * ++i,
-          ),
-          eventType: "AddReward",
-          poolIndex: 0,
-          signer: contractAdminRoleSigner,
-          signerAddress: await contractAdminRoleSigner.getAddress(),
-          rewardAmountWei: totalRewardToBeDistributedWei.gt(
-            hre.ethers.constants.Zero,
-          )
-            ? totalRewardToBeDistributedWei.sub(totalStakeRewardLessByWei)
-            : totalRewardToBeDistributedWei,
-          hasPermission: true,
-        });
-
-        const {
-          nextExpectStakeInfos: stakeInfos001,
-          nextExpectStakingPoolStats: stakingPoolStats001,
-        } = await stakeServiceHelpers.testAddStakingPoolReward(
-          stakingServiceInstance,
-          [stakingPoolConfig],
-          startblockTimestamp,
-          stakeEvents000,
-          stakeInfos000,
-          stakingPoolStats000,
-          stakingPoolsRewardBalanceOf,
-        );
-
-        for (let j = 0; j < stakingPoolStats.length; j++) {
-          if (
-            poolId !==
-            "0x872a842c2cba7ade47a67a77555bec65d8cffbbd050afaa52d6a7d0d590904e2"
-          ) {
-            console.log(`${j}: ${poolId}`);
-            continue;
-          }
-          const poolIdStakingStats = stakingPoolStats[j].get(`${poolId}`);
-          poolIdStakingStats.totalRewardAddedWei =
-            totalRewardToBeDistributedWei.gt(hre.ethers.constants.Zero)
-              ? totalRewardToBeDistributedWei
-                  .sub(totalStakeRewardLessByWei)
-                  .toString()
-              : totalRewardToBeDistributedWei.toString();
-
-          poolIdStakingStats.poolRewardAmountWei = stakeServiceHelpers
-            .computePoolRewardWei(
-              poolIdStakingStats.totalRewardAddedWei,
-              poolIdStakingStats.totalRevokedRewardWei,
-              poolIdStakingStats.totalUnstakedRewardBeforeMatureWei,
-              poolIdStakingStats.totalRewardRemovedWei,
-            )
-            .toString();
-
-          poolIdStakingStats.poolRemainingRewardWei = stakeServiceHelpers
-            .computePoolRemainingRewardWei(
-              poolIdStakingStats.poolRewardAmountWei,
-              poolIdStakingStats.rewardToBeDistributedWei,
-            )
-            .toString();
-
-          poolIdStakingStats.poolSizeWei = stakeServiceHelpers
-            .computePoolSizeWei(
-              stakingPoolConfig.stakeDurationDays,
-              stakingPoolConfig.poolAprWei,
-              poolIdStakingStats.poolRewardAmountWei,
-              stakingPoolConfig.stakeTokenDecimals,
-            )
-            .toString();
-
-          stakingPoolStats[j].set(`${poolId}`, poolIdStakingStats);
-        }
-      }
 
       await stakeServiceHelpers.testStakeClaimRevokeUnstakeWithdraw(
         stakingServiceInstance,
