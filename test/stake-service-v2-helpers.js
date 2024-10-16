@@ -1580,6 +1580,9 @@ async function removeUnstakePenaltyWithVerify(
           expectedTotalRemovableUnstakePenaltyWeiBeforeRemove,
         )
       : stakingPoolStatsBeforeRemove.totalUnstakePenaltyRemovedWei;
+  expect(expectedTotalUnstakePenaltyRemovedWeiAfterRemove).to.equal(
+    stakingPoolStatsBeforeRemove.totalUnstakePenaltyAmountWei,
+  );
 
   const contractDecimalsBalanceOfStakeAfterRemove =
     await stakeTokenContractInstance.balanceOf(
@@ -3655,6 +3658,19 @@ async function testStakeClaimRevokeUnstakeWithdraw(
       case "Claim":
         console.log(`\n${i}: Claim`);
         await claimWithVerify(
+          stakingServiceContractInstance,
+          stakingPoolConfigs,
+          startblockTimestamp,
+          stakeEvents[i],
+          stakeInfos[i],
+          stakeInfos[i + 1],
+          stakingPoolStats[i],
+          stakingPoolStats[i + 1],
+        );
+        break;
+      case "RemovePenalty":
+        console.log(`\n${i}: RemovePenalty`);
+        await removeUnstakePenaltyWithVerify(
           stakingServiceContractInstance,
           stakingPoolConfigs,
           startblockTimestamp,
