@@ -1337,6 +1337,9 @@ async function removeUnallocatedStakingPoolRewardWithVerify(
       expectedPoolRewardWeiAfterRemove,
       stakingPoolStatsBeforeRemove.rewardToBeDistributedWei,
     );
+  expect(expectedPoolRemainingRewardWeiAfterRemove).to.equal(
+    hre.ethers.constants.Zero,
+  );
 
   const expectedPoolSizeWeiAfterRemove = computePoolSizeWei(
     stakeDurationDays,
@@ -3652,6 +3655,19 @@ async function testStakeClaimRevokeUnstakeWithdraw(
       case "Claim":
         console.log(`\n${i}: Claim`);
         await claimWithVerify(
+          stakingServiceContractInstance,
+          stakingPoolConfigs,
+          startblockTimestamp,
+          stakeEvents[i],
+          stakeInfos[i],
+          stakeInfos[i + 1],
+          stakingPoolStats[i],
+          stakingPoolStats[i + 1],
+        );
+        break;
+      case "RemoveReward":
+        console.log(`\n${i}: RemoveReward`);
+        await removeUnallocatedStakingPoolRewardWithVerify(
           stakingServiceContractInstance,
           stakingPoolConfigs,
           startblockTimestamp,
