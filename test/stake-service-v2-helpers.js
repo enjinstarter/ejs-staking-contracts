@@ -433,6 +433,15 @@ function calculateStateMaturityTimestamp(stakeDurationDays, stakeTimestamp) {
   );
 }
 
+function calculateTotalRemovableRevokedStakeWei(
+  totalRevokedStakeWei,
+  totalRevokedStakeRemovedWei,
+) {
+  return hre.ethers.BigNumber.from(totalRevokedStakeWei).sub(
+    hre.ethers.BigNumber.from(totalRevokedStakeRemovedWei),
+  );
+}
+
 function calculateTotalRemovableUnstakePenaltyWei(
   totalUnstakePenaltyAmountWei,
   totalUnstakePenaltyRemovedWei,
@@ -1031,6 +1040,15 @@ function getNextExpectStakeInfoStakingPoolStats(
         expectStakingPoolStatsAfterTriggerStakeEvent,
       );
       break;
+    case "RemoveRevokedStakes":
+      console.log(
+        `\nRemoveRevokedStakes: ${JSON.stringify(triggerStakeEvent)}`,
+      );
+      updateExpectStakingPoolStatsAfterRemoveRevokedStakes(
+        triggerStakeEvent,
+        expectStakingPoolStatsAfterTriggerStakeEvent,
+      );
+      break;
     case "RemoveReward":
       console.log(`\nRemoveReward: ${JSON.stringify(triggerStakeEvent)}`);
       updateExpectStakingPoolStatsAfterRemoveReward(
@@ -1177,6 +1195,244 @@ async function newStakingService(stakingPoolAddress) {
   await stakingServiceContractInstance.deployed();
 
   return stakingServiceContractInstance;
+}
+
+async function removeRevokedStakesWithVerify(
+  stakingServiceContractInstance,
+  stakingPoolConfigs,
+  startblockTimestamp,
+  stakeEvent,
+  expectStakeInfosBeforeRemove,
+  expectStakeInfosAfterRemove,
+  expectStakingPoolStatsBeforeRemove,
+  expectStakingPoolStatsAfterRemove,
+) {
+  const poolId = stakingPoolConfigs[stakeEvent.poolIndex].poolId;
+  const stakeTokenContractInstance =
+    stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenInstance;
+  const stakeTokenDecimals =
+    stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenDecimals;
+  const signerAccount = stakeEvent.signer;
+  const signerAddress = stakeEvent.signerAddress;
+
+  const contractWeiBalanceOfStakeBeforeRemove = testHelpers.scaleDecimalsToWei(
+    await stakeTokenContractInstance.balanceOf(
+      stakingServiceContractInstance.address,
+    ),
+    stakeTokenDecimals,
+  );
+
+  const signerWeiBalanceOfStakeBeforeRemove = testHelpers.scaleDecimalsToWei(
+    await stakeTokenContractInstance.balanceOf(signerAddress),
+    stakeTokenDecimals,
+  );
+
+  const adminWalletWeiBalanceOfStakeBeforeRemove =
+    testHelpers.scaleDecimalsToWei(
+      await stakeTokenContractInstance.balanceOf(stakeEvent.adminWalletAddress),
+      stakeTokenDecimals,
+    );
+
+  await verifyMultipleStakeInfos(
+    stakingServiceContractInstance,
+    startblockTimestamp,
+    expectStakeInfosBeforeRemove,
+  );
+
+  const stakingPoolStatsBeforeRemove = await verifyStakingPoolStats(
+    stakingServiceContractInstance,
+    poolId,
+    expectStakingPoolStatsBeforeRemove.get(poolId),
+  );
+
+  await verifyMultipleStakingPoolStats(
+    stakingServiceContractInstance,
+    expectStakingPoolStatsBeforeRemove,
+  );
+
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosBeforeRemove,
+  );
+
+  const expectedTotalRemovableRevokedStakeWeiBeforeRemove =
+    calculateTotalRemovableRevokedStakeWei(
+      stakingPoolStatsBeforeRemove.totalRevokedStakeWei,
+      stakingPoolStatsBeforeRemove.totalRevokedStakeRemovedWei,
+    );
+
+  const expectRemoveRevokedStakeTimestamp = hre.ethers.BigNumber.from(
+    startblockTimestamp,
+  ).add(stakeEvent.eventSecondsAfterStartblockTimestamp);
+  await testHelpers.setTimeNextBlock(
+    expectRemoveRevokedStakeTimestamp.toNumber(),
+  );
+
+  if (stakeEvent.hasPermission) {
+    if (
+      expectedTotalRemovableRevokedStakeWeiBeforeRemove.gt(
+        hre.ethers.constants.Zero,
+      )
+    ) {
+      await expect(
+        stakingServiceContractInstance
+          .connect(signerAccount)
+          .removeRevokedStakes(poolId),
+      )
+        .to.emit(stakingServiceContractInstance, "RevokedStakesRemoved")
+        .withArgs(
+          poolId,
+          signerAddress,
+          stakeEvent.adminWalletAddress,
+          stakeTokenContractInstance.address,
+          expectedTotalRemovableRevokedStakeWeiBeforeRemove,
+        );
+    } else {
+      await expect(
+        stakingServiceContractInstance
+          .connect(signerAccount)
+          .removeRevokedStakes(poolId),
+      ).to.be.revertedWith("SSvcs2: no revoked");
+    }
+  } else {
+    await expect(
+      stakingServiceContractInstance
+        .connect(signerAccount)
+        .removeRevokedStakes(poolId),
+    ).to.be.revertedWith(
+      `AccessControl: account ${signerAddress.toLowerCase()} is missing role ${
+        testHelpers.CONTRACT_ADMIN_ROLE
+      }`,
+    );
+  }
+
+  const expectContractWeiBalanceOfStakeAfterRemove = stakeEvent.hasPermission
+    ? contractWeiBalanceOfStakeBeforeRemove.sub(
+        expectedTotalRemovableRevokedStakeWeiBeforeRemove,
+      )
+    : contractWeiBalanceOfStakeBeforeRemove;
+
+  const expectSignerWeiBalanceOfStakeAfterRemove =
+    stakeEvent.hasPermission && signerAddress === stakeEvent.adminWalletAddress
+      ? signerWeiBalanceOfStakeBeforeRemove.add(
+          expectedTotalRemovableRevokedStakeWeiBeforeRemove,
+        )
+      : signerWeiBalanceOfStakeBeforeRemove;
+
+  const expectAdminWalletWeiBalanceOfStakeAfterRemove = stakeEvent.hasPermission
+    ? adminWalletWeiBalanceOfStakeBeforeRemove.add(
+        expectedTotalRemovableRevokedStakeWeiBeforeRemove,
+      )
+    : adminWalletWeiBalanceOfStakeBeforeRemove;
+
+  const expectedTotalRevokedStakeRemovedWeiAfterRemove =
+    stakeEvent.hasPermission
+      ? stakingPoolStatsBeforeRemove.totalRevokedStakeRemovedWei.add(
+          expectedTotalRemovableRevokedStakeWeiBeforeRemove,
+        )
+      : stakingPoolStatsBeforeRemove.totalUnstakePenaltyRemovedWei;
+  expect(expectedTotalRevokedStakeRemovedWeiAfterRemove).to.equal(
+    stakingPoolStatsBeforeRemove.totalRevokedStakeWei,
+  );
+
+  const contractDecimalsBalanceOfStakeAfterRemove =
+    await stakeTokenContractInstance.balanceOf(
+      stakingServiceContractInstance.address,
+    );
+  expect(contractDecimalsBalanceOfStakeAfterRemove).to.equal(
+    testHelpers.scaleWeiToDecimals(
+      expectContractWeiBalanceOfStakeAfterRemove,
+      stakeTokenDecimals,
+    ),
+  );
+
+  const signerDecimalsBalanceOfStakeAfterRemove =
+    await stakeTokenContractInstance.balanceOf(signerAddress);
+  expect(signerDecimalsBalanceOfStakeAfterRemove).to.equal(
+    testHelpers.scaleWeiToDecimals(
+      expectSignerWeiBalanceOfStakeAfterRemove,
+      stakeTokenDecimals,
+    ),
+  );
+
+  const adminWalletDecimalsBalanceOfStakeAfterRemove =
+    await stakeTokenContractInstance.balanceOf(stakeEvent.adminWalletAddress);
+  expect(adminWalletDecimalsBalanceOfStakeAfterRemove).to.equal(
+    testHelpers.scaleWeiToDecimals(
+      expectAdminWalletWeiBalanceOfStakeAfterRemove,
+      stakeTokenDecimals,
+    ),
+  );
+
+  await verifyMultipleStakeInfos(
+    stakingServiceContractInstance,
+    startblockTimestamp,
+    expectStakeInfosBeforeRemove,
+  );
+
+  await verifyMultipleStakeInfos(
+    stakingServiceContractInstance,
+    startblockTimestamp,
+    expectStakeInfosAfterRemove,
+  );
+
+  const stakingPoolStatsAfterRemove = await verifyStakingPoolStats(
+    stakingServiceContractInstance,
+    poolId,
+    {
+      isOpen: stakingPoolStatsBeforeRemove.isOpen,
+      isActive: stakingPoolStatsBeforeRemove.isActive,
+      poolRemainingRewardWei:
+        stakingPoolStatsBeforeRemove.poolRemainingRewardWei,
+      poolRewardAmountWei: stakingPoolStatsBeforeRemove.poolRewardAmountWei,
+      poolSizeWei: stakingPoolStatsBeforeRemove.poolSizeWei,
+      rewardToBeDistributedWei:
+        stakingPoolStatsBeforeRemove.rewardToBeDistributedWei,
+      totalRevokedRewardWei: stakingPoolStatsBeforeRemove.totalRevokedRewardWei,
+      totalRevokedStakeWei: stakingPoolStatsBeforeRemove.totalRevokedStakeWei,
+      totalRevokedStakeRemovedWei:
+        expectedTotalRevokedStakeRemovedWeiAfterRemove,
+      totalRewardAddedWei: stakingPoolStatsBeforeRemove.totalRewardAddedWei,
+      totalRewardClaimedWei: stakingPoolStatsBeforeRemove.totalRewardClaimedWei,
+      totalRewardRemovedWei: stakingPoolStatsBeforeRemove.totalRewardRemovedWei,
+      totalStakedWei: stakingPoolStatsBeforeRemove.totalStakedWei,
+      totalUnstakedAfterMatureWei:
+        stakingPoolStatsBeforeRemove.totalUnstakedAfterMatureWei,
+      totalUnstakedBeforeMatureWei:
+        stakingPoolStatsBeforeRemove.totalUnstakedBeforeMatureWei,
+      totalUnstakedRewardBeforeMatureWei:
+        stakingPoolStatsBeforeRemove.totalUnstakedRewardBeforeMatureWei,
+      totalUnstakePenaltyAmountWei:
+        stakingPoolStatsBeforeRemove.totalUnstakePenaltyAmountWei,
+      totalUnstakePenaltyRemovedWei:
+        stakingPoolStatsBeforeRemove.totalUnstakePenaltyRemovedWei,
+      totalWithdrawnUnstakeWei:
+        stakingPoolStatsBeforeRemove.totalWithdrawnUnstakeWei,
+    },
+  );
+
+  await verifyMultipleStakingPoolStats(
+    stakingServiceContractInstance,
+    expectStakingPoolStatsAfterRemove,
+  );
+
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosBeforeRemove,
+  );
+
+  await verifyMultipleUnstakingInfos(
+    stakingServiceContractInstance,
+    stakingPoolConfigs,
+    startblockTimestamp,
+    expectStakeInfosAfterRemove,
+  );
+
+  return expectContractWeiBalanceOfStakeAfterRemove;
 }
 
 async function removeUnallocatedStakingPoolRewardWithVerify(
@@ -3681,6 +3937,19 @@ async function testStakeClaimRevokeUnstakeWithdraw(
           stakingPoolStats[i + 1],
         );
         break;
+      case "RemoveRevokedStakes":
+        console.log(`\n${i}: RemoveRevokedStakes`);
+        await removeRevokedStakesWithVerify(
+          stakingServiceContractInstance,
+          stakingPoolConfigs,
+          startblockTimestamp,
+          stakeEvents[i],
+          stakeInfos[i],
+          stakeInfos[i + 1],
+          stakingPoolStats[i],
+          stakingPoolStats[i + 1],
+        );
+        break;
       case "RemoveReward":
         console.log(`\n${i}: RemoveReward`);
         await removeUnallocatedStakingPoolRewardWithVerify(
@@ -4478,6 +4747,29 @@ function updateExpectStakingPoolStatsAfterRemovePenalty(
 
   expectStakingPoolStatsAfterTriggerStakeEvent.totalUnstakePenaltyRemovedWei =
     expectTotalUnstakePenaltyRemovedWeiAfterRemove.toString();
+}
+
+function updateExpectStakingPoolStatsAfterRemoveRevokedStakes(
+  triggerStakeEvent,
+  expectStakingPoolStatsAfterTriggerStakeEvent,
+) {
+  if (!triggerStakeEvent.hasPermission) {
+    return;
+  }
+
+  const expectedTotalRemovableRevokedStakeWeiBeforeRemove =
+    calculateTotalRemovableRevokedStakeWei(
+      expectStakingPoolStatsAfterTriggerStakeEvent.totalRevokedStakeWei,
+      expectStakingPoolStatsAfterTriggerStakeEvent.totalRevokedStakeRemovedWei,
+    );
+
+  const expectTotalRemovableRevokedStakeWeiAfterRemove =
+    hre.ethers.BigNumber.from(
+      expectStakingPoolStatsAfterTriggerStakeEvent.totalRevokedStakeRemovedWei,
+    ).add(expectedTotalRemovableRevokedStakeWeiBeforeRemove);
+
+  expectStakingPoolStatsAfterTriggerStakeEvent.totalRevokedStakeRemovedWei =
+    expectTotalRemovableRevokedStakeWeiAfterRemove.toString();
 }
 
 function updateExpectStakingPoolStatsAfterRemoveReward(
@@ -5661,6 +5953,7 @@ module.exports = {
   calculateRevokedRewardAmountWei,
   calculateRevokedStakeAmountWei,
   calculateStateMaturityTimestamp,
+  calculateTotalRemovableRevokedStakeWei,
   calculateTotalRemovableUnstakePenaltyWei,
   calculateUnstakeAmountWei,
   calculateUnstakePenaltyAmountWei,
@@ -5705,6 +5998,7 @@ module.exports = {
   updateExpectStakeInfoAfterWithdraw,
   updateExpectStakingPoolStatsAfterClaim,
   updateExpectStakingPoolStatsAfterRemovePenalty,
+  updateExpectStakingPoolStatsAfterRemoveRevokedStakes,
   updateExpectStakingPoolStatsAfterRemoveReward,
   updateExpectStakingPoolStatsAfterRevoke,
   updateExpectStakingPoolStatsAfterStake,

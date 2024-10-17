@@ -2853,6 +2853,16 @@ describe("StakingServiceV2", function () {
           stakeId: hre.ethers.utils.id("d5f88099-472a-4974-ad2a-c8d70af8f37f"),
         },
         {
+          eventSecondsAfterStartblockTimestamp:
+            hre.ethers.BigNumber.from(31599503789),
+          eventType: "RemoveRevokedStakes",
+          poolIndex: 2,
+          signer: contractAdminRoleAccounts[1],
+          signerAddress: await contractAdminRoleAccounts[1].getAddress(),
+          adminWalletAddress: await governanceRoleAccounts[0].getAddress(),
+          hasPermission: true,
+        },
+        {
           eventSecondsAfterStartblockTimestamp: 31599506452,
           eventType: "RemovePenalty",
           poolIndex: 1,
@@ -2893,7 +2903,17 @@ describe("StakingServiceV2", function () {
           hasPermission: true,
         },
         {
-          eventSecondsAfterStartblockTimestamp: 31599524511,
+          eventSecondsAfterStartblockTimestamp: 31599524551,
+          eventType: "RemoveRevokedStakes",
+          poolIndex: 0,
+          signer: contractAdminRoleAccounts[1],
+          signerAddress: await contractAdminRoleAccounts[1].getAddress(),
+          adminWalletAccount: governanceRoleAccounts[0],
+          adminWalletAddress: await governanceRoleAccounts[0].getAddress(),
+          hasPermission: true,
+        },
+        {
+          eventSecondsAfterStartblockTimestamp: 31599526511,
           eventType: "RemovePenalty",
           poolIndex: 2,
           signer: contractAdminRoleAccounts[1],
@@ -2907,6 +2927,16 @@ describe("StakingServiceV2", function () {
             hre.ethers.BigNumber.from(31599529000),
           eventType: "RemoveReward",
           poolIndex: 0,
+          signer: contractAdminRoleAccounts[1],
+          signerAddress: await contractAdminRoleAccounts[1].getAddress(),
+          adminWalletAddress: await governanceRoleAccounts[0].getAddress(),
+          hasPermission: true,
+        },
+        {
+          eventSecondsAfterStartblockTimestamp:
+            hre.ethers.BigNumber.from(31599537956),
+          eventType: "RemoveRevokedStakes",
+          poolIndex: 1,
           signer: contractAdminRoleAccounts[1],
           signerAddress: await contractAdminRoleAccounts[1].getAddress(),
           adminWalletAddress: await governanceRoleAccounts[0].getAddress(),
@@ -8242,6 +8272,57 @@ describe("StakingServiceV2", function () {
       stakingPoolStats.push(stakingPoolStats250);
       console.log(
         `stakingPoolStatsAfterEvent249 after: ${JSON.stringify(stakingPoolStats[250].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[249].poolIndex].poolId}`))}`,
+      );
+
+      const {
+        nextExpectStakeInfos: stakeInfos251,
+        nextExpectStakingPoolStats: stakingPoolStats251,
+      } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+        stakeEvents[250],
+        stakeEvents[250],
+        null,
+        stakingPoolStakeRewardTokenSameConfigs,
+        stakeInfos250,
+        stakingPoolStats250,
+      );
+      stakeInfos.push(stakeInfos251);
+      stakingPoolStats.push(stakingPoolStats251);
+      console.log(
+        `stakingPoolStatsAfterEvent250 after: ${JSON.stringify(stakingPoolStats[251].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[250].poolIndex].poolId}`))}`,
+      );
+
+      const {
+        nextExpectStakeInfos: stakeInfos252,
+        nextExpectStakingPoolStats: stakingPoolStats252,
+      } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+        stakeEvents[251],
+        stakeEvents[251],
+        null,
+        stakingPoolStakeRewardTokenSameConfigs,
+        stakeInfos251,
+        stakingPoolStats251,
+      );
+      stakeInfos.push(stakeInfos252);
+      stakingPoolStats.push(stakingPoolStats252);
+      console.log(
+        `stakingPoolStatsAfterEvent251 after: ${JSON.stringify(stakingPoolStats[252].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[251].poolIndex].poolId}`))}`,
+      );
+
+      const {
+        nextExpectStakeInfos: stakeInfos253,
+        nextExpectStakingPoolStats: stakingPoolStats253,
+      } = stakeServiceHelpers.getNextExpectStakeInfoStakingPoolStats(
+        stakeEvents[252],
+        stakeEvents[252],
+        null,
+        stakingPoolStakeRewardTokenSameConfigs,
+        stakeInfos252,
+        stakingPoolStats252,
+      );
+      stakeInfos.push(stakeInfos253);
+      stakingPoolStats.push(stakingPoolStats253);
+      console.log(
+        `stakingPoolStatsAfterEvent252 after: ${JSON.stringify(stakingPoolStats[253].get(`${stakingPoolStakeRewardTokenSameConfigs[stakeEvents[252].poolIndex].poolId}`))}`,
       );
 
       await stakeServiceHelpers.testStakeClaimRevokeUnstakeWithdraw(
