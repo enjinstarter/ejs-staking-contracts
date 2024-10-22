@@ -3194,13 +3194,23 @@ async function stakeWithVerify(
     stakingPoolConfigs[stakeEvent.poolIndex].stakeTokenDecimals,
   );
 
-  const claimableRewardWeiAfterStake =
-    await stakingServiceContractInstance.getClaimableRewardWei(
-      stakingPoolConfigs[stakeEvent.poolIndex].poolId,
-      stakeEvent.signerAddress,
-      stakeEvent.stakeId,
-    );
-  expect(claimableRewardWeiAfterStake).to.equal(hre.ethers.constants.Zero);
+  if (stakeEvent.stakeExceedPoolReward) {
+    await expect(
+      stakingServiceContractInstance.getClaimableRewardWei(
+        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
+        stakeEvent.stakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized stake");
+  } else {
+    const claimableRewardWeiAfterStake =
+      await stakingServiceContractInstance.getClaimableRewardWei(
+        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
+        stakeEvent.stakeId,
+      );
+    expect(claimableRewardWeiAfterStake).to.equal(hre.ethers.constants.Zero);
+  }
 
   const stakeInfoAfterStake = await verifyStakeInfo(
     stakingServiceContractInstance,
@@ -3278,23 +3288,33 @@ async function stakeWithVerify(
   const getUnstakingInfoBlockTimestamp =
     await testHelpers.getCurrentBlockTimestamp();
 
-  await verifyUnstakingInfo(
-    stakingServiceContractInstance,
-    stakingPoolConfigs[stakeEvent.poolIndex],
-    stakeEvent.signerAddress,
-    stakeEvent.stakeId,
-    stakeEvent.stakeAmountWei,
-    expectRewardAtMaturityWei,
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
-    expectStakeMaturityTimestamp.sub(startblockTimestamp),
-    hre.ethers.BigNumber.from(getUnstakingInfoBlockTimestamp).sub(
-      startblockTimestamp,
-    ),
-    stakeEvent.eventSecondsAfterStartblockTimestamp,
-    null,
-    null,
-    false,
-  );
+  if (stakeEvent.stakeExceedPoolReward) {
+    await expect(
+      stakingServiceContractInstance.getUnstakingInfo(
+        stakingPoolConfigs[stakeEvent.poolIndex].poolId,
+        stakeEvent.signerAddress,
+        stakeEvent.stakeId,
+      ),
+    ).to.be.revertedWith("SSvcs2: uninitialized stake");
+  } else {
+    await verifyUnstakingInfo(
+      stakingServiceContractInstance,
+      stakingPoolConfigs[stakeEvent.poolIndex],
+      stakeEvent.signerAddress,
+      stakeEvent.stakeId,
+      stakeEvent.stakeAmountWei,
+      expectRewardAtMaturityWei,
+      stakeEvent.eventSecondsAfterStartblockTimestamp,
+      expectStakeMaturityTimestamp.sub(startblockTimestamp),
+      hre.ethers.BigNumber.from(getUnstakingInfoBlockTimestamp).sub(
+        startblockTimestamp,
+      ),
+      stakeEvent.eventSecondsAfterStartblockTimestamp,
+      null,
+      null,
+      false,
+    );
+  }
 
   await verifyMultipleUnstakingInfos(
     stakingServiceContractInstance,
