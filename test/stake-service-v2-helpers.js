@@ -407,11 +407,20 @@ function calculateEstimatedRewardAtUnstakingWei(
 
 function calculateRevokedRewardAmountWei(
   estimatedRewardAtMaturityWei,
+  estimatedRewardAtUnstakeWei,
   rewardClaimedWei,
 ) {
-  return hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei).sub(
-    rewardClaimedWei,
-  );
+  return hre.ethers.BigNumber.from(rewardClaimedWei).gt(
+    hre.ethers.constants.Zero,
+  )
+    ? hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei).sub(
+        rewardClaimedWei,
+      )
+    : hre.ethers.BigNumber.from(estimatedRewardAtUnstakeWei).gt(
+          hre.ethers.constants.Zero,
+        )
+      ? hre.ethers.BigNumber.from(estimatedRewardAtUnstakeWei)
+      : hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei);
 }
 
 function calculateRevokedStakeAmountWei(
@@ -2062,6 +2071,7 @@ async function revokeWithVerify(
 
   const expectRevokedRewardAmountWei = calculateRevokedRewardAmountWei(
     expectStakeInfoBeforeRevoke.estimatedRewardAtMaturityWei,
+    expectStakeInfoBeforeRevoke.estimatedRewardAtUnstakeWei,
     expectStakeInfoBeforeRevoke.rewardClaimedWei,
   );
 
@@ -4486,6 +4496,7 @@ function updateExpectStakeInfoAfterRevoke(
   expectStakeInfoAfterTriggerStakeEvent.revokedRewardAmountWei =
     calculateRevokedRewardAmountWei(
       expectStakeInfoAfterTriggerStakeEvent.estimatedRewardAtMaturityWei,
+      expectStakeInfoAfterTriggerStakeEvent.estimatedRewardAtUnstakeWei,
       expectStakeInfoAfterTriggerStakeEvent.rewardClaimedWei,
     ).toString();
   expectStakeInfoAfterTriggerStakeEvent.revokedStakeAmountWei =
@@ -4875,6 +4886,7 @@ function updateExpectStakingPoolStatsAfterRevoke(
   );
   const revokedRewardAmountWei = calculateRevokedRewardAmountWei(
     estimatedRewardAtMaturityWei,
+    expectStakeInfoAfterTriggerStakeEvent.estimatedRewardAtUnstakeWei,
     expectStakeInfoAfterTriggerStakeEvent.rewardClaimedWei,
   );
   const revokedStakeAmountWei = calculateRevokedStakeAmountWei(

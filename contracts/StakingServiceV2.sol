@@ -203,8 +203,13 @@ contract StakingServiceV2 is
         _stakes[stakekey].unstakeTimestamp = block.timestamp;
 
         if (unstakingInfo.isStakeMature) {
+            // console.log("unstake mature: unstakeAmountWei=%o", unstakingInfo.unstakeAmountWei); // solhint-disable-line no-console
+
             _stakingPoolStats[poolId].totalUnstakedAfterMatureWei += unstakingInfo.unstakeAmountWei;
         } else {
+            // console.log("unstake immature: estimatedRewardAtMaturityWei=%o, estimatedRewardAtUnstakingWei=%o", _stakes[stakekey].estimatedRewardAtMaturityWei, unstakingInfo.estimatedRewardAtUnstakingWei); // solhint-disable-line no-console
+            // console.log("unstake immature: _getUnstakedRewardBeforeMatureWei=%o", _getUnstakedRewardBeforeMatureWei(_stakes[stakekey].estimatedRewardAtMaturityWei, unstakingInfo.estimatedRewardAtUnstakingWei)); // solhint-disable-line no-console
+
             _stakingPoolStats[poolId].totalUnstakedBeforeMatureWei += unstakingInfo.unstakeAmountWei;
             _stakingPoolStats[poolId].totalUnstakePenaltyAmountWei += unstakingInfo.unstakePenaltyAmountWei;
             _stakingPoolStats[poolId].totalUnstakedRewardBeforeMatureWei += _getUnstakedRewardBeforeMatureWei(
@@ -450,6 +455,8 @@ contract StakingServiceV2 is
 
         (uint256 revokedStakeAmountWei, uint256 revokedRewardAmountWei) = _calculateRevokedAmountFor(stakekey);
 
+        // console.log("revokeStake: revokedStakeAmountWei=%o, revokedRewardAmountWei=%o", revokedStakeAmountWei, revokedRewardAmountWei); // solhint-disable-line no-console
+
         _stakes[stakekey].revokeTimestamp = block.timestamp;
         _stakes[stakekey].revokedStakeAmountWei = revokedStakeAmountWei;
         _stakes[stakekey].revokedRewardAmountWei = revokedRewardAmountWei;
@@ -654,6 +661,13 @@ contract StakingServiceV2 is
         virtual
         returns (uint256 calculatedRemainingRewardWei)
     {
+        /*
+        console.log("_calculatePoolRemainingRewardWei: totalRewardAddedWei=%o, totalRevokedRewardWei=%o", _stakingPoolStats[poolId].totalRewardAddedWei, _stakingPoolStats[poolId].totalRevokedRewardWei); // solhint-disable-line no-console
+        console.log("_calculatePoolRemainingRewardWei: totalUnstakedRewardBeforeMatureWei=%o, totalRewardRemovedWei=%o", _stakingPoolStats[poolId].totalUnstakedRewardBeforeMatureWei, _stakingPoolStats[poolId].totalRewardRemovedWei); // solhint-disable-line no-console
+        console.log("_calculatePoolRemainingRewardWei: _calculatePoolRewardAmountWei=%o, rewardToBeDistributedWei=%o", _calculatePoolRewardAmountWei(poolId), _stakingPoolStats[poolId].rewardToBeDistributedWei); // solhint-disable-line no-console
+        console.log("_calculatePoolRemainingRewardWei: calculatedRemainingRewardWei=%o", calculatedRemainingRewardWei); // solhint-disable-line no-console
+        */
+
         calculatedRemainingRewardWei = _calculatePoolRewardAmountWei(poolId) -
             _stakingPoolStats[poolId].rewardToBeDistributedWei;
     }
@@ -688,6 +702,12 @@ contract StakingServiceV2 is
         virtual
         returns (uint256 revokedStakeAmountWei, uint256 revokedRewardAmountWei)
     {
+        /*
+        console.log("_calculateRevokedAmountFor: _isUnstakeWithdrawnFor=%o, _isStakeUnstakedFor=%o", _isUnstakeWithdrawnFor(stakekey), _isStakeUnstakedFor(stakekey)); // solhint-disable-line no-console
+        console.log("_calculateRevokedAmountFor: unstakeAmountWei=%o, stakeAmountWei=%o", _stakes[stakekey].unstakeAmountWei, _stakes[stakekey].stakeAmountWei); // solhint-disable-line no-console
+        console.log("_calculateRevokedAmountFor: estimatedRewardAtMaturityWei=%o, rewardClaimedWei=%o", _stakes[stakekey].estimatedRewardAtMaturityWei, _stakes[stakekey].rewardClaimedWei); // solhint-disable-line no-console
+        */
+
         revokedStakeAmountWei =
             _isUnstakeWithdrawnFor(stakekey)
                 ? 0
@@ -696,7 +716,13 @@ contract StakingServiceV2 is
                         ? _stakes[stakekey].unstakeAmountWei
                         : _stakes[stakekey].stakeAmountWei
                 );
-        revokedRewardAmountWei = _stakes[stakekey].estimatedRewardAtMaturityWei - _stakes[stakekey].rewardClaimedWei;
+        revokedRewardAmountWei = (_stakes[stakekey].rewardClaimedWei > 0)
+            ? _stakes[stakekey].estimatedRewardAtMaturityWei - _stakes[stakekey].rewardClaimedWei
+            : (
+                (_stakes[stakekey].estimatedRewardAtUnstakeWei > 0)
+                    ? _stakes[stakekey].estimatedRewardAtUnstakeWei
+                    : _stakes[stakekey].estimatedRewardAtMaturityWei
+            );
     }
 
     /**

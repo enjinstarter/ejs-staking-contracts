@@ -2114,7 +2114,9 @@ describe("StakingServiceV2", function () {
           poolIndex: 2,
           signer: contractAdminRoleAccounts[1],
           signerAddress: await contractAdminRoleAccounts[1].getAddress(),
-          rewardAmountWei: hre.ethers.utils.parseEther("542.595454521956"),
+          rewardAmountWei: hre.ethers.utils.parseEther(
+            "359.200961483466612328",
+          ),
           hasPermission: true,
         },
         {
