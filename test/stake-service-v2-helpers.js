@@ -413,9 +413,7 @@ function calculateRevokedRewardAmountWei(
   return hre.ethers.BigNumber.from(rewardClaimedWei).gt(
     hre.ethers.constants.Zero,
   )
-    ? hre.ethers.BigNumber.from(estimatedRewardAtMaturityWei).sub(
-        rewardClaimedWei,
-      )
+    ? hre.ethers.constants.Zero
     : hre.ethers.BigNumber.from(estimatedRewardAtUnstakeWei).gt(
           hre.ethers.constants.Zero,
         )

@@ -115,7 +115,7 @@ contract StakingServiceV2 is
             truncatedStakeAmountWei
         ).truncateWeiToDecimals(stakingPoolInfo.rewardTokenDecimals);
 
-        // console.log("estimatedRewardAtMaturityWei=%o, calculatePoolRemainingRewardWei=%o", estimatedRewardAtMaturityWei, _calculatePoolRemainingRewardWei(poolId)); // solhint-disable-line no-console
+        // console.log("stake: estimatedRewardAtMaturityWei=%o, calculatePoolRemainingRewardWei=%o", estimatedRewardAtMaturityWei, _calculatePoolRemainingRewardWei(poolId)); // solhint-disable-line no-console
 
         require(stakingPoolInfo.poolAprWei == 0 || estimatedRewardAtMaturityWei > 0, "SSvcs2: zero reward");
 
@@ -188,7 +188,7 @@ contract StakingServiceV2 is
             block.timestamp
         );
 
-        // console.log("unstakeCooldownExpiryTimestamp=%o, blockTimestamp=%o", unstakeCooldownExpiryTimestamp, block.timestamp); // solhint-disable-line no-console
+        // console.log("unstake: unstakeCooldownExpiryTimestamp=%o, blockTimestamp=%o", unstakeCooldownExpiryTimestamp, block.timestamp); // solhint-disable-line no-console
 
         require(
             unstakeCooldownExpiryTimestamp >= block.timestamp,
@@ -717,7 +717,7 @@ contract StakingServiceV2 is
                         : _stakes[stakekey].stakeAmountWei
                 );
         revokedRewardAmountWei = (_stakes[stakekey].rewardClaimedWei > 0)
-            ? _stakes[stakekey].estimatedRewardAtMaturityWei - _stakes[stakekey].rewardClaimedWei
+            ? 0
             : (
                 (_stakes[stakekey].estimatedRewardAtUnstakeWei > 0)
                     ? _stakes[stakekey].estimatedRewardAtUnstakeWei
