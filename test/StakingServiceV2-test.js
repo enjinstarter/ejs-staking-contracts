@@ -740,7 +740,7 @@ describe("StakingServiceV2", function () {
             stakingPoolStakeRewardTokenSameConfigs[0].poolId,
             hre.ethers.constants.Zero,
           ),
-        ).to.be.revertedWith("SSvcs2: reward amount");
+        ).to.be.revertedWith("SSvcs2: 0 reward");
       });
 
       it("Should not allow add staking pool reward for uninitialized staking pool", async () => {
@@ -755,6 +755,17 @@ describe("StakingServiceV2", function () {
             rewardAmountWei,
           ),
         ).to.be.revertedWith("SPool2: uninitialized");
+      });
+
+      it("Should not allow add staking pool reward for staking pool with 0% APR", async () => {
+        const rewardAmountWei = hre.ethers.utils.parseEther("6917.15942393");
+
+        await expect(
+          stakingServiceInstance.addStakingPoolReward(
+            stakingPoolStakeRewardTokenSameConfigs[0].poolId,
+            rewardAmountWei,
+          ),
+        ).to.be.revertedWith("SSvcs2: 0 apr");
       });
 
       it("Should not allow remove unallocated staking pool reward for uninitialized staking pool", async () => {

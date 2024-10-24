@@ -62,20 +62,23 @@ contract StakingServiceV2 is
         uint256 rewardAmountWei = _getClaimableRewardWeiFor(stakekey);
         require(rewardAmountWei > 0, "SSvcs2: zero reward");
 
-        _stakes[stakekey].rewardClaimedWei += rewardAmountWei;
-        _stakingPoolStats[poolId].totalRewardClaimedWei += rewardAmountWei;
+        uint256 truncatedRewardAmountWei = rewardAmountWei.truncateWeiToDecimals(stakingPoolInfo.rewardTokenDecimals);
+        require(truncatedRewardAmountWei > 0, "SSvcs2: truncated reward");
+
+        _stakes[stakekey].rewardClaimedWei += truncatedRewardAmountWei;
+        _stakingPoolStats[poolId].totalRewardClaimedWei += truncatedRewardAmountWei;
 
         emit RewardClaimed(
             poolId,
             msg.sender,
             stakeId,
             stakingPoolInfo.rewardTokenAddress,
-            rewardAmountWei
+            truncatedRewardAmountWei
         );
 
         IERC20(stakingPoolInfo.rewardTokenAddress).transferTokensFromContractToAccount(
             stakingPoolInfo.rewardTokenDecimals,
-            rewardAmountWei,
+            truncatedRewardAmountWei,
             msg.sender
         );
     }
@@ -117,7 +120,10 @@ contract StakingServiceV2 is
 
         // console.log("stake: estimatedRewardAtMaturityWei=%o, calculatePoolRemainingRewardWei=%o", estimatedRewardAtMaturityWei, _calculatePoolRemainingRewardWei(poolId)); // solhint-disable-line no-console
 
-        require(stakingPoolInfo.poolAprWei == 0 || estimatedRewardAtMaturityWei > 0, "SSvcs2: zero reward");
+        require((
+            stakingPoolInfo.poolAprWei == 0 && estimatedRewardAtMaturityWei == 0)
+            || (stakingPoolInfo.poolAprWei > 0 && estimatedRewardAtMaturityWei > 0
+        ), "SSvcs2: zero reward");
 
         require(
             estimatedRewardAtMaturityWei <=
@@ -279,16 +285,13 @@ contract StakingServiceV2 is
         override
         onlyRole(CONTRACT_ADMIN_ROLE)
     {
-        require(rewardAmountWei > 0, "SSvcs2: reward amount");
+        require(rewardAmountWei > 0, "SSvcs2: 0 reward");
 
         IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
+        require(stakingPoolInfo.poolAprWei > 0, "SSvcs2: 0 apr");
 
-        uint256 truncatedRewardAmountWei = stakingPoolInfo.rewardTokenDecimals <
-            TOKEN_MAX_DECIMALS
-            ? rewardAmountWei
-                .scaleWeiToDecimals(stakingPoolInfo.rewardTokenDecimals)
-                .scaleDecimalsToWei(stakingPoolInfo.rewardTokenDecimals)
-            : rewardAmountWei;
+        uint256 truncatedRewardAmountWei = rewardAmountWei.truncateWeiToDecimals(stakingPoolInfo.rewardTokenDecimals);
+        require(truncatedRewardAmountWei > 0, "SSvcs2: reward amount");
 
         _stakingPoolStats[poolId].totalRewardAddedWei += truncatedRewardAmountWei;
 
@@ -299,7 +302,10 @@ contract StakingServiceV2 is
             truncatedRewardAmountWei
         );
 
-        IERC20(stakingPoolInfo.rewardTokenAddress).transferTokensFromSenderToContract(stakingPoolInfo.rewardTokenDecimals, truncatedRewardAmountWei);
+        IERC20(stakingPoolInfo.rewardTokenAddress).transferTokensFromSenderToContract(
+            stakingPoolInfo.rewardTokenDecimals,
+            truncatedRewardAmountWei
+        );
     }
 
     /**
@@ -367,19 +373,22 @@ contract StakingServiceV2 is
         uint256 unallocatedRewardWei = _calculatePoolRemainingRewardWei(poolId);
         require(unallocatedRewardWei > 0, "SSvcs2: no unallocated");
 
-        _stakingPoolStats[poolId].totalRewardRemovedWei += unallocatedRewardWei;
+        uint256 truncatedUnallocatedRewardWei = unallocatedRewardWei.truncateWeiToDecimals(stakingPoolInfo.rewardTokenDecimals);
+        require(truncatedUnallocatedRewardWei > 0, "SSvcs2: zero unallocated");
+
+        _stakingPoolStats[poolId].totalRewardRemovedWei += truncatedUnallocatedRewardWei;
 
         emit StakingPoolRewardRemoved(
             poolId,
             msg.sender,
             adminWallet(),
             stakingPoolInfo.rewardTokenAddress,
-            unallocatedRewardWei
+            truncatedUnallocatedRewardWei
         );
 
         IERC20(stakingPoolInfo.rewardTokenAddress).transferTokensFromContractToAccount(
             stakingPoolInfo.rewardTokenDecimals,
-            unallocatedRewardWei,
+            truncatedUnallocatedRewardWei,
             adminWallet()
         );
     }
@@ -454,15 +463,16 @@ contract StakingServiceV2 is
         require(!_isStakeRevokedFor(stakekey), "SSvcs2: revoked");
 
         (uint256 revokedStakeAmountWei, uint256 revokedRewardAmountWei) = _calculateRevokedAmountFor(stakekey);
+        uint256 truncatedRevokedRewardAmountWei = revokedRewardAmountWei.truncateWeiToDecimals(stakingPoolInfo.rewardTokenDecimals);
 
         // console.log("revokeStake: revokedStakeAmountWei=%o, revokedRewardAmountWei=%o", revokedStakeAmountWei, revokedRewardAmountWei); // solhint-disable-line no-console
 
         _stakes[stakekey].revokeTimestamp = block.timestamp;
         _stakes[stakekey].revokedStakeAmountWei = revokedStakeAmountWei;
-        _stakes[stakekey].revokedRewardAmountWei = revokedRewardAmountWei;
+        _stakes[stakekey].revokedRewardAmountWei = truncatedRevokedRewardAmountWei;
 
         _stakingPoolStats[poolId].totalRevokedStakeWei += revokedStakeAmountWei;
-        _stakingPoolStats[poolId].totalRevokedRewardWei += revokedRewardAmountWei;
+        _stakingPoolStats[poolId].totalRevokedRewardWei += truncatedRevokedRewardAmountWei;
 
         emit StakeRevoked(
             poolId,
@@ -471,7 +481,7 @@ contract StakingServiceV2 is
             stakingPoolInfo.stakeTokenAddress,
             revokedStakeAmountWei,
             stakingPoolInfo.rewardTokenAddress,
-            revokedRewardAmountWei,
+            truncatedRevokedRewardAmountWei,
             msg.sender
         );
     }
@@ -601,16 +611,17 @@ contract StakingServiceV2 is
         returns (StakingPoolStatsDto memory stakingPoolStatsDto)
     {
         IStakingPoolV2.StakingPoolInfo memory stakingPoolInfo = _getStakingPoolInfo(poolId);
+        uint256 poolRewardAmountWei = _calculatePoolRewardAmountWei(poolId);
 
         stakingPoolStatsDto = StakingPoolStatsDto({
             isActive: stakingPoolInfo.isActive,
             isOpen: stakingPoolInfo.isOpen,
             poolRemainingRewardWei: _calculatePoolRemainingRewardWei(poolId),
-            poolRewardAmountWei: _calculatePoolRewardAmountWei(poolId),
+            poolRewardAmountWei: poolRewardAmountWei,
             poolSizeWei: _getPoolSizeWei(
                 stakingPoolInfo.stakeDurationDays,
                 stakingPoolInfo.poolAprWei,
-                _calculatePoolRewardAmountWei(poolId),
+                poolRewardAmountWei,
                 stakingPoolInfo.stakeTokenDecimals
             ),
             rewardToBeDistributedWei: _stakingPoolStats[poolId].rewardToBeDistributedWei,
@@ -921,7 +932,9 @@ contract StakingServiceV2 is
         uint256 unstakePenaltyAmountWei = isStakeMature
             ? 0
             : _stakes[stakekey].stakeAmountWei * unstakePenaltyPercentWei / PERCENT_100_WEI;
-        uint256 unstakeAmountWei =  _stakes[stakekey].stakeAmountWei - unstakePenaltyAmountWei;
+        uint256 truncatedUnstakePenaltyAmountWei =
+            unstakePenaltyAmountWei.truncateWeiToDecimals(stakingPoolInfo.stakeTokenDecimals);
+        uint256 unstakeAmountWei =  _stakes[stakekey].stakeAmountWei - truncatedUnstakePenaltyAmountWei;
         uint256 unstakeCooldownPeriodDays = isStakeMature ? 0 : stakingPoolInfo.earlyUnstakeCooldownPeriodDays;
         uint256 estimatedRewardAtUnstakingWei = _getEstimatedRewardAtUnstakingWei(stakekey, block.timestamp);
         require(
@@ -932,7 +945,7 @@ contract StakingServiceV2 is
         unstakingInfo = UnstakingInfo({
             estimatedRewardAtUnstakingWei: estimatedRewardAtUnstakingWei,
             unstakeAmountWei: unstakeAmountWei,
-            unstakePenaltyAmountWei: unstakePenaltyAmountWei,
+            unstakePenaltyAmountWei: truncatedUnstakePenaltyAmountWei,
             unstakePenaltyPercentWei: unstakePenaltyPercentWei,
             unstakeCooldownPeriodDays: unstakeCooldownPeriodDays,
             isStakeMature: isStakeMature
