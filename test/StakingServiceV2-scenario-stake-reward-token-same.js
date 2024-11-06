@@ -10893,6 +10893,32 @@ describe("StakingServiceV2", function () {
         stakeInfos,
         stakingPoolStats,
       );
+
+      console.log("\n");
+
+      for (let i = 0; i < stakingPoolStakeRewardTokenSameConfigs.length; i++) {
+        const stakingPoolConfig = stakingPoolStakeRewardTokenSameConfigs[i];
+
+        console.log(
+          `${i}: stakeTokenAddress=${stakingPoolConfig.stakeTokenInstance.address}, rewardTokenAddress=${stakingPoolConfig.rewardTokenInstance.address}`,
+        );
+
+        const contractDecimalsBalanceOfStakeToken =
+          await stakingPoolConfig.stakeTokenInstance.balanceOf(
+            stakingServiceInstance.address,
+          );
+        const contractDecimalsBalanceOfRewardToken =
+          await stakingPoolConfig.rewardTokenInstance.balanceOf(
+            stakingServiceInstance.address,
+          );
+
+        expect(contractDecimalsBalanceOfStakeToken).to.equal(
+          hre.ethers.constants.Zero,
+        );
+        expect(contractDecimalsBalanceOfRewardToken).to.equal(
+          hre.ethers.constants.Zero,
+        );
+      }
     });
   });
 });
